@@ -1,7 +1,7 @@
 #include "Banks/SetBank4.h"
 
 #include "../res/src/window.h"
-#include "../res/src/diag.h"
+#include "../res/src/diagnew.h"
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\mapboss0.h"
@@ -42,7 +42,6 @@ extern INT8 level_tool;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
 extern STATE archer_state;
-extern INT8 show_diag;
 
 extern UINT8 amulet;
 extern UINT8 coins;

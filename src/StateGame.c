@@ -1,7 +1,7 @@
 #include "Banks/SetBank2.h"
 
 #include "../res/src/window.h"
-#include "../res/src/diag.h"
+#include "../res/src/diagnew.h"
 #include "../res/src/diagface.h"
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
@@ -58,6 +58,7 @@ void WriteTOOL();
 void populate_00();
 void populate_01();
 void ShowWindow();
+void ShowWindowDiag();
 
 //Levels
 INT8 load_next = 0;
@@ -79,8 +80,17 @@ UINT16 drop_player_y;
 STATE archer_state;
 
 INT8 show_diag;
+INT8 showing_diag = 0;
+/*
+const char* diags_10 = "DIAG_10";
+const char* diags_11 = "DIAG_\n11";
 
-
+const char** diags_1[] = {
+	diags_10,
+	diags_11
+};
+const char*** diags[] = {diags_1};
+*/
 void Start_StateGame() {
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
@@ -191,13 +201,23 @@ void ShowWindow(){
 	
 }
 
+void ShowWindowDiag(){
+	if (showing_diag == 0){	
+		HIDE_WIN;
+		//WINDOW
+		WX_REG = 7;
+		WY_REG = 144 - 32;
+		InitWindow(0, 0, &diagnew);
+		SHOW_WIN;
+		showing_diag = 1;
+	}
+	ShowDiag();
+}
+
 void ShowDiag(){
-	HIDE_WIN;
-	//WINDOW
-	WX_REG = 7;
-	WY_REG = 144 - 32;
-	InitWindow(0, 0, &diag);
-	SHOW_WIN;
+	PRINT_POS(3,1);
+	//char * d[] = diags[current_level];
+	Printf("DIAG_10");
 }
 
 void populate_01(){
@@ -293,14 +313,19 @@ void Update_StateGame() {
 	}
 	
 	if(archer_state == STATE_DIAG){
-		if(show_diag > 0){
-			show_diag = 0;
-			ShowDiag();
+		if (show_diag == 2){
+			show_diag = -1;
+			showing_diag = 0;
+			ShowWindow();
+			return;
+		}
+		if(show_diag > 0 ){
+			ShowWindowDiag();
+			return;
 		}
 		if(show_diag < 0 ){
-			show_diag = 0;
-			archer_state = STATE_NORMAL;
 			ShowWindow();
+			return;
 		}
 	}
 	if(archer_state != STATE_DIAG){

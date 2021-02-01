@@ -72,8 +72,11 @@ void Start_SpritePlayer() {
 void Update_SpritePlayer() {
 	
 	if(archer_state == STATE_DIAG ){
-		if(ANY_KEY_PRESSED){
-			show_diag = -1;
+		if(KEY_RELEASED(J_A)){
+			show_diag += 1;			
+		}
+		if (show_diag < 0){
+			archer_state = STATE_NORMAL;
 		}
 		return;
 	}
@@ -133,10 +136,11 @@ void Update_SpritePlayer() {
 				}
 				if(KEY_RELEASED(J_UP)){
 					aimc = 0;
-					if (aimc > 0){
-						show_diag = 1;
-						archer_state = STATE_DIAG;						
-					}
+					//if (aimc > 0){
+						if(show_diag<0){show_diag=0;}
+						show_diag += 1;
+						archer_state = STATE_DIAG;
+					//}
 					return;
 				}
 			}
