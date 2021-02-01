@@ -77,14 +77,23 @@ void Update_SpriteArrow() {
 				item_data->collided = 1u;
 			}
 		}
+		if(iaspr->type == SpriteArrow) {
+			if(CheckCollision(THIS, iaspr)) {
+				struct ArrowInfo* arrow_diasprata = (struct ArrowInfo*)iaspr->custom_data;
+				if (arrow_diasprata->type == 6 & data->type != 6){
+					SpriteManagerRemove(THIS_IDX);
+					SpriteManagerRemoveSprite(iaspr);
+				}
+			}
+		}
 	}
 }
 
 void SetupArrow(){
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	data->arrowdamage = 10u;
 	switch(internal_t) {
-		case 1:
+		case 1: //NORMAL
+			data->arrowdamage = 7u;
 			switch(data->arrowdir){
 				case 1: //orizzontale
 					data->vy = 0;
@@ -109,7 +118,8 @@ void SetupArrow(){
 			}
 			data->type = 0;
 		break;
-		case 2:
+		case 2: // WATER
+			data->arrowdamage = 10u;
 			switch(data->arrowdir){
 				case 1:
 					data->vy = 0;
@@ -134,7 +144,8 @@ void SetupArrow(){
 			}						
 			data->type = 0;
 		break;
-		case 3:
+		case 3: //STONE
+			data->arrowdamage = 15u;
 			switch(data->arrowdir){
 				case 1:
 					data->vy = 0;
@@ -159,7 +170,8 @@ void SetupArrow(){
 			}						
 			data->type = 0;
 		break;
-		case 4:
+		case 4:// BLAST
+			data->arrowdamage = 0u;
 			switch(data->arrowdir){
 				case 1:
 					data->vy = 0;
@@ -184,7 +196,8 @@ void SetupArrow(){
 			}						
 			data->type = 0;
 		break;
-		case 5:
+		case 5: //FIRE
+			data->arrowdamage = 30u;
 			switch(data->arrowdir){
 				case 1:
 					data->vy = 0;

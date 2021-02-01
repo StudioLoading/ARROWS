@@ -358,8 +358,12 @@ void Update_SpritePlayer() {
 					//archer_accel_y = 0;
 					ispr->coll_x = 0;
 					ispr->coll_y = 2;
-					ispr->coll_w = 8;	
-					platform_vx = datap->vx;
+					ispr->coll_w = 8;
+					if (SPRITE_GET_VMIRROR(ispr)){
+						platform_vx = -datap->vx;	
+					}else{
+						platform_vx = datap->vx;	
+					}					
 					if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
 						archer_state = STATE_NORMAL_PLATFORM;
 						THIS->y = ispr->y - 12;
