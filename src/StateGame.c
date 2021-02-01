@@ -209,7 +209,6 @@ void ShowWindowDiag(){
 		WY_REG = 144 - 32;
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;
-		showing_diag = 1;
 	}
 	ShowDiag();
 }
@@ -217,7 +216,22 @@ void ShowWindowDiag(){
 void ShowDiag(){
 	PRINT_POS(3,1);
 	//char * d[] = diags[current_level];
-	Printf("DIAG_10");
+	char * d1 = "DIALOG";
+	char * d2 = "DIALOG";
+	char * ddd [] = {d1,d2};
+	INT8 face = 0;
+	Printf(ddd[0]);
+	PRINT_POS(3,2);
+	Printf(ddd[1]);
+	if (showing_diag == 0){	
+		if (face == 0){
+			struct Sprite* face_sprite = SpriteManagerAdd(SpriteDiagface, 8, 144);
+			struct FaceInfo* face_data = (struct FaceInfo*)face_sprite->custom_data;
+			face_data->face_type = face;
+			face_data->face_setup = 1;
+		}	
+		showing_diag = 1;
+	}
 }
 
 void populate_01(){

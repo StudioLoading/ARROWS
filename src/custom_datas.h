@@ -63,3 +63,8 @@ struct EnemyInfo{
 	UINT8 enemydamage;
 	INT8 hp;
 };
+
+struct FaceInfo{
+	INT8 face_type;
+	INT8 face_setup;
+};
