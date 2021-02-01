@@ -1,0 +1,745 @@
+; no$gmb format .sym file
+; Generated automagically by ASxxxx linker V01.75 (SDK 3.0.0)
+; Area: .  .ABS.
+00:0000 s__HEADERf
+00:0000 s__CABS
+00:0000 s__HEADER0
+00:0000 s__DABS
+00:0000 s__HEADER1
+00:0000 s__HEADER2
+00:0000 s__HEADER3
+00:0000 s__SFR1a
+00:0000 s__HEADER4
+00:0000 s__SFR2a
+00:0000 s__SFR1b
+00:0000 s__HEADER5
+00:0000 s__SFR2b
+00:0000 s__SFR1c
+00:0000 s__HEADER6
+00:0000 s__SFR2c
+00:0000 s__SFR1d
+00:0000 s__HEADER7
+00:0000 s__SFR2d
+00:0000 s__SFR1e
+00:0000 s__HEADER8
+00:0000 s__SFR2e
+00:0000 s__SFR1f
+00:0000 s__HEADER9
+00:0000 s__SFR2f
+00:0000 s__CALLHL_HEADER0
+00:0000 s__HRAM
+00:0000 s__HEADER
+00:0000 s__SFR10
+00:0000 s__SFRa
+00:0000 s__SFR20
+00:0000 s__SFR11
+00:0000 s__SFRb
+00:0000 s__SFR30
+00:0000 s__SFR21
+00:0000 s__SFR12
+00:0000 s__SFRc
+00:0000 s__SFR31
+00:0000 s__SFR22
+00:0000 s__SFR13
+00:0000 s__SFRd
+00:0000 s__SFR32
+00:0000 s__SFR23
+00:0000 s__SFR14
+00:0000 s__SFRe
+00:0000 s__SFR33
+00:0000 s__SFR24
+00:0000 s__SFR15
+00:0000 s__SFRf
+00:0000 .init
+00:0000 s__SFR34
+00:0000 s__SFR25
+00:0000 s__SFR16
+00:0000 s__SFR35
+00:0000 s__SFR26
+00:0000 s__SFR17
+00:0000 s__SFR36
+00:0000 s__SFR27
+00:0000 s__SFR18
+00:0000 s__SFR28
+00:0000 s__SFR19
+00:0000 s__SFR29
+00:0000 s__CALLHL_HEADER
+00:0000 s__SFR0
+00:0000 s__SFR1
+00:0000 s__SFR2
+00:0000 s__SFR3
+00:0000 s__SFR4
+00:0000 s__SFR5
+00:0000 s__SFR6
+00:0000 s__SFR7
+00:0000 s__SFR8
+00:0000 s__SFR9
+00:0000 s__HEADER10
+00:0000 s__HEADERa
+00:0000 s__SFR
+00:0000 s__HEADER11
+00:0000 s__HEADERb
+00:0000 s__HRAM13
+00:0000 s__HEADER12
+00:0000 s__HEADERc
+00:0000 s__HEADERd
+00:0000 s__HEADERe
+00:0200 s__CODE
+00:2D4E s__HOME
+00:2F0E s__BASE
+00:3153 s__LIT
+00:3153 s__GSINIT
+00:3581 s__GSINITTAIL
+00:3582 s__GSFINAL
+01:4000 s__CODE_1
+01:4000 s__CODE_2
+01:4000 s__CODE_3
+01:4000 s__CODE_4
+01:5600 s__CODE_0
+00:C000 .OAM
+00:C0A0 s__DATA
+00:C8DD s__BSS
+00:C935 s__HEAP
+00:DEFF .STACK
+00:FF80 .refresh_OAM
+; Area: _CODE
+00:0200 _map
+00:0203 _map2
+00:0206 _mapgameover
+00:0209 _mapsecret0
+00:020C _window
+00:020F _archer
+00:0212 _arrow
+00:0215 _enemy
+00:0218 _font
+00:021B _item
+00:021E _platform
+00:0221 _porcupine
+00:0224 _scorpion
+00:0227 _tiles
+00:022A _bank_SpriteArrow
+00:022B _bank_SpriteEnemy
+00:022C _bank_SpriteItem
+00:022D _bank_SpritePlatform
+00:022E _bank_SpritePlayer
+00:022F _bank_SpritePorcupine
+00:0230 _bank_SpriteScorpion
+00:0231 _bank_StateGame
+00:0232 _bank_StateGameOver
+00:0233 _bank_StateSecret
+00:0234 _GetTileReplacement
+00:0237 _InitSprite
+00:030C _SetSpriteAnim
+00:038E _DrawSprite
+00:05E4 _TranslateSprite
+00:0C78 _CheckCollision
+00:0DD7 _SetState
+00:0DE6 _PlayMusic
+00:0E21 _vbl_update
+00:0F5A _MusicUpdate
+00:0F66 _main
+00:10A1 _SetTile
+00:10B3 _UPDATE_TILE
+00:128C _ScrollSetTiles
+00:135A _InitWindow
+00:13AD _ClampScrollLimits
+00:144B _ScrollSetMap
+00:157F _InitScroll
+00:15C6 _InitScrollWithTiles
+00:16D6 _ScrollUpdateRowR
+00:172E _ScrollUpdateRowWithDelay
+00:177A _ScrollUpdateRow
+00:17F6 _ScrollUpdateColumnR
+00:1851 _ScrollUpdateColumnWithDelay
+00:189D _ScrollUpdateColumn
+00:191C _RefreshScroll
+00:19DF _MoveScroll
+00:1B53 _GetScrollTilePtr
+00:1B7C _GetScrollTile
+00:1B9F _GetMapSize
+00:1BF0 _ScrollFindTile
+00:1D04 _FadeIn
+00:1D14 _FadeOut
+00:1D24 _PushBank
+00:1D39 _PopBank
+00:1D49 _set_sprite_palette_entry
+00:1D4E _set_bkg_palette_entry
+00:1D51 .set_palette_entry
+00:1D6D _cpu_slow
+00:1D88 _cpu_fast
+00:1D8F _cgb_compatibility
+00:1DD0 gbt_get_pattern_ptr
+00:1DED _gbt_play
+00:1EA8 _gbt_pause
+00:1EB4 _gbt_loop
+00:1EBB _gbt_stop
+00:1EC6 _gbt_enable_channels
+00:1ECD _gbt_update
+00:1FD2 _LoadSprite
+00:208E _SwapOAMs
+00:2106 _ClearOAMs
+00:214A _FlushOAMSprite
+00:2164 _SpriteManagerReset
+00:223F _SpriteManagerLoad
+00:2281 _SpriteManagerAdd
+00:2400 _SpriteManagerRemove
+00:242D _SpriteManagerRemoveSprite
+00:2482 _SpriteManagerFlushRemove
+00:253C _SetBank
+00:2546 _SpriteManagerUpdate
+00:2618 __mulsuchar
+00:2622 __muluschar
+00:262C __mulschar
+00:263F __muluchar
+00:264C __mulint
+00:2674 _DrawFrame
+00:271F _VectorAdd
+00:2731 _VectorRemovePos
+00:2790 _UIntToString
+00:2814 _IntToString
+00:2861 _Printf
+00:2B65 _DespRight
+00:2B7A _PlayFx
+00:2C04 _FX_REG_SIZES
+00:2C09 _FX_ADDRESS
+00:2C13 __divsuchar
+00:2C22 __modsuchar
+00:2C2E __divuschar
+00:2C40 __moduschar
+00:2C50 __divschar
+00:2C5E __modschar
+00:2C6A __divsint
+00:2C7D __modsint
+00:2C8E __divuchar
+00:2C9C __moduchar
+00:2CA8 __divuint
+00:2CBB __moduint
+00:2CCC .mod8
+00:2CCC .div8
+00:2CD4 .mod16
+00:2CD4 .div16
+00:2D0A .modu8
+00:2D0A .divu8
+00:2D0D .modu16
+00:2D0D .divu16
+; Area: _HEADER0
+; Area: _HEADER1
+; Area: _HEADER2
+; Area: _HEADER3
+; Area: _HEADER4
+; Area: _HEADER5
+; Area: _HEADER6
+; Area: _HEADER7
+; Area: _HEADER8
+; Area: _HEADER9
+; Area: _HEADERa
+; Area: _HEADERb
+; Area: _HEADERc
+; Area: _HEADERd
+; Area: _HEADERe
+; Area: _HEADERf
+; Area: _HEADER10
+; Area: _HEADER11
+00:01D0 _exit
+; Area: _HEADER12
+; Area: _HOME
+00:2D4E .set_mode
+00:2D5E .remove_VBL
+00:2D64 .remove_LCD
+00:2D6A .remove_TIM
+00:2D70 .remove_SIO
+00:2D76 .remove_JOY
+00:2D7C .add_VBL
+00:2D82 .add_LCD
+00:2D88 .add_TIM
+00:2D8E .add_SIO
+00:2D94 .add_JOY
+00:2D9A .remove_int
+00:2DB9 .add_int
+00:2DD5 .wait_vbl_done
+00:2DD5 _wait_vbl_done
+00:2DEC _display_off
+00:2DEC .display_off
+00:2E0D .serial_IO
+00:2E3C _mode
+00:2E45 _get_mode
+00:2E4A _enable_interrupts
+00:2E4C _disable_interrupts
+00:2E4E _reset
+00:2E4E .reset
+00:2E54 _set_interrupts
+00:2E5F _remove_VBL
+00:2E6A _remove_LCD
+00:2E75 _remove_TIM
+00:2E80 _remove_SIO
+00:2E8B _remove_JOY
+00:2E96 _add_VBL
+00:2EA1 _add_LCD
+00:2EAC _add_TIM
+00:2EB7 _add_SIO
+00:2EC2 _add_JOY
+00:2ECD _clock
+00:2ED6 __printTStates
+00:2ED7 banked_call
+00:2EEE banked_ret
+00:2F0D _empty
+; Area: _BASE
+00:2F0E _set_sprite_palette
+00:2F13 _set_bkg_palette
+00:2F16 .set_palette
+00:2F35 _set_win_tiles
+00:2F49 _set_win_data
+00:2F49 _set_bkg_data
+00:2F51 _set_sprite_data
+00:2FC7 .padup
+00:2FC7 _waitpadup
+00:2FD7 .jpad
+00:3004 .wait_pad
+00:300B _joypad
+00:3010 _waitpad
+00:301A _strcpy
+00:302C _memcpy
+00:304C _strcmp
+00:3070 .delay
+00:30AA _delay
+00:30B3 _set_bkg_tiles
+00:30C7 .copy_vram
+00:30D6 _get_data
+00:30D6 _set_data
+00:30E9 .set_xy_wtt
+00:30FA .set_xy_btt
+00:3109 .set_xy_tt
+00:313A _set_tiles
+; Area: _LIT
+; Area: _GSINIT
+00:3153 gsinit
+; Area: _GSINITTAIL
+; Area: _GSFINAL
+; Area: _DATA
+00:C0A2 _tile_a_collision
+00:C0A3 _internal_t
+00:C0AC _shoot_cooldown
+00:C0AD _jump_power
+00:C0AE _platform_vx
+00:C0AF _princess_parent
+00:C0B1 _archer_state
+00:C0B2 _archer_accel_y
+00:C0B4 _tile_collision
+00:C0B5 _aimc
+00:C0B6 _hit_cooldown
+00:C0B7 _archer_data
+00:C0BF _bg_palette
+00:C0FF _sprites_palette
+00:C13F _collision_tiles
+00:C157 _amulet
+00:C158 _coins
+00:C159 _ups
+00:C15A _hp
+00:C15B _level_tool
+00:C15C _load_next
+00:C15D _load_next_s
+00:C15E _current_level
+00:C15F _current_map
+00:C160 _level_1
+00:C164 _levels
+00:C166 _drop_player_x
+00:C168 _drop_player_y
+00:C16A _damage_cooldown
+00:C16B _attack_wait
+00:C16C _current_level_s
+00:C16D _current_map_s
+00:C16E _secret_1
+00:C170 _secrets
+00:C172 _next_state
+00:C173 _tile_coll
+00:C175 _delta_time
+00:C176 _current_state
+00:C177 _state_running
+00:C178 _last_music
+00:C17A _vbl_count
+00:C17B _old_scroll_x
+00:C17D _old_scroll_y
+00:C17F _music_mute_frames
+00:C180 _default_palette
+00:C188 _scroll_top_movement_limit
+00:C189 _scroll_bottom_movement_limit
+00:C18A _scroll_map
+00:C18C _scroll_cmap
+00:C18E _scroll_x
+00:C190 _scroll_y
+00:C192 _scroll_w
+00:C194 _scroll_h
+00:C196 _scroll_tiles_w
+00:C198 _scroll_tiles_h
+00:C19A _scroll_target
+00:C19C _scroll_target_offset_x
+00:C19E _scroll_target_offset_y
+00:C1A0 _scroll_collisions
+00:C220 _scroll_collisions_down
+00:C2A0 _scroll_tile_info
+00:C3A0 _scroll_bank
+00:C3A1 _scroll_offset_x
+00:C3A2 _scroll_offset_y
+00:C3A3 _pending_h_x
+00:C3A5 _pending_h_y
+00:C3A7 _pending_h_i
+00:C3A8 _pending_h_map
+00:C3AA _pending_w_map
+00:C3AC _pending_w_x
+00:C3AE _pending_w_y
+00:C3B0 _pending_w_i
+00:C3B1 _current_vbl_count
+00:C3B2 _scroll_h_border
+00:C3B3 _clamp_enabled
+00:C3B4 _fade_bank
+00:C3B5 _ZGB_Fading_BPal
+00:C3F5 _ZGB_Fading_SPal
+00:C435 _bank_stackSTACK
+00:C43F _bank_stack
+00:C441 gbt_playing
+00:C442 gbt_song
+00:C444 gbt_bank
+00:C445 gbt_speed
+00:C446 gbt_temp_play_data
+00:C452 gbt_loop_enabled
+00:C453 gbt_ticks_elapsed
+00:C454 gbt_current_step
+00:C455 gbt_current_pattern
+00:C456 gbt_current_step_data_ptr
+00:C458 gbt_channels_enabled
+00:C459 gbt_pan
+00:C45D gbt_vol
+00:C461 gbt_instr
+00:C465 gbt_freq
+00:C46B gbt_channel3_loaded_instrument
+00:C46C gbt_arpeggio_freq_index
+00:C475 gbt_arpeggio_enabled
+00:C478 gbt_arpeggio_tick
+00:C47B gbt_cut_note_tick
+00:C47F gbt_have_to_stop_next_step
+00:C480 gbt_update_pattern_pointers
+00:C481 _stateBanks
+00:C484 _startFuncs
+00:C48A _updateFuncs
+00:C490 _spriteBanks
+00:C497 _spriteDataBanks
+00:C49E _spriteStartFuncs
+00:C4AC _spriteUpdateFuncs
+00:C4BA _spriteDestroyFuncs
+00:C4C8 _spriteDatas
+00:C4D6 _spriteIdxs
+00:C4DD _last_sprite_loaded
+00:C4DE _sprites_pal
+00:C5DE _oam
+00:C5E0 _oam0
+00:C5E2 _oam1
+00:C5E4 _oam_end
+00:C5E6 _next_oam_sprite_y
+00:C5E7 _next_oam_sprite_x
+00:C5E8 _next_oam_sprite_idx
+00:C5E9 _next_oam_sprite_flags
+00:C5EA _sprite_manager_sprites_mem
+00:C87E _sprite_manager_sprites
+00:C8A6 _sprite_manager_sprites_poolSTA
+00:C8BA _sprite_manager_sprites_pool
+00:C8BC _sprite_manager_updatables
+00:C8D1 _sprite_manager_removal_check
+00:C8D2 _cachedSprite
+00:C8D4 _THIS_IDX
+00:C8D5 _THIS
+00:C8D7 _previous_keys
+00:C8D8 _keys
+00:C8D9 _print_x
+00:C8DA _print_y
+00:C8DB _font_idx
+00:C8DC _print_target
+; Area: _BSS
+00:C8DD __cpu
+00:C8DE .mode
+00:C8DF __io_out
+00:C8E0 __io_in
+00:C8E1 __io_status
+00:C8E2 .vbl_done
+00:C8E3 _sys_time
+00:C8E3 .sys_time
+00:C8E5 .int_0x40
+00:C8F5 .int_0x48
+00:C905 .int_0x50
+00:C915 .int_0x58
+00:C925 .int_0x60
+; Area: _HEAP
+00:C935 _malloc_heap_start
+; Area: _HRAM13
+00:FF90 __current_bank
+; Area: _CODE_4
+01:4000 _map_map
+01:4900 _map_internal
+01:4908 _map2_map
+01:5208 _map2_internal
+01:5210 _mapsecret0_map
+01:5450 _mapsecret0_internal
+01:5458 _item_tiles
+01:5558 _item_internal
+; Area: _CODE_3
+01:4000 _mapgameover_map
+01:4140 _mapgameover_internal
+01:4148 _window_map
+01:4198 _window_internal
+01:41A0 _archerCGB
+01:41AF _archer_tiles
+01:456F _archer_internal
+01:4576 _arrow_tiles
+01:4816 _arrow_internal
+01:481D _enemy_tiles
+01:499D _enemy_internal
+01:49A4 _platform_tiles
+01:49E4 _platform_internal
+01:49EB _porcupine_tiles
+01:4BEB _porcupine_internal
+01:4BF2 _scorpion_tiles
+01:4D72 _scorpion_internal
+01:4D79 _tilesCGB
+01:4DF9 _tiles_tiles
+01:55F9 _tiles_internal
+; Area: _CODE_0
+01:5600 _font_tiles
+01:5930 _font_internal
+; Area: _CODE_2
+01:4000 _Start_SpriteArrow
+01:405F _arrow_normal
+01:4061 _arrow_water
+01:4063 _arrow_stone
+01:4065 _arrow_blast
+01:4067 _arrow_fire
+01:4069 _arrow_normal_d
+01:406B _arrow_water_d
+01:406D _arrow_stone_d
+01:406F _arrow_blast_d
+01:4071 _arrow_fire_d
+01:4073 _arrow_normal_v
+01:4075 _arrow_water_v
+01:4077 _arrow_stone_v
+01:4079 _arrow_blast_v
+01:407B _arrow_fire_v
+01:407D _arrow_normal_g
+01:407F _arrow_water_g
+01:4081 _arrow_stone_g
+01:4083 _arrow_blast_g
+01:4085 _arrow_fire_g
+01:4087 _spine
+01:4089 _Update_SpriteArrow
+01:4231 _SetupArrow
+01:462D _CheckCollisionArrowTile
+01:4650 _RedirectArrow
+01:491E _Destroy_SpriteArrow
+01:491F _Start_SpriteEnemy
+01:49E3 _enemy_idle
+01:49E5 _enemy_walk
+01:49E8 _enemy_hit
+01:49EC _enemy_dead
+01:49EE _Update_SpriteEnemy
+01:4E6F _CheckCollisionETile
+01:4E9E _ETurn
+01:4F95 _Destroy_SpriteEnemy
+01:4F96 _Start_SpriteItem
+01:5047 _item_hidden
+01:5049 _item_coin
+01:504B _item_hp
+01:504D _item_up
+01:504F _item_scrigno
+01:5051 _item_scrignoaperto
+01:5053 _item_wrench
+01:5055 _item_dcoin
+01:5057 _Update_SpriteItem
+01:5464 _Destroy_SpriteItem
+01:5465 _Start_SpritePlatform
+01:5505 _platform_normal
+01:5507 _Update_SpritePlatform
+01:563B _Destroy_SpritePlatform
+01:563C _Start_SpritePlayer
+01:5697 _anim_idle
+01:5699 _anim_jump
+01:569B _anim_jump_up
+01:569D _anim_up
+01:569F _anim_dead
+01:56A1 _anim_walk
+01:56A6 _anim_shield
+01:56A8 _anim_hit
+01:56AB _anim_shoot
+01:56AE _anim_flying
+01:56B3 _Update_SpritePlayer
+01:60D5 _Die
+01:60EF _Shoot
+01:622F _Jump
+01:6264 _MoveArcher
+01:6337 _MoveArcherRelativePlatform
+01:635D _CheckCollisionTile
+01:6409 _Hit
+01:6477 _Destroy_SpritePlayer
+01:6478 _Start_SpritePorcupine
+01:653C _porcupine_idle
+01:653E _porcupine_walk
+01:6541 _porcupine_hit
+01:6545 _porcupine_dead
+01:6547 _porcupine_attack
+01:654C _Update_SpritePorcupine
+01:68DA _Destroy_SpritePorcupine
+01:68DB _Start_SpriteScorpion
+01:699F _scorpion_idle
+01:69A1 _scorpion_walk
+01:69A4 _scorpion_hit
+01:69A8 _scorpion_dead
+01:69AA _Update_SpriteScorpion
+01:6E0B _Destroy_SpriteScorpion
+01:6E0C _Start_StateGame
+01:70A4 _level_names
+01:70BB _populate_01
+01:722E _populate_00
+01:7438 _Update_StateGame
+01:7512 _WriteAMULET
+01:758B _WriteMap
+01:75AF _WriteCOINS
+01:75E1 _WriteHP
+01:7665 _WriteTOOL
+01:768B _WriteUPS
+01:76D4 _Start_StateGameOver
+01:76EB _Update_StateGameOver
+01:773B _Start_StateSecret
+01:791F _populate_secret0
+01:7A2B _Update_StateSecret
+; Area: _SFR0
+00:FF00 _P1_REG
+; Area: _SFR1
+00:FF01 _SB_REG
+; Area: _SFR2
+00:FF02 _SC_REG
+; Area: _SFR3
+00:FF04 _DIV_REG
+; Area: _SFR4
+00:FF05 _TIMA_REG
+; Area: _SFR5
+00:FF06 _TMA_REG
+; Area: _SFR6
+00:FF07 _TAC_REG
+; Area: _SFR7
+00:FF0F _IF_REG
+; Area: _SFR8
+00:FF10 _NR10_REG
+; Area: _SFR9
+00:FF11 _NR11_REG
+; Area: _SFRa
+00:FF12 _NR12_REG
+; Area: _SFRb
+00:FF13 _NR13_REG
+; Area: _SFRc
+00:FF14 _NR14_REG
+; Area: _SFRd
+00:FF16 _NR21_REG
+; Area: _SFRe
+00:FF17 _NR22_REG
+; Area: _SFRf
+00:FF18 _NR23_REG
+; Area: _SFR10
+00:FF19 _NR24_REG
+; Area: _SFR11
+00:FF1A _NR30_REG
+; Area: _SFR12
+00:FF1B _NR31_REG
+; Area: _SFR13
+00:FF1C _NR32_REG
+; Area: _SFR14
+00:FF1D _NR33_REG
+; Area: _SFR15
+00:FF1E _NR34_REG
+; Area: _SFR16
+00:FF20 _NR41_REG
+; Area: _SFR17
+00:FF21 _NR42_REG
+; Area: _SFR18
+00:FF22 _NR43_REG
+; Area: _SFR19
+00:FF23 _NR44_REG
+; Area: _SFR1a
+00:FF24 _NR50_REG
+; Area: _SFR1b
+00:FF25 _NR51_REG
+; Area: _SFR1c
+00:FF26 _NR52_REG
+; Area: _SFR1d
+00:FF40 _LCDC_REG
+; Area: _SFR1e
+00:FF41 _STAT_REG
+; Area: _SFR1f
+00:FF42 _SCY_REG
+; Area: _SFR20
+00:FF43 _SCX_REG
+; Area: _SFR21
+00:FF44 _LY_REG
+; Area: _SFR22
+00:FF45 _LYC_REG
+; Area: _SFR23
+00:FF46 _DMA_REG
+; Area: _SFR24
+00:FF47 _BGP_REG
+; Area: _SFR25
+00:FF48 _OBP0_REG
+; Area: _SFR26
+00:FF49 _OBP1_REG
+; Area: _SFR27
+00:FF4A _WY_REG
+; Area: _SFR28
+00:FF4B _WX_REG
+; Area: _SFR29
+00:FF4D _KEY1_REG
+; Area: _SFR2a
+00:FF4F _VBK_REG
+; Area: _SFR2b
+00:FF51 _HDMA1_REG
+; Area: _SFR2c
+00:FF52 _HDMA2_REG
+; Area: _SFR2d
+00:FF53 _HDMA3_REG
+; Area: _SFR2e
+00:FF54 _HDMA4_REG
+; Area: _SFR2f
+00:FF55 _HDMA5_REG
+; Area: _SFR30
+00:FF56 _RP_REG
+; Area: _SFR31
+00:FF68 _BCPS_REG
+; Area: _SFR32
+00:FF69 _BCPD_REG
+; Area: _SFR33
+00:FF6A _OCPS_REG
+; Area: _SFR34
+00:FF6B _OCPD_REG
+; Area: _SFR35
+00:FF70 _SVBK_REG
+; Area: _SFR36
+00:FFFF _IE_REG
+; Area: _CODE_1
+01:4000 _FadeInOp
+01:4021 _FadeDMG
+01:41CC _FadeInDMG
+01:41D4 _UpdateColor
+01:4297 _FadeStepColor
+01:43A7 _FadeInCOLOR
+01:43B8 _FadeIn_b
+01:43BB _FadeOutDMG
+01:43C4 _FadeOutColor
+01:43D4 _FadeOut_b
+01:43D7 _InitStates
+01:441F _InitSprites
+01:4585 _DrawFrame32x32
+01:47D5 gbt_channel_1_handle
+01:492C gbt_channel_2_handle
+01:4A7F gbt_channel_3_handle
+01:4BF1 gbt_channel_4_handle
+01:4CE1 gbt_update_bank1
+01:4CFD gbt_update_effects_bank1
+; Area: .  .ABS.
+00:DF00 _oam_mirror
+; Area: _CALLHL_HEADER0
+00:0020 ___sdcc_call_hl
+; Area: .  .ABS.
+00:0000 .__.ABS.

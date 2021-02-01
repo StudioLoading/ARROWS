@@ -1,0 +1,1005 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : free open source ANSI-C Compiler
+                              3 ; Version 4.0.0 #11528 (MINGW32)
+                              4 ;--------------------------------------------------------
+                              5 	.module SpritePorcupine
+                              6 	.optsdcc -mgbz80
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _Destroy_SpritePorcupine
+                             12 	.globl _Update_SpritePorcupine
+                             13 	.globl _Start_SpritePorcupine
+                             14 	.globl _SpriteManagerRemoveSprite
+                             15 	.globl _SpriteManagerAdd
+                             16 	.globl _CheckCollision
+                             17 	.globl _TranslateSprite
+                             18 	.globl _SetSpriteAnim
+                             19 	.globl _empty
+                             20 	.globl _bank_SpritePorcupine
+                             21 	.globl _attack_wait
+                             22 	.globl _damage_cooldown
+                             23 	.globl _porcupine_attack
+                             24 	.globl _porcupine_dead
+                             25 	.globl _porcupine_hit
+                             26 	.globl _porcupine_walk
+                             27 	.globl _porcupine_idle
+                             28 ;--------------------------------------------------------
+                             29 ; special function registers
+                             30 ;--------------------------------------------------------
+                             31 ;--------------------------------------------------------
+                             32 ; ram data
+                             33 ;--------------------------------------------------------
+                             34 	.area _DATA
+   0000                      35 _damage_cooldown::
+   0000                      36 	.ds 1
+   0001                      37 _attack_wait::
+   0001                      38 	.ds 1
+                             39 ;--------------------------------------------------------
+                             40 ; CODE rom data
+                             41 ;--------------------------------------------------------
+                             42 	.area _CODE
+   0000                      43 _bank_SpritePorcupine:
+   0000 02                   44 	.db #0x02	; 2
+                             45 ;--------------------------------------------------------
+                             46 ; absolute external ram data
+                             47 ;--------------------------------------------------------
+                             48 	.area _DABS (ABS)
+                             49 ;--------------------------------------------------------
+                             50 ; global & static initialisations
+                             51 ;--------------------------------------------------------
+                             52 	.area _HOME
+                             53 	.area _GSINIT
+                             54 	.area _GSFINAL
+                             55 	.area _GSINIT
+                             56 ;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+   0000 21r00r00             57 	ld	hl, #_damage_cooldown
+   0003 36 1E                58 	ld	(hl), #0x1e
+                             59 ;custom_datas.h:45: UINT8 attack_wait = 32u;
+   0005 21r01r00             60 	ld	hl, #_attack_wait
+   0008 36 20                61 	ld	(hl), #0x20
+                             62 ;--------------------------------------------------------
+                             63 ; Home
+                             64 ;--------------------------------------------------------
+                             65 	.area _HOME
+                             66 ;C:/GB/ZGB/common/include/Banks/SetBankCommon.h:4: void empty(void) __nonbanked {}
+                             67 ;	---------------------------------
+                             68 ; Function empty
+                             69 ; ---------------------------------
+   0000                      70 _empty::
+   0000 C9                   71 	ret
+                             72 	.area _HOME
+                             73 ;--------------------------------------------------------
+                             74 ; code
+                             75 ;--------------------------------------------------------
+                             76 	.area _CODE_2
+                             77 ;SpritePorcupine.c:18: void Start_SpritePorcupine() {
+                             78 ;	---------------------------------
+                             79 ; Function Start_SpritePorcupine
+                             80 ; ---------------------------------
+   0000                      81 _Start_SpritePorcupine::
+   0000 E8 FE                82 	add	sp, #-2
+                             83 ;SpritePorcupine.c:20: THIS->coll_x = 2;
+   0002 21r01r00             84 	ld	hl, #_THIS + 1
+   0005 2B                   85 	dec	hl
+   0006 4E                   86 	ld	c, (hl)
+   0007 23                   87 	inc	hl
+   0008 46                   88 	ld	b, (hl)
+   0009 21 0D 00             89 	ld	hl, #0x000d
+   000C 09                   90 	add	hl, bc
+   000D 4D                   91 	ld	c,l
+   000E 7C                   92 	ld	a,h
+   000F 36 02                93 	ld	(hl), #0x02
+                             94 ;SpritePorcupine.c:21: THIS->coll_y = 0;
+   0011 21r01r00             95 	ld	hl, #_THIS + 1
+   0014 2B                   96 	dec	hl
+   0015 4E                   97 	ld	c, (hl)
+   0016 23                   98 	inc	hl
+   0017 46                   99 	ld	b, (hl)
+   0018 21 0E 00            100 	ld	hl, #0x000e
+   001B 09                  101 	add	hl, bc
+   001C 4D                  102 	ld	c, l
+   001D 44                  103 	ld	b, h
+   001E AF                  104 	xor	a, a
+   001F 02                  105 	ld	(bc), a
+                            106 ;SpritePorcupine.c:22: THIS->coll_w = 12;
+   0020 21r01r00            107 	ld	hl, #_THIS + 1
+   0023 2B                  108 	dec	hl
+   0024 4E                  109 	ld	c, (hl)
+   0025 23                  110 	inc	hl
+   0026 46                  111 	ld	b, (hl)
+   0027 21 0F 00            112 	ld	hl, #0x000f
+   002A 09                  113 	add	hl, bc
+   002B 4D                  114 	ld	c,l
+   002C 7C                  115 	ld	a,h
+   002D 36 0C               116 	ld	(hl), #0x0c
+                            117 ;SpritePorcupine.c:23: THIS->coll_h = 16;
+   002F 21r01r00            118 	ld	hl, #_THIS + 1
+   0032 2B                  119 	dec	hl
+   0033 4E                  120 	ld	c, (hl)
+   0034 23                  121 	inc	hl
+   0035 46                  122 	ld	b, (hl)
+   0036 21 10 00            123 	ld	hl, #0x0010
+   0039 09                  124 	add	hl, bc
+   003A 4D                  125 	ld	c,l
+   003B 7C                  126 	ld	a,h
+   003C 36 10               127 	ld	(hl), #0x10
+                            128 ;SpritePorcupine.c:24: THIS->lim_x = 255u;
+   003E 21r00r00            129 	ld	hl, #_THIS
+   0041 46                  130 	ld	b, (hl)
+   0042 23                  131 	inc	hl
+   0043 4E                  132 	ld	c, (hl)
+   0044 78                  133 	ld	a, b
+   0045 C6 13               134 	add	a, #0x13
+   0047 47                  135 	ld	b, a
+   0048 30 01               136 	jr	NC,00103$
+   004A 0C                  137 	inc	c
+   004B                     138 00103$:
+   004B 68                  139 	ld	l, b
+   004C 61                  140 	ld	h, c
+   004D 36 FF               141 	ld	(hl), #0xff
+   004F 23                  142 	inc	hl
+   0050 36 00               143 	ld	(hl), #0x00
+                            144 ;SpritePorcupine.c:25: THIS->lim_y = 244u;
+   0052 21r00r00            145 	ld	hl, #_THIS
+   0055 46                  146 	ld	b, (hl)
+   0056 23                  147 	inc	hl
+   0057 4E                  148 	ld	c, (hl)
+   0058 78                  149 	ld	a, b
+   0059 C6 15               150 	add	a, #0x15
+   005B 47                  151 	ld	b, a
+   005C 30 01               152 	jr	NC,00104$
+   005E 0C                  153 	inc	c
+   005F                     154 00104$:
+   005F 68                  155 	ld	l, b
+   0060 61                  156 	ld	h, c
+   0061 36 F4               157 	ld	(hl), #0xf4
+   0063 23                  158 	inc	hl
+   0064 36 00               159 	ld	(hl), #0x00
+                            160 ;SpritePorcupine.c:26: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
+   0066 21r01r00            161 	ld	hl, #_THIS + 1
+   0069 2B                  162 	dec	hl
+   006A 4E                  163 	ld	c, (hl)
+   006B 23                  164 	inc	hl
+   006C 46                  165 	ld	b, (hl)
+   006D 21 19 00            166 	ld	hl, #0x0019
+   0070 09                  167 	add	hl, bc
+   0071 4D                  168 	ld	c, l
+   0072 7C                  169 	ld	a, h
+   0073 47                  170 	ld	b, a
+                            171 ;SpritePorcupine.c:27: SetSpriteAnim(THIS, porcupine_idle, 8u);
+   0074 C5                  172 	push	bc
+   0075 3E 08               173 	ld	a, #0x08
+   0077 F5                  174 	push	af
+   0078 33                  175 	inc	sp
+   0079 21rC4r00            176 	ld	hl, #_porcupine_idle
+   007C E5                  177 	push	hl
+   007D 21r00r00            178 	ld	hl, #_THIS
+   0080 2A                  179 	ld	a, (hl+)
+   0081 66                  180 	ld	h, (hl)
+   0082 6F                  181 	ld	l, a
+   0083 E5                  182 	push	hl
+   0084 CDr00r00            183 	call	_SetSpriteAnim
+   0087 E8 05               184 	add	sp, #5
+   0089 C1                  185 	pop	bc
+                            186 ;SpritePorcupine.c:28: data->enemy_accel_y = 24;
+   008A 69                  187 	ld	l, c
+   008B 60                  188 	ld	h, b
+   008C 36 18               189 	ld	(hl), #0x18
+   008E 23                  190 	inc	hl
+   008F 36 00               191 	ld	(hl), #0x00
+                            192 ;SpritePorcupine.c:29: data->vx = 1;
+   0091 21 04 00            193 	ld	hl, #0x0004
+   0094 09                  194 	add	hl, bc
+   0095 33                  195 	inc	sp
+   0096 33                  196 	inc	sp
+   0097 E5                  197 	push	hl
+   0098 E1                  198 	pop	hl
+   0099 E5                  199 	push	hl
+   009A 36 01               200 	ld	(hl), #0x01
+                            201 ;SpritePorcupine.c:30: data->wait = 0u;
+   009C 21 05 00            202 	ld	hl, #0x0005
+   009F 09                  203 	add	hl, bc
+   00A0 33                  204 	inc	sp
+   00A1 33                  205 	inc	sp
+   00A2 E5                  206 	push	hl
+   00A3 E1                  207 	pop	hl
+   00A4 E5                  208 	push	hl
+   00A5 36 00               209 	ld	(hl), #0x00
+                            210 ;SpritePorcupine.c:31: data->enemydamage = 15u;
+   00A7 21 06 00            211 	ld	hl, #0x0006
+   00AA 09                  212 	add	hl, bc
+   00AB 33                  213 	inc	sp
+   00AC 33                  214 	inc	sp
+   00AD E5                  215 	push	hl
+   00AE E1                  216 	pop	hl
+   00AF E5                  217 	push	hl
+   00B0 36 0F               218 	ld	(hl), #0x0f
+                            219 ;SpritePorcupine.c:32: data->hp = 30u;
+   00B2 21 07 00            220 	ld	hl, #0x0007
+   00B5 09                  221 	add	hl, bc
+   00B6 33                  222 	inc	sp
+   00B7 33                  223 	inc	sp
+   00B8 E5                  224 	push	hl
+   00B9 E1                  225 	pop	hl
+   00BA E5                  226 	push	hl
+   00BB 36 1E               227 	ld	(hl), #0x1e
+                            228 ;SpritePorcupine.c:33: data->enemy_state = ENEMY_STATE_NORMAL;
+   00BD 03                  229 	inc	bc
+   00BE 03                  230 	inc	bc
+   00BF AF                  231 	xor	a, a
+   00C0 02                  232 	ld	(bc), a
+                            233 ;SpritePorcupine.c:34: }
+   00C1 E8 02               234 	add	sp, #2
+   00C3 C9                  235 	ret
+   00C4                     236 _porcupine_idle:
+   00C4 01                  237 	.db #0x01	; 1
+   00C5 00                  238 	.db #0x00	; 0
+   00C6                     239 _porcupine_walk:
+   00C6 02                  240 	.db #0x02	; 2
+   00C7 00                  241 	.db #0x00	; 0
+   00C8 01                  242 	.db #0x01	; 1
+   00C9                     243 _porcupine_hit:
+   00C9 03                  244 	.db #0x03	; 3
+   00CA 02                  245 	.db #0x02	; 2
+   00CB 03                  246 	.db #0x03	; 3
+   00CC 04                  247 	.db #0x04	; 4
+   00CD                     248 _porcupine_dead:
+   00CD 01                  249 	.db #0x01	; 1
+   00CE 05                  250 	.db #0x05	; 5
+   00CF                     251 _porcupine_attack:
+   00CF 04                  252 	.db #0x04	; 4
+   00D0 06                  253 	.db #0x06	; 6
+   00D1 07                  254 	.db #0x07	; 7
+   00D2 07                  255 	.db #0x07	; 7
+   00D3 07                  256 	.db #0x07	; 7
+                            257 ;SpritePorcupine.c:36: void Update_SpritePorcupine() {
+                            258 ;	---------------------------------
+                            259 ; Function Update_SpritePorcupine
+                            260 ; ---------------------------------
+   00D4                     261 _Update_SpritePorcupine::
+   00D4 E8 F5               262 	add	sp, #-11
+                            263 ;SpritePorcupine.c:38: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+   00D6 21r00r00            264 	ld	hl, #_THIS
+   00D9 2A                  265 	ld	a, (hl+)
+   00DA 5E                  266 	ld	e, (hl)
+   00DB F8 07               267 	ldhl	sp,	#7
+   00DD 22                  268 	ld	(hl+), a
+   00DE 73                  269 	ld	(hl), e
+   00DF 2B                  270 	dec	hl
+   00E0 5E                  271 	ld	e, (hl)
+   00E1 23                  272 	inc	hl
+   00E2 56                  273 	ld	d, (hl)
+   00E3 21 19 00            274 	ld	hl, #0x0019
+   00E6 19                  275 	add	hl, de
+   00E7 4D                  276 	ld	c, l
+   00E8 44                  277 	ld	b, h
+   00E9 33                  278 	inc	sp
+   00EA 33                  279 	inc	sp
+   00EB C5                  280 	push	bc
+                            281 ;SpritePorcupine.c:40: if (data->enemy_state == ENEMY_STATE_DEAD){
+   00EC D1                  282 	pop	de
+   00ED D5                  283 	push	de
+   00EE 21 02 00            284 	ld	hl, #0x0002
+   00F1 19                  285 	add	hl, de
+   00F2 7D                  286 	ld	a, l
+   00F3 54                  287 	ld	d, h
+   00F4 F8 02               288 	ldhl	sp,	#2
+   00F6 22                  289 	ld	(hl+), a
+   00F7 72                  290 	ld	(hl), d
+   00F8 2B                  291 	dec	hl
+   00F9 5E                  292 	ld	e, (hl)
+   00FA 23                  293 	inc	hl
+   00FB 56                  294 	ld	d, (hl)
+   00FC 1A                  295 	ld	a,(de)
+   00FD F8 09               296 	ldhl	sp,	#9
+   00FF 77                  297 	ld	(hl), a
+                            298 ;SpritePorcupine.c:41: if (data->wait > 0){
+   0100 D1                  299 	pop	de
+   0101 D5                  300 	push	de
+   0102 21 05 00            301 	ld	hl, #0x0005
+   0105 19                  302 	add	hl, de
+   0106 7D                  303 	ld	a, l
+   0107 54                  304 	ld	d, h
+   0108 F8 04               305 	ldhl	sp,	#4
+   010A 22                  306 	ld	(hl+), a
+   010B 72                  307 	ld	(hl), d
+   010C 2B                  308 	dec	hl
+   010D 5E                  309 	ld	e, (hl)
+   010E 23                  310 	inc	hl
+   010F 56                  311 	ld	d, (hl)
+   0110 1A                  312 	ld	a,(de)
+   0111 F8 0A               313 	ldhl	sp,	#10
+                            314 ;SpritePorcupine.c:40: if (data->enemy_state == ENEMY_STATE_DEAD){
+   0113 32                  315 	ld	(hl-), a
+   0114 7E                  316 	ld	a, (hl)
+   0115 D6 03               317 	sub	a, #0x03
+   0117 C2r7Fr01            318 	jp	NZ,00105$
+                            319 ;SpritePorcupine.c:42: THIS->y--;
+   011A F8 07               320 	ldhl	sp,#(8 - 1)
+   011C 5E                  321 	ld	e, (hl)
+   011D 23                  322 	inc	hl
+   011E 56                  323 	ld	d, (hl)
+   011F 21 0A 00            324 	ld	hl, #0x000a
+   0122 19                  325 	add	hl, de
+   0123 7D                  326 	ld	a, l
+   0124 54                  327 	ld	d, h
+   0125 F8 02               328 	ldhl	sp,	#2
+   0127 22                  329 	ld	(hl+), a
+   0128 72                  330 	ld	(hl), d
+   0129 2B                  331 	dec	hl
+   012A 5E                  332 	ld	e, (hl)
+   012B 23                  333 	inc	hl
+   012C 56                  334 	ld	d, (hl)
+   012D 1A                  335 	ld	a,(de)
+   012E 4F                  336 	ld	c, a
+   012F 13                  337 	inc	de
+   0130 1A                  338 	ld	a,(de)
+   0131 47                  339 	ld	b, a
+                            340 ;SpritePorcupine.c:41: if (data->wait > 0){
+   0132 F8 0A               341 	ldhl	sp,	#10
+   0134 7E                  342 	ld	a, (hl)
+   0135 B7                  343 	or	a, a
+   0136 28 19               344 	jr	Z,00102$
+                            345 ;SpritePorcupine.c:42: THIS->y--;
+   0138 0B                  346 	dec	bc
+   0139 F8 02               347 	ldhl	sp,	#2
+   013B 2A                  348 	ld	a, (hl+)
+   013C 66                  349 	ld	h, (hl)
+   013D 6F                  350 	ld	l, a
+   013E 71                  351 	ld	(hl), c
+   013F 23                  352 	inc	hl
+   0140 70                  353 	ld	(hl), b
+                            354 ;SpritePorcupine.c:43: data->wait--;
+   0141 F8 04               355 	ldhl	sp,#(5 - 1)
+   0143 5E                  356 	ld	e, (hl)
+   0144 23                  357 	inc	hl
+   0145 56                  358 	ld	d, (hl)
+   0146 1A                  359 	ld	a,(de)
+   0147 4F                  360 	ld	c, a
+   0148 0D                  361 	dec	c
+   0149 2B                  362 	dec	hl
+   014A 2A                  363 	ld	a, (hl+)
+   014B 66                  364 	ld	h, (hl)
+   014C 6F                  365 	ld	l, a
+   014D 71                  366 	ld	(hl), c
+   014E C3r5Fr04            367 	jp	00139$
+   0151                     368 00102$:
+                            369 ;SpritePorcupine.c:45: THIS->y++;	
+   0151 03                  370 	inc	bc
+   0152 F8 02               371 	ldhl	sp,	#2
+   0154 2A                  372 	ld	a, (hl+)
+   0155 66                  373 	ld	h, (hl)
+   0156 6F                  374 	ld	l, a
+   0157 71                  375 	ld	(hl), c
+   0158 23                  376 	inc	hl
+   0159 70                  377 	ld	(hl), b
+                            378 ;SpritePorcupine.c:46: THIS->y++;
+   015A 21r01r00            379 	ld	hl, #_THIS + 1
+   015D 2B                  380 	dec	hl
+   015E 4E                  381 	ld	c, (hl)
+   015F 23                  382 	inc	hl
+   0160 46                  383 	ld	b, (hl)
+   0161 21 0A 00            384 	ld	hl, #0x000a
+   0164 09                  385 	add	hl, bc
+   0165 7D                  386 	ld	a, l
+   0166 54                  387 	ld	d, h
+   0167 F8 09               388 	ldhl	sp,	#9
+   0169 22                  389 	ld	(hl+), a
+   016A 72                  390 	ld	(hl), d
+   016B 2B                  391 	dec	hl
+   016C 5E                  392 	ld	e, (hl)
+   016D 23                  393 	inc	hl
+   016E 56                  394 	ld	d, (hl)
+   016F 1A                  395 	ld	a,(de)
+   0170 4F                  396 	ld	c, a
+   0171 13                  397 	inc	de
+   0172 1A                  398 	ld	a,(de)
+   0173 47                  399 	ld	b, a
+   0174 03                  400 	inc	bc
+   0175 2B                  401 	dec	hl
+   0176 2A                  402 	ld	a, (hl+)
+   0177 66                  403 	ld	h, (hl)
+   0178 6F                  404 	ld	l, a
+   0179 71                  405 	ld	(hl), c
+   017A 23                  406 	inc	hl
+   017B 70                  407 	ld	(hl), b
+                            408 ;SpritePorcupine.c:48: return;
+   017C C3r5Fr04            409 	jp	00139$
+   017F                     410 00105$:
+                            411 ;SpritePorcupine.c:51: if (data->enemy_state == ENEMY_STATE_ATTACK){
+   017F F8 09               412 	ldhl	sp,	#9
+   0181 7E                  413 	ld	a, (hl)
+   0182 D6 04               414 	sub	a, #0x04
+   0184 C2r92r02            415 	jp	NZ,00114$
+                            416 ;SpritePorcupine.c:52: if (data->wait == attack_wait){SetSpriteAnim(THIS, porcupine_attack, 8u);}
+   0187 21r01r00            417 	ld	hl, #_attack_wait
+   018A 7E                  418 	ld	a, (hl)
+   018B F8 0A               419 	ldhl	sp,	#10
+   018D 96                  420 	sub	a, (hl)
+   018E 20 14               421 	jr	NZ,00107$
+   0190 3E 08               422 	ld	a, #0x08
+   0192 F5                  423 	push	af
+   0193 33                  424 	inc	sp
+   0194 21rCFr00            425 	ld	hl, #_porcupine_attack
+   0197 E5                  426 	push	hl
+   0198 21r00r00            427 	ld	hl, #_THIS
+   019B 2A                  428 	ld	a, (hl+)
+   019C 66                  429 	ld	h, (hl)
+   019D 6F                  430 	ld	l, a
+   019E E5                  431 	push	hl
+   019F CDr00r00            432 	call	_SetSpriteAnim
+   01A2 E8 05               433 	add	sp, #5
+   01A4                     434 00107$:
+                            435 ;SpritePorcupine.c:53: if (data->wait == 1u){
+   01A4 F8 04               436 	ldhl	sp,#(5 - 1)
+   01A6 5E                  437 	ld	e, (hl)
+   01A7 23                  438 	inc	hl
+   01A8 56                  439 	ld	d, (hl)
+   01A9 1A                  440 	ld	a,(de)
+   01AA 3D                  441 	dec	a
+   01AB C2r92r02            442 	jp	NZ,00114$
+                            443 ;SpritePorcupine.c:54: struct Sprite* arrow_e_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
+   01AE 21 00 00            444 	ld	hl, #0x0000
+   01B1 E5                  445 	push	hl
+   01B2 2E 00               446 	ld	l, #0x00
+   01B4 E5                  447 	push	hl
+   01B5 3E 01               448 	ld	a, #0x01
+   01B7 F5                  449 	push	af
+   01B8 33                  450 	inc	sp
+   01B9 CDr00r00            451 	call	_SpriteManagerAdd
+   01BC E8 05               452 	add	sp, #5
+   01BE F8 06               453 	ldhl	sp,	#6
+   01C0 73                  454 	ld	(hl), e
+   01C1 23                  455 	inc	hl
+   01C2 72                  456 	ld	(hl), d
+                            457 ;SpritePorcupine.c:55: struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_e_sprite->custom_data;
+   01C3 2B                  458 	dec	hl
+   01C4 5E                  459 	ld	e, (hl)
+   01C5 23                  460 	inc	hl
+   01C6 56                  461 	ld	d, (hl)
+   01C7 21 19 00            462 	ld	hl, #0x0019
+   01CA 19                  463 	add	hl, de
+   01CB 4D                  464 	ld	c, l
+   01CC 7C                  465 	ld	a, h
+   01CD 47                  466 	ld	b, a
+                            467 ;SpritePorcupine.c:56: arrow_data->arrowdir = 1;
+   01CE 21 03 00            468 	ld	hl, #0x0003
+   01D1 09                  469 	add	hl, bc
+   01D2 7D                  470 	ld	a, l
+   01D3 54                  471 	ld	d, h
+   01D4 F8 09               472 	ldhl	sp,	#9
+   01D6 22                  473 	ld	(hl+), a
+   01D7 72                  474 	ld	(hl), d
+   01D8 2B                  475 	dec	hl
+   01D9 2A                  476 	ld	a, (hl+)
+   01DA 66                  477 	ld	h, (hl)
+   01DB 6F                  478 	ld	l, a
+   01DC 36 01               479 	ld	(hl), #0x01
+                            480 ;SpritePorcupine.c:57: arrow_data->type = 6;
+   01DE 59                  481 	ld	e, c
+   01DF 50                  482 	ld	d, b
+   01E0 1A                  483 	ld	a, (de)
+   01E1 E6 F0               484 	and	a, #0xf0
+   01E3 F6 06               485 	or	a, #0x06
+   01E5 12                  486 	ld	(de),a
+                            487 ;SpritePorcupine.c:58: arrow_data->arrowdamage = 10u;
+   01E6 03                  488 	inc	bc
+   01E7 03                  489 	inc	bc
+   01E8 03                  490 	inc	bc
+   01E9 03                  491 	inc	bc
+   01EA 3E 0A               492 	ld	a, #0x0a
+   01EC 02                  493 	ld	(bc), a
+                            494 ;SpritePorcupine.c:59: arrow_e_sprite->flags = THIS->flags;
+   01ED F8 06               495 	ldhl	sp,#(7 - 1)
+   01EF 5E                  496 	ld	e, (hl)
+   01F0 23                  497 	inc	hl
+   01F1 56                  498 	ld	d, (hl)
+   01F2 21 0C 00            499 	ld	hl, #0x000c
+   01F5 19                  500 	add	hl, de
+   01F6 7D                  501 	ld	a, l
+   01F7 54                  502 	ld	d, h
+   01F8 F8 09               503 	ldhl	sp,	#9
+   01FA 22                  504 	ld	(hl+), a
+   01FB 72                  505 	ld	(hl), d
+   01FC 21r01r00            506 	ld	hl, #_THIS + 1
+   01FF 2B                  507 	dec	hl
+   0200 4E                  508 	ld	c, (hl)
+   0201 23                  509 	inc	hl
+   0202 46                  510 	ld	b, (hl)
+   0203 21 0C 00            511 	ld	hl, #0x000c
+   0206 09                  512 	add	hl, bc
+   0207 4D                  513 	ld	c,l
+   0208 7C                  514 	ld	a,h
+   0209 4E                  515 	ld	c, (hl)
+   020A F8 09               516 	ldhl	sp,	#9
+   020C 2A                  517 	ld	a, (hl+)
+   020D 66                  518 	ld	h, (hl)
+   020E 6F                  519 	ld	l, a
+   020F 71                  520 	ld	(hl), c
+                            521 ;SpritePorcupine.c:38: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+   0210 21r01r00            522 	ld	hl, #_THIS + 1
+   0213 2B                  523 	dec	hl
+   0214 4E                  524 	ld	c, (hl)
+   0215 23                  525 	inc	hl
+   0216 46                  526 	ld	b, (hl)
+                            527 ;SpritePorcupine.c:60: if(SPRITE_GET_VMIRROR(THIS)){arrow_e_sprite->x = THIS->x-16;}
+   0217 21 0C 00            528 	ld	hl, #0x000c
+   021A 09                  529 	add	hl, bc
+   021B 7D                  530 	ld	a, l
+   021C 54                  531 	ld	d, h
+   021D F8 09               532 	ldhl	sp,	#9
+   021F 22                  533 	ld	(hl+), a
+   0220 72                  534 	ld	(hl), d
+   0221 2B                  535 	dec	hl
+   0222 5E                  536 	ld	e, (hl)
+   0223 23                  537 	inc	hl
+   0224 56                  538 	ld	d, (hl)
+   0225 1A                  539 	ld	a,(de)
+   0226 2B                  540 	dec	hl
+   0227 2B                  541 	dec	hl
+   0228 32                  542 	ld	(hl-), a
+   0229 2B                  543 	dec	hl
+   022A 5E                  544 	ld	e, (hl)
+   022B 23                  545 	inc	hl
+   022C 56                  546 	ld	d, (hl)
+   022D 21 08 00            547 	ld	hl, #0x0008
+   0230 19                  548 	add	hl, de
+   0231 7D                  549 	ld	a, l
+   0232 54                  550 	ld	d, h
+   0233 F8 09               551 	ldhl	sp,	#9
+   0235 22                  552 	ld	(hl+), a
+   0236 72                  553 	ld	(hl), d
+   0237 21 08 00            554 	ld	hl, #0x0008
+   023A 09                  555 	add	hl, bc
+   023B 4D                  556 	ld	c,l
+   023C 44                  557 	ld	b,h
+   023D 46                  558 	ld	b, (hl)
+   023E 23                  559 	inc	hl
+   023F 4E                  560 	ld	c, (hl)
+   0240 F8 08               561 	ldhl	sp,	#8
+   0242 CB 6E               562 	bit	5, (hl)
+   0244 28 12               563 	jr	Z,00109$
+   0246 78                  564 	ld	a, b
+   0247 C6 F0               565 	add	a, #0xf0
+   0249 47                  566 	ld	b, a
+   024A 79                  567 	ld	a, c
+   024B CE FF               568 	adc	a, #0xff
+   024D 4F                  569 	ld	c, a
+   024E F8 09               570 	ldhl	sp,	#9
+   0250 2A                  571 	ld	a, (hl+)
+   0251 66                  572 	ld	h, (hl)
+   0252 6F                  573 	ld	l, a
+   0253 70                  574 	ld	(hl), b
+   0254 23                  575 	inc	hl
+   0255 71                  576 	ld	(hl), c
+   0256 18 0F               577 	jr	00110$
+   0258                     578 00109$:
+                            579 ;SpritePorcupine.c:61: else{arrow_e_sprite->x = THIS->x+10;}
+   0258 78                  580 	ld	a, b
+   0259 C6 0A               581 	add	a, #0x0a
+   025B 47                  582 	ld	b, a
+   025C 30 01               583 	jr	NC,00241$
+   025E 0C                  584 	inc	c
+   025F                     585 00241$:
+   025F F8 09               586 	ldhl	sp,	#9
+   0261 2A                  587 	ld	a, (hl+)
+   0262 66                  588 	ld	h, (hl)
+   0263 6F                  589 	ld	l, a
+   0264 70                  590 	ld	(hl), b
+   0265 23                  591 	inc	hl
+   0266 71                  592 	ld	(hl), c
+   0267                     593 00110$:
+                            594 ;SpritePorcupine.c:62: arrow_e_sprite->y = THIS->y + 2;
+   0267 F8 06               595 	ldhl	sp,#(7 - 1)
+   0269 5E                  596 	ld	e, (hl)
+   026A 23                  597 	inc	hl
+   026B 56                  598 	ld	d, (hl)
+   026C 21 0A 00            599 	ld	hl, #0x000a
+   026F 19                  600 	add	hl, de
+   0270 7D                  601 	ld	a, l
+   0271 54                  602 	ld	d, h
+   0272 F8 09               603 	ldhl	sp,	#9
+   0274 22                  604 	ld	(hl+), a
+   0275 72                  605 	ld	(hl), d
+   0276 21r00r00            606 	ld	hl, #_THIS
+   0279 46                  607 	ld	b, (hl)
+   027A 23                  608 	inc	hl
+   027B 4E                  609 	ld	c, (hl)
+   027C 78                  610 	ld	a, b
+   027D C6 0A               611 	add	a, #0x0a
+   027F 47                  612 	ld	b, a
+   0280 30 01               613 	jr	NC,00242$
+   0282 0C                  614 	inc	c
+   0283                     615 00242$:
+   0283 68                  616 	ld	l, b
+   0284 61                  617 	ld	h, c
+   0285 4E                  618 	ld	c, (hl)
+   0286 23                  619 	inc	hl
+   0287 46                  620 	ld	b, (hl)
+   0288 03                  621 	inc	bc
+   0289 03                  622 	inc	bc
+   028A F8 09               623 	ldhl	sp,	#9
+   028C 2A                  624 	ld	a, (hl+)
+   028D 66                  625 	ld	h, (hl)
+   028E 6F                  626 	ld	l, a
+   028F 71                  627 	ld	(hl), c
+   0290 23                  628 	inc	hl
+   0291 70                  629 	ld	(hl), b
+   0292                     630 00114$:
+                            631 ;SpritePorcupine.c:66: if (data->wait > 0u){
+   0292 F8 04               632 	ldhl	sp,#(5 - 1)
+   0294 5E                  633 	ld	e, (hl)
+   0295 23                  634 	inc	hl
+   0296 56                  635 	ld	d, (hl)
+   0297 1A                  636 	ld	a,(de)
+   0298 F8 0A               637 	ldhl	sp,	#10
+   029A 77                  638 	ld	(hl),a
+   029B B7                  639 	or	a, a
+   029C 28 2A               640 	jr	Z,00129$
+                            641 ;SpritePorcupine.c:67: data->wait -= 1u;
+   029E 4E                  642 	ld	c, (hl)
+   029F 0D                  643 	dec	c
+   02A0 F8 04               644 	ldhl	sp,	#4
+   02A2 2A                  645 	ld	a, (hl+)
+   02A3 66                  646 	ld	h, (hl)
+   02A4 6F                  647 	ld	l, a
+                            648 ;SpritePorcupine.c:68: if (data->wait == 0u){
+   02A5 79                  649 	ld	a,c
+   02A6 77                  650 	ld	(hl),a
+   02A7 B7                  651 	or	a, a
+   02A8 C2rEFr03            652 	jp	NZ, 00130$
+                            653 ;SpritePorcupine.c:69: SetSpriteAnim(THIS, porcupine_walk, 8u);
+   02AB 3E 08               654 	ld	a, #0x08
+   02AD F5                  655 	push	af
+   02AE 33                  656 	inc	sp
+   02AF 21rC6r00            657 	ld	hl, #_porcupine_walk
+   02B2 E5                  658 	push	hl
+   02B3 21r00r00            659 	ld	hl, #_THIS
+   02B6 2A                  660 	ld	a, (hl+)
+   02B7 66                  661 	ld	h, (hl)
+   02B8 6F                  662 	ld	l, a
+   02B9 E5                  663 	push	hl
+   02BA CDr00r00            664 	call	_SetSpriteAnim
+   02BD E8 05               665 	add	sp, #5
+                            666 ;SpritePorcupine.c:70: data->enemy_state = ENEMY_STATE_NORMAL;
+   02BF C1                  667 	pop	bc
+   02C0 E1                  668 	pop	hl
+   02C1 E5                  669 	push	hl
+   02C2 C5                  670 	push	bc
+   02C3 36 00               671 	ld	(hl), #0x00
+   02C5 C3rEFr03            672 	jp	00130$
+   02C8                     673 00129$:
+                            674 ;SpritePorcupine.c:73: if(data->enemy_accel_y < 24) {
+   02C8 D1                  675 	pop	de
+   02C9 D5                  676 	push	de
+   02CA 1A                  677 	ld	a,(de)
+   02CB 4F                  678 	ld	c, a
+   02CC 13                  679 	inc	de
+   02CD 1A                  680 	ld	a,(de)
+   02CE 47                  681 	ld	b, a
+   02CF 79                  682 	ld	a, c
+   02D0 D6 18               683 	sub	a, #0x18
+   02D2 78                  684 	ld	a, b
+   02D3 17                  685 	rla
+   02D4 3F                  686 	ccf
+   02D5 1F                  687 	rra
+   02D6 DE 80               688 	sbc	a, #0x80
+   02D8 30 06               689 	jr	NC,00118$
+                            690 ;SpritePorcupine.c:74: data->enemy_accel_y += 1;
+   02DA 03                  691 	inc	bc
+   02DB E1                  692 	pop	hl
+   02DC E5                  693 	push	hl
+   02DD 71                  694 	ld	(hl), c
+   02DE 23                  695 	inc	hl
+   02DF 70                  696 	ld	(hl), b
+   02E0                     697 00118$:
+                            698 ;SpritePorcupine.c:76: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+   02E0 D1                  699 	pop	de
+   02E1 D5                  700 	push	de
+   02E2 21 03 00            701 	ld	hl, #0x0003
+   02E5 19                  702 	add	hl, de
+   02E6 7D                  703 	ld	a, l
+   02E7 54                  704 	ld	d, h
+   02E8 F8 08               705 	ldhl	sp,	#8
+   02EA 22                  706 	ld	(hl+), a
+   02EB 72                  707 	ld	(hl), d
+   02EC D1                  708 	pop	de
+   02ED D5                  709 	push	de
+   02EE 1A                  710 	ld	a,(de)
+   02EF 47                  711 	ld	b, a
+   02F0 13                  712 	inc	de
+   02F1 1A                  713 	ld	a,(de)
+   02F2 4F                  714 	ld	c, a
+   02F3 CB 29               715 	sra	c
+   02F5 CB 18               716 	rr	b
+   02F7 CB 29               717 	sra	c
+   02F9 CB 18               718 	rr	b
+   02FB CB 29               719 	sra	c
+   02FD CB 18               720 	rr	b
+   02FF CB 29               721 	sra	c
+   0301 CB 18               722 	rr	b
+   0303 E5                  723 	push	hl
+   0304 21r00r00            724 	ld	hl, #_delta_time
+   0307 7E                  725 	ld	a, (hl)
+   0308 F8 0C               726 	ldhl	sp,	#12
+   030A 77                  727 	ld	(hl), a
+   030B E1                  728 	pop	hl
+   030C F8 0A               729 	ldhl	sp,	#10
+   030E 7E                  730 	ld	a, (hl)
+   030F 3C                  731 	inc	a
+   0310 18 02               732 	jr	00244$
+   0312                     733 00243$:
+   0312 CB 20               734 	sla	b
+   0314                     735 00244$:
+   0314 3D                  736 	dec	a
+   0315 20 FB               737 	jr	NZ,00243$
+   0317 D1                  738 	pop	de
+   0318 D5                  739 	push	de
+   0319 21 04 00            740 	ld	hl, #0x0004
+   031C 19                  741 	add	hl, de
+   031D 4D                  742 	ld	c,l
+   031E 7C                  743 	ld	a,h
+   031F 4E                  744 	ld	c, (hl)
+   0320 F8 0A               745 	ldhl	sp,	#10
+   0322 7E                  746 	ld	a, (hl)
+   0323 3C                  747 	inc	a
+   0324 18 02               748 	jr	00246$
+   0326                     749 00245$:
+   0326 CB 21               750 	sla	c
+   0328                     751 00246$:
+   0328 3D                  752 	dec	a
+   0329 20 FB               753 	jr	NZ,00245$
+   032B C5                  754 	push	bc
+   032C 33                  755 	inc	sp
+   032D 79                  756 	ld	a, c
+   032E F5                  757 	push	af
+   032F 33                  758 	inc	sp
+   0330 21r00r00            759 	ld	hl, #_THIS
+   0333 2A                  760 	ld	a, (hl+)
+   0334 66                  761 	ld	h, (hl)
+   0335 6F                  762 	ld	l, a
+   0336 E5                  763 	push	hl
+   0337 CDr00r00            764 	call	_TranslateSprite
+   033A E8 04               765 	add	sp, #4
+   033C 7B                  766 	ld	a, e
+   033D F8 08               767 	ldhl	sp,	#8
+   033F F5                  768 	push	af
+   0340 2A                  769 	ld	a, (hl+)
+   0341 66                  770 	ld	h, (hl)
+   0342 6F                  771 	ld	l, a
+   0343 F1                  772 	pop	af
+   0344 77                  773 	ld	(hl), a
+                            774 ;SpritePorcupine.c:78: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+   0345 B7                  775 	or	a, a
+   0346 C2rA0r03            776 	jp	NZ, 00120$
+   0349 21r00r00            777 	ld	hl, #_delta_time
+   034C 7E                  778 	ld	a, (hl)
+   034D B7                  779 	or	a, a
+   034E CArA0r03            780 	jp	Z, 00120$
+                            781 ;SpritePorcupine.c:73: if(data->enemy_accel_y < 24) {
+   0351 D1                  782 	pop	de
+   0352 D5                  783 	push	de
+   0353 1A                  784 	ld	a,(de)
+   0354 4F                  785 	ld	c, a
+   0355 13                  786 	inc	de
+   0356 1A                  787 	ld	a,(de)
+   0357 47                  788 	ld	b, a
+                            789 ;SpritePorcupine.c:78: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+   0358 79                  790 	ld	a, c
+   0359 D6 18               791 	sub	a, #0x18
+   035B 78                  792 	ld	a, b
+   035C 17                  793 	rla
+   035D 3F                  794 	ccf
+   035E 1F                  795 	rra
+   035F DE 80               796 	sbc	a, #0x80
+   0361 D2rA0r03            797 	jp	NC, 00120$
+                            798 ;SpritePorcupine.c:79: data->enemy_accel_y += 2;
+   0364 03                  799 	inc	bc
+   0365 03                  800 	inc	bc
+   0366 E1                  801 	pop	hl
+   0367 E5                  802 	push	hl
+   0368 71                  803 	ld	(hl), c
+   0369 23                  804 	inc	hl
+   036A 70                  805 	ld	(hl), b
+                            806 ;SpritePorcupine.c:80: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
+   036B CB 28               807 	sra	b
+   036D CB 19               808 	rr	c
+   036F CB 28               809 	sra	b
+   0371 CB 19               810 	rr	c
+   0373 CB 28               811 	sra	b
+   0375 CB 19               812 	rr	c
+   0377 CB 28               813 	sra	b
+   0379 CB 19               814 	rr	c
+   037B 21r00r00            815 	ld	hl, #_delta_time
+   037E 7E                  816 	ld	a, (hl)
+   037F 3C                  817 	inc	a
+   0380 18 02               818 	jr	00248$
+   0382                     819 00247$:
+   0382 CB 21               820 	sla	c
+   0384                     821 00248$:
+   0384 3D                  822 	dec	a
+   0385 20 FB               823 	jr	NZ,00247$
+   0387 79                  824 	ld	a, c
+   0388 F5                  825 	push	af
+   0389 33                  826 	inc	sp
+   038A AF                  827 	xor	a, a
+   038B F5                  828 	push	af
+   038C 33                  829 	inc	sp
+   038D 21r00r00            830 	ld	hl, #_THIS
+   0390 2A                  831 	ld	a, (hl+)
+   0391 66                  832 	ld	h, (hl)
+   0392 6F                  833 	ld	l, a
+   0393 E5                  834 	push	hl
+   0394 CDr00r00            835 	call	_TranslateSprite
+   0397 E8 04               836 	add	sp, #4
+   0399 4B                  837 	ld	c, e
+   039A F8 08               838 	ldhl	sp,	#8
+   039C 2A                  839 	ld	a, (hl+)
+   039D 66                  840 	ld	h, (hl)
+   039E 6F                  841 	ld	l, a
+   039F 71                  842 	ld	(hl), c
+   03A0                     843 00120$:
+                            844 ;SpritePorcupine.c:82: if(data->tile_e_collision) {
+   03A0 F8 08               845 	ldhl	sp,#(9 - 1)
+   03A2 5E                  846 	ld	e, (hl)
+   03A3 23                  847 	inc	hl
+   03A4 56                  848 	ld	d, (hl)
+   03A5 1A                  849 	ld	a,(de)
+   03A6 B7                  850 	or	a, a
+   03A7 CArEFr03            851 	jp	Z, 00130$
+                            852 ;SpritePorcupine.c:83: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
+   03AA F8 02               853 	ldhl	sp,#(3 - 1)
+   03AC 5E                  854 	ld	e, (hl)
+   03AD 23                  855 	inc	hl
+   03AE 56                  856 	ld	d, (hl)
+   03AF 1A                  857 	ld	a,(de)
+   03B0 3D                  858 	dec	a
+   03B1 3E 01               859 	ld	a, #0x01
+   03B3 28 01               860 	jr	Z,00250$
+   03B5 AF                  861 	xor	a, a
+   03B6                     862 00250$:
+   03B6 F8 0A               863 	ldhl	sp,	#10
+   03B8 77                  864 	ld	(hl), a
+   03B9 D1                  865 	pop	de
+   03BA D5                  866 	push	de
+   03BB 1A                  867 	ld	a,(de)
+   03BC 4F                  868 	ld	c, a
+   03BD 13                  869 	inc	de
+   03BE 1A                  870 	ld	a,(de)
+   03BF 47                  871 	ld	b,a
+   03C0 5F                  872 	ld	e, a
+   03C1 3E 00               873 	ld	a, #0x00
+   03C3 57                  874 	ld	d, a
+   03C4 AF                  875 	xor	a, a
+   03C5 B9                  876 	cp	a, c
+   03C6 98                  877 	sbc	a, b
+   03C7 CB 7B               878 	bit	7, e
+   03C9 28 07               879 	jr	Z,00251$
+   03CB CB 7A               880 	bit	7, d
+   03CD 20 08               881 	jr	NZ,00252$
+   03CF BF                  882 	cp	a, a
+   03D0 18 05               883 	jr	00252$
+   03D2                     884 00251$:
+   03D2 CB 7A               885 	bit	7, d
+   03D4 28 01               886 	jr	Z,00252$
+   03D6 37                  887 	scf
+   03D7                     888 00252$:
+   03D7 3E 00               889 	ld	a, #0x00
+   03D9 17                  890 	rla
+   03DA F8 0A               891 	ldhl	sp,	#10
+   03DC A6                  892 	and	a,(hl)
+   03DD 28 08               893 	jr	Z,00124$
+                            894 ;SpritePorcupine.c:84: data->enemy_state = ENEMY_STATE_NORMAL;
+   03DF C1                  895 	pop	bc
+   03E0 E1                  896 	pop	hl
+   03E1 E5                  897 	push	hl
+   03E2 C5                  898 	push	bc
+   03E3 36 00               899 	ld	(hl), #0x00
+   03E5 18 05               900 	jr	00125$
+   03E7                     901 00124$:
+                            902 ;SpritePorcupine.c:86: data->enemy_accel_y = 0;	
+   03E7 E1                  903 	pop	hl
+   03E8 E5                  904 	push	hl
+   03E9 AF                  905 	xor	a, a
+   03EA 22                  906 	ld	(hl+), a
+   03EB 77                  907 	ld	(hl), a
+   03EC                     908 00125$:
+                            909 ;SpritePorcupine.c:88: CheckCollisionETile();
+   03EC CDr00r00            910 	call	_CheckCollisionETile
+   03EF                     911 00130$:
+                            912 ;SpritePorcupine.c:96: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+   03EF FAr01r00            913 	ld	a, (#(_sprite_manager_updatables + 0x0001) + 0)
+   03F2 4F                  914 	ld	c, a
+   03F3 06 00               915 	ld	b, #0x00
+   03F5 CB 21               916 	sla	c
+   03F7 CB 10               917 	rl	b
+   03F9 21r00r00            918 	ld	hl, #_sprite_manager_sprites
+   03FC 09                  919 	add	hl, bc
+   03FD 4D                  920 	ld	c,l
+   03FE 44                  921 	ld	b,h
+   03FF 4E                  922 	ld	c, (hl)
+   0400 23                  923 	inc	hl
+   0401 46                  924 	ld	b, (hl)
+   0402 AF                  925 	xor	a, a
+   0403 F8 0A               926 	ldhl	sp,	#10
+   0405 77                  927 	ld	(hl), a
+   0406                     928 00137$:
+   0406 21r00r00            929 	ld	hl, #_sprite_manager_updatables + 0
+   0409 7E                  930 	ld	a, (hl)
+   040A F8 09               931 	ldhl	sp,	#9
+   040C 77                  932 	ld	(hl), a
+   040D F8 0A               933 	ldhl	sp,	#10
+   040F 3A                  934 	ld	a, (hl-)
+   0410 96                  935 	sub	a, (hl)
+   0411 CAr5Fr04            936 	jp	Z,00139$
+                            937 ;SpritePorcupine.c:97: if(iespr->type == SpriteArrow) {
+   0414 21 11 00            938 	ld	hl, #0x0011
+   0417 09                  939 	add	hl, bc
+   0418 7D                  940 	ld	a, l
+   0419 54                  941 	ld	d, h
+   041A F8 08               942 	ldhl	sp,	#8
+   041C 22                  943 	ld	(hl+), a
+   041D 72                  944 	ld	(hl), d
+   041E 2B                  945 	dec	hl
+   041F 5E                  946 	ld	e, (hl)
+   0420 23                  947 	inc	hl
+   0421 56                  948 	ld	d, (hl)
+   0422 1A                  949 	ld	a,(de)
+   0423 3D                  950 	dec	a
+   0424 20 19               951 	jr	NZ,00138$
+                            952 ;SpritePorcupine.c:98: if(CheckCollision(THIS, iespr)) {
+   0426 C5                  953 	push	bc
+   0427 C5                  954 	push	bc
+   0428 21r00r00            955 	ld	hl, #_THIS
+   042B 2A                  956 	ld	a, (hl+)
+   042C 66                  957 	ld	h, (hl)
+   042D 6F                  958 	ld	l, a
+   042E E5                  959 	push	hl
+   042F CDr00r00            960 	call	_CheckCollision
+   0432 E8 04               961 	add	sp, #4
+   0434 7B                  962 	ld	a, e
+   0435 C1                  963 	pop	bc
+   0436 B7                  964 	or	a, a
+   0437 28 06               965 	jr	Z,00138$
+                            966 ;SpritePorcupine.c:99: SpriteManagerRemoveSprite(iespr);
+   0439 C5                  967 	push	bc
+   043A CDr00r00            968 	call	_SpriteManagerRemoveSprite
+   043D E8 02               969 	add	sp, #2
+   043F                     970 00138$:
+                            971 ;SpritePorcupine.c:96: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+   043F F8 0A               972 	ldhl	sp,	#10
+   0441 34                  973 	inc	(hl)
+   0442 4E                  974 	ld	c, (hl)
+   0443 06 00               975 	ld	b, #0x00
+   0445 03                  976 	inc	bc
+   0446 21r00r00            977 	ld	hl, #_sprite_manager_updatables
+   0449 09                  978 	add	hl, bc
+   044A 4D                  979 	ld	c,l
+   044B 7C                  980 	ld	a,h
+   044C 4E                  981 	ld	c, (hl)
+   044D 06 00               982 	ld	b, #0x00
+   044F CB 21               983 	sla	c
+   0451 CB 10               984 	rl	b
+   0453 21r00r00            985 	ld	hl, #_sprite_manager_sprites
+   0456 09                  986 	add	hl, bc
+   0457 4D                  987 	ld	c,l
+   0458 44                  988 	ld	b,h
+   0459 4E                  989 	ld	c, (hl)
+   045A 23                  990 	inc	hl
+   045B 46                  991 	ld	b, (hl)
+   045C C3r06r04            992 	jp	00137$
+   045F                     993 00139$:
+                            994 ;SpritePorcupine.c:104: }
+   045F E8 0B               995 	add	sp, #11
+   0461 C9                  996 	ret
+                            997 ;SpritePorcupine.c:106: void Destroy_SpritePorcupine() {
+                            998 ;	---------------------------------
+                            999 ; Function Destroy_SpritePorcupine
+                           1000 ; ---------------------------------
+   0462                    1001 _Destroy_SpritePorcupine::
+                           1002 ;SpritePorcupine.c:107: }
+   0462 C9                 1003 	ret
+                           1004 	.area _CODE_2
+                           1005 	.area _CABS (ABS)

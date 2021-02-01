@@ -1,0 +1,2995 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : free open source ANSI-C Compiler
+                              3 ; Version 4.0.0 #11528 (MINGW32)
+                              4 ;--------------------------------------------------------
+                              5 	.module SpritePlayer
+                              6 	.optsdcc -mgbz80
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _Destroy_SpritePlayer
+                             12 	.globl _Update_SpritePlayer
+                             13 	.globl _Start_SpritePlayer
+                             14 	.globl _PlayFx
+                             15 	.globl _SpriteManagerRemoveSprite
+                             16 	.globl _SpriteManagerAdd
+                             17 	.globl _SetState
+                             18 	.globl _CheckCollision
+                             19 	.globl _TranslateSprite
+                             20 	.globl _SetSpriteAnim
+                             21 	.globl _empty
+                             22 	.globl _bank_SpritePlayer
+                             23 	.globl _archer_data
+                             24 	.globl _hit_cooldown
+                             25 	.globl _aimc
+                             26 	.globl _tile_collision
+                             27 	.globl _archer_accel_y
+                             28 	.globl _archer_state
+                             29 	.globl _princess_parent
+                             30 	.globl _platform_vx
+                             31 	.globl _jump_power
+                             32 	.globl _shoot_cooldown
+                             33 	.globl _attack_wait
+                             34 	.globl _damage_cooldown
+                             35 	.globl _anim_flying
+                             36 	.globl _anim_shoot
+                             37 	.globl _anim_hit
+                             38 	.globl _anim_shield
+                             39 	.globl _anim_walk
+                             40 	.globl _anim_dead
+                             41 	.globl _anim_up
+                             42 	.globl _anim_jump_up
+                             43 	.globl _anim_jump
+                             44 	.globl _anim_idle
+                             45 	.globl _Die
+                             46 	.globl _Shoot
+                             47 	.globl _Jump
+                             48 	.globl _MoveArcher
+                             49 	.globl _MoveArcherRelativePlatform
+                             50 	.globl _CheckCollisionTile
+                             51 	.globl _Hit
+                             52 ;--------------------------------------------------------
+                             53 ; special function registers
+                             54 ;--------------------------------------------------------
+                             55 ;--------------------------------------------------------
+                             56 ; ram data
+                             57 ;--------------------------------------------------------
+                             58 	.area _DATA
+   0000                      59 _damage_cooldown::
+   0000                      60 	.ds 1
+   0001                      61 _attack_wait::
+   0001                      62 	.ds 1
+   0002                      63 _shoot_cooldown::
+   0002                      64 	.ds 1
+   0003                      65 _jump_power::
+   0003                      66 	.ds 1
+   0004                      67 _platform_vx::
+   0004                      68 	.ds 1
+   0005                      69 _princess_parent::
+   0005                      70 	.ds 2
+   0007                      71 _archer_state::
+   0007                      72 	.ds 1
+   0008                      73 _archer_accel_y::
+   0008                      74 	.ds 2
+   000A                      75 _tile_collision::
+   000A                      76 	.ds 1
+   000B                      77 _aimc::
+   000B                      78 	.ds 1
+   000C                      79 _hit_cooldown::
+   000C                      80 	.ds 1
+   000D                      81 _archer_data::
+   000D                      82 	.ds 2
+                             83 ;--------------------------------------------------------
+                             84 ; CODE rom data
+                             85 ;--------------------------------------------------------
+                             86 	.area _CODE
+   0000                      87 _bank_SpritePlayer:
+   0000 02                   88 	.db #0x02	; 2
+                             89 ;--------------------------------------------------------
+                             90 ; absolute external ram data
+                             91 ;--------------------------------------------------------
+                             92 	.area _DABS (ABS)
+                             93 ;--------------------------------------------------------
+                             94 ; global & static initialisations
+                             95 ;--------------------------------------------------------
+                             96 	.area _HOME
+                             97 	.area _GSINIT
+                             98 	.area _GSFINAL
+                             99 	.area _GSINIT
+                            100 ;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+   0000 21r00r00            101 	ld	hl, #_damage_cooldown
+   0003 36 1E               102 	ld	(hl), #0x1e
+                            103 ;custom_datas.h:45: UINT8 attack_wait = 32u;
+   0005 21r01r00            104 	ld	hl, #_attack_wait
+   0008 36 20               105 	ld	(hl), #0x20
+                            106 ;SpritePlayer.c:25: INT8 shoot_cooldown = 0;
+   000A 21r02r00            107 	ld	hl, #_shoot_cooldown
+   000D 36 00               108 	ld	(hl), #0x00
+                            109 ;SpritePlayer.c:26: UINT8 jump_power = 0u;
+   000F 21r03r00            110 	ld	hl, #_jump_power
+   0012 36 00               111 	ld	(hl), #0x00
+                            112 ;SpritePlayer.c:27: INT8 platform_vx = 0;
+   0014 21r04r00            113 	ld	hl, #_platform_vx
+   0017 36 00               114 	ld	(hl), #0x00
+                            115 ;SpritePlayer.c:29: struct Sprite* princess_parent = 0;
+   0019 21r05r00            116 	ld	hl, #_princess_parent
+   001C 36 00               117 	ld	(hl), #0x00
+   001E 23                  118 	inc	hl
+   001F 36 00               119 	ld	(hl), #0x00
+                            120 ;--------------------------------------------------------
+                            121 ; Home
+                            122 ;--------------------------------------------------------
+                            123 	.area _HOME
+                            124 ;C:/GB/ZGB/common/include/Banks/SetBankCommon.h:4: void empty(void) __nonbanked {}
+                            125 ;	---------------------------------
+                            126 ; Function empty
+                            127 ; ---------------------------------
+   0000                     128 _empty::
+   0000 C9                  129 	ret
+                            130 	.area _HOME
+                            131 ;--------------------------------------------------------
+                            132 ; code
+                            133 ;--------------------------------------------------------
+                            134 	.area _CODE_2
+                            135 ;SpritePlayer.c:61: void Start_SpritePlayer() {
+                            136 ;	---------------------------------
+                            137 ; Function Start_SpritePlayer
+                            138 ; ---------------------------------
+   0000                     139 _Start_SpritePlayer::
+   0000 E8 FE               140 	add	sp, #-2
+                            141 ;SpritePlayer.c:62: archer_data = (struct ArcherInfo*)THIS->custom_data;
+   0002 21r01r00            142 	ld	hl, #_THIS + 1
+   0005 2B                  143 	dec	hl
+   0006 4E                  144 	ld	c, (hl)
+   0007 23                  145 	inc	hl
+   0008 46                  146 	ld	b, (hl)
+   0009 21 19 00            147 	ld	hl, #0x0019
+   000C 09                  148 	add	hl, bc
+   000D 33                  149 	inc	sp
+   000E 33                  150 	inc	sp
+   000F E5                  151 	push	hl
+   0010 F8 00               152 	ldhl	sp,	#0
+   0012 2A                  153 	ld	a, (hl+)
+   0013 5E                  154 	ld	e, (hl)
+   0014 21r0Dr00            155 	ld	hl, #_archer_data
+   0017 22                  156 	ld	(hl+), a
+   0018 73                  157 	ld	(hl), e
+                            158 ;SpritePlayer.c:65: THIS->coll_x = 5;
+   0019 21 0D 00            159 	ld	hl, #0x000d
+   001C 09                  160 	add	hl, bc
+   001D 4D                  161 	ld	c,l
+   001E 7C                  162 	ld	a,h
+   001F 36 05               163 	ld	(hl), #0x05
+                            164 ;SpritePlayer.c:66: THIS->coll_y = 5;
+   0021 21r01r00            165 	ld	hl, #_THIS + 1
+   0024 2B                  166 	dec	hl
+   0025 4E                  167 	ld	c, (hl)
+   0026 23                  168 	inc	hl
+   0027 46                  169 	ld	b, (hl)
+   0028 21 0E 00            170 	ld	hl, #0x000e
+   002B 09                  171 	add	hl, bc
+   002C 4D                  172 	ld	c,l
+   002D 7C                  173 	ld	a,h
+   002E 36 05               174 	ld	(hl), #0x05
+                            175 ;SpritePlayer.c:67: THIS->coll_w = 6;
+   0030 21r01r00            176 	ld	hl, #_THIS + 1
+   0033 2B                  177 	dec	hl
+   0034 4E                  178 	ld	c, (hl)
+   0035 23                  179 	inc	hl
+   0036 46                  180 	ld	b, (hl)
+   0037 21 0F 00            181 	ld	hl, #0x000f
+   003A 09                  182 	add	hl, bc
+   003B 4D                  183 	ld	c,l
+   003C 7C                  184 	ld	a,h
+   003D 36 06               185 	ld	(hl), #0x06
+                            186 ;SpritePlayer.c:68: THIS->coll_h = 11;
+   003F 21r01r00            187 	ld	hl, #_THIS + 1
+   0042 2B                  188 	dec	hl
+   0043 4E                  189 	ld	c, (hl)
+   0044 23                  190 	inc	hl
+   0045 46                  191 	ld	b, (hl)
+   0046 21 10 00            192 	ld	hl, #0x0010
+   0049 09                  193 	add	hl, bc
+   004A 4D                  194 	ld	c,l
+   004B 7C                  195 	ld	a,h
+   004C 36 0B               196 	ld	(hl), #0x0b
+                            197 ;SpritePlayer.c:70: archer_state = STATE_JUMPING;
+   004E 21r07r00            198 	ld	hl, #_archer_state
+   0051 36 02               199 	ld	(hl), #0x02
+                            200 ;SpritePlayer.c:72: hit_cooldown = 36u;
+   0053 21r0Cr00            201 	ld	hl, #_hit_cooldown
+   0056 36 24               202 	ld	(hl), #0x24
+                            203 ;SpritePlayer.c:74: }
+   0058 E8 02               204 	add	sp, #2
+   005A C9                  205 	ret
+   005B                     206 _anim_idle:
+   005B 01                  207 	.db #0x01	; 1
+   005C 00                  208 	.db #0x00	; 0
+   005D                     209 _anim_jump:
+   005D 01                  210 	.db #0x01	; 1
+   005E 0A                  211 	.db #0x0a	; 10
+   005F                     212 _anim_jump_up:
+   005F 01                  213 	.db #0x01	; 1
+   0060 0B                  214 	.db #0x0b	; 11
+   0061                     215 _anim_up:
+   0061 01                  216 	.db #0x01	; 1
+   0062 00                  217 	.db #0x00	; 0
+   0063                     218 _anim_dead:
+   0063 01                  219 	.db #0x01	; 1
+   0064 00                  220 	.db #0x00	; 0
+   0065                     221 _anim_walk:
+   0065 04                  222 	.db #0x04	; 4
+   0066 07                  223 	.db #0x07	; 7
+   0067 06                  224 	.db #0x06	; 6
+   0068 05                  225 	.db #0x05	; 5
+   0069 04                  226 	.db #0x04	; 4
+   006A                     227 _anim_shield:
+   006A 01                  228 	.db #0x01	; 1
+   006B 03                  229 	.db #0x03	; 3
+   006C                     230 _anim_hit:
+   006C 02                  231 	.db #0x02	; 2
+   006D 08                  232 	.db #0x08	; 8
+   006E 09                  233 	.db #0x09	; 9
+   006F                     234 _anim_shoot:
+   006F 02                  235 	.db #0x02	; 2
+   0070 01                  236 	.db #0x01	; 1
+   0071 02                  237 	.db #0x02	; 2
+   0072                     238 _anim_flying:
+   0072 04                  239 	.db #0x04	; 4
+   0073 0C                  240 	.db #0x0c	; 12
+   0074 0D                  241 	.db #0x0d	; 13
+   0075 0E                  242 	.db #0x0e	; 14
+   0076 0D                  243 	.db #0x0d	; 13
+                            244 ;SpritePlayer.c:76: void Update_SpritePlayer() {
+                            245 ;	---------------------------------
+                            246 ; Function Update_SpritePlayer
+                            247 ; ---------------------------------
+   0077                     248 _Update_SpritePlayer::
+   0077 E8 EE               249 	add	sp, #-18
+                            250 ;SpritePlayer.c:80: if(KEY_TICKED(J_START)){
+   0079 E5                  251 	push	hl
+   007A 21r00r00            252 	ld	hl, #_keys
+   007D 7E                  253 	ld	a, (hl)
+   007E F8 12               254 	ldhl	sp,	#18
+   0080 77                  255 	ld	(hl), a
+   0081 E1                  256 	pop	hl
+   0082 E5                  257 	push	hl
+   0083 21r00r00            258 	ld	hl, #_previous_keys
+   0086 7E                  259 	ld	a, (hl)
+   0087 F8 13               260 	ldhl	sp,	#19
+   0089 77                  261 	ld	(hl), a
+   008A E1                  262 	pop	hl
+   008B F8 10               263 	ldhl	sp,	#16
+   008D CB 7E               264 	bit	7, (hl)
+   008F 28 10               265 	jr	Z,00102$
+   0091 F8 11               266 	ldhl	sp,	#17
+   0093 CB 7E               267 	bit	7, (hl)
+   0095 20 0A               268 	jr	NZ,00102$
+                            269 ;SpritePlayer.c:81: SetState(StateGame);
+   0097 AF                  270 	xor	a, a
+   0098 F5                  271 	push	af
+   0099 33                  272 	inc	sp
+   009A CDr00r00            273 	call	_SetState
+   009D 33                  274 	inc	sp
+                            275 ;SpritePlayer.c:82: return;
+   009E C3r96r0A            276 	jp	00261$
+   00A1                     277 00102$:
+                            278 ;SpritePlayer.c:85: if (KEY_RELEASED(J_SELECT)){
+   00A1 F8 11               279 	ldhl	sp,	#17
+   00A3 CB 76               280 	bit	6, (hl)
+   00A5 CArDDr00            281 	jp	Z,00107$
+   00A8 F8 10               282 	ldhl	sp,	#16
+   00AA CB 76               283 	bit	6, (hl)
+   00AC C2rDDr00            284 	jp	NZ,00107$
+                            285 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   00AF 21r0Er00            286 	ld	hl, #_archer_data + 1
+   00B2 2B                  287 	dec	hl
+   00B3 4E                  288 	ld	c, (hl)
+   00B4 23                  289 	inc	hl
+   00B5 46                  290 	ld	b, (hl)
+   00B6 0A                  291 	ld	a, (bc)
+   00B7 3C                  292 	inc	a
+   00B8 02                  293 	ld	(bc), a
+   00B9 2B                  294 	dec	hl
+   00BA 4E                  295 	ld	c, (hl)
+   00BB 23                  296 	inc	hl
+   00BC 46                  297 	ld	b, (hl)
+                            298 ;SpritePlayer.c:87: archer_data->amulet %= 6u;
+   00BD 0A                  299 	ld	a, (bc)
+   00BE 5F                  300 	ld	e, a
+   00BF 16 00               301 	ld	d, #0x00
+   00C1 C5                  302 	push	bc
+   00C2 21 06 00            303 	ld	hl, #0x0006
+   00C5 E5                  304 	push	hl
+   00C6 D5                  305 	push	de
+   00C7 CDr00r00            306 	call	__moduint
+   00CA E8 04               307 	add	sp, #4
+   00CC C1                  308 	pop	bc
+   00CD 7B                  309 	ld	a, e
+   00CE 02                  310 	ld	(bc), a
+                            311 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   00CF 21r0Er00            312 	ld	hl, #_archer_data + 1
+   00D2 2B                  313 	dec	hl
+   00D3 4E                  314 	ld	c, (hl)
+   00D4 23                  315 	inc	hl
+   00D5 46                  316 	ld	b, (hl)
+                            317 ;SpritePlayer.c:88: if(archer_data->amulet == 0u){
+   00D6 0A                  318 	ld	a, (bc)
+   00D7 B7                  319 	or	a, a
+   00D8 20 03               320 	jr	NZ,00107$
+                            321 ;SpritePlayer.c:89: archer_data->amulet = 1u;
+   00DA 3E 01               322 	ld	a, #0x01
+   00DC 02                  323 	ld	(bc), a
+   00DD                     324 00107$:
+                            325 ;SpritePlayer.c:93: switch(archer_state) {
+   00DD 21r07r00            326 	ld	hl, #_archer_state
+   00E0 7E                  327 	ld	a, (hl)
+   00E1 B7                  328 	or	a, a
+   00E2 CAr46r01            329 	jp	Z,00114$
+   00E5 21r07r00            330 	ld	hl, #_archer_state
+   00E8 7E                  331 	ld	a, (hl)
+   00E9 3D                  332 	dec	a
+   00EA CAr46r01            333 	jp	Z,00114$
+   00ED 21r07r00            334 	ld	hl, #_archer_state
+   00F0 7E                  335 	ld	a, (hl)
+   00F1 D6 02               336 	sub	a, #0x02
+   00F3 CArDBr02            337 	jp	Z,00147$
+   00F6 21r07r00            338 	ld	hl, #_archer_state
+   00F9 7E                  339 	ld	a, (hl)
+   00FA D6 04               340 	sub	a, #0x04
+   00FC CArA2r03            341 	jp	Z,00166$
+   00FF 21r07r00            342 	ld	hl, #_archer_state
+   0102 7E                  343 	ld	a, (hl)
+   0103 D6 05               344 	sub	a, #0x05
+   0105 C2rCDr03            345 	jp	NZ,00171$
+                            346 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   0108 21r0Er00            347 	ld	hl, #_archer_data + 1
+   010B 2B                  348 	dec	hl
+   010C 4E                  349 	ld	c, (hl)
+   010D 23                  350 	inc	hl
+   010E 46                  351 	ld	b, (hl)
+                            352 ;SpritePlayer.c:95: archer_data->ups -= 1;
+   010F 03                  353 	inc	bc
+   0110 03                  354 	inc	bc
+   0111 03                  355 	inc	bc
+   0112 0A                  356 	ld	a, (bc)
+   0113 3D                  357 	dec	a
+   0114 02                  358 	ld	(bc), a
+                            359 ;SpritePlayer.c:96: archer_data->hp = 100;
+   0115 2B                  360 	dec	hl
+   0116 4E                  361 	ld	c, (hl)
+   0117 23                  362 	inc	hl
+   0118 46                  363 	ld	b, (hl)
+   0119 03                  364 	inc	bc
+   011A 03                  365 	inc	bc
+   011B 78                  366 	ld	a, b
+   011C 69                  367 	ld	l, c
+   011D 67                  368 	ld	h, a
+   011E 36 64               369 	ld	(hl), #0x64
+                            370 ;SpritePlayer.c:97: if (archer_data->ups == -1){SetState(StateGameOver);}
+   0120 21r0Er00            371 	ld	hl, #_archer_data + 1
+   0123 2B                  372 	dec	hl
+   0124 4E                  373 	ld	c, (hl)
+   0125 23                  374 	inc	hl
+   0126 46                  375 	ld	b, (hl)
+   0127 03                  376 	inc	bc
+   0128 03                  377 	inc	bc
+   0129 03                  378 	inc	bc
+   012A 78                  379 	ld	a, b
+   012B 69                  380 	ld	l, c
+   012C 67                  381 	ld	h, a
+   012D 7E                  382 	ld	a, (hl)
+   012E 3C                  383 	inc	a
+   012F 20 0B               384 	jr	NZ,00111$
+   0131 3E 02               385 	ld	a, #0x02
+   0133 F5                  386 	push	af
+   0134 33                  387 	inc	sp
+   0135 CDr00r00            388 	call	_SetState
+   0138 33                  389 	inc	sp
+   0139 C3r96r0A            390 	jp	00261$
+   013C                     391 00111$:
+                            392 ;SpritePlayer.c:98: else{SetState(StateGame);}
+   013C AF                  393 	xor	a, a
+   013D F5                  394 	push	af
+   013E 33                  395 	inc	sp
+   013F CDr00r00            396 	call	_SetState
+   0142 33                  397 	inc	sp
+                            398 ;SpritePlayer.c:99: return;
+   0143 C3r96r0A            399 	jp	00261$
+                            400 ;SpritePlayer.c:102: case STATE_NORMAL_PLATFORM:
+   0146                     401 00114$:
+                            402 ;SpritePlayer.c:103: MoveArcher();
+   0146 CDr28r0C            403 	call	_MoveArcher
+                            404 ;SpritePlayer.c:104: CheckCollisionTile();
+   0149 CDr21r0D            405 	call	_CheckCollisionTile
+                            406 ;SpritePlayer.c:105: if(shoot_cooldown) {
+   014C 21r02r00            407 	ld	hl, #_shoot_cooldown
+   014F 7E                  408 	ld	a, (hl)
+   0150 B7                  409 	or	a, a
+   0151 28 17               410 	jr	Z,00130$
+                            411 ;SpritePlayer.c:106: SetSpriteAnim(THIS, anim_shoot, 12u);
+   0153 3E 0C               412 	ld	a, #0x0c
+   0155 F5                  413 	push	af
+   0156 33                  414 	inc	sp
+   0157 21r6Fr00            415 	ld	hl, #_anim_shoot
+   015A E5                  416 	push	hl
+   015B 21r00r00            417 	ld	hl, #_THIS
+   015E 2A                  418 	ld	a, (hl+)
+   015F 66                  419 	ld	h, (hl)
+   0160 6F                  420 	ld	l, a
+   0161 E5                  421 	push	hl
+   0162 CDr00r00            422 	call	_SetSpriteAnim
+   0165 E8 05               423 	add	sp, #5
+   0167 C3rE8r01            424 	jp	00131$
+   016A                     425 00130$:
+                            426 ;SpritePlayer.c:80: if(KEY_TICKED(J_START)){
+   016A 21r00r00            427 	ld	hl, #_keys
+   016D 7E                  428 	ld	a, (hl)
+                            429 ;SpritePlayer.c:108: if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT) ) {
+   016E CB 47               430 	bit	0, a
+   0170 20 04               431 	jr	NZ,00118$
+   0172 CB 4F               432 	bit	1, a
+   0174 28 17               433 	jr	Z,00119$
+   0176                     434 00118$:
+                            435 ;SpritePlayer.c:109: SetSpriteAnim(THIS, anim_walk, 16u);
+   0176 3E 10               436 	ld	a, #0x10
+   0178 F5                  437 	push	af
+   0179 33                  438 	inc	sp
+   017A 21r65r00            439 	ld	hl, #_anim_walk
+   017D E5                  440 	push	hl
+   017E 21r00r00            441 	ld	hl, #_THIS
+   0181 2A                  442 	ld	a, (hl+)
+   0182 66                  443 	ld	h, (hl)
+   0183 6F                  444 	ld	l, a
+   0184 E5                  445 	push	hl
+   0185 CDr00r00            446 	call	_SetSpriteAnim
+   0188 E8 05               447 	add	sp, #5
+   018A C3rBEr01            448 	jp	00120$
+   018D                     449 00119$:
+                            450 ;SpritePlayer.c:111: if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
+   018D 21r07r00            451 	ld	hl, #_archer_state
+   0190 7E                  452 	ld	a, (hl)
+   0191 3D                  453 	dec	a
+   0192 20 16               454 	jr	NZ,00116$
+   0194 3E 10               455 	ld	a, #0x10
+   0196 F5                  456 	push	af
+   0197 33                  457 	inc	sp
+   0198 21r72r00            458 	ld	hl, #_anim_flying
+   019B E5                  459 	push	hl
+   019C 21r00r00            460 	ld	hl, #_THIS
+   019F 2A                  461 	ld	a, (hl+)
+   01A0 66                  462 	ld	h, (hl)
+   01A1 6F                  463 	ld	l, a
+   01A2 E5                  464 	push	hl
+   01A3 CDr00r00            465 	call	_SetSpriteAnim
+   01A6 E8 05               466 	add	sp, #5
+   01A8 18 14               467 	jr	00120$
+   01AA                     468 00116$:
+                            469 ;SpritePlayer.c:112: else{SetSpriteAnim(THIS, anim_idle, 33u);}					
+   01AA 3E 21               470 	ld	a, #0x21
+   01AC F5                  471 	push	af
+   01AD 33                  472 	inc	sp
+   01AE 21r5Br00            473 	ld	hl, #_anim_idle
+   01B1 E5                  474 	push	hl
+   01B2 21r00r00            475 	ld	hl, #_THIS
+   01B5 2A                  476 	ld	a, (hl+)
+   01B6 66                  477 	ld	h, (hl)
+   01B7 6F                  478 	ld	l, a
+   01B8 E5                  479 	push	hl
+   01B9 CDr00r00            480 	call	_SetSpriteAnim
+   01BC E8 05               481 	add	sp, #5
+   01BE                     482 00120$:
+                            483 ;SpritePlayer.c:80: if(KEY_TICKED(J_START)){
+   01BE 21r00r00            484 	ld	hl, #_keys
+   01C1 7E                  485 	ld	a, (hl)
+                            486 ;SpritePlayer.c:114: if(KEY_PRESSED(J_UP)){
+   01C2 E6 04               487 	and	a, #0x04
+   01C4 4F                  488 	ld	c, a
+   01C5 06 00               489 	ld	b, #0x00
+   01C7 78                  490 	ld	a, b
+   01C8 B1                  491 	or	a, c
+   01C9 28 0C               492 	jr	Z,00125$
+                            493 ;SpritePlayer.c:115: aimc += 1;
+   01CB 21r0Br00            494 	ld	hl, #_aimc
+   01CE 7E                  495 	ld	a, (hl)
+   01CF 3C                  496 	inc	a
+                            497 ;SpritePlayer.c:116: if(aimc >= 16){
+   01D0 77                  498 	ld	(hl),a
+   01D1 D6 10               499 	sub	a, #0x10
+   01D3 38 02               500 	jr	C,00125$
+                            501 ;SpritePlayer.c:117: aimc=16;
+   01D5 36 10               502 	ld	(hl), #0x10
+   01D7                     503 00125$:
+                            504 ;SpritePlayer.c:120: if(KEY_RELEASED(J_UP)){
+   01D7 21r00r00            505 	ld	hl, #_previous_keys
+   01DA 7E                  506 	ld	a, (hl)
+   01DB CB 57               507 	bit	2, a
+   01DD 28 09               508 	jr	Z,00131$
+   01DF 78                  509 	ld	a, b
+   01E0 B1                  510 	or	a, c
+   01E1 20 05               511 	jr	NZ,00131$
+                            512 ;SpritePlayer.c:121: aimc = 0;
+   01E3 21r0Br00            513 	ld	hl, #_aimc
+   01E6 36 00               514 	ld	(hl), #0x00
+   01E8                     515 00131$:
+                            516 ;SpritePlayer.c:124: if (KEY_PRESSED(J_DOWN)){
+   01E8 21r00r00            517 	ld	hl, #_keys
+   01EB 7E                  518 	ld	a, (hl)
+   01EC CB 5F               519 	bit	3, a
+   01EE 28 25               520 	jr	Z,00135$
+                            521 ;SpritePlayer.c:125: SetSpriteAnim(THIS, anim_shield, 8u);
+   01F0 3E 08               522 	ld	a, #0x08
+   01F2 F5                  523 	push	af
+   01F3 33                  524 	inc	sp
+   01F4 21r6Ar00            525 	ld	hl, #_anim_shield
+   01F7 E5                  526 	push	hl
+   01F8 21r00r00            527 	ld	hl, #_THIS
+   01FB 2A                  528 	ld	a, (hl+)
+   01FC 66                  529 	ld	h, (hl)
+   01FD 6F                  530 	ld	l, a
+   01FE E5                  531 	push	hl
+   01FF CDr00r00            532 	call	_SetSpriteAnim
+   0202 E8 05               533 	add	sp, #5
+                            534 ;SpritePlayer.c:126: THIS->coll_x = 8;
+   0204 21r01r00            535 	ld	hl, #_THIS + 1
+   0207 2B                  536 	dec	hl
+   0208 4E                  537 	ld	c, (hl)
+   0209 23                  538 	inc	hl
+   020A 46                  539 	ld	b, (hl)
+   020B 21 0D 00            540 	ld	hl, #0x000d
+   020E 09                  541 	add	hl, bc
+   020F 4D                  542 	ld	c,l
+   0210 7C                  543 	ld	a,h
+   0211 36 08               544 	ld	(hl), #0x08
+   0213 18 15               545 	jr	00136$
+   0215                     546 00135$:
+   0215 21r01r00            547 	ld	hl, #_THIS + 1
+   0218 2B                  548 	dec	hl
+   0219 4E                  549 	ld	c, (hl)
+   021A 23                  550 	inc	hl
+   021B 46                  551 	ld	b, (hl)
+                            552 ;SpritePlayer.c:127: }else if (THIS->coll_x != 5){
+   021C 21 0D 00            553 	ld	hl, #0x000d
+   021F 09                  554 	add	hl, bc
+   0220 4D                  555 	ld	c, l
+   0221 44                  556 	ld	b, h
+   0222 0A                  557 	ld	a, (bc)
+   0223 D6 05               558 	sub	a, #0x05
+   0225 28 03               559 	jr	Z,00136$
+                            560 ;SpritePlayer.c:128: THIS->coll_x = 5;
+   0227 3E 05               561 	ld	a, #0x05
+   0229 02                  562 	ld	(bc), a
+   022A                     563 00136$:
+                            564 ;SpritePlayer.c:131: if(KEY_TICKED(J_A)) {
+   022A 21r00r00            565 	ld	hl, #_keys
+   022D 7E                  566 	ld	a, (hl)
+   022E CB 67               567 	bit	4, a
+   0230 28 0B               568 	jr	Z,00138$
+   0232 21r00r00            569 	ld	hl, #_previous_keys
+   0235 7E                  570 	ld	a, (hl)
+   0236 CB 67               571 	bit	4, a
+   0238 20 03               572 	jr	NZ,00138$
+                            573 ;SpritePlayer.c:132: Jump();
+   023A CDrF3r0B            574 	call	_Jump
+   023D                     575 00138$:
+                            576 ;SpritePlayer.c:134: if(shoot_cooldown) {
+   023D 21r02r00            577 	ld	hl, #_shoot_cooldown
+   0240 7E                  578 	ld	a, (hl)
+   0241 B7                  579 	or	a, a
+   0242 28 04               580 	jr	Z,00143$
+                            581 ;SpritePlayer.c:135: shoot_cooldown -= 1u;
+   0244 35                  582 	dec	(hl)
+   0245 C3rA2r02            583 	jp	00144$
+   0248                     584 00143$:
+                            585 ;SpritePlayer.c:137: if(KEY_TICKED(J_B) & (!KEY_PRESSED(J_DOWN) | (KEY_PRESSED(J_DOWN) & archer_state == STATE_JUMPING))) {
+   0248 21r00r00            586 	ld	hl, #_keys
+   024B 7E                  587 	ld	a, (hl)
+   024C CB 6F               588 	bit	5, a
+   024E 28 09               589 	jr	Z,00263$
+   0250 21r00r00            590 	ld	hl, #_previous_keys
+   0253 4E                  591 	ld	c, (hl)
+   0254 AF                  592 	xor	a, a
+   0255 CB 69               593 	bit	5, c
+   0257 28 04               594 	jr	Z,00264$
+   0259                     595 00263$:
+   0259 16 00               596 	ld	d, #0x00
+   025B 18 02               597 	jr	00265$
+   025D                     598 00264$:
+   025D 16 01               599 	ld	d, #0x01
+   025F                     600 00265$:
+   025F 21r00r00            601 	ld	hl, #_keys
+   0262 4E                  602 	ld	c, (hl)
+   0263 06 00               603 	ld	b, #0x00
+   0265 79                  604 	ld	a, c
+   0266 E6 08               605 	and	a, #0x08
+   0268 4F                  606 	ld	c, a
+   0269 06 00               607 	ld	b, #0x00
+   026B 78                  608 	ld	a, b
+   026C B1                  609 	or	a, c
+   026D D6 01               610 	sub	a,#0x01
+   026F 3E 00               611 	ld	a, #0x00
+   0271 17                  612 	rla
+   0272 F8 11               613 	ldhl	sp,	#17
+   0274 77                  614 	ld	(hl), a
+   0275 21r07r00            615 	ld	hl, #_archer_state
+   0278 7E                  616 	ld	a, (hl)
+   0279 D6 02               617 	sub	a, #0x02
+   027B 3E 01               618 	ld	a, #0x01
+   027D 28 01               619 	jr	Z,00714$
+   027F AF                  620 	xor	a, a
+   0280                     621 00714$:
+   0280 5F                  622 	ld	e, a
+   0281 AF                  623 	xor	a, a
+   0282 F5                  624 	push	af
+   0283 79                  625 	ld	a, c
+   0284 A3                  626 	and	a, e
+   0285 4F                  627 	ld	c, a
+   0286 F1                  628 	pop	af
+   0287 A0                  629 	and	a, b
+   0288 47                  630 	ld	b, a
+   0289 F8 11               631 	ldhl	sp,	#17
+   028B 5E                  632 	ld	e, (hl)
+   028C AF                  633 	xor	a, a
+   028D F5                  634 	push	af
+   028E 79                  635 	ld	a, c
+   028F B3                  636 	or	a, e
+   0290 4F                  637 	ld	c, a
+   0291 F1                  638 	pop	af
+   0292 B0                  639 	or	a, b
+   0293 47                  640 	ld	b, a
+   0294 5A                  641 	ld	e, d
+   0295 16 00               642 	ld	d, #0x00
+   0297 7B                  643 	ld	a, e
+   0298 A1                  644 	and	a, c
+   0299 4F                  645 	ld	c, a
+   029A 7A                  646 	ld	a, d
+   029B A0                  647 	and	a, b
+   029C B1                  648 	or	a, c
+   029D 28 03               649 	jr	Z,00144$
+                            650 ;SpritePlayer.c:138: Shoot();
+   029F CDrB3r0A            651 	call	_Shoot
+   02A2                     652 00144$:
+                            653 ;SpritePlayer.c:142: if((archer_accel_y >> 3) > 1) {
+   02A2 21r09r00            654 	ld	hl, #_archer_accel_y + 1
+   02A5 2B                  655 	dec	hl
+   02A6 4E                  656 	ld	c, (hl)
+   02A7 23                  657 	inc	hl
+   02A8 46                  658 	ld	b, (hl)
+   02A9 CB 28               659 	sra	b
+   02AB CB 19               660 	rr	c
+   02AD CB 28               661 	sra	b
+   02AF CB 19               662 	rr	c
+   02B1 CB 28               663 	sra	b
+   02B3 CB 19               664 	rr	c
+   02B5 78                  665 	ld	a, b
+   02B6 5F                  666 	ld	e, a
+   02B7 3E 00               667 	ld	a, #0x00
+   02B9 57                  668 	ld	d, a
+   02BA 3E 01               669 	ld	a, #0x01
+   02BC B9                  670 	cp	a, c
+   02BD 3E 00               671 	ld	a, #0x00
+   02BF 98                  672 	sbc	a, b
+   02C0 CB 7B               673 	bit	7, e
+   02C2 28 07               674 	jr	Z,00715$
+   02C4 CB 7A               675 	bit	7, d
+   02C6 20 08               676 	jr	NZ,00716$
+   02C8 BF                  677 	cp	a, a
+   02C9 18 05               678 	jr	00716$
+   02CB                     679 00715$:
+   02CB CB 7A               680 	bit	7, d
+   02CD 28 01               681 	jr	Z,00716$
+   02CF 37                  682 	scf
+   02D0                     683 00716$:
+   02D0 D2rCDr03            684 	jp	NC, 00171$
+                            685 ;SpritePlayer.c:143: archer_state = STATE_JUMPING;
+   02D3 21r07r00            686 	ld	hl, #_archer_state
+   02D6 36 02               687 	ld	(hl), #0x02
+                            688 ;SpritePlayer.c:146: break;
+   02D8 C3rCDr03            689 	jp	00171$
+                            690 ;SpritePlayer.c:147: case STATE_JUMPING:
+   02DB                     691 00147$:
+                            692 ;SpritePlayer.c:148: if(shoot_cooldown) {
+   02DB 21r02r00            693 	ld	hl, #_shoot_cooldown
+   02DE 7E                  694 	ld	a, (hl)
+   02DF B7                  695 	or	a, a
+   02E0 28 04               696 	jr	Z,00164$
+                            697 ;SpritePlayer.c:149: shoot_cooldown -= 1u;
+   02E2 35                  698 	dec	(hl)
+   02E3 C3r98r03            699 	jp	00165$
+   02E6                     700 00164$:
+                            701 ;SpritePlayer.c:80: if(KEY_TICKED(J_START)){
+   02E6 E5                  702 	push	hl
+   02E7 21r00r00            703 	ld	hl, #_keys
+   02EA 7E                  704 	ld	a, (hl)
+   02EB F8 13               705 	ldhl	sp,	#19
+   02ED 77                  706 	ld	(hl), a
+   02EE E1                  707 	pop	hl
+   02EF 21r00r00            708 	ld	hl, #_previous_keys
+   02F2 4E                  709 	ld	c, (hl)
+                            710 ;SpritePlayer.c:151: if(KEY_TICKED(J_B)) {
+   02F3 F8 11               711 	ldhl	sp,	#17
+   02F5 CB 6E               712 	bit	5, (hl)
+   02F7 28 0A               713 	jr	Z,00160$
+   02F9 CB 69               714 	bit	5, c
+   02FB 20 06               715 	jr	NZ,00160$
+                            716 ;SpritePlayer.c:152: Shoot();
+   02FD CDrB3r0A            717 	call	_Shoot
+   0300 C3r98r03            718 	jp	00165$
+   0303                     719 00160$:
+                            720 ;SpritePlayer.c:154: if (archer_accel_y < 4){									
+   0303 21r08r00            721 	ld	hl, #_archer_accel_y
+   0306 7E                  722 	ld	a, (hl)
+   0307 D6 04               723 	sub	a, #0x04
+   0309 23                  724 	inc	hl
+   030A 7E                  725 	ld	a, (hl)
+   030B DE 00               726 	sbc	a, #0x00
+   030D 56                  727 	ld	d, (hl)
+   030E 3E 00               728 	ld	a, #0x00
+   0310 5F                  729 	ld	e, a
+   0311 CB 7B               730 	bit	7, e
+   0313 28 07               731 	jr	Z,00720$
+   0315 CB 7A               732 	bit	7, d
+   0317 20 08               733 	jr	NZ,00721$
+   0319 BF                  734 	cp	a, a
+   031A 18 05               735 	jr	00721$
+   031C                     736 00720$:
+   031C CB 7A               737 	bit	7, d
+   031E 28 01               738 	jr	Z,00721$
+   0320 37                  739 	scf
+   0321                     740 00721$:
+   0321 D2r77r03            741 	jp	NC, 00157$
+                            742 ;SpritePlayer.c:157: jump_power += 1u;
+   0324 21r03r00            743 	ld	hl, #_jump_power
+   0327 46                  744 	ld	b, (hl)
+   0328 04                  745 	inc	b
+                            746 ;SpritePlayer.c:155: if(KEY_PRESSED(J_A)) {
+   0329 F8 11               747 	ldhl	sp,	#17
+   032B 7E                  748 	ld	a, (hl)
+   032C E6 10               749 	and	a, #0x10
+   032E 5F                  750 	ld	e, a
+   032F 16 00               751 	ld	d, #0x00
+   0331 7A                  752 	ld	a, d
+   0332 B3                  753 	or	a, e
+   0333 28 18               754 	jr	Z,00154$
+                            755 ;SpritePlayer.c:156: if (jump_power < 12u){
+   0335 21r03r00            756 	ld	hl, #_jump_power
+   0338 7E                  757 	ld	a, (hl)
+   0339 D6 0C               758 	sub	a, #0x0c
+   033B 30 24               759 	jr	NC,00155$
+                            760 ;SpritePlayer.c:157: jump_power += 1u;
+   033D 70                  761 	ld	(hl), b
+                            762 ;SpritePlayer.c:158: archer_accel_y -= 2;
+   033E 21r09r00            763 	ld	hl, #_archer_accel_y + 1
+   0341 2B                  764 	dec	hl
+   0342 5E                  765 	ld	e, (hl)
+   0343 23                  766 	inc	hl
+   0344 56                  767 	ld	d, (hl)
+   0345 1B                  768 	dec	de
+   0346 1B                  769 	dec	de
+   0347 2B                  770 	dec	hl
+   0348 73                  771 	ld	(hl), e
+   0349 23                  772 	inc	hl
+   034A 72                  773 	ld	(hl), d
+   034B 18 14               774 	jr	00155$
+   034D                     775 00154$:
+                            776 ;SpritePlayer.c:160: }else if (KEY_RELEASED(J_A)){
+   034D CB 61               777 	bit	4, c
+   034F 28 10               778 	jr	Z,00155$
+   0351 7A                  779 	ld	a, d
+   0352 B3                  780 	or	a, e
+   0353 20 0C               781 	jr	NZ,00155$
+                            782 ;SpritePlayer.c:161: jump_power += 1u;
+   0355 21r03r00            783 	ld	hl, #_jump_power
+   0358 70                  784 	ld	(hl), b
+                            785 ;SpritePlayer.c:162: archer_accel_y = 0;
+   0359 21r08r00            786 	ld	hl, #_archer_accel_y
+   035C 36 00               787 	ld	(hl), #0x00
+   035E 23                  788 	inc	hl
+   035F 36 00               789 	ld	(hl), #0x00
+   0361                     790 00155$:
+                            791 ;SpritePlayer.c:164: SetSpriteAnim(THIS, anim_jump_up, 33u);
+   0361 3E 21               792 	ld	a, #0x21
+   0363 F5                  793 	push	af
+   0364 33                  794 	inc	sp
+   0365 21r5Fr00            795 	ld	hl, #_anim_jump_up
+   0368 E5                  796 	push	hl
+   0369 21r00r00            797 	ld	hl, #_THIS
+   036C 2A                  798 	ld	a, (hl+)
+   036D 66                  799 	ld	h, (hl)
+   036E 6F                  800 	ld	l, a
+   036F E5                  801 	push	hl
+   0370 CDr00r00            802 	call	_SetSpriteAnim
+   0373 E8 05               803 	add	sp, #5
+   0375 18 21               804 	jr	00165$
+   0377                     805 00157$:
+                            806 ;SpritePlayer.c:166: jump_power = 0u;
+   0377 21r03r00            807 	ld	hl, #_jump_power
+   037A 36 00               808 	ld	(hl), #0x00
+                            809 ;SpritePlayer.c:167: archer_accel_y += 1;
+   037C 21r08r00            810 	ld	hl, #_archer_accel_y
+   037F 34                  811 	inc	(hl)
+   0380 20 02               812 	jr	NZ,00723$
+   0382 23                  813 	inc	hl
+   0383 34                  814 	inc	(hl)
+   0384                     815 00723$:
+                            816 ;SpritePlayer.c:168: SetSpriteAnim(THIS, anim_jump, 33u);
+   0384 3E 21               817 	ld	a, #0x21
+   0386 F5                  818 	push	af
+   0387 33                  819 	inc	sp
+   0388 21r5Dr00            820 	ld	hl, #_anim_jump
+   038B E5                  821 	push	hl
+   038C 21r00r00            822 	ld	hl, #_THIS
+   038F 2A                  823 	ld	a, (hl+)
+   0390 66                  824 	ld	h, (hl)
+   0391 6F                  825 	ld	l, a
+   0392 E5                  826 	push	hl
+   0393 CDr00r00            827 	call	_SetSpriteAnim
+   0396 E8 05               828 	add	sp, #5
+   0398                     829 00165$:
+                            830 ;SpritePlayer.c:172: platform_vx = 0;
+   0398 21r04r00            831 	ld	hl, #_platform_vx
+   039B 36 00               832 	ld	(hl), #0x00
+                            833 ;SpritePlayer.c:173: MoveArcher();
+   039D CDr28r0C            834 	call	_MoveArcher
+                            835 ;SpritePlayer.c:174: break;
+   03A0 18 2B               836 	jr	00171$
+                            837 ;SpritePlayer.c:175: case STATE_HIT:
+   03A2                     838 00166$:
+                            839 ;SpritePlayer.c:176: hit_cooldown -= 1;
+   03A2 21r0Cr00            840 	ld	hl, #_hit_cooldown
+   03A5 7E                  841 	ld	a, (hl)
+   03A6 C6 FF               842 	add	a, #0xff
+   03A8 77                  843 	ld	(hl), a
+                            844 ;SpritePlayer.c:177: MoveArcher();
+   03A9 CDr28r0C            845 	call	_MoveArcher
+                            846 ;SpritePlayer.c:178: if (hit_cooldown == 0){
+   03AC 21r0Cr00            847 	ld	hl, #_hit_cooldown
+   03AF 7E                  848 	ld	a, (hl)
+   03B0 B7                  849 	or	a, a
+   03B1 20 1A               850 	jr	NZ,00171$
+                            851 ;SpritePlayer.c:179: platform_vx = 0;
+   03B3 21r04r00            852 	ld	hl, #_platform_vx
+   03B6 36 00               853 	ld	(hl), #0x00
+                            854 ;SpritePlayer.c:180: archer_state = STATE_NORMAL;
+   03B8 21r07r00            855 	ld	hl, #_archer_state
+   03BB 36 00               856 	ld	(hl), #0x00
+                            857 ;SpritePlayer.c:181: hit_cooldown = 24u;
+   03BD 21r0Cr00            858 	ld	hl, #_hit_cooldown
+   03C0 36 18               859 	ld	(hl), #0x18
+                            860 ;SpritePlayer.c:182: if(KEY_PRESSED(J_A)) {
+   03C2 21r00r00            861 	ld	hl, #_keys
+   03C5 7E                  862 	ld	a, (hl)
+   03C6 CB 67               863 	bit	4, a
+   03C8 28 03               864 	jr	Z,00171$
+                            865 ;SpritePlayer.c:183: Jump();
+   03CA CDrF3r0B            866 	call	_Jump
+                            867 ;SpritePlayer.c:187: }//end switch archer_state
+   03CD                     868 00171$:
+                            869 ;SpritePlayer.c:190: if(princess_parent == 0 && archer_state != STATE_LADDER && archer_state != STATE_HIT) {
+   03CD 21r06r00            870 	ld	hl, #_princess_parent + 1
+   03D0 3A                  871 	ld	a, (hl-)
+   03D1 B6                  872 	or	a, (hl)
+   03D2 C2rE5r04            873 	jp	NZ, 00184$
+   03D5 21r07r00            874 	ld	hl, #_archer_state
+   03D8 7E                  875 	ld	a, (hl)
+   03D9 D6 03               876 	sub	a, #0x03
+   03DB CArE5r04            877 	jp	Z,00184$
+   03DE 21r07r00            878 	ld	hl, #_archer_state
+   03E1 7E                  879 	ld	a, (hl)
+   03E2 D6 04               880 	sub	a, #0x04
+   03E4 CArE5r04            881 	jp	Z,00184$
+                            882 ;SpritePlayer.c:192: if(archer_accel_y < 24) {
+   03E7 21r08r00            883 	ld	hl, #_archer_accel_y
+   03EA 7E                  884 	ld	a, (hl)
+   03EB D6 18               885 	sub	a, #0x18
+   03ED 23                  886 	inc	hl
+   03EE 7E                  887 	ld	a, (hl)
+   03EF DE 00               888 	sbc	a, #0x00
+   03F1 56                  889 	ld	d, (hl)
+   03F2 3E 00               890 	ld	a, #0x00
+   03F4 5F                  891 	ld	e, a
+   03F5 CB 7B               892 	bit	7, e
+   03F7 28 07               893 	jr	Z,00727$
+   03F9 CB 7A               894 	bit	7, d
+   03FB 20 08               895 	jr	NZ,00728$
+   03FD BF                  896 	cp	a, a
+   03FE 18 05               897 	jr	00728$
+   0400                     898 00727$:
+   0400 CB 7A               899 	bit	7, d
+   0402 28 01               900 	jr	Z,00728$
+   0404 37                  901 	scf
+   0405                     902 00728$:
+   0405 30 08               903 	jr	NC,00173$
+                            904 ;SpritePlayer.c:193: archer_accel_y += 1;
+   0407 21r08r00            905 	ld	hl, #_archer_accel_y
+   040A 34                  906 	inc	(hl)
+   040B 20 02               907 	jr	NZ,00729$
+   040D 23                  908 	inc	hl
+   040E 34                  909 	inc	(hl)
+   040F                     910 00729$:
+   040F                     911 00173$:
+                            912 ;SpritePlayer.c:195: tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
+   040F 21r08r00            913 	ld	hl, #_archer_accel_y
+   0412 46                  914 	ld	b, (hl)
+   0413 23                  915 	inc	hl
+   0414 4E                  916 	ld	c, (hl)
+   0415 CB 29               917 	sra	c
+   0417 CB 18               918 	rr	b
+   0419 CB 29               919 	sra	c
+   041B CB 18               920 	rr	b
+   041D CB 29               921 	sra	c
+   041F CB 18               922 	rr	b
+   0421 CB 29               923 	sra	c
+   0423 CB 18               924 	rr	b
+   0425 C5                  925 	push	bc
+   0426 33                  926 	inc	sp
+   0427 AF                  927 	xor	a, a
+   0428 F5                  928 	push	af
+   0429 33                  929 	inc	sp
+   042A 21r00r00            930 	ld	hl, #_THIS
+   042D 2A                  931 	ld	a, (hl+)
+   042E 66                  932 	ld	h, (hl)
+   042F 6F                  933 	ld	l, a
+   0430 E5                  934 	push	hl
+   0431 CDr00r00            935 	call	_TranslateSprite
+   0434 E8 04               936 	add	sp, #4
+   0436 21r0Ar00            937 	ld	hl, #_tile_collision
+   0439 73                  938 	ld	(hl), e
+                            939 ;SpritePlayer.c:196: if(!tile_collision && delta_time != 0 && archer_accel_y < 24) { //Do another iteration if there is no collision
+   043A 7E                  940 	ld	a, (hl)
+   043B B7                  941 	or	a, a
+   043C C2r9Br04            942 	jp	NZ, 00175$
+   043F 21r00r00            943 	ld	hl, #_delta_time
+   0442 7E                  944 	ld	a, (hl)
+   0443 B7                  945 	or	a, a
+   0444 CAr9Br04            946 	jp	Z, 00175$
+   0447 21r08r00            947 	ld	hl, #_archer_accel_y
+   044A 7E                  948 	ld	a, (hl)
+   044B D6 18               949 	sub	a, #0x18
+   044D 23                  950 	inc	hl
+   044E 7E                  951 	ld	a, (hl)
+   044F DE 00               952 	sbc	a, #0x00
+   0451 56                  953 	ld	d, (hl)
+   0452 3E 00               954 	ld	a, #0x00
+   0454 5F                  955 	ld	e, a
+   0455 CB 7B               956 	bit	7, e
+   0457 28 07               957 	jr	Z,00730$
+   0459 CB 7A               958 	bit	7, d
+   045B 20 08               959 	jr	NZ,00731$
+   045D BF                  960 	cp	a, a
+   045E 18 05               961 	jr	00731$
+   0460                     962 00730$:
+   0460 CB 7A               963 	bit	7, d
+   0462 28 01               964 	jr	Z,00731$
+   0464 37                  965 	scf
+   0465                     966 00731$:
+   0465 D2r9Br04            967 	jp	NC, 00175$
+                            968 ;SpritePlayer.c:197: archer_accel_y += 2;
+   0468 21r08r00            969 	ld	hl, #_archer_accel_y
+   046B 7E                  970 	ld	a, (hl)
+   046C C6 02               971 	add	a, #0x02
+   046E 22                  972 	ld	(hl+), a
+   046F 7E                  973 	ld	a, (hl)
+   0470 CE 00               974 	adc	a, #0x00
+                            975 ;SpritePlayer.c:198: tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
+   0472 32                  976 	ld	(hl-), a
+   0473 46                  977 	ld	b, (hl)
+   0474 23                  978 	inc	hl
+   0475 4E                  979 	ld	c, (hl)
+   0476 CB 29               980 	sra	c
+   0478 CB 18               981 	rr	b
+   047A CB 29               982 	sra	c
+   047C CB 18               983 	rr	b
+   047E CB 29               984 	sra	c
+   0480 CB 18               985 	rr	b
+   0482 CB 29               986 	sra	c
+   0484 CB 18               987 	rr	b
+   0486 C5                  988 	push	bc
+   0487 33                  989 	inc	sp
+   0488 AF                  990 	xor	a, a
+   0489 F5                  991 	push	af
+   048A 33                  992 	inc	sp
+   048B 21r00r00            993 	ld	hl, #_THIS
+   048E 2A                  994 	ld	a, (hl+)
+   048F 66                  995 	ld	h, (hl)
+   0490 6F                  996 	ld	l, a
+   0491 E5                  997 	push	hl
+   0492 CDr00r00            998 	call	_TranslateSprite
+   0495 E8 04               999 	add	sp, #4
+   0497 21r0Ar00           1000 	ld	hl, #_tile_collision
+   049A 73                 1001 	ld	(hl), e
+   049B                    1002 00175$:
+                           1003 ;SpritePlayer.c:200: if(tile_collision) {
+   049B 21r0Ar00           1004 	ld	hl, #_tile_collision
+   049E 7E                 1005 	ld	a, (hl)
+   049F B7                 1006 	or	a, a
+   04A0 CArE5r04           1007 	jp	Z, 00184$
+                           1008 ;SpritePlayer.c:201: if(archer_state == STATE_JUMPING & archer_accel_y > 0) {
+   04A3 21r07r00           1009 	ld	hl, #_archer_state
+   04A6 7E                 1010 	ld	a, (hl)
+   04A7 D6 02              1011 	sub	a, #0x02
+   04A9 3E 01              1012 	ld	a, #0x01
+   04AB 28 01              1013 	jr	Z,00733$
+   04AD AF                 1014 	xor	a, a
+   04AE                    1015 00733$:
+   04AE 4F                 1016 	ld	c, a
+   04AF 21r08r00           1017 	ld	hl, #_archer_accel_y
+   04B2 3E 00              1018 	ld	a, #0x00
+   04B4 96                 1019 	sub	a, (hl)
+   04B5 23                 1020 	inc	hl
+   04B6 3E 00              1021 	ld	a, #0x00
+   04B8 9E                 1022 	sbc	a, (hl)
+   04B9 3E 00              1023 	ld	a, #0x00
+   04BB 57                 1024 	ld	d, a
+   04BC 5E                 1025 	ld	e, (hl)
+   04BD CB 7B              1026 	bit	7, e
+   04BF 28 07              1027 	jr	Z,00734$
+   04C1 CB 7A              1028 	bit	7, d
+   04C3 20 08              1029 	jr	NZ,00735$
+   04C5 BF                 1030 	cp	a, a
+   04C6 18 05              1031 	jr	00735$
+   04C8                    1032 00734$:
+   04C8 CB 7A              1033 	bit	7, d
+   04CA 28 01              1034 	jr	Z,00735$
+   04CC 37                 1035 	scf
+   04CD                    1036 00735$:
+   04CD 3E 00              1037 	ld	a, #0x00
+   04CF 17                 1038 	rla
+   04D0 A1                 1039 	and	a,c
+   04D1 28 07              1040 	jr	Z,00179$
+                           1041 ;SpritePlayer.c:202: archer_state = STATE_NORMAL;
+   04D3 21r07r00           1042 	ld	hl, #_archer_state
+   04D6 36 00              1043 	ld	(hl), #0x00
+   04D8 18 08              1044 	jr	00180$
+   04DA                    1045 00179$:
+                           1046 ;SpritePlayer.c:205: archer_accel_y = 0;	
+   04DA 21r08r00           1047 	ld	hl, #_archer_accel_y
+   04DD 36 00              1048 	ld	(hl), #0x00
+   04DF 23                 1049 	inc	hl
+   04E0 36 00              1050 	ld	(hl), #0x00
+   04E2                    1051 00180$:
+                           1052 ;SpritePlayer.c:207: CheckCollisionTile();
+   04E2 CDr21r0D           1053 	call	_CheckCollisionTile
+   04E5                    1054 00184$:
+                           1055 ;SpritePlayer.c:210: if(princess_parent && archer_state == STATE_JUMPING) {
+   04E5 21r06r00           1056 	ld	hl, #_princess_parent + 1
+   04E8 3A                 1057 	ld	a, (hl-)
+   04E9 B6                 1058 	or	a, (hl)
+   04EA 28 15              1059 	jr	Z,00188$
+   04EC 21r07r00           1060 	ld	hl, #_archer_state
+   04EF 7E                 1061 	ld	a, (hl)
+   04F0 D6 02              1062 	sub	a, #0x02
+   04F2 20 0D              1063 	jr	NZ,00188$
+                           1064 ;SpritePlayer.c:211: archer_accel_y = 0;
+   04F4 21r08r00           1065 	ld	hl, #_archer_accel_y
+   04F7 36 00              1066 	ld	(hl), #0x00
+   04F9 23                 1067 	inc	hl
+   04FA 36 00              1068 	ld	(hl), #0x00
+                           1069 ;SpritePlayer.c:212: archer_state = STATE_NORMAL;
+   04FC 21r07r00           1070 	ld	hl, #_archer_state
+   04FF 36 00              1071 	ld	(hl), #0x00
+   0501                    1072 00188$:
+                           1073 ;SpritePlayer.c:216: SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
+   0501 FAr01r00           1074 	ld	a, (#(_sprite_manager_updatables + 0x0001) + 0)
+   0504 4F                 1075 	ld	c, a
+   0505 06 00              1076 	ld	b, #0x00
+   0507 CB 21              1077 	sla	c
+   0509 CB 10              1078 	rl	b
+   050B 21r00r00           1079 	ld	hl, #_sprite_manager_sprites
+   050E 09                 1080 	add	hl, bc
+   050F 4D                 1081 	ld	c, l
+   0510 44                 1082 	ld	b, h
+   0511 59                 1083 	ld	e, c
+   0512 50                 1084 	ld	d, b
+   0513 1A                 1085 	ld	a,(de)
+   0514 F8 00              1086 	ldhl	sp,	#0
+   0516 22                 1087 	ld	(hl+), a
+   0517 13                 1088 	inc	de
+   0518 1A                 1089 	ld	a, (de)
+   0519 77                 1090 	ld	(hl), a
+   051A AF                 1091 	xor	a, a
+   051B F8 11              1092 	ldhl	sp,	#17
+   051D 77                 1093 	ld	(hl), a
+   051E                    1094 00259$:
+   051E 21r00r00           1095 	ld	hl, #_sprite_manager_updatables + 0
+   0521 4E                 1096 	ld	c, (hl)
+   0522 F8 11              1097 	ldhl	sp,	#17
+   0524 7E                 1098 	ld	a, (hl)
+   0525 91                 1099 	sub	a, c
+   0526 CAr96r0A           1100 	jp	Z,00261$
+                           1101 ;SpritePlayer.c:217: if(ispr->type == SpriteItem) {
+   0529 D1                 1102 	pop	de
+   052A D5                 1103 	push	de
+   052B 21 11 00           1104 	ld	hl, #0x0011
+   052E 19                 1105 	add	hl, de
+   052F 7D                 1106 	ld	a, l
+   0530 54                 1107 	ld	d, h
+   0531 F8 02              1108 	ldhl	sp,	#2
+   0533 22                 1109 	ld	(hl+), a
+   0534 72                 1110 	ld	(hl), d
+   0535 2B                 1111 	dec	hl
+   0536 5E                 1112 	ld	e, (hl)
+   0537 23                 1113 	inc	hl
+   0538 56                 1114 	ld	d, (hl)
+   0539 1A                 1115 	ld	a,(de)
+   053A 4F                 1116 	ld	c, a
+                           1117 ;SpritePlayer.c:219: struct ItemInfo* dataitem = (struct ItemInfo*)ispr->custom_data;
+   053B D1                 1118 	pop	de
+   053C D5                 1119 	push	de
+   053D 21 19 00           1120 	ld	hl, #0x0019
+   0540 19                 1121 	add	hl, de
+   0541 7D                 1122 	ld	a, l
+   0542 54                 1123 	ld	d, h
+   0543 F8 04              1124 	ldhl	sp,	#4
+   0545 22                 1125 	ld	(hl+), a
+   0546 72                 1126 	ld	(hl), d
+                           1127 ;SpritePlayer.c:217: if(ispr->type == SpriteItem) {
+   0547 79                 1128 	ld	a, c
+   0548 D6 03              1129 	sub	a, #0x03
+   054A C2rB3r06           1130 	jp	NZ,00208$
+                           1131 ;SpritePlayer.c:218: if(CheckCollision(THIS, ispr)) {
+   054D E1                 1132 	pop	hl
+   054E E5                 1133 	push	hl
+   054F E5                 1134 	push	hl
+   0550 21r00r00           1135 	ld	hl, #_THIS
+   0553 2A                 1136 	ld	a, (hl+)
+   0554 66                 1137 	ld	h, (hl)
+   0555 6F                 1138 	ld	l, a
+   0556 E5                 1139 	push	hl
+   0557 CDr00r00           1140 	call	_CheckCollision
+   055A E8 04              1141 	add	sp, #4
+   055C 7B                 1142 	ld	a, e
+   055D B7                 1143 	or	a, a
+   055E CArB3r06           1144 	jp	Z, 00208$
+                           1145 ;SpritePlayer.c:219: struct ItemInfo* dataitem = (struct ItemInfo*)ispr->custom_data;
+   0561 F8 04              1146 	ldhl	sp,	#4
+   0563 2A                 1147 	ld	a, (hl+)
+   0564 5E                 1148 	ld	e, (hl)
+   0565 F8 0B              1149 	ldhl	sp,	#11
+   0567 22                 1150 	ld	(hl+), a
+   0568 73                 1151 	ld	(hl), e
+                           1152 ;SpritePlayer.c:220: if (dataitem->setup == 0u){ //se e' trasparente non faccio niente
+   0569 2B                 1153 	dec	hl
+   056A 5E                 1154 	ld	e, (hl)
+   056B 23                 1155 	inc	hl
+   056C 56                 1156 	ld	d, (hl)
+   056D 21 04 00           1157 	ld	hl, #0x0004
+   0570 19                 1158 	add	hl, de
+   0571 4D                 1159 	ld	c, l
+   0572 44                 1160 	ld	b, h
+   0573 0A                 1161 	ld	a, (bc)
+   0574 B7                 1162 	or	a, a
+   0575 C2rB3r06           1163 	jp	NZ, 00208$
+                           1164 ;SpritePlayer.c:221: switch(dataitem->type){
+   0578 F8 0B              1165 	ldhl	sp,#(12 - 1)
+   057A 4E                 1166 	ld	c, (hl)
+   057B 23                 1167 	inc	hl
+   057C 46                 1168 	ld	b, (hl)
+   057D 03                 1169 	inc	bc
+   057E 0A                 1170 	ld	a, (bc)
+   057F 4F                 1171 	ld	c, a
+                           1172 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   0580 21r0Dr00           1173 	ld	hl, #_archer_data
+   0583 2A                 1174 	ld	a, (hl+)
+   0584 5E                 1175 	ld	e, (hl)
+   0585 F8 0D              1176 	ldhl	sp,	#13
+   0587 22                 1177 	ld	(hl+), a
+   0588 73                 1178 	ld	(hl), e
+                           1179 ;SpritePlayer.c:223: archer_data->coins++;
+   0589 2B                 1180 	dec	hl
+   058A 5E                 1181 	ld	e, (hl)
+   058B 23                 1182 	inc	hl
+   058C 56                 1183 	ld	d, (hl)
+   058D 21 01 00           1184 	ld	hl, #0x0001
+   0590 19                 1185 	add	hl, de
+   0591 7D                 1186 	ld	a, l
+   0592 54                 1187 	ld	d, h
+   0593 F8 0F              1188 	ldhl	sp,	#15
+   0595 22                 1189 	ld	(hl+), a
+   0596 72                 1190 	ld	(hl), d
+                           1191 ;SpritePlayer.c:221: switch(dataitem->type){
+   0597 79                 1192 	ld	a, c
+   0598 3D                 1193 	dec	a
+   0599 28 1D              1194 	jr	Z,00190$
+   059B 79                 1195 	ld	a,c
+   059C FE 02              1196 	cp	a,#0x02
+   059E CAr15r06           1197 	jp	Z,00193$
+   05A1 FE 03              1198 	cp	a,##0x03
+   05A3 CAr2Ar06           1199 	jp	Z,00194$
+   05A6 FE 06              1200 	cp	a,#0x06
+   05A8 CAr40r06           1201 	jp	Z,00195$
+   05AB FE 07              1202 	cp	a,##0x07
+   05AD CAr5Er06           1203 	jp	Z,00198$
+   05B0 D6 0A              1204 	sub	a, #0x0a
+   05B2 CArACr06           1205 	jp	Z,00201$
+   05B5 C3rB3r06           1206 	jp	00208$
+                           1207 ;SpritePlayer.c:222: case 1u: //coins
+   05B8                    1208 00190$:
+                           1209 ;SpritePlayer.c:223: archer_data->coins++;
+   05B8 F8 0F              1210 	ldhl	sp,#(16 - 1)
+   05BA 5E                 1211 	ld	e, (hl)
+   05BB 23                 1212 	inc	hl
+   05BC 56                 1213 	ld	d, (hl)
+   05BD 1A                 1214 	ld	a,(de)
+   05BE 4F                 1215 	ld	c, a
+   05BF 0C                 1216 	inc	c
+   05C0 2B                 1217 	dec	hl
+   05C1 2A                 1218 	ld	a, (hl+)
+   05C2 66                 1219 	ld	h, (hl)
+   05C3 6F                 1220 	ld	l, a
+   05C4 71                 1221 	ld	(hl), c
+                           1222 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   05C5 21r0Er00           1223 	ld	hl, #_archer_data + 1
+   05C8 2B                 1224 	dec	hl
+   05C9 4E                 1225 	ld	c, (hl)
+   05CA 23                 1226 	inc	hl
+   05CB 46                 1227 	ld	b, (hl)
+                           1228 ;SpritePlayer.c:223: archer_data->coins++;
+   05CC 03                 1229 	inc	bc
+   05CD F8 0F              1230 	ldhl	sp,	#15
+   05CF 71                 1231 	ld	(hl), c
+   05D0 23                 1232 	inc	hl
+   05D1 70                 1233 	ld	(hl), b
+                           1234 ;SpritePlayer.c:224: if (archer_data->coins == 100){
+   05D2 2B                 1235 	dec	hl
+   05D3 5E                 1236 	ld	e, (hl)
+   05D4 23                 1237 	inc	hl
+   05D5 56                 1238 	ld	d, (hl)
+   05D6 1A                 1239 	ld	a,(de)
+   05D7 D6 64              1240 	sub	a, #0x64
+   05D9 20 13              1241 	jr	NZ,00192$
+                           1242 ;SpritePlayer.c:225: archer_data->coins = 0;
+   05DB 2B                 1243 	dec	hl
+   05DC 2A                 1244 	ld	a, (hl+)
+   05DD 66                 1245 	ld	h, (hl)
+   05DE 6F                 1246 	ld	l, a
+   05DF 36 00              1247 	ld	(hl), #0x00
+                           1248 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   05E1 21r0Er00           1249 	ld	hl, #_archer_data + 1
+   05E4 2B                 1250 	dec	hl
+   05E5 4E                 1251 	ld	c, (hl)
+   05E6 23                 1252 	inc	hl
+   05E7 46                 1253 	ld	b, (hl)
+                           1254 ;SpritePlayer.c:95: archer_data->ups -= 1;
+   05E8 03                 1255 	inc	bc
+   05E9 03                 1256 	inc	bc
+   05EA 03                 1257 	inc	bc
+                           1258 ;SpritePlayer.c:226: archer_data->ups += 1;	
+   05EB 0A                 1259 	ld	a, (bc)
+   05EC 3C                 1260 	inc	a
+   05ED 02                 1261 	ld	(bc), a
+   05EE                    1262 00192$:
+                           1263 ;SpritePlayer.c:228: PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);
+   05EE 21 C7 00           1264 	ld	hl, #0x00c7
+   05F1 E5                 1265 	push	hl
+   05F2 2E FF              1266 	ld	l, #0xff
+   05F4 E5                 1267 	push	hl
+   05F5 2E 73              1268 	ld	l, #0x73
+   05F7 E5                 1269 	push	hl
+   05F8 2E 8C              1270 	ld	l, #0x8c
+   05FA E5                 1271 	push	hl
+   05FB 2E 6D              1272 	ld	l, #0x6d
+   05FD E5                 1273 	push	hl
+   05FE 3E 03              1274 	ld	a, #0x03
+   0600 F5                 1275 	push	af
+   0601 33                 1276 	inc	sp
+   0602 AF                 1277 	xor	a, a
+   0603 F5                 1278 	push	af
+   0604 33                 1279 	inc	sp
+   0605 CDr00r00           1280 	call	_PlayFx
+   0608 E8 0C              1281 	add	sp, #12
+                           1282 ;SpritePlayer.c:229: SpriteManagerRemoveSprite(ispr);
+   060A E1                 1283 	pop	hl
+   060B E5                 1284 	push	hl
+   060C E5                 1285 	push	hl
+   060D CDr00r00           1286 	call	_SpriteManagerRemoveSprite
+   0610 E8 02              1287 	add	sp, #2
+                           1288 ;SpritePlayer.c:230: break;
+   0612 C3rB3r06           1289 	jp	00208$
+                           1290 ;SpritePlayer.c:231: case 2u: //hp
+   0615                    1291 00193$:
+                           1292 ;SpritePlayer.c:232: archer_data->hp = 100u;
+   0615 F8 0D              1293 	ldhl	sp,#(14 - 1)
+   0617 4E                 1294 	ld	c, (hl)
+   0618 23                 1295 	inc	hl
+   0619 46                 1296 	ld	b, (hl)
+   061A 03                 1297 	inc	bc
+   061B 03                 1298 	inc	bc
+   061C 3E 64              1299 	ld	a, #0x64
+   061E 02                 1300 	ld	(bc), a
+                           1301 ;SpritePlayer.c:233: SpriteManagerRemoveSprite(ispr);
+   061F E1                 1302 	pop	hl
+   0620 E5                 1303 	push	hl
+   0621 E5                 1304 	push	hl
+   0622 CDr00r00           1305 	call	_SpriteManagerRemoveSprite
+   0625 E8 02              1306 	add	sp, #2
+                           1307 ;SpritePlayer.c:234: break;
+   0627 C3rB3r06           1308 	jp	00208$
+                           1309 ;SpritePlayer.c:235: case 3u: //up
+   062A                    1310 00194$:
+                           1311 ;SpritePlayer.c:95: archer_data->ups -= 1;
+   062A F8 0D              1312 	ldhl	sp,#(14 - 1)
+   062C 4E                 1313 	ld	c, (hl)
+   062D 23                 1314 	inc	hl
+   062E 46                 1315 	ld	b, (hl)
+   062F 03                 1316 	inc	bc
+   0630 03                 1317 	inc	bc
+   0631 03                 1318 	inc	bc
+                           1319 ;SpritePlayer.c:236: archer_data->ups += 1;
+   0632 0A                 1320 	ld	a, (bc)
+   0633 3C                 1321 	inc	a
+   0634 02                 1322 	ld	(bc), a
+                           1323 ;SpritePlayer.c:237: SpriteManagerRemoveSprite(ispr);
+   0635 E1                 1324 	pop	hl
+   0636 E5                 1325 	push	hl
+   0637 E5                 1326 	push	hl
+   0638 CDr00r00           1327 	call	_SpriteManagerRemoveSprite
+   063B E8 02              1328 	add	sp, #2
+                           1329 ;SpritePlayer.c:238: break;
+   063D C3rB3r06           1330 	jp	00208$
+                           1331 ;SpritePlayer.c:239: case 6u: //wrench
+   0640                    1332 00195$:
+                           1333 ;SpritePlayer.c:240: if (archer_data->tool == 0){
+   0640 F8 0D              1334 	ldhl	sp,#(14 - 1)
+   0642 5E                 1335 	ld	e, (hl)
+   0643 23                 1336 	inc	hl
+   0644 56                 1337 	ld	d, (hl)
+   0645 21 04 00           1338 	ld	hl, #0x0004
+   0648 19                 1339 	add	hl, de
+   0649 4D                 1340 	ld	c, l
+   064A 44                 1341 	ld	b, h
+   064B 0A                 1342 	ld	a, (bc)
+   064C B7                 1343 	or	a, a
+   064D C2rB3r06           1344 	jp	NZ, 00208$
+                           1345 ;SpritePlayer.c:241: archer_data->tool = 6;
+   0650 3E 06              1346 	ld	a, #0x06
+   0652 02                 1347 	ld	(bc), a
+                           1348 ;SpritePlayer.c:242: SpriteManagerRemoveSprite(ispr);	
+   0653 E1                 1349 	pop	hl
+   0654 E5                 1350 	push	hl
+   0655 E5                 1351 	push	hl
+   0656 CDr00r00           1352 	call	_SpriteManagerRemoveSprite
+   0659 E8 02              1353 	add	sp, #2
+                           1354 ;SpritePlayer.c:244: break;
+   065B C3rB3r06           1355 	jp	00208$
+                           1356 ;SpritePlayer.c:245: case 7u: //dcoin
+   065E                    1357 00198$:
+                           1358 ;SpritePlayer.c:246: archer_data->coins+=10;
+   065E F8 0F              1359 	ldhl	sp,#(16 - 1)
+   0660 5E                 1360 	ld	e, (hl)
+   0661 23                 1361 	inc	hl
+   0662 56                 1362 	ld	d, (hl)
+   0663 1A                 1363 	ld	a,(de)
+   0664 C6 0A              1364 	add	a, #0x0a
+   0666 4F                 1365 	ld	c, a
+   0667 2B                 1366 	dec	hl
+   0668 2A                 1367 	ld	a, (hl+)
+   0669 66                 1368 	ld	h, (hl)
+   066A 6F                 1369 	ld	l, a
+   066B 71                 1370 	ld	(hl), c
+                           1371 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   066C 21r0Er00           1372 	ld	hl, #_archer_data + 1
+   066F 2B                 1373 	dec	hl
+   0670 4E                 1374 	ld	c, (hl)
+   0671 23                 1375 	inc	hl
+   0672 46                 1376 	ld	b, (hl)
+                           1377 ;SpritePlayer.c:223: archer_data->coins++;
+   0673 03                 1378 	inc	bc
+   0674 0A                 1379 	ld	a, (bc)
+                           1380 ;SpritePlayer.c:247: if (archer_data->coins >= 100){
+   0675 FE 64              1381 	cp	a, #0x64
+   0677 38 0D              1382 	jr	C,00200$
+                           1383 ;SpritePlayer.c:248: archer_data->coins = archer_data->coins - 100;
+   0679 C6 9C              1384 	add	a, #0x9c
+   067B 02                 1385 	ld	(bc), a
+                           1386 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   067C 2B                 1387 	dec	hl
+   067D 4E                 1388 	ld	c, (hl)
+   067E 23                 1389 	inc	hl
+   067F 46                 1390 	ld	b, (hl)
+                           1391 ;SpritePlayer.c:95: archer_data->ups -= 1;
+   0680 03                 1392 	inc	bc
+   0681 03                 1393 	inc	bc
+   0682 03                 1394 	inc	bc
+                           1395 ;SpritePlayer.c:249: archer_data->ups += 1;	
+   0683 0A                 1396 	ld	a, (bc)
+   0684 3C                 1397 	inc	a
+   0685 02                 1398 	ld	(bc), a
+   0686                    1399 00200$:
+                           1400 ;SpritePlayer.c:251: PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);
+   0686 21 C7 00           1401 	ld	hl, #0x00c7
+   0689 E5                 1402 	push	hl
+   068A 2E FF              1403 	ld	l, #0xff
+   068C E5                 1404 	push	hl
+   068D 2E 73              1405 	ld	l, #0x73
+   068F E5                 1406 	push	hl
+   0690 2E 8C              1407 	ld	l, #0x8c
+   0692 E5                 1408 	push	hl
+   0693 2E 6D              1409 	ld	l, #0x6d
+   0695 E5                 1410 	push	hl
+   0696 3E 03              1411 	ld	a, #0x03
+   0698 F5                 1412 	push	af
+   0699 33                 1413 	inc	sp
+   069A AF                 1414 	xor	a, a
+   069B F5                 1415 	push	af
+   069C 33                 1416 	inc	sp
+   069D CDr00r00           1417 	call	_PlayFx
+   06A0 E8 0C              1418 	add	sp, #12
+                           1419 ;SpritePlayer.c:252: SpriteManagerRemoveSprite(ispr);
+   06A2 E1                 1420 	pop	hl
+   06A3 E5                 1421 	push	hl
+   06A4 E5                 1422 	push	hl
+   06A5 CDr00r00           1423 	call	_SpriteManagerRemoveSprite
+   06A8 E8 02              1424 	add	sp, #2
+                           1425 ;SpritePlayer.c:253: break;
+   06AA 18 07              1426 	jr	00208$
+                           1427 ;SpritePlayer.c:254: case 10u: //scrigno
+   06AC                    1428 00201$:
+                           1429 ;SpritePlayer.c:255: dataitem->collided = 1;
+   06AC F8 0B              1430 	ldhl	sp,	#11
+   06AE 2A                 1431 	ld	a, (hl+)
+   06AF 66                 1432 	ld	h, (hl)
+   06B0 6F                 1433 	ld	l, a
+   06B1 36 01              1434 	ld	(hl), #0x01
+                           1435 ;SpritePlayer.c:257: }
+   06B3                    1436 00208$:
+                           1437 ;SpritePlayer.c:261: if(ispr->type == SpritePlatform) {
+   06B3 F8 02              1438 	ldhl	sp,#(3 - 1)
+   06B5 5E                 1439 	ld	e, (hl)
+   06B6 23                 1440 	inc	hl
+   06B7 56                 1441 	ld	d, (hl)
+   06B8 1A                 1442 	ld	a,(de)
+   06B9 4F                 1443 	ld	c, a
+                           1444 ;SpritePlayer.c:269: THIS->y = ispr->y - ispr->coll_h;
+   06BA D1                 1445 	pop	de
+   06BB D5                 1446 	push	de
+   06BC 21 0A 00           1447 	ld	hl, #0x000a
+   06BF 19                 1448 	add	hl, de
+   06C0 7D                 1449 	ld	a, l
+   06C1 54                 1450 	ld	d, h
+   06C2 F8 06              1451 	ldhl	sp,	#6
+   06C4 22                 1452 	ld	(hl+), a
+   06C5 72                 1453 	ld	(hl), d
+                           1454 ;SpritePlayer.c:261: if(ispr->type == SpritePlatform) {
+   06C6 79                 1455 	ld	a, c
+   06C7 D6 02              1456 	sub	a, #0x02
+   06C9 C2r74r07           1457 	jp	NZ,00216$
+                           1458 ;SpritePlayer.c:262: if(CheckCollision(THIS, ispr)) {
+   06CC E1                 1459 	pop	hl
+   06CD E5                 1460 	push	hl
+   06CE E5                 1461 	push	hl
+   06CF 21r00r00           1462 	ld	hl, #_THIS
+   06D2 2A                 1463 	ld	a, (hl+)
+   06D3 66                 1464 	ld	h, (hl)
+   06D4 6F                 1465 	ld	l, a
+   06D5 E5                 1466 	push	hl
+   06D6 CDr00r00           1467 	call	_CheckCollision
+   06D9 E8 04              1468 	add	sp, #4
+   06DB 7B                 1469 	ld	a, e
+   06DC B7                 1470 	or	a, a
+   06DD CAr74r07           1471 	jp	Z, 00216$
+                           1472 ;SpritePlayer.c:263: if (archer_accel_y > 0){//se sono in salita non collido !
+   06E0 21r08r00           1473 	ld	hl, #_archer_accel_y
+   06E3 3E 00              1474 	ld	a, #0x00
+   06E5 96                 1475 	sub	a, (hl)
+   06E6 23                 1476 	inc	hl
+   06E7 3E 00              1477 	ld	a, #0x00
+   06E9 9E                 1478 	sbc	a, (hl)
+   06EA 3E 00              1479 	ld	a, #0x00
+   06EC 57                 1480 	ld	d, a
+   06ED 5E                 1481 	ld	e, (hl)
+   06EE CB 7B              1482 	bit	7, e
+   06F0 28 07              1483 	jr	Z,00753$
+   06F2 CB 7A              1484 	bit	7, d
+   06F4 20 08              1485 	jr	NZ,00754$
+   06F6 BF                 1486 	cp	a, a
+   06F7 18 05              1487 	jr	00754$
+   06F9                    1488 00753$:
+   06F9 CB 7A              1489 	bit	7, d
+   06FB 28 01              1490 	jr	Z,00754$
+   06FD 37                 1491 	scf
+   06FE                    1492 00754$:
+   06FE D2r74r07           1493 	jp	NC, 00216$
+                           1494 ;SpritePlayer.c:264: archer_accel_y = 0;
+   0701 21r08r00           1495 	ld	hl, #_archer_accel_y
+   0704 36 00              1496 	ld	(hl), #0x00
+   0706 23                 1497 	inc	hl
+   0707 36 00              1498 	ld	(hl), #0x00
+                           1499 ;SpritePlayer.c:265: struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
+   0709 F8 04              1500 	ldhl	sp,#(5 - 1)
+   070B 4E                 1501 	ld	c, (hl)
+   070C 23                 1502 	inc	hl
+   070D 46                 1503 	ld	b, (hl)
+                           1504 ;SpritePlayer.c:266: platform_vx = datap->vx;
+   070E 03                 1505 	inc	bc
+   070F 03                 1506 	inc	bc
+   0710 03                 1507 	inc	bc
+   0711 03                 1508 	inc	bc
+   0712 0A                 1509 	ld	a, (bc)
+   0713 21r04r00           1510 	ld	hl, #_platform_vx
+   0716 77                 1511 	ld	(hl), a
+                           1512 ;SpritePlayer.c:267: if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
+   0717 21r07r00           1513 	ld	hl, #_archer_state
+   071A 7E                 1514 	ld	a, (hl)
+   071B D6 01              1515 	sub	a,#0x01
+   071D 3E 00              1516 	ld	a, #0x00
+   071F 17                 1517 	rla
+   0720 EE 01              1518 	xor	a, #0x01
+   0722 4F                 1519 	ld	c, a
+   0723 7E                 1520 	ld	a, (hl)
+   0724 3D                 1521 	dec	a
+   0725 3E 01              1522 	ld	a, #0x01
+   0727 28 01              1523 	jr	Z,00756$
+   0729 AF                 1524 	xor	a, a
+   072A                    1525 00756$:
+   072A EE 01              1526 	xor	a, #0x01
+   072C A1                 1527 	and	a, c
+   072D CB 47              1528 	bit	0, a
+   072F CAr74r07           1529 	jp	Z, 00216$
+                           1530 ;SpritePlayer.c:268: archer_state = STATE_NORMAL_PLATFORM;
+   0732 21r07r00           1531 	ld	hl, #_archer_state
+   0735 36 01              1532 	ld	(hl), #0x01
+                           1533 ;SpritePlayer.c:269: THIS->y = ispr->y - ispr->coll_h;
+   0737 21r01r00           1534 	ld	hl, #_THIS + 1
+   073A 2B                 1535 	dec	hl
+   073B 4E                 1536 	ld	c, (hl)
+   073C 23                 1537 	inc	hl
+   073D 46                 1538 	ld	b, (hl)
+   073E 21 0A 00           1539 	ld	hl, #0x000a
+   0741 09                 1540 	add	hl, bc
+   0742 7D                 1541 	ld	a, l
+   0743 54                 1542 	ld	d, h
+   0744 F8 0D              1543 	ldhl	sp,	#13
+   0746 22                 1544 	ld	(hl+), a
+   0747 72                 1545 	ld	(hl), d
+   0748 F8 06              1546 	ldhl	sp,#(7 - 1)
+   074A 5E                 1547 	ld	e, (hl)
+   074B 23                 1548 	inc	hl
+   074C 56                 1549 	ld	d, (hl)
+   074D 1A                 1550 	ld	a,(de)
+   074E F8 0F              1551 	ldhl	sp,	#15
+   0750 22                 1552 	ld	(hl+), a
+   0751 13                 1553 	inc	de
+   0752 1A                 1554 	ld	a, (de)
+   0753 77                 1555 	ld	(hl), a
+   0754 D1                 1556 	pop	de
+   0755 D5                 1557 	push	de
+   0756 21 10 00           1558 	ld	hl, #0x0010
+   0759 19                 1559 	add	hl, de
+   075A 4D                 1560 	ld	c, l
+   075B 44                 1561 	ld	b, h
+   075C 0A                 1562 	ld	a, (bc)
+   075D 4F                 1563 	ld	c, a
+   075E 06 00              1564 	ld	b, #0x00
+   0760 F8 0F              1565 	ldhl	sp,#(16 - 1)
+   0762 5E                 1566 	ld	e, (hl)
+   0763 23                 1567 	inc	hl
+   0764 56                 1568 	ld	d, (hl)
+   0765 7B                 1569 	ld	a, e
+   0766 91                 1570 	sub	a, c
+   0767 5F                 1571 	ld	e, a
+   0768 7A                 1572 	ld	a, d
+   0769 98                 1573 	sbc	a, b
+   076A 47                 1574 	ld	b, a
+   076B 4B                 1575 	ld	c, e
+   076C F8 0D              1576 	ldhl	sp,	#13
+   076E 2A                 1577 	ld	a, (hl+)
+   076F 66                 1578 	ld	h, (hl)
+   0770 6F                 1579 	ld	l, a
+   0771 71                 1580 	ld	(hl), c
+   0772 23                 1581 	inc	hl
+   0773 70                 1582 	ld	(hl), b
+   0774                    1583 00216$:
+                           1584 ;SpritePlayer.c:274: if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine) { //collision con l' enemy
+   0774 F8 02              1585 	ldhl	sp,#(3 - 1)
+   0776 5E                 1586 	ld	e, (hl)
+   0777 23                 1587 	inc	hl
+   0778 56                 1588 	ld	d, (hl)
+   0779 1A                 1589 	ld	a,(de)
+   077A FE 04              1590 	cp	a, #0x04
+   077C 28 09              1591 	jr	Z,00237$
+   077E FE 05              1592 	cp	a, #0x05
+   0780 28 05              1593 	jr	Z,00237$
+   0782 D6 06              1594 	sub	a, #0x06
+   0784 C2rF3r08           1595 	jp	NZ,00238$
+   0787                    1596 00237$:
+                           1597 ;SpritePlayer.c:275: if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
+   0787 E1                 1598 	pop	hl
+   0788 E5                 1599 	push	hl
+   0789 E5                 1600 	push	hl
+   078A 21r00r00           1601 	ld	hl, #_THIS
+   078D 2A                 1602 	ld	a, (hl+)
+   078E 66                 1603 	ld	h, (hl)
+   078F 6F                 1604 	ld	l, a
+   0790 E5                 1605 	push	hl
+   0791 CDr00r00           1606 	call	_CheckCollision
+   0794 E8 04              1607 	add	sp, #4
+   0796 21r07r00           1608 	ld	hl, #_archer_state
+   0799 7E                 1609 	ld	a, (hl)
+   079A D6 04              1610 	sub	a, #0x04
+   079C 3E 01              1611 	ld	a, #0x01
+   079E 28 01              1612 	jr	Z,00762$
+   07A0 AF                 1613 	xor	a, a
+   07A1                    1614 00762$:
+   07A1 EE 01              1615 	xor	a, #0x01
+   07A3 A3                 1616 	and	a,e
+   07A4 CArF3r08           1617 	jp	Z, 00238$
+                           1618 ;SpritePlayer.c:276: struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
+   07A7 F8 04              1619 	ldhl	sp,	#4
+   07A9 2A                 1620 	ld	a, (hl+)
+   07AA 5E                 1621 	ld	e, (hl)
+   07AB F8 08              1622 	ldhl	sp,	#8
+   07AD 22                 1623 	ld	(hl+), a
+   07AE 73                 1624 	ld	(hl), e
+                           1625 ;SpritePlayer.c:277: if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
+   07AF 2B                 1626 	dec	hl
+   07B0 4E                 1627 	ld	c, (hl)
+   07B1 23                 1628 	inc	hl
+   07B2 46                 1629 	ld	b, (hl)
+   07B3 03                 1630 	inc	bc
+   07B4 03                 1631 	inc	bc
+   07B5 0A                 1632 	ld	a, (bc)
+   07B6 D6 03              1633 	sub	a, #0x03
+   07B8 CAr96r0A           1634 	jp	Z,00261$
+   07BB 18 03              1635 	jr	00218$
+                           1636 ;SpritePlayer.c:278: return;
+   07BD C3r96r0A           1637 	jp	00261$
+   07C0                    1638 00218$:
+                           1639 ;SpritePlayer.c:280: UINT8 being_hit = 1;
+   07C0 F8 0A              1640 	ldhl	sp,	#10
+   07C2 36 01              1641 	ld	(hl), #0x01
+                           1642 ;SpritePlayer.c:281: if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
+   07C4 21r00r00           1643 	ld	hl, #_keys
+   07C7 4E                 1644 	ld	c, (hl)
+                           1645 ;SpritePlayer.c:282: if (ispr->x < THIS->x){
+   07C8 D1                 1646 	pop	de
+   07C9 D5                 1647 	push	de
+   07CA 21 08 00           1648 	ld	hl, #0x0008
+   07CD 19                 1649 	add	hl, de
+   07CE 7D                 1650 	ld	a, l
+   07CF 54                 1651 	ld	d, h
+   07D0 F8 0B              1652 	ldhl	sp,	#11
+   07D2 22                 1653 	ld	(hl+), a
+   07D3 72                 1654 	ld	(hl), d
+                           1655 ;SpritePlayer.c:281: if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
+   07D4 CB 59              1656 	bit	3, c
+   07D6 CAr56r08           1657 	jp	Z,00227$
+                           1658 ;SpritePlayer.c:282: if (ispr->x < THIS->x){
+   07D9 F8 0B              1659 	ldhl	sp,#(12 - 1)
+   07DB 5E                 1660 	ld	e, (hl)
+   07DC 23                 1661 	inc	hl
+   07DD 56                 1662 	ld	d, (hl)
+   07DE 1A                 1663 	ld	a,(de)
+   07DF 23                 1664 	inc	hl
+   07E0 22                 1665 	ld	(hl+), a
+   07E1 13                 1666 	inc	de
+   07E2 1A                 1667 	ld	a, (de)
+   07E3 77                 1668 	ld	(hl), a
+                           1669 ;SpritePlayer.c:126: THIS->coll_x = 8;
+   07E4 21r01r00           1670 	ld	hl, #_THIS + 1
+   07E7 2B                 1671 	dec	hl
+   07E8 4E                 1672 	ld	c, (hl)
+   07E9 23                 1673 	inc	hl
+   07EA 46                 1674 	ld	b, (hl)
+                           1675 ;SpritePlayer.c:282: if (ispr->x < THIS->x){
+   07EB 21 08 00           1676 	ld	hl, #0x0008
+   07EE 09                 1677 	add	hl, bc
+   07EF 7D                 1678 	ld	a, l
+   07F0 54                 1679 	ld	d, h
+   07F1 F8 0F              1680 	ldhl	sp,	#15
+   07F3 22                 1681 	ld	(hl+), a
+   07F4 72                 1682 	ld	(hl), d
+   07F5 2B                 1683 	dec	hl
+   07F6 5E                 1684 	ld	e, (hl)
+   07F7 23                 1685 	inc	hl
+   07F8 56                 1686 	ld	d, (hl)
+   07F9 1A                 1687 	ld	a,(de)
+   07FA 2B                 1688 	dec	hl
+   07FB 22                 1689 	ld	(hl+), a
+   07FC 13                 1690 	inc	de
+   07FD 1A                 1691 	ld	a, (de)
+   07FE 77                 1692 	ld	(hl), a
+                           1693 ;SpritePlayer.c:283: if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
+   07FF 21 0C 00           1694 	ld	hl, #0x000c
+   0802 09                 1695 	add	hl, bc
+   0803 4D                 1696 	ld	c, l
+   0804 44                 1697 	ld	b, h
+   0805 0A                 1698 	ld	a, (bc)
+   0806 E6 20              1699 	and	a, #0x20
+   0808 4F                 1700 	ld	c, a
+   0809 06 00              1701 	ld	b, #0x00
+                           1702 ;SpritePlayer.c:282: if (ispr->x < THIS->x){
+   080B F8 0D              1703 	ldhl	sp,	#13
+   080D 5D                 1704 	ld	e, l
+   080E 54                 1705 	ld	d, h
+   080F F8 0F              1706 	ldhl	sp,	#15
+   0811 1A                 1707 	ld	a, (de)
+   0812 96                 1708 	sub	a, (hl)
+   0813 23                 1709 	inc	hl
+   0814 13                 1710 	inc	de
+   0815 1A                 1711 	ld	a, (de)
+   0816 9E                 1712 	sbc	a, (hl)
+   0817 30 22              1713 	jr	NC,00224$
+                           1714 ;SpritePlayer.c:283: if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
+   0819 78                 1715 	ld	a, b
+   081A B1                 1716 	or	a, c
+   081B CAr56r08           1717 	jp	Z, 00227$
+                           1718 ;SpritePlayer.c:284: ispr->x -= 16;
+   081E F8 0D              1719 	ldhl	sp,#(14 - 1)
+   0820 5E                 1720 	ld	e, (hl)
+   0821 23                 1721 	inc	hl
+   0822 56                 1722 	ld	d, (hl)
+   0823 21 10 00           1723 	ld	hl, #0x0010
+   0826 7B                 1724 	ld	a, e
+   0827 95                 1725 	sub	a, l
+   0828 5F                 1726 	ld	e, a
+   0829 7A                 1727 	ld	a, d
+   082A 9C                 1728 	sbc	a, h
+   082B 47                 1729 	ld	b, a
+   082C 4B                 1730 	ld	c, e
+   082D F8 0B              1731 	ldhl	sp,	#11
+   082F 2A                 1732 	ld	a, (hl+)
+   0830 66                 1733 	ld	h, (hl)
+   0831 6F                 1734 	ld	l, a
+   0832 71                 1735 	ld	(hl), c
+   0833 23                 1736 	inc	hl
+   0834 70                 1737 	ld	(hl), b
+                           1738 ;SpritePlayer.c:285: being_hit = 0;
+   0835 AF                 1739 	xor	a, a
+   0836 F8 0A              1740 	ldhl	sp,	#10
+   0838 77                 1741 	ld	(hl), a
+   0839 18 1B              1742 	jr	00227$
+   083B                    1743 00224$:
+                           1744 ;SpritePlayer.c:288: if (!SPRITE_GET_VMIRROR(THIS)){
+   083B 78                 1745 	ld	a, b
+   083C B1                 1746 	or	a, c
+   083D 20 17              1747 	jr	NZ,00227$
+                           1748 ;SpritePlayer.c:289: ispr->x += 16;
+   083F F8 0D              1749 	ldhl	sp,#(14 - 1)
+   0841 5E                 1750 	ld	e, (hl)
+   0842 23                 1751 	inc	hl
+   0843 56                 1752 	ld	d, (hl)
+   0844 21 10 00           1753 	ld	hl, #0x0010
+   0847 19                 1754 	add	hl, de
+   0848 4D                 1755 	ld	c, l
+   0849 44                 1756 	ld	b, h
+   084A F8 0B              1757 	ldhl	sp,	#11
+   084C 2A                 1758 	ld	a, (hl+)
+   084D 66                 1759 	ld	h, (hl)
+   084E 6F                 1760 	ld	l, a
+   084F 71                 1761 	ld	(hl), c
+   0850 23                 1762 	inc	hl
+   0851 70                 1763 	ld	(hl), b
+                           1764 ;SpritePlayer.c:290: being_hit = 0;
+   0852 AF                 1765 	xor	a, a
+   0853 F8 0A              1766 	ldhl	sp,	#10
+   0855 77                 1767 	ld	(hl), a
+   0856                    1768 00227$:
+                           1769 ;SpritePlayer.c:294: if (being_hit & archer_state != STATE_DEAD){
+   0856 21r07r00           1770 	ld	hl, #_archer_state
+   0859 7E                 1771 	ld	a, (hl)
+   085A D6 05              1772 	sub	a, #0x05
+   085C 3E 01              1773 	ld	a, #0x01
+   085E 28 01              1774 	jr	Z,00767$
+   0860 AF                 1775 	xor	a, a
+   0861                    1776 00767$:
+   0861 EE 01              1777 	xor	a, #0x01
+   0863 F8 0A              1778 	ldhl	sp,	#10
+   0865 4E                 1779 	ld	c, (hl)
+   0866 A1                 1780 	and	a,c
+   0867 CArF3r08           1781 	jp	Z, 00238$
+                           1782 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   086A 21r0Er00           1783 	ld	hl, #_archer_data + 1
+   086D 2B                 1784 	dec	hl
+   086E 4E                 1785 	ld	c, (hl)
+   086F 23                 1786 	inc	hl
+   0870 46                 1787 	ld	b, (hl)
+                           1788 ;SpritePlayer.c:232: archer_data->hp = 100u;
+   0871 03                 1789 	inc	bc
+   0872 03                 1790 	inc	bc
+   0873 F8 0F              1791 	ldhl	sp,	#15
+   0875 71                 1792 	ld	(hl), c
+   0876 23                 1793 	inc	hl
+   0877 70                 1794 	ld	(hl), b
+                           1795 ;SpritePlayer.c:295: archer_data->hp -=  dataenemy->enemydamage;
+   0878 2B                 1796 	dec	hl
+   0879 5E                 1797 	ld	e, (hl)
+   087A 23                 1798 	inc	hl
+   087B 56                 1799 	ld	d, (hl)
+   087C 1A                 1800 	ld	a,(de)
+   087D 4F                 1801 	ld	c, a
+   087E F8 08              1802 	ldhl	sp,#(9 - 1)
+   0880 5E                 1803 	ld	e, (hl)
+   0881 23                 1804 	inc	hl
+   0882 56                 1805 	ld	d, (hl)
+   0883 21 06 00           1806 	ld	hl, #0x0006
+   0886 19                 1807 	add	hl, de
+   0887 45                 1808 	ld	b,l
+   0888 7C                 1809 	ld	a,h
+   0889 46                 1810 	ld	b, (hl)
+   088A 79                 1811 	ld	a, c
+   088B 90                 1812 	sub	a, b
+   088C 4F                 1813 	ld	c, a
+   088D F8 0F              1814 	ldhl	sp,	#15
+   088F 2A                 1815 	ld	a, (hl+)
+   0890 66                 1816 	ld	h, (hl)
+   0891 6F                 1817 	ld	l, a
+   0892 71                 1818 	ld	(hl), c
+                           1819 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   0893 21r0Er00           1820 	ld	hl, #_archer_data + 1
+   0896 2B                 1821 	dec	hl
+   0897 4E                 1822 	ld	c, (hl)
+   0898 23                 1823 	inc	hl
+   0899 46                 1824 	ld	b, (hl)
+                           1825 ;SpritePlayer.c:232: archer_data->hp = 100u;
+   089A 03                 1826 	inc	bc
+   089B 03                 1827 	inc	bc
+                           1828 ;SpritePlayer.c:296: if (archer_data->hp <= 0){
+   089C 0A                 1829 	ld	a, (bc)
+   089D F8 10              1830 	ldhl	sp,	#16
+   089F 77                 1831 	ld	(hl),a
+   08A0 5F                 1832 	ld	e, a
+   08A1 3E 00              1833 	ld	a, #0x00
+   08A3 57                 1834 	ld	d, a
+   08A4 AF                 1835 	xor	a, a
+   08A5 96                 1836 	sub	a, (hl)
+   08A6 CB 7B              1837 	bit	7, e
+   08A8 28 07              1838 	jr	Z,00768$
+   08AA CB 7A              1839 	bit	7, d
+   08AC 20 08              1840 	jr	NZ,00769$
+   08AE BF                 1841 	cp	a, a
+   08AF 18 05              1842 	jr	00769$
+   08B1                    1843 00768$:
+   08B1 CB 7A              1844 	bit	7, d
+   08B3 28 01              1845 	jr	Z,00769$
+   08B5 37                 1846 	scf
+   08B6                    1847 00769$:
+   08B6 38 05              1848 	jr	C,00229$
+                           1849 ;SpritePlayer.c:297: archer_data->hp = 0;
+   08B8 AF                 1850 	xor	a, a
+   08B9 02                 1851 	ld	(bc), a
+                           1852 ;SpritePlayer.c:298: Die();
+   08BA CDr99r0A           1853 	call	_Die
+   08BD                    1854 00229$:
+                           1855 ;SpritePlayer.c:300: Hit();
+   08BD CDrCDr0D           1856 	call	_Hit
+                           1857 ;SpritePlayer.c:301: if (ispr->x < THIS->x){
+   08C0 F8 0B              1858 	ldhl	sp,#(12 - 1)
+   08C2 5E                 1859 	ld	e, (hl)
+   08C3 23                 1860 	inc	hl
+   08C4 56                 1861 	ld	d, (hl)
+   08C5 1A                 1862 	ld	a,(de)
+   08C6 F8 0F              1863 	ldhl	sp,	#15
+   08C8 22                 1864 	ld	(hl+), a
+   08C9 13                 1865 	inc	de
+   08CA 1A                 1866 	ld	a, (de)
+   08CB 77                 1867 	ld	(hl), a
+   08CC 21r00r00           1868 	ld	hl, #_THIS
+   08CF 46                 1869 	ld	b, (hl)
+   08D0 23                 1870 	inc	hl
+   08D1 4E                 1871 	ld	c, (hl)
+   08D2 78                 1872 	ld	a, b
+   08D3 C6 08              1873 	add	a, #0x08
+   08D5 47                 1874 	ld	b, a
+   08D6 30 01              1875 	jr	NC,00770$
+   08D8 0C                 1876 	inc	c
+   08D9                    1877 00770$:
+   08D9 68                 1878 	ld	l, b
+   08DA 61                 1879 	ld	h, c
+   08DB 4E                 1880 	ld	c, (hl)
+   08DC 23                 1881 	inc	hl
+   08DD 46                 1882 	ld	b, (hl)
+   08DE F8 0F              1883 	ldhl	sp,	#15
+   08E0 7E                 1884 	ld	a, (hl)
+   08E1 91                 1885 	sub	a, c
+   08E2 23                 1886 	inc	hl
+   08E3 7E                 1887 	ld	a, (hl)
+   08E4 98                 1888 	sbc	a, b
+   08E5 30 07              1889 	jr	NC,00231$
+                           1890 ;SpritePlayer.c:302: platform_vx = 1;
+   08E7 21r04r00           1891 	ld	hl, #_platform_vx
+   08EA 36 01              1892 	ld	(hl), #0x01
+   08EC 18 05              1893 	jr	00238$
+   08EE                    1894 00231$:
+                           1895 ;SpritePlayer.c:304: platform_vx = -1;
+   08EE 21r04r00           1896 	ld	hl, #_platform_vx
+   08F1 36 FF              1897 	ld	(hl), #0xff
+   08F3                    1898 00238$:
+                           1899 ;SpritePlayer.c:309: if(ispr->type == SpriteArrow) {
+   08F3 F8 02              1900 	ldhl	sp,#(3 - 1)
+   08F5 5E                 1901 	ld	e, (hl)
+   08F6 23                 1902 	inc	hl
+   08F7 56                 1903 	ld	d, (hl)
+   08F8 1A                 1904 	ld	a,(de)
+   08F9 3D                 1905 	dec	a
+   08FA C2r70r0A           1906 	jp	NZ,00260$
+                           1907 ;SpritePlayer.c:310: if(CheckCollision(THIS, ispr)) {
+   08FD E1                 1908 	pop	hl
+   08FE E5                 1909 	push	hl
+   08FF E5                 1910 	push	hl
+   0900 21r00r00           1911 	ld	hl, #_THIS
+   0903 2A                 1912 	ld	a, (hl+)
+   0904 66                 1913 	ld	h, (hl)
+   0905 6F                 1914 	ld	l, a
+   0906 E5                 1915 	push	hl
+   0907 CDr00r00           1916 	call	_CheckCollision
+   090A E8 04              1917 	add	sp, #4
+   090C 7B                 1918 	ld	a, e
+   090D B7                 1919 	or	a, a
+   090E CAr70r0A           1920 	jp	Z, 00260$
+                           1921 ;SpritePlayer.c:311: struct ArrowInfo* arrowdata = (struct ArrowInfo*)ispr->custom_data;
+   0911 F8 04              1922 	ldhl	sp,	#4
+   0913 2A                 1923 	ld	a, (hl+)
+   0914 5E                 1924 	ld	e, (hl)
+   0915 F8 0F              1925 	ldhl	sp,	#15
+   0917 22                 1926 	ld	(hl+), a
+   0918 73                 1927 	ld	(hl), e
+                           1928 ;SpritePlayer.c:312: if (arrowdata->type == 6u){ //spine from porcupine
+   0919 2B                 1929 	dec	hl
+   091A 4E                 1930 	ld	c, (hl)
+   091B 23                 1931 	inc	hl
+   091C 46                 1932 	ld	b, (hl)
+   091D 69                 1933 	ld	l, c
+   091E 60                 1934 	ld	h, b
+   091F 7E                 1935 	ld	a, (hl)
+   0920 E6 0F              1936 	and	a, #0x0f
+   0922 D6 06              1937 	sub	a, #0x06
+   0924 C2r90r09           1938 	jp	NZ,00246$
+                           1939 ;SpritePlayer.c:313: if(!KEY_PRESSED(J_DOWN)){
+   0927 21r00r00           1940 	ld	hl, #_keys
+   092A 7E                 1941 	ld	a, (hl)
+   092B CB 5F              1942 	bit	3, a
+   092D C2r85r09           1943 	jp	NZ,00244$
+                           1944 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   0930 21r0Er00           1945 	ld	hl, #_archer_data + 1
+   0933 2B                 1946 	dec	hl
+   0934 4E                 1947 	ld	c, (hl)
+   0935 23                 1948 	inc	hl
+   0936 46                 1949 	ld	b, (hl)
+                           1950 ;SpritePlayer.c:232: archer_data->hp = 100u;
+   0937 03                 1951 	inc	bc
+   0938 03                 1952 	inc	bc
+   0939 F8 0D              1953 	ldhl	sp,	#13
+   093B 71                 1954 	ld	(hl), c
+   093C 23                 1955 	inc	hl
+   093D 70                 1956 	ld	(hl), b
+                           1957 ;SpritePlayer.c:314: archer_data->hp -=  arrowdata->arrowdamage;
+   093E 2B                 1958 	dec	hl
+   093F 5E                 1959 	ld	e, (hl)
+   0940 23                 1960 	inc	hl
+   0941 56                 1961 	ld	d, (hl)
+   0942 1A                 1962 	ld	a,(de)
+   0943 4F                 1963 	ld	c, a
+   0944 23                 1964 	inc	hl
+   0945 5E                 1965 	ld	e, (hl)
+   0946 23                 1966 	inc	hl
+   0947 56                 1967 	ld	d, (hl)
+   0948 21 04 00           1968 	ld	hl, #0x0004
+   094B 19                 1969 	add	hl, de
+   094C 45                 1970 	ld	b,l
+   094D 7C                 1971 	ld	a,h
+   094E 46                 1972 	ld	b, (hl)
+   094F 79                 1973 	ld	a, c
+   0950 90                 1974 	sub	a, b
+   0951 4F                 1975 	ld	c, a
+   0952 F8 0D              1976 	ldhl	sp,	#13
+   0954 2A                 1977 	ld	a, (hl+)
+   0955 66                 1978 	ld	h, (hl)
+   0956 6F                 1979 	ld	l, a
+   0957 71                 1980 	ld	(hl), c
+                           1981 ;SpritePlayer.c:86: archer_data->amulet += 1u;
+   0958 21r0Er00           1982 	ld	hl, #_archer_data + 1
+   095B 2B                 1983 	dec	hl
+   095C 4E                 1984 	ld	c, (hl)
+   095D 23                 1985 	inc	hl
+   095E 46                 1986 	ld	b, (hl)
+                           1987 ;SpritePlayer.c:232: archer_data->hp = 100u;
+   095F 03                 1988 	inc	bc
+   0960 03                 1989 	inc	bc
+                           1990 ;SpritePlayer.c:315: if (archer_data->hp <= 0){
+   0961 0A                 1991 	ld	a, (bc)
+   0962 F8 11              1992 	ldhl	sp,	#17
+   0964 77                 1993 	ld	(hl),a
+   0965 5F                 1994 	ld	e, a
+   0966 3E 00              1995 	ld	a, #0x00
+   0968 57                 1996 	ld	d, a
+   0969 AF                 1997 	xor	a, a
+   096A 96                 1998 	sub	a, (hl)
+   096B CB 7B              1999 	bit	7, e
+   096D 28 07              2000 	jr	Z,00777$
+   096F CB 7A              2001 	bit	7, d
+   0971 20 08              2002 	jr	NZ,00778$
+   0973 BF                 2003 	cp	a, a
+   0974 18 05              2004 	jr	00778$
+   0976                    2005 00777$:
+   0976 CB 7A              2006 	bit	7, d
+   0978 28 01              2007 	jr	Z,00778$
+   097A 37                 2008 	scf
+   097B                    2009 00778$:
+   097B 38 05              2010 	jr	C,00242$
+                           2011 ;SpritePlayer.c:316: archer_data->hp = 0;
+   097D AF                 2012 	xor	a, a
+   097E 02                 2013 	ld	(bc), a
+                           2014 ;SpritePlayer.c:317: Die();
+   097F CDr99r0A           2015 	call	_Die
+   0982                    2016 00242$:
+                           2017 ;SpritePlayer.c:319: Hit();
+   0982 CDrCDr0D           2018 	call	_Hit
+   0985                    2019 00244$:
+                           2020 ;SpritePlayer.c:321: SpriteManagerRemoveSprite(ispr);
+   0985 E1                 2021 	pop	hl
+   0986 E5                 2022 	push	hl
+   0987 E5                 2023 	push	hl
+   0988 CDr00r00           2024 	call	_SpriteManagerRemoveSprite
+   098B E8 02              2025 	add	sp, #2
+                           2026 ;SpritePlayer.c:322: return;
+   098D C3r96r0A           2027 	jp	00261$
+   0990                    2028 00246$:
+                           2029 ;SpritePlayer.c:324: struct ArrowInfo* datap = (struct ArrowInfo*)ispr->custom_data;
+   0990 F8 04              2030 	ldhl	sp,#(5 - 1)
+   0992 4E                 2031 	ld	c, (hl)
+   0993 23                 2032 	inc	hl
+   0994 46                 2033 	ld	b, (hl)
+   0995 F8 0C              2034 	ldhl	sp,	#12
+   0997 71                 2035 	ld	(hl), c
+   0998 23                 2036 	inc	hl
+   0999 70                 2037 	ld	(hl), b
+                           2038 ;SpritePlayer.c:325: if (datap->arrowdir != 1){return;}//guardo solo se è orizzontale
+   099A 2B                 2039 	dec	hl
+   099B 4E                 2040 	ld	c, (hl)
+   099C 23                 2041 	inc	hl
+   099D 46                 2042 	ld	b, (hl)
+   099E 03                 2043 	inc	bc
+   099F 03                 2044 	inc	bc
+   09A0 03                 2045 	inc	bc
+   09A1 0A                 2046 	ld	a, (bc)
+   09A2 3D                 2047 	dec	a
+   09A3 C2r96r0A           2048 	jp	NZ,00261$
+                           2049 ;SpritePlayer.c:326: if (archer_accel_y > 0 & THIS->y < (ispr->y-4)){//se sono in salita non collido !
+   09A6 21r08r00           2050 	ld	hl, #_archer_accel_y
+   09A9 3E 00              2051 	ld	a, #0x00
+   09AB 96                 2052 	sub	a, (hl)
+   09AC 23                 2053 	inc	hl
+   09AD 3E 00              2054 	ld	a, #0x00
+   09AF 9E                 2055 	sbc	a, (hl)
+   09B0 3E 00              2056 	ld	a, #0x00
+   09B2 57                 2057 	ld	d, a
+   09B3 5E                 2058 	ld	e, (hl)
+   09B4 CB 7B              2059 	bit	7, e
+   09B6 28 07              2060 	jr	Z,00780$
+   09B8 CB 7A              2061 	bit	7, d
+   09BA 20 08              2062 	jr	NZ,00781$
+   09BC BF                 2063 	cp	a, a
+   09BD 18 05              2064 	jr	00781$
+   09BF                    2065 00780$:
+   09BF CB 7A              2066 	bit	7, d
+   09C1 28 01              2067 	jr	Z,00781$
+   09C3 37                 2068 	scf
+   09C4                    2069 00781$:
+   09C4 3E 00              2070 	ld	a, #0x00
+   09C6 17                 2071 	rla
+   09C7 F8 0E              2072 	ldhl	sp,	#14
+   09C9 77                 2073 	ld	(hl), a
+   09CA 21r00r00           2074 	ld	hl, #_THIS
+   09CD 46                 2075 	ld	b, (hl)
+   09CE 23                 2076 	inc	hl
+   09CF 4E                 2077 	ld	c, (hl)
+   09D0 78                 2078 	ld	a, b
+   09D1 C6 0A              2079 	add	a, #0x0a
+   09D3 47                 2080 	ld	b, a
+   09D4 30 01              2081 	jr	NC,00782$
+   09D6 0C                 2082 	inc	c
+   09D7                    2083 00782$:
+   09D7 58                 2084 	ld	e, b
+   09D8 51                 2085 	ld	d, c
+   09D9 1A                 2086 	ld	a,(de)
+   09DA F8 0F              2087 	ldhl	sp,	#15
+   09DC 22                 2088 	ld	(hl+), a
+   09DD 13                 2089 	inc	de
+   09DE 1A                 2090 	ld	a, (de)
+   09DF 77                 2091 	ld	(hl), a
+   09E0 F8 06              2092 	ldhl	sp,#(7 - 1)
+   09E2 5E                 2093 	ld	e, (hl)
+   09E3 23                 2094 	inc	hl
+   09E4 56                 2095 	ld	d, (hl)
+   09E5 1A                 2096 	ld	a,(de)
+   09E6 4F                 2097 	ld	c, a
+   09E7 13                 2098 	inc	de
+   09E8 1A                 2099 	ld	a,(de)
+   09E9 47                 2100 	ld	b, a
+   09EA 79                 2101 	ld	a, c
+   09EB C6 FC              2102 	add	a, #0xfc
+   09ED 4F                 2103 	ld	c, a
+   09EE 78                 2104 	ld	a, b
+   09EF CE FF              2105 	adc	a, #0xff
+   09F1 47                 2106 	ld	b, a
+   09F2 F8 0F              2107 	ldhl	sp,	#15
+   09F4 7E                 2108 	ld	a, (hl)
+   09F5 91                 2109 	sub	a, c
+   09F6 23                 2110 	inc	hl
+   09F7 7E                 2111 	ld	a, (hl)
+   09F8 98                 2112 	sbc	a, b
+   09F9 3E 00              2113 	ld	a, #0x00
+   09FB 17                 2114 	rla
+   09FC F8 0E              2115 	ldhl	sp,	#14
+   09FE A6                 2116 	and	a,(hl)
+   09FF CAr70r0A           2117 	jp	Z, 00260$
+                           2118 ;SpritePlayer.c:328: ispr->coll_x = 0;
+   0A02 D1                 2119 	pop	de
+   0A03 D5                 2120 	push	de
+   0A04 21 0D 00           2121 	ld	hl, #0x000d
+   0A07 19                 2122 	add	hl, de
+   0A08 4D                 2123 	ld	c, l
+   0A09 44                 2124 	ld	b, h
+   0A0A AF                 2125 	xor	a, a
+   0A0B 02                 2126 	ld	(bc), a
+                           2127 ;SpritePlayer.c:329: ispr->coll_w = 8;	
+   0A0C D1                 2128 	pop	de
+   0A0D D5                 2129 	push	de
+   0A0E 21 0F 00           2130 	ld	hl, #0x000f
+   0A11 19                 2131 	add	hl, de
+   0A12 4D                 2132 	ld	c,l
+   0A13 7C                 2133 	ld	a,h
+   0A14 36 08              2134 	ld	(hl), #0x08
+                           2135 ;SpritePlayer.c:330: platform_vx = datap->vx;
+   0A16 F8 0C              2136 	ldhl	sp,#(13 - 1)
+   0A18 4E                 2137 	ld	c, (hl)
+   0A19 23                 2138 	inc	hl
+   0A1A 46                 2139 	ld	b, (hl)
+   0A1B 03                 2140 	inc	bc
+   0A1C 69                 2141 	ld	l, c
+   0A1D 60                 2142 	ld	h, b
+   0A1E 7E                 2143 	ld	a, (hl)
+   0A1F E6 0F              2144 	and	a, #0x0f
+   0A21 21r04r00           2145 	ld	hl, #_platform_vx
+   0A24 77                 2146 	ld	(hl), a
+                           2147 ;SpritePlayer.c:331: if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
+   0A25 21r07r00           2148 	ld	hl, #_archer_state
+   0A28 7E                 2149 	ld	a, (hl)
+   0A29 D6 01              2150 	sub	a,#0x01
+   0A2B 3E 00              2151 	ld	a, #0x00
+   0A2D 17                 2152 	rla
+   0A2E EE 01              2153 	xor	a, #0x01
+   0A30 4F                 2154 	ld	c, a
+   0A31 7E                 2155 	ld	a, (hl)
+   0A32 3D                 2156 	dec	a
+   0A33 3E 01              2157 	ld	a, #0x01
+   0A35 28 01              2158 	jr	Z,00784$
+   0A37 AF                 2159 	xor	a, a
+   0A38                    2160 00784$:
+   0A38 EE 01              2161 	xor	a, #0x01
+   0A3A A1                 2162 	and	a, c
+   0A3B CB 47              2163 	bit	0, a
+   0A3D CAr70r0A           2164 	jp	Z, 00260$
+                           2165 ;SpritePlayer.c:332: archer_state = STATE_NORMAL_PLATFORM;
+   0A40 21r07r00           2166 	ld	hl, #_archer_state
+   0A43 36 01              2167 	ld	(hl), #0x01
+                           2168 ;SpritePlayer.c:333: THIS->y = ispr->y - 12;
+   0A45 21r01r00           2169 	ld	hl, #_THIS + 1
+   0A48 2B                 2170 	dec	hl
+   0A49 4E                 2171 	ld	c, (hl)
+   0A4A 23                 2172 	inc	hl
+   0A4B 46                 2173 	ld	b, (hl)
+   0A4C 21 0A 00           2174 	ld	hl, #0x000a
+   0A4F 09                 2175 	add	hl, bc
+   0A50 7D                 2176 	ld	a, l
+   0A51 54                 2177 	ld	d, h
+   0A52 F8 0F              2178 	ldhl	sp,	#15
+   0A54 22                 2179 	ld	(hl+), a
+   0A55 72                 2180 	ld	(hl), d
+   0A56 F8 06              2181 	ldhl	sp,#(7 - 1)
+   0A58 5E                 2182 	ld	e, (hl)
+   0A59 23                 2183 	inc	hl
+   0A5A 56                 2184 	ld	d, (hl)
+   0A5B 1A                 2185 	ld	a,(de)
+   0A5C 4F                 2186 	ld	c, a
+   0A5D 13                 2187 	inc	de
+   0A5E 1A                 2188 	ld	a,(de)
+   0A5F 47                 2189 	ld	b, a
+   0A60 79                 2190 	ld	a, c
+   0A61 C6 F4              2191 	add	a, #0xf4
+   0A63 4F                 2192 	ld	c, a
+   0A64 78                 2193 	ld	a, b
+   0A65 CE FF              2194 	adc	a, #0xff
+   0A67 47                 2195 	ld	b, a
+   0A68 F8 0F              2196 	ldhl	sp,	#15
+   0A6A 2A                 2197 	ld	a, (hl+)
+   0A6B 66                 2198 	ld	h, (hl)
+   0A6C 6F                 2199 	ld	l, a
+   0A6D 71                 2200 	ld	(hl), c
+   0A6E 23                 2201 	inc	hl
+   0A6F 70                 2202 	ld	(hl), b
+   0A70                    2203 00260$:
+                           2204 ;SpritePlayer.c:216: SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
+   0A70 F8 11              2205 	ldhl	sp,	#17
+   0A72 34                 2206 	inc	(hl)
+   0A73 4E                 2207 	ld	c, (hl)
+   0A74 06 00              2208 	ld	b, #0x00
+   0A76 03                 2209 	inc	bc
+   0A77 21r00r00           2210 	ld	hl, #_sprite_manager_updatables
+   0A7A 09                 2211 	add	hl, bc
+   0A7B 4D                 2212 	ld	c,l
+   0A7C 7C                 2213 	ld	a,h
+   0A7D 4E                 2214 	ld	c, (hl)
+   0A7E 06 00              2215 	ld	b, #0x00
+   0A80 CB 21              2216 	sla	c
+   0A82 CB 10              2217 	rl	b
+   0A84 21r00r00           2218 	ld	hl, #_sprite_manager_sprites
+   0A87 09                 2219 	add	hl, bc
+   0A88 4D                 2220 	ld	c, l
+   0A89 44                 2221 	ld	b, h
+   0A8A 59                 2222 	ld	e, c
+   0A8B 50                 2223 	ld	d, b
+   0A8C 1A                 2224 	ld	a,(de)
+   0A8D F8 00              2225 	ldhl	sp,	#0
+   0A8F 22                 2226 	ld	(hl+), a
+   0A90 13                 2227 	inc	de
+   0A91 1A                 2228 	ld	a, (de)
+   0A92 77                 2229 	ld	(hl), a
+   0A93 C3r1Er05           2230 	jp	00259$
+   0A96                    2231 00261$:
+                           2232 ;SpritePlayer.c:340: }
+   0A96 E8 12              2233 	add	sp, #18
+   0A98 C9                 2234 	ret
+                           2235 ;SpritePlayer.c:342: void Die(){
+                           2236 ;	---------------------------------
+                           2237 ; Function Die
+                           2238 ; ---------------------------------
+   0A99                    2239 _Die::
+                           2240 ;SpritePlayer.c:343: SetSpriteAnim(THIS, anim_dead, 12u);	
+   0A99 3E 0C              2241 	ld	a, #0x0c
+   0A9B F5                 2242 	push	af
+   0A9C 33                 2243 	inc	sp
+   0A9D 21r63r00           2244 	ld	hl, #_anim_dead
+   0AA0 E5                 2245 	push	hl
+   0AA1 21r00r00           2246 	ld	hl, #_THIS
+   0AA4 2A                 2247 	ld	a, (hl+)
+   0AA5 66                 2248 	ld	h, (hl)
+   0AA6 6F                 2249 	ld	l, a
+   0AA7 E5                 2250 	push	hl
+   0AA8 CDr00r00           2251 	call	_SetSpriteAnim
+   0AAB E8 05              2252 	add	sp, #5
+                           2253 ;SpritePlayer.c:344: archer_state = STATE_DEAD;
+   0AAD 21r07r00           2254 	ld	hl, #_archer_state
+   0AB0 36 05              2255 	ld	(hl), #0x05
+                           2256 ;SpritePlayer.c:345: }
+   0AB2 C9                 2257 	ret
+                           2258 ;SpritePlayer.c:347: void Shoot() {
+                           2259 ;	---------------------------------
+                           2260 ; Function Shoot
+                           2261 ; ---------------------------------
+   0AB3                    2262 _Shoot::
+   0AB3 E8 FB              2263 	add	sp, #-5
+                           2264 ;SpritePlayer.c:348: SetSpriteAnim(THIS, anim_shoot, 16u);
+   0AB5 3E 10              2265 	ld	a, #0x10
+   0AB7 F5                 2266 	push	af
+   0AB8 33                 2267 	inc	sp
+   0AB9 21r6Fr00           2268 	ld	hl, #_anim_shoot
+   0ABC E5                 2269 	push	hl
+   0ABD 21r00r00           2270 	ld	hl, #_THIS
+   0AC0 2A                 2271 	ld	a, (hl+)
+   0AC1 66                 2272 	ld	h, (hl)
+   0AC2 6F                 2273 	ld	l, a
+   0AC3 E5                 2274 	push	hl
+   0AC4 CDr00r00           2275 	call	_SetSpriteAnim
+   0AC7 E8 05              2276 	add	sp, #5
+                           2277 ;SpritePlayer.c:349: struct Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
+   0AC9 21 00 00           2278 	ld	hl, #0x0000
+   0ACC E5                 2279 	push	hl
+   0ACD 2E 00              2280 	ld	l, #0x00
+   0ACF E5                 2281 	push	hl
+   0AD0 3E 01              2282 	ld	a, #0x01
+   0AD2 F5                 2283 	push	af
+   0AD3 33                 2284 	inc	sp
+   0AD4 CDr00r00           2285 	call	_SpriteManagerAdd
+   0AD7 E8 05              2286 	add	sp, #5
+   0AD9 33                 2287 	inc	sp
+   0ADA 33                 2288 	inc	sp
+   0ADB D5                 2289 	push	de
+                           2290 ;SpritePlayer.c:352: arrow_sprite->flags = THIS->flags;
+   0ADC D1                 2291 	pop	de
+   0ADD D5                 2292 	push	de
+   0ADE 21 0C 00           2293 	ld	hl, #0x000c
+   0AE1 19                 2294 	add	hl, de
+   0AE2 7D                 2295 	ld	a, l
+   0AE3 54                 2296 	ld	d, h
+   0AE4 F8 03              2297 	ldhl	sp,	#3
+   0AE6 22                 2298 	ld	(hl+), a
+   0AE7 72                 2299 	ld	(hl), d
+   0AE8 21r01r00           2300 	ld	hl, #_THIS + 1
+   0AEB 2B                 2301 	dec	hl
+   0AEC 4E                 2302 	ld	c, (hl)
+   0AED 23                 2303 	inc	hl
+   0AEE 46                 2304 	ld	b, (hl)
+   0AEF 21 0C 00           2305 	ld	hl, #0x000c
+   0AF2 09                 2306 	add	hl, bc
+   0AF3 4D                 2307 	ld	c,l
+   0AF4 7C                 2308 	ld	a,h
+   0AF5 4E                 2309 	ld	c, (hl)
+   0AF6 F8 03              2310 	ldhl	sp,	#3
+   0AF8 2A                 2311 	ld	a, (hl+)
+   0AF9 66                 2312 	ld	h, (hl)
+   0AFA 6F                 2313 	ld	l, a
+   0AFB 71                 2314 	ld	(hl), c
+                           2315 ;SpritePlayer.c:353: arrow_sprite->x = THIS->x;
+   0AFC D1                 2316 	pop	de
+   0AFD D5                 2317 	push	de
+   0AFE 21 08 00           2318 	ld	hl, #0x0008
+   0B01 19                 2319 	add	hl, de
+   0B02 7D                 2320 	ld	a, l
+   0B03 54                 2321 	ld	d, h
+   0B04 F8 03              2322 	ldhl	sp,	#3
+   0B06 22                 2323 	ld	(hl+), a
+   0B07 72                 2324 	ld	(hl), d
+   0B08 21r00r00           2325 	ld	hl, #_THIS
+   0B0B 46                 2326 	ld	b, (hl)
+   0B0C 23                 2327 	inc	hl
+   0B0D 4E                 2328 	ld	c, (hl)
+   0B0E 78                 2329 	ld	a, b
+   0B0F C6 08              2330 	add	a, #0x08
+   0B11 47                 2331 	ld	b, a
+   0B12 30 01              2332 	jr	NC,00141$
+   0B14 0C                 2333 	inc	c
+   0B15                    2334 00141$:
+   0B15 68                 2335 	ld	l, b
+   0B16 61                 2336 	ld	h, c
+   0B17 4E                 2337 	ld	c, (hl)
+   0B18 23                 2338 	inc	hl
+   0B19 46                 2339 	ld	b, (hl)
+   0B1A F8 03              2340 	ldhl	sp,	#3
+   0B1C 2A                 2341 	ld	a, (hl+)
+   0B1D 66                 2342 	ld	h, (hl)
+   0B1E 6F                 2343 	ld	l, a
+   0B1F 71                 2344 	ld	(hl), c
+   0B20 23                 2345 	inc	hl
+   0B21 70                 2346 	ld	(hl), b
+                           2347 ;SpritePlayer.c:354: arrow_sprite->x += 4;
+   0B22 03                 2348 	inc	bc
+   0B23 03                 2349 	inc	bc
+   0B24 03                 2350 	inc	bc
+   0B25 03                 2351 	inc	bc
+   0B26 F8 03              2352 	ldhl	sp,	#3
+   0B28 2A                 2353 	ld	a, (hl+)
+   0B29 66                 2354 	ld	h, (hl)
+   0B2A 6F                 2355 	ld	l, a
+   0B2B 71                 2356 	ld	(hl), c
+   0B2C 23                 2357 	inc	hl
+   0B2D 70                 2358 	ld	(hl), b
+                           2359 ;SpritePlayer.c:355: arrow_sprite->y = THIS->y;
+   0B2E D1                 2360 	pop	de
+   0B2F D5                 2361 	push	de
+   0B30 21 0A 00           2362 	ld	hl, #0x000a
+   0B33 19                 2363 	add	hl, de
+   0B34 7D                 2364 	ld	a, l
+   0B35 54                 2365 	ld	d, h
+   0B36 F8 02              2366 	ldhl	sp,	#2
+   0B38 22                 2367 	ld	(hl+), a
+   0B39 72                 2368 	ld	(hl), d
+   0B3A 21r00r00           2369 	ld	hl, #_THIS
+   0B3D 46                 2370 	ld	b, (hl)
+   0B3E 23                 2371 	inc	hl
+   0B3F 4E                 2372 	ld	c, (hl)
+   0B40 78                 2373 	ld	a, b
+   0B41 C6 0A              2374 	add	a, #0x0a
+   0B43 47                 2375 	ld	b, a
+   0B44 30 01              2376 	jr	NC,00142$
+   0B46 0C                 2377 	inc	c
+   0B47                    2378 00142$:
+   0B47 68                 2379 	ld	l, b
+   0B48 61                 2380 	ld	h, c
+   0B49 4E                 2381 	ld	c, (hl)
+   0B4A 23                 2382 	inc	hl
+   0B4B 46                 2383 	ld	b, (hl)
+   0B4C F8 02              2384 	ldhl	sp,	#2
+   0B4E 2A                 2385 	ld	a, (hl+)
+   0B4F 66                 2386 	ld	h, (hl)
+   0B50 6F                 2387 	ld	l, a
+   0B51 71                 2388 	ld	(hl), c
+   0B52 23                 2389 	inc	hl
+   0B53 70                 2390 	ld	(hl), b
+                           2391 ;SpritePlayer.c:356: struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_sprite->custom_data;
+   0B54 D1                 2392 	pop	de
+   0B55 D5                 2393 	push	de
+   0B56 21 19 00           2394 	ld	hl, #0x0019
+   0B59 19                 2395 	add	hl, de
+   0B5A 4D                 2396 	ld	c, l
+   0B5B 7C                 2397 	ld	a, h
+   0B5C 47                 2398 	ld	b, a
+                           2399 ;SpritePlayer.c:357: if (archer_data->amulet){arrow_data->type = archer_data->amulet;}
+   0B5D 21r0Er00           2400 	ld	hl, #_archer_data + 1
+   0B60 2B                 2401 	dec	hl
+   0B61 5E                 2402 	ld	e, (hl)
+   0B62 23                 2403 	inc	hl
+   0B63 56                 2404 	ld	d, (hl)
+   0B64 1A                 2405 	ld	a, (de)
+   0B65 B7                 2406 	or	a, a
+   0B66 28 0C              2407 	jr	Z,00102$
+   0B68 59                 2408 	ld	e, c
+   0B69 50                 2409 	ld	d, b
+   0B6A E6 0F              2410 	and	a, #0x0f
+   0B6C 6F                 2411 	ld	l, a
+   0B6D 1A                 2412 	ld	a, (de)
+   0B6E E6 F0              2413 	and	a, #0xf0
+   0B70 B5                 2414 	or	a, l
+   0B71 12                 2415 	ld	(de), a
+   0B72 18 08              2416 	jr	00103$
+   0B74                    2417 00102$:
+                           2418 ;SpritePlayer.c:358: else{arrow_data->type = 1;}
+   0B74 59                 2419 	ld	e, c
+   0B75 50                 2420 	ld	d, b
+   0B76 1A                 2421 	ld	a, (de)
+   0B77 E6 F0              2422 	and	a, #0xf0
+   0B79 F6 01              2423 	or	a, #0x01
+   0B7B 12                 2424 	ld	(de),a
+   0B7C                    2425 00103$:
+                           2426 ;SpritePlayer.c:359: if (KEY_PRESSED(J_DOWN)){
+   0B7C E5                 2427 	push	hl
+   0B7D 21r00r00           2428 	ld	hl, #_keys
+   0B80 7E                 2429 	ld	a, (hl)
+   0B81 F8 06              2430 	ldhl	sp,	#6
+   0B83 77                 2431 	ld	(hl), a
+   0B84 E1                 2432 	pop	hl
+                           2433 ;SpritePlayer.c:360: arrow_data->arrowdir = 4; // verticale in giu
+   0B85 03                 2434 	inc	bc
+   0B86 03                 2435 	inc	bc
+   0B87 03                 2436 	inc	bc
+                           2437 ;SpritePlayer.c:359: if (KEY_PRESSED(J_DOWN)){
+   0B88 F8 04              2438 	ldhl	sp,	#4
+   0B8A CB 5E              2439 	bit	3, (hl)
+   0B8C 28 1E              2440 	jr	Z,00112$
+                           2441 ;SpritePlayer.c:360: arrow_data->arrowdir = 4; // verticale in giu
+   0B8E 3E 04              2442 	ld	a, #0x04
+   0B90 02                 2443 	ld	(bc), a
+                           2444 ;SpritePlayer.c:361: arrow_sprite->y += 8;
+   0B91 F8 02              2445 	ldhl	sp,#(3 - 1)
+   0B93 5E                 2446 	ld	e, (hl)
+   0B94 23                 2447 	inc	hl
+   0B95 56                 2448 	ld	d, (hl)
+   0B96 1A                 2449 	ld	a,(de)
+   0B97 47                 2450 	ld	b, a
+   0B98 13                 2451 	inc	de
+   0B99 1A                 2452 	ld	a,(de)
+   0B9A 4F                 2453 	ld	c, a
+   0B9B 78                 2454 	ld	a, b
+   0B9C C6 08              2455 	add	a, #0x08
+   0B9E 47                 2456 	ld	b, a
+   0B9F 30 01              2457 	jr	NC,00144$
+   0BA1 0C                 2458 	inc	c
+   0BA2                    2459 00144$:
+   0BA2 2B                 2460 	dec	hl
+   0BA3 2A                 2461 	ld	a, (hl+)
+   0BA4 66                 2462 	ld	h, (hl)
+   0BA5 6F                 2463 	ld	l, a
+   0BA6 70                 2464 	ld	(hl), b
+   0BA7 23                 2465 	inc	hl
+   0BA8 71                 2466 	ld	(hl), c
+   0BA9 C3rE6r0B           2467 	jp	00113$
+   0BAC                    2468 00112$:
+                           2469 ;SpritePlayer.c:363: if (KEY_PRESSED(J_UP)){ //diagonale
+   0BAC F8 04              2470 	ldhl	sp,	#4
+   0BAE CB 56              2471 	bit	2, (hl)
+   0BB0 28 05              2472 	jr	Z,00107$
+                           2473 ;SpritePlayer.c:364: arrow_data->arrowdir = 2;
+   0BB2 3E 02              2474 	ld	a, #0x02
+   0BB4 02                 2475 	ld	(bc), a
+   0BB5 18 0B              2476 	jr	00108$
+   0BB7                    2477 00107$:
+                           2478 ;SpritePlayer.c:366: if(aimc < 16){ //orizzontale
+   0BB7 21r0Br00           2479 	ld	hl, #_aimc
+   0BBA 7E                 2480 	ld	a, (hl)
+   0BBB D6 10              2481 	sub	a, #0x10
+   0BBD 30 03              2482 	jr	NC,00108$
+                           2483 ;SpritePlayer.c:367: arrow_data->arrowdir = 1;
+   0BBF 3E 01              2484 	ld	a, #0x01
+   0BC1 02                 2485 	ld	(bc), a
+   0BC2                    2486 00108$:
+                           2487 ;SpritePlayer.c:370: if (aimc == 16){ // verticale in su
+   0BC2 21r0Br00           2488 	ld	hl, #_aimc
+   0BC5 7E                 2489 	ld	a, (hl)
+   0BC6 D6 10              2490 	sub	a, #0x10
+   0BC8 20 1C              2491 	jr	NZ,00113$
+                           2492 ;SpritePlayer.c:371: arrow_data->arrowdir = 3;
+   0BCA 3E 03              2493 	ld	a, #0x03
+   0BCC 02                 2494 	ld	(bc), a
+                           2495 ;SpritePlayer.c:372: arrow_sprite->y -= 4;
+   0BCD F8 02              2496 	ldhl	sp,#(3 - 1)
+   0BCF 5E                 2497 	ld	e, (hl)
+   0BD0 23                 2498 	inc	hl
+   0BD1 56                 2499 	ld	d, (hl)
+   0BD2 1A                 2500 	ld	a,(de)
+   0BD3 4F                 2501 	ld	c, a
+   0BD4 13                 2502 	inc	de
+   0BD5 1A                 2503 	ld	a,(de)
+   0BD6 47                 2504 	ld	b, a
+   0BD7 79                 2505 	ld	a, c
+   0BD8 C6 FC              2506 	add	a, #0xfc
+   0BDA 4F                 2507 	ld	c, a
+   0BDB 78                 2508 	ld	a, b
+   0BDC CE FF              2509 	adc	a, #0xff
+   0BDE 47                 2510 	ld	b, a
+   0BDF 2B                 2511 	dec	hl
+   0BE0 2A                 2512 	ld	a, (hl+)
+   0BE1 66                 2513 	ld	h, (hl)
+   0BE2 6F                 2514 	ld	l, a
+   0BE3 71                 2515 	ld	(hl), c
+   0BE4 23                 2516 	inc	hl
+   0BE5 70                 2517 	ld	(hl), b
+   0BE6                    2518 00113$:
+                           2519 ;SpritePlayer.c:375: shoot_cooldown = 4;//8
+   0BE6 21r02r00           2520 	ld	hl, #_shoot_cooldown
+   0BE9 36 04              2521 	ld	(hl), #0x04
+                           2522 ;SpritePlayer.c:376: aimc = 0;
+   0BEB 21r0Br00           2523 	ld	hl, #_aimc
+   0BEE 36 00              2524 	ld	(hl), #0x00
+                           2525 ;SpritePlayer.c:377: }
+   0BF0 E8 05              2526 	add	sp, #5
+   0BF2 C9                 2527 	ret
+                           2528 ;SpritePlayer.c:379: void Jump() {
+                           2529 ;	---------------------------------
+                           2530 ; Function Jump
+                           2531 ; ---------------------------------
+   0BF3                    2532 _Jump::
+                           2533 ;SpritePlayer.c:380: if(archer_state != STATE_JUMPING) {
+   0BF3 21r07r00           2534 	ld	hl, #_archer_state
+   0BF6 7E                 2535 	ld	a, (hl)
+   0BF7 D6 02              2536 	sub	a, #0x02
+   0BF9 C8                 2537 	ret	Z
+                           2538 ;SpritePlayer.c:381: NR50_REG = 0x22; //Max volume		
+   0BFA 3E 22              2539 	ld	a, #0x22
+   0BFC E0r00              2540 	ldh	(_NR50_REG+0),a
+                           2541 ;SpritePlayer.c:383: archer_state = STATE_JUMPING;
+   0BFE 21r07r00           2542 	ld	hl, #_archer_state
+   0C01 36 02              2543 	ld	(hl), #0x02
+                           2544 ;SpritePlayer.c:384: archer_accel_y = -8;
+   0C03 21r08r00           2545 	ld	hl, #_archer_accel_y
+   0C06 36 F8              2546 	ld	(hl), #0xf8
+   0C08 23                 2547 	inc	hl
+   0C09 36 FF              2548 	ld	(hl), #0xff
+                           2549 ;SpritePlayer.c:385: princess_parent = 0;
+   0C0B 21r05r00           2550 	ld	hl, #_princess_parent
+   0C0E 36 00              2551 	ld	(hl), #0x00
+   0C10 23                 2552 	inc	hl
+   0C11 36 00              2553 	ld	(hl), #0x00
+                           2554 ;SpritePlayer.c:386: SetSpriteAnim(THIS, anim_jump_up, 12u);
+   0C13 3E 0C              2555 	ld	a, #0x0c
+   0C15 F5                 2556 	push	af
+   0C16 33                 2557 	inc	sp
+   0C17 21r5Fr00           2558 	ld	hl, #_anim_jump_up
+   0C1A E5                 2559 	push	hl
+   0C1B 21r00r00           2560 	ld	hl, #_THIS
+   0C1E 2A                 2561 	ld	a, (hl+)
+   0C1F 66                 2562 	ld	h, (hl)
+   0C20 6F                 2563 	ld	l, a
+   0C21 E5                 2564 	push	hl
+   0C22 CDr00r00           2565 	call	_SetSpriteAnim
+   0C25 E8 05              2566 	add	sp, #5
+                           2567 ;SpritePlayer.c:388: }
+   0C27 C9                 2568 	ret
+                           2569 ;SpritePlayer.c:390: void MoveArcher() {
+                           2570 ;	---------------------------------
+                           2571 ; Function MoveArcher
+                           2572 ; ---------------------------------
+   0C28                    2573 _MoveArcher::
+   0C28 E8 FD              2574 	add	sp, #-3
+                           2575 ;SpritePlayer.c:392: if(KEY_PRESSED(J_LEFT)) {
+   0C2A E5                 2576 	push	hl
+   0C2B 21r00r00           2577 	ld	hl, #_keys
+   0C2E 7E                 2578 	ld	a, (hl)
+   0C2F F8 02              2579 	ldhl	sp,	#2
+   0C31 77                 2580 	ld	(hl), a
+   0C32 E1                 2581 	pop	hl
+                           2582 ;SpritePlayer.c:396: if (SPRITE_GET_VMIRROR(THIS)){
+   0C33 21r00r00           2583 	ld	hl, #_THIS
+   0C36 2A                 2584 	ld	a, (hl+)
+   0C37 5E                 2585 	ld	e, (hl)
+   0C38 F8 01              2586 	ldhl	sp,	#1
+   0C3A 22                 2587 	ld	(hl+), a
+   0C3B 73                 2588 	ld	(hl), e
+                           2589 ;SpritePlayer.c:397: tile_collision = TranslateSprite(THIS, -1 << delta_time, 0);
+   0C3C 21r00r00           2590 	ld	hl, #_delta_time
+   0C3F 4E                 2591 	ld	c, (hl)
+                           2592 ;SpritePlayer.c:396: if (SPRITE_GET_VMIRROR(THIS)){
+   0C40 F8 01              2593 	ldhl	sp,#(2 - 1)
+   0C42 5E                 2594 	ld	e, (hl)
+   0C43 23                 2595 	inc	hl
+   0C44 56                 2596 	ld	d, (hl)
+   0C45 21 0C 00           2597 	ld	hl, #0x000c
+   0C48 19                 2598 	add	hl, de
+   0C49 45                 2599 	ld	b, l
+   0C4A 7C                 2600 	ld	a, h
+                           2601 ;SpritePlayer.c:392: if(KEY_PRESSED(J_LEFT)) {
+   0C4B F8 00              2602 	ldhl	sp,	#0
+   0C4D CB 4E              2603 	bit	1, (hl)
+   0C4F CAr92r0C           2604 	jp	Z,00111$
+                           2605 ;SpritePlayer.c:393: if(KEY_PRESSED(J_DOWN)){
+   0C52 F8 00              2606 	ldhl	sp,	#0
+   0C54 CB 5E              2607 	bit	3, (hl)
+   0C56 20 26              2608 	jr	NZ,00105$
+                           2609 ;SpritePlayer.c:396: if (SPRITE_GET_VMIRROR(THIS)){
+   0C58 68                 2610 	ld	l, b
+   0C59 67                 2611 	ld	h, a
+   0C5A 7E                 2612 	ld	a, (hl)
+   0C5B CB 6F              2613 	bit	5, a
+   0C5D 28 1F              2614 	jr	Z,00105$
+                           2615 ;SpritePlayer.c:397: tile_collision = TranslateSprite(THIS, -1 << delta_time, 0);
+   0C5F 06 FF              2616 	ld	b, #0xff
+   0C61 0C                 2617 	inc	c
+   0C62 18 02              2618 	jr	00145$
+   0C64                    2619 00144$:
+   0C64 CB 20              2620 	sla	b
+   0C66                    2621 00145$:
+   0C66 0D                 2622 	dec	c
+   0C67 20 FB              2623 	jr	NZ,00144$
+   0C69 AF                 2624 	xor	a, a
+   0C6A F5                 2625 	push	af
+   0C6B 33                 2626 	inc	sp
+   0C6C C5                 2627 	push	bc
+   0C6D 33                 2628 	inc	sp
+   0C6E 21r00r00           2629 	ld	hl, #_THIS
+   0C71 2A                 2630 	ld	a, (hl+)
+   0C72 66                 2631 	ld	h, (hl)
+   0C73 6F                 2632 	ld	l, a
+   0C74 E5                 2633 	push	hl
+   0C75 CDr00r00           2634 	call	_TranslateSprite
+   0C78 E8 04              2635 	add	sp, #4
+   0C7A 21r0Ar00           2636 	ld	hl, #_tile_collision
+   0C7D 73                 2637 	ld	(hl), e
+   0C7E                    2638 00105$:
+                           2639 ;SpritePlayer.c:396: if (SPRITE_GET_VMIRROR(THIS)){
+   0C7E 21r01r00           2640 	ld	hl, #_THIS + 1
+   0C81 2B                 2641 	dec	hl
+   0C82 4E                 2642 	ld	c, (hl)
+   0C83 23                 2643 	inc	hl
+   0C84 46                 2644 	ld	b, (hl)
+   0C85 21 0C 00           2645 	ld	hl, #0x000c
+   0C88 09                 2646 	add	hl, bc
+   0C89 4D                 2647 	ld	c, l
+   0C8A 44                 2648 	ld	b, h
+                           2649 ;SpritePlayer.c:400: SPRITE_SET_VMIRROR(THIS);
+   0C8B 0A                 2650 	ld	a, (bc)
+   0C8C CB EF              2651 	set	5, a
+   0C8E 02                 2652 	ld	(bc), a
+   0C8F C3rF5r0C           2653 	jp	00112$
+   0C92                    2654 00111$:
+                           2655 ;SpritePlayer.c:402: else if(KEY_PRESSED(J_RIGHT)) {
+   0C92 F8 00              2656 	ldhl	sp,	#0
+   0C94 CB 46              2657 	bit	0, (hl)
+   0C96 CArF5r0C           2658 	jp	Z,00112$
+                           2659 ;SpritePlayer.c:403: if(!SPRITE_GET_VMIRROR(THIS) & !KEY_PRESSED(J_DOWN)){
+   0C99 68                 2660 	ld	l, b
+   0C9A 67                 2661 	ld	h, a
+   0C9B 7E                 2662 	ld	a, (hl)
+   0C9C 5F                 2663 	ld	e, a
+   0C9D 16 00              2664 	ld	d, #0x00
+   0C9F 7B                 2665 	ld	a, e
+   0CA0 E6 20              2666 	and	a, #0x20
+   0CA2 5F                 2667 	ld	e, a
+   0CA3 16 00              2668 	ld	d, #0x00
+   0CA5 7A                 2669 	ld	a, d
+   0CA6 B3                 2670 	or	a, e
+   0CA7 D6 01              2671 	sub	a,#0x01
+   0CA9 3E 00              2672 	ld	a, #0x00
+   0CAB 17                 2673 	rla
+   0CAC 47                 2674 	ld	b, a
+   0CAD 21r00r00           2675 	ld	hl, #_keys
+   0CB0 5E                 2676 	ld	e, (hl)
+   0CB1 16 00              2677 	ld	d, #0x00
+   0CB3 7B                 2678 	ld	a, e
+   0CB4 E6 08              2679 	and	a, #0x08
+   0CB6 5F                 2680 	ld	e, a
+   0CB7 16 00              2681 	ld	d, #0x00
+   0CB9 7A                 2682 	ld	a, d
+   0CBA B3                 2683 	or	a, e
+   0CBB D6 01              2684 	sub	a,#0x01
+   0CBD 3E 00              2685 	ld	a, #0x00
+   0CBF 17                 2686 	rla
+   0CC0 A0                 2687 	and	a, b
+   0CC1 CB 47              2688 	bit	0, a
+   0CC3 28 1F              2689 	jr	Z,00107$
+                           2690 ;SpritePlayer.c:404: tile_collision = TranslateSprite(THIS, 1 << delta_time, 0);
+   0CC5 06 01              2691 	ld	b, #0x01
+   0CC7 0C                 2692 	inc	c
+   0CC8 18 02              2693 	jr	00148$
+   0CCA                    2694 00147$:
+   0CCA CB 20              2695 	sla	b
+   0CCC                    2696 00148$:
+   0CCC 0D                 2697 	dec	c
+   0CCD 20 FB              2698 	jr	NZ,00147$
+   0CCF AF                 2699 	xor	a, a
+   0CD0 F5                 2700 	push	af
+   0CD1 33                 2701 	inc	sp
+   0CD2 C5                 2702 	push	bc
+   0CD3 33                 2703 	inc	sp
+   0CD4 21r00r00           2704 	ld	hl, #_THIS
+   0CD7 2A                 2705 	ld	a, (hl+)
+   0CD8 66                 2706 	ld	h, (hl)
+   0CD9 6F                 2707 	ld	l, a
+   0CDA E5                 2708 	push	hl
+   0CDB CDr00r00           2709 	call	_TranslateSprite
+   0CDE E8 04              2710 	add	sp, #4
+   0CE0 21r0Ar00           2711 	ld	hl, #_tile_collision
+   0CE3 73                 2712 	ld	(hl), e
+   0CE4                    2713 00107$:
+                           2714 ;SpritePlayer.c:396: if (SPRITE_GET_VMIRROR(THIS)){
+   0CE4 21r01r00           2715 	ld	hl, #_THIS + 1
+   0CE7 2B                 2716 	dec	hl
+   0CE8 4E                 2717 	ld	c, (hl)
+   0CE9 23                 2718 	inc	hl
+   0CEA 46                 2719 	ld	b, (hl)
+   0CEB 21 0C 00           2720 	ld	hl, #0x000c
+   0CEE 09                 2721 	add	hl, bc
+   0CEF 4D                 2722 	ld	c, l
+   0CF0 44                 2723 	ld	b, h
+                           2724 ;SpritePlayer.c:406: SPRITE_UNSET_VMIRROR(THIS);
+   0CF1 0A                 2725 	ld	a, (bc)
+   0CF2 CB AF              2726 	res	5, a
+   0CF4 02                 2727 	ld	(bc), a
+   0CF5                    2728 00112$:
+                           2729 ;SpritePlayer.c:408: MoveArcherRelativePlatform();
+   0CF5 CDrFBr0C           2730 	call	_MoveArcherRelativePlatform
+                           2731 ;SpritePlayer.c:409: }
+   0CF8 E8 03              2732 	add	sp, #3
+   0CFA C9                 2733 	ret
+                           2734 ;SpritePlayer.c:411: void MoveArcherRelativePlatform(){
+                           2735 ;	---------------------------------
+                           2736 ; Function MoveArcherRelativePlatform
+                           2737 ; ---------------------------------
+   0CFB                    2738 _MoveArcherRelativePlatform::
+                           2739 ;SpritePlayer.c:412: tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);
+   0CFB 21r00r00           2740 	ld	hl, #_delta_time
+   0CFE 4E                 2741 	ld	c, (hl)
+   0CFF 21r04r00           2742 	ld	hl, #_platform_vx
+   0D02 46                 2743 	ld	b, (hl)
+   0D03 0C                 2744 	inc	c
+   0D04 18 02              2745 	jr	00104$
+   0D06                    2746 00103$:
+   0D06 CB 20              2747 	sla	b
+   0D08                    2748 00104$:
+   0D08 0D                 2749 	dec	c
+   0D09 20 FB              2750 	jr	NZ,00103$
+   0D0B AF                 2751 	xor	a, a
+   0D0C F5                 2752 	push	af
+   0D0D 33                 2753 	inc	sp
+   0D0E C5                 2754 	push	bc
+   0D0F 33                 2755 	inc	sp
+   0D10 21r00r00           2756 	ld	hl, #_THIS
+   0D13 2A                 2757 	ld	a, (hl+)
+   0D14 66                 2758 	ld	h, (hl)
+   0D15 6F                 2759 	ld	l, a
+   0D16 E5                 2760 	push	hl
+   0D17 CDr00r00           2761 	call	_TranslateSprite
+   0D1A E8 04              2762 	add	sp, #4
+   0D1C 21r0Ar00           2763 	ld	hl, #_tile_collision
+   0D1F 73                 2764 	ld	(hl), e
+                           2765 ;SpritePlayer.c:413: }
+   0D20 C9                 2766 	ret
+                           2767 ;SpritePlayer.c:415: void CheckCollisionTile() {
+                           2768 ;	---------------------------------
+                           2769 ; Function CheckCollisionTile
+                           2770 ; ---------------------------------
+   0D21                    2771 _CheckCollisionTile::
+   0D21 3B                 2772 	dec	sp
+                           2773 ;SpritePlayer.c:416: if(tile_collision){
+   0D22 21r0Ar00           2774 	ld	hl, #_tile_collision
+   0D25 7E                 2775 	ld	a, (hl)
+   0D26 B7                 2776 	or	a, a
+   0D27 28 05              2777 	jr	Z,00102$
+                           2778 ;SpritePlayer.c:417: platform_vx = 0;
+   0D29 21r04r00           2779 	ld	hl, #_platform_vx
+   0D2C 36 00              2780 	ld	(hl), #0x00
+   0D2E                    2781 00102$:
+                           2782 ;SpritePlayer.c:419: switch(tile_collision) {
+   0D2E 21r0Ar00           2783 	ld	hl, #_tile_collision
+   0D31 7E                 2784 	ld	a, (hl)
+   0D32 D6 02              2785 	sub	a, #0x02
+   0D34 28 30              2786 	jr	Z,00103$
+   0D36 21r0Ar00           2787 	ld	hl, #_tile_collision
+   0D39 7E                 2788 	ld	a, (hl)
+   0D3A D6 07              2789 	sub	a, #0x07
+   0D3C CArB8r0D           2790 	jp	Z,00110$
+   0D3F 21r0Ar00           2791 	ld	hl, #_tile_collision
+   0D42 7E                 2792 	ld	a, (hl)
+   0D43 D6 13              2793 	sub	a, #0x13
+   0D45 CArBFr0D           2794 	jp	Z,00111$
+   0D48 21r0Ar00           2795 	ld	hl, #_tile_collision
+   0D4B 7E                 2796 	ld	a, (hl)
+   0D4C D6 29              2797 	sub	a, #0x29
+   0D4E CArAAr0D           2798 	jp	Z,00108$
+   0D51 21r0Ar00           2799 	ld	hl, #_tile_collision
+   0D54 7E                 2800 	ld	a, (hl)
+   0D55 D6 2A              2801 	sub	a, #0x2a
+   0D57 CArB1r0D           2802 	jp	Z,00109$
+   0D5A 21r0Ar00           2803 	ld	hl, #_tile_collision
+   0D5D 7E                 2804 	ld	a, (hl)
+   0D5E D6 2E              2805 	sub	a, #0x2e
+   0D60 CArC6r0D           2806 	jp	Z,00112$
+   0D63 C3rCBr0D           2807 	jp	00114$
+                           2808 ;SpritePlayer.c:420: case 2u:
+   0D66                    2809 00103$:
+                           2810 ;SpritePlayer.c:421: if (archer_state != STATE_HIT){
+   0D66 21r07r00           2811 	ld	hl, #_archer_state
+   0D69 7E                 2812 	ld	a, (hl)
+   0D6A D6 04              2813 	sub	a, #0x04
+   0D6C CArCBr0D           2814 	jp	Z,00114$
+                           2815 ;SpritePlayer.c:422: archer_data->hp -=  5;
+   0D6F 21r0Er00           2816 	ld	hl, #_archer_data + 1
+   0D72 2B                 2817 	dec	hl
+   0D73 4E                 2818 	ld	c, (hl)
+   0D74 23                 2819 	inc	hl
+   0D75 46                 2820 	ld	b, (hl)
+   0D76 03                 2821 	inc	bc
+   0D77 03                 2822 	inc	bc
+   0D78 0A                 2823 	ld	a, (bc)
+   0D79 C6 FB              2824 	add	a, #0xfb
+   0D7B 02                 2825 	ld	(bc), a
+   0D7C 2B                 2826 	dec	hl
+   0D7D 4E                 2827 	ld	c, (hl)
+   0D7E 23                 2828 	inc	hl
+   0D7F 46                 2829 	ld	b, (hl)
+   0D80 03                 2830 	inc	bc
+   0D81 03                 2831 	inc	bc
+                           2832 ;SpritePlayer.c:423: if (archer_data->hp <= 0){
+   0D82 0A                 2833 	ld	a, (bc)
+   0D83 F8 00              2834 	ldhl	sp,	#0
+   0D85 77                 2835 	ld	(hl),a
+   0D86 5F                 2836 	ld	e, a
+   0D87 3E 00              2837 	ld	a, #0x00
+   0D89 57                 2838 	ld	d, a
+   0D8A AF                 2839 	xor	a, a
+   0D8B 96                 2840 	sub	a, (hl)
+   0D8C CB 7B              2841 	bit	7, e
+   0D8E 28 07              2842 	jr	Z,00168$
+   0D90 CB 7A              2843 	bit	7, d
+   0D92 20 08              2844 	jr	NZ,00169$
+   0D94 BF                 2845 	cp	a, a
+   0D95 18 05              2846 	jr	00169$
+   0D97                    2847 00168$:
+   0D97 CB 7A              2848 	bit	7, d
+   0D99 28 01              2849 	jr	Z,00169$
+   0D9B 37                 2850 	scf
+   0D9C                    2851 00169$:
+   0D9C 38 07              2852 	jr	C,00105$
+                           2853 ;SpritePlayer.c:424: archer_data->hp = 0;
+   0D9E AF                 2854 	xor	a, a
+   0D9F 02                 2855 	ld	(bc), a
+                           2856 ;SpritePlayer.c:425: archer_state = STATE_DEAD;
+   0DA0 21r07r00           2857 	ld	hl, #_archer_state
+   0DA3 36 05              2858 	ld	(hl), #0x05
+   0DA5                    2859 00105$:
+                           2860 ;SpritePlayer.c:427: Hit();
+   0DA5 CDrCDr0D           2861 	call	_Hit
+                           2862 ;SpritePlayer.c:429: break;
+   0DA8 18 21              2863 	jr	00114$
+                           2864 ;SpritePlayer.c:430: case 41u: //next map
+   0DAA                    2865 00108$:
+                           2866 ;SpritePlayer.c:431: load_next = 1;
+   0DAA 21r00r00           2867 	ld	hl, #_load_next
+   0DAD 36 01              2868 	ld	(hl), #0x01
+                           2869 ;SpritePlayer.c:432: break;
+   0DAF 18 1A              2870 	jr	00114$
+                           2871 ;SpritePlayer.c:433: case 42u: //previous map
+   0DB1                    2872 00109$:
+                           2873 ;SpritePlayer.c:434: load_next = -1;
+   0DB1 21r00r00           2874 	ld	hl, #_load_next
+   0DB4 36 FF              2875 	ld	(hl), #0xff
+                           2876 ;SpritePlayer.c:435: break;
+   0DB6 18 13              2877 	jr	00114$
+                           2878 ;SpritePlayer.c:436: case 7u: //fine level
+   0DB8                    2879 00110$:
+                           2880 ;SpritePlayer.c:437: load_next = 10;
+   0DB8 21r00r00           2881 	ld	hl, #_load_next
+   0DBB 36 0A              2882 	ld	(hl), #0x0a
+                           2883 ;SpritePlayer.c:438: break;
+   0DBD 18 0C              2884 	jr	00114$
+                           2885 ;SpritePlayer.c:439: case 19u: //exit secret room
+   0DBF                    2886 00111$:
+                           2887 ;SpritePlayer.c:440: load_next_s = -1;
+   0DBF 21r00r00           2888 	ld	hl, #_load_next_s
+   0DC2 36 FF              2889 	ld	(hl), #0xff
+                           2890 ;SpritePlayer.c:441: break;
+   0DC4 18 05              2891 	jr	00114$
+                           2892 ;SpritePlayer.c:442: case 46u: //secret room
+   0DC6                    2893 00112$:
+                           2894 ;SpritePlayer.c:443: load_next_s = 1;
+   0DC6 21r00r00           2895 	ld	hl, #_load_next_s
+   0DC9 36 01              2896 	ld	(hl), #0x01
+                           2897 ;SpritePlayer.c:449: }
+   0DCB                    2898 00114$:
+                           2899 ;SpritePlayer.c:450: }
+   0DCB 33                 2900 	inc	sp
+   0DCC C9                 2901 	ret
+                           2902 ;SpritePlayer.c:452: void Hit() {
+                           2903 ;	---------------------------------
+                           2904 ; Function Hit
+                           2905 ; ---------------------------------
+   0DCD                    2906 _Hit::
+   0DCD E8 FE              2907 	add	sp, #-2
+                           2908 ;SpritePlayer.c:453: if (archer_state != STATE_DEAD){
+   0DCF 21r07r00           2909 	ld	hl, #_archer_state
+   0DD2 7E                 2910 	ld	a, (hl)
+   0DD3 D6 05              2911 	sub	a, #0x05
+   0DD5 CAr38r0E           2912 	jp	Z,00103$
+                           2913 ;SpritePlayer.c:454: archer_state = STATE_HIT;	
+   0DD8 21r07r00           2914 	ld	hl, #_archer_state
+   0DDB 36 04              2915 	ld	(hl), #0x04
+                           2916 ;SpritePlayer.c:455: platform_vx = 1;
+   0DDD 21r04r00           2917 	ld	hl, #_platform_vx
+   0DE0 36 01              2918 	ld	(hl), #0x01
+                           2919 ;SpritePlayer.c:456: THIS->y -= 6;
+   0DE2 21r01r00           2920 	ld	hl, #_THIS + 1
+   0DE5 2B                 2921 	dec	hl
+   0DE6 4E                 2922 	ld	c, (hl)
+   0DE7 23                 2923 	inc	hl
+   0DE8 46                 2924 	ld	b, (hl)
+   0DE9 21 0A 00           2925 	ld	hl, #0x000a
+   0DEC 09                 2926 	add	hl, bc
+   0DED 33                 2927 	inc	sp
+   0DEE 33                 2928 	inc	sp
+   0DEF E5                 2929 	push	hl
+   0DF0 D1                 2930 	pop	de
+   0DF1 D5                 2931 	push	de
+   0DF2 1A                 2932 	ld	a,(de)
+   0DF3 4F                 2933 	ld	c, a
+   0DF4 13                 2934 	inc	de
+   0DF5 1A                 2935 	ld	a,(de)
+   0DF6 47                 2936 	ld	b, a
+   0DF7 79                 2937 	ld	a, c
+   0DF8 C6 FA              2938 	add	a, #0xfa
+   0DFA 4F                 2939 	ld	c, a
+   0DFB 78                 2940 	ld	a, b
+   0DFC CE FF              2941 	adc	a, #0xff
+   0DFE 47                 2942 	ld	b, a
+   0DFF E1                 2943 	pop	hl
+   0E00 E5                 2944 	push	hl
+   0E01 71                 2945 	ld	(hl), c
+   0E02 23                 2946 	inc	hl
+   0E03 70                 2947 	ld	(hl), b
+                           2948 ;SpritePlayer.c:457: SetSpriteAnim(THIS, anim_hit, 32u);
+   0E04 3E 20              2949 	ld	a, #0x20
+   0E06 F5                 2950 	push	af
+   0E07 33                 2951 	inc	sp
+   0E08 21r6Cr00           2952 	ld	hl, #_anim_hit
+   0E0B E5                 2953 	push	hl
+   0E0C 21r00r00           2954 	ld	hl, #_THIS
+   0E0F 2A                 2955 	ld	a, (hl+)
+   0E10 66                 2956 	ld	h, (hl)
+   0E11 6F                 2957 	ld	l, a
+   0E12 E5                 2958 	push	hl
+   0E13 CDr00r00           2959 	call	_SetSpriteAnim
+   0E16 E8 05              2960 	add	sp, #5
+                           2961 ;SpritePlayer.c:458: NR50_REG = 0x55; //Max volume
+   0E18 3E 55              2962 	ld	a, #0x55
+   0E1A E0r00              2963 	ldh	(_NR50_REG+0),a
+                           2964 ;SpritePlayer.c:459: PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
+   0E1C 21 86 00           2965 	ld	hl, #0x0086
+   0E1F E5                 2966 	push	hl
+   0E20 2E 73              2967 	ld	l, #0x73
+   0E22 E5                 2968 	push	hl
+   0E23 2E 43              2969 	ld	l, #0x43
+   0E25 E5                 2970 	push	hl
+   0E26 2E 81              2971 	ld	l, #0x81
+   0E28 E5                 2972 	push	hl
+   0E29 2E 4C              2973 	ld	l, #0x4c
+   0E2B E5                 2974 	push	hl
+   0E2C 3E 02              2975 	ld	a, #0x02
+   0E2E F5                 2976 	push	af
+   0E2F 33                 2977 	inc	sp
+   0E30 AF                 2978 	xor	a, a
+   0E31 F5                 2979 	push	af
+   0E32 33                 2980 	inc	sp
+   0E33 CDr00r00           2981 	call	_PlayFx
+   0E36 E8 0C              2982 	add	sp, #12
+   0E38                    2983 00103$:
+                           2984 ;SpritePlayer.c:461: }
+   0E38 E8 02              2985 	add	sp, #2
+   0E3A C9                 2986 	ret
+                           2987 ;SpritePlayer.c:464: void Destroy_SpritePlayer() {
+                           2988 ;	---------------------------------
+                           2989 ; Function Destroy_SpritePlayer
+                           2990 ; ---------------------------------
+   0E3B                    2991 _Destroy_SpritePlayer::
+                           2992 ;SpritePlayer.c:466: }
+   0E3B C9                 2993 	ret
+                           2994 	.area _CODE_2
+                           2995 	.area _CABS (ABS)

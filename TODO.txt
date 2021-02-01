@@ -1,0 +1,85 @@
+
+MORE ANIMALS IN BG file img/ZOO_more_bg.png
+
+BOSS STAGE
+
+BOSS AI
+
+WINDOW DI DIALOGO
+
+SOUND EFFECT DI 1UP
+SOUND EFFECT DI SHIELD
+SOUND EFFECT DI EXIT SENZA TOOL
+
+
+DA IMPLEMENTARE
+CHECKPOINT DI SALVATAGGIO
+
+RIUSCIRò MAI A METTERE MONETE COME TILE DI BACKGROUND E 
+SOSTITUIRLE CON BLANK QUANDO CI VADO SOPRA ?
+
+
+
+
+
+
+
+DISCORD MARKDOWN:
+
+SpritePlayer.c
+```c
+	const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
+	...
+	Printf(level_names[current_level]);	
+```
+
+SpritePlayer.c
+```c
+	set_bkg_tiles(25*8, 12*8, 1, 1, tiles.data->data+3u);
+```
+
+
+#include "..\res\src\tiles.h"
+...
+set_bkg_tiles(THIS->x, THIS->y, 1, 1, tiles.data->data+3u);
+
+
+tiles.h
+```c
+extern struct TilesInfo tiles;
+```
+
+TilesInfo.h
+```c
+
+struct TilesInfoInternal {
+	unsigned char width;
+	unsigned char height;
+	unsigned char num_frames;
+	unsigned char* data; // HERE IT IS !!
+	unsigned char* color_data; 
+};
+
+struct TilesInfo {
+	unsigned char bank;
+	struct TilesInfoInternal const* data;
+};
+
+```
+
+Now the declaration of the method I want to call:
+```c
+/** Sets the tiles in the background tile table.
+    Starting at position x,y in tiles and writing across for w tiles
+    and down for h tiles. Taking the values starting from the pointer
+    data.
+    @param data		Pointer to an unsigned char. Usually the 
+    			first element in an array. // HERE IT IS !!
+*/
+void
+set_bkg_tiles(UINT8 x,
+	      UINT8 y,
+	      UINT8 w,
+	      UINT8 h,
+	      unsigned char *tiles) NONBANKED; // HERE IT IS !!
+```

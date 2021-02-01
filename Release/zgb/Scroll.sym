@@ -1,0 +1,89 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  2710 L
+    .__.ABS.                                                    =  0000 G
+    .__.CPU.                                                    =  0000 L
+    .__.H$L.                                                    =  0000 L
+  0 _ClampScrollLimits                                             030C GR
+  0 _GetMapSize                                                    0AFE GR
+  0 _GetScrollTile                                                 0ADB GR
+  0 _GetScrollTilePtr                                              0AB2 GR
+    _GetTileReplacement                                            **** GX
+  0 _InitScroll                                                    04DE GR
+  0 _InitScrollWithTiles                                           0525 GR
+  0 _InitWindow                                                    02B9 GR
+  0 _MoveScroll                                                    093E GR
+    _PopBank                                                       **** GX
+    _PushBank                                                      **** GX
+  0 _RefreshScroll                                                 087B GR
+    _STAT_REG                                                      **** GX
+  0 _ScrollFindTile                                                0B4F GR
+  0 _ScrollSetMap                                                  03AA GR
+  0 _ScrollSetTiles                                                01EB GR
+  0 _ScrollUpdateColumn                                            07FC GR
+  0 _ScrollUpdateColumnR                                           0755 GR
+  0 _ScrollUpdateColumnWithDelay                                   07B0 GR
+  0 _ScrollUpdateRow                                               06D9 GR
+  0 _ScrollUpdateRowR                                              0635 GR
+  0 _ScrollUpdateRowWithDelay                                      068D GR
+  0 _SetTile                                                       0000 GR
+    _SpriteManagerAdd                                              **** GX
+  0 _UPDATE_TILE                                                   0012 GR
+    __mulint                                                       **** GX
+  1 _clamp_enabled                                                 022B GR
+  1 _current_vbl_count                                             0229 GR
+  1 _pending_h_i                                                   021F GR
+  1 _pending_h_map                                                 0220 GR
+  1 _pending_h_x                                                   021B GR
+  1 _pending_h_y                                                   021D GR
+  1 _pending_w_i                                                   0228 GR
+  1 _pending_w_map                                                 0222 GR
+  1 _pending_w_x                                                   0224 GR
+  1 _pending_w_y                                                   0226 GR
+  1 _scroll_bank                                                   0218 GR
+  1 _scroll_bottom_movement_limit                                  0001 GR
+  1 _scroll_cmap                                                   0004 GR
+  1 _scroll_collisions                                             0018 GR
+  1 _scroll_collisions_down                                        0098 GR
+  1 _scroll_h                                                      000C GR
+  1 _scroll_h_border                                               022A GR
+  1 _scroll_map                                                    0002 GR
+  1 _scroll_offset_x                                               0219 GR
+  1 _scroll_offset_y                                               021A GR
+  1 _scroll_target                                                 0012 GR
+  1 _scroll_target_offset_x                                        0014 GR
+  1 _scroll_target_offset_y                                        0016 GR
+  1 _scroll_tile_info                                              0118 GR
+  1 _scroll_tiles_h                                                0010 GR
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+  1 _scroll_tiles_w                                                000E GR
+  1 _scroll_top_movement_limit                                     0000 GR
+  1 _scroll_w                                                      000A GR
+  1 _scroll_x                                                      0006 GR
+  1 _scroll_y                                                      0008 GR
+    _set_bkg_data                                                  **** GX
+    _set_win_tiles                                                 **** GX
+    _sprite_manager_sprites                                        **** GX
+    _sprite_manager_updatables                                     **** GX
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
+Hexadecimal [16-Bits]
+
+Area Table
+
+   0 _CODE                                      size  C63   flags    0
+   1 _DATA                                      size  22C   flags    0
+   2 _DABS                                      size    0   flags    8
+   3 _HOME                                      size    0   flags    0
+   4 _GSINIT                                    size   56   flags    0
+   5 _GSFINAL                                   size    0   flags    0
+   6 _CABS                                      size    0   flags    8
+

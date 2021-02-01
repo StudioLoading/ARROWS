@@ -1,0 +1,86 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  2710 L
+    .__.ABS.                                                    =  0000 G
+    .__.CPU.                                                    =  0000 L
+    .__.H$L.                                                    =  0000 L
+    _BGP_REG                                                       **** GX
+    _FadeIn                                                        **** GX
+    _FadeOut                                                       **** GX
+    _InitSprites                                                   **** GX
+    _InitStates                                                    **** GX
+    _LCDC_REG                                                      **** GX
+  0 _MusicUpdate                                                   0183 GR
+    _OBP0_REG                                                      **** GX
+    _OBP1_REG                                                      **** GX
+  0 _PlayMusic                                                     000F GR
+    _PopBank                                                       **** GX
+    _PushBank                                                      **** GX
+    _SCX_REG                                                       **** GX
+    _SCY_REG                                                       **** GX
+  0 _SetState                                                      0000 GR
+    _SpriteManagerReset                                            **** GX
+    _SpriteManagerUpdate                                           **** GX
+    _TAC_REG                                                       **** GX
+    _TMA_REG                                                       **** GX
+    ___sdcc_call_hl                                                **** GX
+    __current_bank                                                 **** GX
+    _add_TIM                                                       **** GX
+    _add_VBL                                                       **** GX
+  1 _current_state                                                 0001 GR
+  1 _default_palette                                               000B GR
+  1 _delta_time                                                    0000 GR
+    _disable_interrupts                                            **** GX
+    _display_off                                                   **** GX
+    _enable_interrupts                                             **** GX
+    _gbt_enable_channels                                           **** GX
+    _gbt_loop                                                      **** GX
+    _gbt_play                                                      **** GX
+    _gbt_stop                                                      **** GX
+    _gbt_update                                                    **** GX
+    _joypad                                                        **** GX
+    _keys                                                          **** GX
+  1 _last_music                                                    0003 GR
+    _last_sprite_loaded                                            **** GX
+  0 _main                                                          018F GR
+  1 _music_mute_frames                                             000A GR
+    _next_state                                                    **** GX
+  1 _old_scroll_x                                                  0006 GR
+  1 _old_scroll_y                                                  0008 GR
+    _previous_keys                                                 **** GX
+    _scroll_offset_x                                               **** GX
+    _scroll_offset_y                                               **** GX
+    _scroll_target                                                 **** GX
+    _scroll_x                                                      **** GX
+    _scroll_y                                                      **** GX
+    _set_interrupts                                                **** GX
+    _startFuncs                                                    **** GX
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+    _stateBanks                                                    **** GX
+  1 _state_running                                                 0002 GR
+    _updateFuncs                                                   **** GX
+  1 _vbl_count                                                     0005 GR
+  0 _vbl_update                                                    004A GR
+    _wait_vbl_done                                                 **** GX
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
+Hexadecimal [16-Bits]
+
+Area Table
+
+   0 _CODE                                      size  2CA   flags    0
+   1 _DATA                                      size   13   flags    0
+   2 _DABS                                      size    0   flags    8
+   3 _HOME                                      size    0   flags    0
+   4 _GSINIT                                    size   30   flags    0
+   5 _GSFINAL                                   size    0   flags    0
+   6 _CABS                                      size    0   flags    8
+

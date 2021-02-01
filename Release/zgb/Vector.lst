@@ -1,0 +1,154 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : free open source ANSI-C Compiler
+                              3 ; Version 4.0.0 #11528 (MINGW32)
+                              4 ;--------------------------------------------------------
+                              5 	.module Vector
+                              6 	.optsdcc -mgbz80
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _memcpy
+                             12 	.globl _VectorAdd
+                             13 	.globl _VectorRemovePos
+                             14 ;--------------------------------------------------------
+                             15 ; special function registers
+                             16 ;--------------------------------------------------------
+                             17 ;--------------------------------------------------------
+                             18 ; ram data
+                             19 ;--------------------------------------------------------
+                             20 	.area _DATA
+                             21 ;--------------------------------------------------------
+                             22 ; absolute external ram data
+                             23 ;--------------------------------------------------------
+                             24 	.area _DABS (ABS)
+                             25 ;--------------------------------------------------------
+                             26 ; global & static initialisations
+                             27 ;--------------------------------------------------------
+                             28 	.area _HOME
+                             29 	.area _GSINIT
+                             30 	.area _GSFINAL
+                             31 	.area _GSINIT
+                             32 ;--------------------------------------------------------
+                             33 ; Home
+                             34 ;--------------------------------------------------------
+                             35 	.area _HOME
+                             36 	.area _HOME
+                             37 ;--------------------------------------------------------
+                             38 ; code
+                             39 ;--------------------------------------------------------
+                             40 	.area _CODE
+                             41 ;C:/GB/ZGB/common/src/Vector.c:5: void VectorAdd(UINT8* v, UINT8 elem) {
+                             42 ;	---------------------------------
+                             43 ; Function VectorAdd
+                             44 ; ---------------------------------
+   0000                      45 _VectorAdd::
+                             46 ;C:/GB/ZGB/common/src/Vector.c:6: v[++ v[0]] = elem;
+   0000 F8 02                47 	ldhl	sp,#(3 - 1)
+   0002 4E                   48 	ld	c, (hl)
+   0003 23                   49 	inc	hl
+   0004 46                   50 	ld	b, (hl)
+   0005 0A                   51 	ld	a, (bc)
+   0006 3C                   52 	inc	a
+   0007 02                   53 	ld	(bc), a
+   0008 81                   54 	add	a, c
+   0009 4F                   55 	ld	c, a
+   000A 3E 00                56 	ld	a, #0x00
+   000C 88                   57 	adc	a, b
+   000D 47                   58 	ld	b, a
+   000E 23                   59 	inc	hl
+   000F 7E                   60 	ld	a, (hl)
+   0010 02                   61 	ld	(bc), a
+                             62 ;C:/GB/ZGB/common/src/Vector.c:7: }
+   0011 C9                   63 	ret
+                             64 ;C:/GB/ZGB/common/src/Vector.c:9: void VectorRemovePos(UINT8* v, UINT8 pos) {
+                             65 ;	---------------------------------
+                             66 ; Function VectorRemovePos
+                             67 ; ---------------------------------
+   0012                      68 _VectorRemovePos::
+   0012 E8 F8                69 	add	sp, #-8
+                             70 ;C:/GB/ZGB/common/src/Vector.c:10: memcpy(&v[pos + 1], &v[pos + 2], v[0] - pos);
+   0014 F8 0A                71 	ldhl	sp,	#10
+   0016 2A                   72 	ld	a, (hl+)
+   0017 5E                   73 	ld	e, (hl)
+   0018 F8 00                74 	ldhl	sp,	#0
+   001A 22                   75 	ld	(hl+), a
+   001B 73                   76 	ld	(hl), e
+   001C D1                   77 	pop	de
+   001D D5                   78 	push	de
+   001E 1A                   79 	ld	a,(de)
+   001F 4F                   80 	ld	c, a
+   0020 06 00                81 	ld	b, #0x00
+   0022 F8 0C                82 	ldhl	sp,	#12
+   0024 7E                   83 	ld	a, (hl)
+   0025 F8 02                84 	ldhl	sp,	#2
+   0027 77                   85 	ld	(hl), a
+   0028 AF                   86 	xor	a, a
+   0029 23                   87 	inc	hl
+   002A 32                   88 	ld	(hl-), a
+   002B 5E                   89 	ld	e, (hl)
+   002C 23                   90 	inc	hl
+   002D 56                   91 	ld	d, (hl)
+   002E 79                   92 	ld	a, c
+   002F 93                   93 	sub	a, e
+   0030 5F                   94 	ld	e, a
+   0031 78                   95 	ld	a, b
+   0032 9A                   96 	sbc	a, d
+   0033 23                   97 	inc	hl
+   0034 23                   98 	inc	hl
+   0035 32                   99 	ld	(hl-), a
+   0036 73                  100 	ld	(hl), e
+   0037 2B                  101 	dec	hl
+   0038 2B                  102 	dec	hl
+   0039 4E                  103 	ld	c, (hl)
+   003A 23                  104 	inc	hl
+   003B 46                  105 	ld	b, (hl)
+   003C 03                  106 	inc	bc
+   003D 03                  107 	inc	bc
+   003E E1                  108 	pop	hl
+   003F E5                  109 	push	hl
+   0040 09                  110 	add	hl, bc
+   0041 4D                  111 	ld	c, l
+   0042 44                  112 	ld	b, h
+   0043 F8 06               113 	ldhl	sp,	#6
+   0045 71                  114 	ld	(hl), c
+   0046 23                  115 	inc	hl
+   0047 70                  116 	ld	(hl), b
+   0048 F8 02               117 	ldhl	sp,#(3 - 1)
+   004A 4E                  118 	ld	c, (hl)
+   004B 23                  119 	inc	hl
+   004C 46                  120 	ld	b, (hl)
+   004D 03                  121 	inc	bc
+   004E E1                  122 	pop	hl
+   004F E5                  123 	push	hl
+   0050 09                  124 	add	hl, bc
+   0051 4D                  125 	ld	c, l
+   0052 7C                  126 	ld	a, h
+   0053 47                  127 	ld	b, a
+   0054 F8 04               128 	ldhl	sp,	#4
+   0056 2A                  129 	ld	a, (hl+)
+   0057 66                  130 	ld	h, (hl)
+   0058 6F                  131 	ld	l, a
+   0059 E5                  132 	push	hl
+   005A F8 08               133 	ldhl	sp,	#8
+   005C 2A                  134 	ld	a, (hl+)
+   005D 66                  135 	ld	h, (hl)
+   005E 6F                  136 	ld	l, a
+   005F E5                  137 	push	hl
+   0060 C5                  138 	push	bc
+   0061 CDr00r00            139 	call	_memcpy
+   0064 E8 06               140 	add	sp, #6
+                            141 ;C:/GB/ZGB/common/src/Vector.c:11: v[0] --;
+   0066 D1                  142 	pop	de
+   0067 D5                  143 	push	de
+   0068 1A                  144 	ld	a,(de)
+   0069 4F                  145 	ld	c, a
+   006A 0D                  146 	dec	c
+   006B E1                  147 	pop	hl
+   006C E5                  148 	push	hl
+   006D 71                  149 	ld	(hl), c
+                            150 ;C:/GB/ZGB/common/src/Vector.c:12: }
+   006E E8 08               151 	add	sp, #8
+   0070 C9                  152 	ret
+                            153 	.area _CODE
+                            154 	.area _CABS (ABS)
