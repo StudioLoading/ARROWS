@@ -9,7 +9,7 @@ Symbol Table
     .__.H$L.                                                    =  0000 L
   3 _empty                                                         0000 GR
   0 _porcupine                                                     0000 GR
-  6 _porcupine_internal                                            0200 GR
+  6 _porcupine_internal                                            0100 GR
   6 _porcupine_tiles                                               0000 GR
 
 
@@ -24,6 +24,6 @@ Area Table
    3 _HOME                                      size    1   flags    0
    4 _GSINIT                                    size    0   flags    0
    5 _GSFINAL                                   size    0   flags    0
-   6 _CODE_3                                    size  207   flags    0
+   6 _CODE_3                                    size  107   flags    0
    7 _CABS                                      size    0   flags    8
 

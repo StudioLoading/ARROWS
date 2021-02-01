@@ -1,4 +1,14 @@
 
+typedef enum  {
+	STATE_NORMAL,
+	STATE_NORMAL_PLATFORM,
+	STATE_JUMPING,
+	STATE_LADDER,
+	STATE_HIT,
+	STATE_DIAG,
+	STATE_DEAD
+}STATE;
+
 struct ArcherInfo {
 	UINT8 amulet;
 	UINT8 coins;
@@ -53,4 +63,3 @@ struct EnemyInfo{
 	UINT8 enemydamage;
 	INT8 hp;
 };
-

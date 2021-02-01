@@ -1,11 +1,10 @@
 
-MORE ANIMALS IN BG file img/ZOO_more_bg.png
 
-BOSS STAGE
-
-BOSS AI
-
-WINDOW DI DIALOGO
+WINDOW DI DIALOGO:
+- davanti alle tile delle persone in gabbia
+- all' uscita dello stage2
+- all' ingresso dello stageBoss
+- a boss sconfitto
 
 SOUND EFFECT DI 1UP
 SOUND EFFECT DI SHIELD
@@ -28,9 +27,41 @@ DISCORD MARKDOWN:
 
 SpritePlayer.c
 ```c
-	const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
-	...
-	Printf(level_names[current_level]);	
+SetSpriteAnim(THIS, anim_shoot, 16u);
+	struct Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
+	arrow_sprite->flags = THIS->flags;
+	arrow_sprite->x = THIS->x;
+	arrow_sprite->x += 4;
+	arrow_sprite->y = THIS->y;
+	//DECIDE THE TYPE OF ARROW accordinG TO THE AMULET EQUIPED
+	struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_sprite->custom_data;
+	if (archer_data->amulet){arrow_data->type = archer_data->amulet;}
+	else{arrow_data->type = 1;}
+	//ARROWDIR IS AN ATTRIBUTE INSIDE CUSTOM_DATA OF THE ARROW SPRITE
+	//WHICH DETERMINES THE DIRECTION OF THE ARROW
+	//1 HORIZONTAL, 2 DIAGONAL, 3 VERTICAL UP, 4 VERTICAL DOWN
+	if (KEY_PRESSED(J_DOWN)){
+		arrow_data->arrowdir = 4; // verticale in giu
+		arrow_sprite->y += 8;
+	}else{
+		if (KEY_PRESSED(J_UP)){ //diagonale
+			arrow_data->arrowdir = 2;
+		}else{
+			if(aimc < 16){ //orizzontale
+				arrow_data->arrowdir = 1;
+			}	
+		}
+		if (aimc == 16){ // verticale in su
+			arrow_data->arrowdir = 3;
+			arrow_sprite->y -= 4;
+		}
+	}
+	shoot_cooldown = 4;// NUMBER OF FRAMES i DON'T WANT AN ARROW TO BE THROWN FROM NOW ON
+	aimc = 0; 
+	//AIMC = 0 MEANS SHOOTING HORIZONTAL
+	//AIMC >0  AND < 16 MEANS DIAGONAL
+	//AIMB = 16 MEANS VERTICAL
+	
 ```
 
 SpritePlayer.c

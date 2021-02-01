@@ -9,8 +9,8 @@ Symbol Table
     .__.H$L.                                                    =  0000 L
   0 _archer                                                        0000 GR
   6 _archerCGB                                                     0000 GR
-  6 _archer_internal                                               03CF GR
-  6 _archer_tiles                                                  000F GR
+  6 _archer_internal                                               0410 GR
+  6 _archer_tiles                                                  0010 GR
   3 _empty                                                         0000 GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
@@ -24,6 +24,6 @@ Area Table
    3 _HOME                                      size    1   flags    0
    4 _GSINIT                                    size    0   flags    0
    5 _GSFINAL                                   size    0   flags    0
-   6 _CODE_3                                    size  3D6   flags    0
+   6 _CODE_3                                    size  417   flags    0
    7 _CABS                                      size    0   flags    8
 

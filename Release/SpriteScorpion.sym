@@ -9,7 +9,7 @@ Symbol Table
     .__.H$L.                                                    =  0000 L
     _CheckCollision                                                **** GX
     _CheckCollisionETile                                           **** GX
-  6 _Destroy_SpriteScorpion                                        0530 GR
+  6 _Destroy_SpriteScorpion                                        0532 GR
     _ETurn                                                         **** GX
     _NR50_REG                                                      **** GX
     _PlayFx                                                        **** GX
@@ -18,14 +18,14 @@ Symbol Table
   6 _Start_SpriteScorpion                                          0000 GR
     _THIS                                                          **** GX
     _TranslateSprite                                               **** GX
-  6 _Update_SpriteScorpion                                         00CF GR
+  6 _Update_SpriteScorpion                                         00D1 GR
   1 _attack_wait                                                   0001 GR
   0 _bank_SpriteScorpion                                           0000 GR
   1 _damage_cooldown                                               0000 GR
     _delta_time                                                    **** GX
   3 _empty                                                         0000 GR
-  6 _scorpion_dead                                                 00CD GR
-  6 _scorpion_hit                                                  00C9 GR
+  6 _scorpion_dead                                                 00CF GR
+  6 _scorpion_hit                                                  00CB GR
   6 _scorpion_idle                                                 00C4 GR
   6 _scorpion_walk                                                 00C6 GR
     _sprite_manager_sprites                                        **** GX
@@ -42,6 +42,6 @@ Area Table
    3 _HOME                                      size    1   flags    0
    4 _GSINIT                                    size    A   flags    0
    5 _GSFINAL                                   size    0   flags    0
-   6 _CODE_2                                    size  531   flags    0
+   6 _CODE_2                                    size  533   flags    0
    7 _CABS                                      size    0   flags    8
 

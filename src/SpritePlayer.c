@@ -15,7 +15,7 @@ const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of fra
 const UINT8 anim_jump[] = {1, 10};
 const UINT8 anim_jump_up[] = {1, 11};
 const UINT8 anim_up[] = {1, 0};
-const UINT8 anim_dead[] = {1, 0};
+const UINT8 anim_dead[] = {1, 15};
 const UINT8 anim_walk[] = {4, 7, 6, 5, 4};
 const UINT8 anim_shield[] = {1, 3};
 const UINT8 anim_hit[] = {2, 8, 9};
@@ -25,38 +25,34 @@ const UINT8 anim_flying[] = {4, 12, 13 ,14 , 13};
 INT8 shoot_cooldown = 0;
 UINT8 jump_power = 0u;
 INT8 platform_vx = 0;
+UINT8 death_cooldown = 0;
 
 struct Sprite* princess_parent = 0;
 
 
-typedef enum  {
-	STATE_NORMAL,
-	STATE_NORMAL_PLATFORM,
-	STATE_JUMPING,
-	STATE_LADDER,
-	STATE_HIT,
-	STATE_DEAD
-}STATE;
-STATE archer_state;
+extern STATE archer_state;
 
 INT16 archer_accel_y;
 
 UINT8 tile_collision;
 extern INT8 load_next;
 extern INT8 load_next_s;
+extern INT8 load_next_b;
 
 UINT8 aimc;
 UINT8 hit_cooldown;
 
 struct ArcherInfo* archer_data;
 
+extern INT8 show_diag;
+
 void Die();
 void Shoot();
 void Jump();
 void MoveArcher();
-void MoveArcherRelativePlatform();
 void CheckCollisionTile();
 void Hit();
+
 
 void Start_SpritePlayer() {
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
@@ -74,8 +70,13 @@ void Start_SpritePlayer() {
 }
 
 void Update_SpritePlayer() {
-	UINT8 scroll_tile;
-	struct Sprite* ispr;
+	
+	if(archer_state == STATE_DIAG ){
+		if(ANY_KEY_PRESSED){
+			show_diag = -1;
+		}
+		return;
+	}
 	
 	if(KEY_TICKED(J_START)){
 		SetState(StateGame);
@@ -91,11 +92,24 @@ void Update_SpritePlayer() {
 	}
 	
 	switch(archer_state) {
-		case STATE_DEAD:		
-			archer_data->ups -= 1;
-			archer_data->hp = 100;
-			if (archer_data->ups == -1){SetState(StateGameOver);}
-			else{SetState(StateGame);}
+		case STATE_DEAD:
+			death_cooldown ++;
+			if(death_cooldown == 6){
+				SetSpriteAnim(THIS, anim_dead, 12u);	
+			}
+			if (death_cooldown < 12){
+				TranslateSprite(THIS, 0, -2 );
+			}else{
+				if (death_cooldown < 160){
+					TranslateSprite(THIS, 0, 1);
+				}else{
+					death_cooldown = 0;
+					archer_data->ups -= 1;
+					archer_data->hp = 100;	
+					if (archer_data->ups == -1){SetState(StateGameOver);}
+					else{SetState(StateGame);}	
+				}
+			}
 			return;
 		break;
 		case STATE_NORMAL:
@@ -119,6 +133,11 @@ void Update_SpritePlayer() {
 				}
 				if(KEY_RELEASED(J_UP)){
 					aimc = 0;
+					if (aimc > 0){
+						show_diag = 1;
+						archer_state = STATE_DIAG;						
+					}
+					return;
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
@@ -165,7 +184,7 @@ void Update_SpritePlayer() {
 					}else{
 						jump_power = 0u;
 						archer_accel_y += 1;
-						SetSpriteAnim(THIS, anim_jump, 33u);
+						SetSpriteAnim(THIS, anim_jump, 32u);
 					}
 				}
 			}
@@ -177,17 +196,17 @@ void Update_SpritePlayer() {
 			MoveArcher();
 			if (hit_cooldown == 0){
 				platform_vx = 0;
-				archer_state = STATE_NORMAL;
 				hit_cooldown = 24u;
 				if(KEY_PRESSED(J_A)) {
 					Jump();
 				}
+				archer_state = STATE_NORMAL;
 			}
 		break;
 	}//end switch archer_state
 	
 	
-	if(princess_parent == 0 && archer_state != STATE_LADDER && archer_state != STATE_HIT) {
+	if(princess_parent == 0 && archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD) {
 		//Simple gravity physics 
 		if(archer_accel_y < 24) {
 			archer_accel_y += 1;
@@ -200,6 +219,7 @@ void Update_SpritePlayer() {
 		if(tile_collision) {
 			if(archer_state == STATE_JUMPING & archer_accel_y > 0) {
 				archer_state = STATE_NORMAL;
+				archer_accel_y = 0;
 				//TODO PLAY ATTERRAGGIO EFFEXT
 			}else{
 				archer_accel_y = 0;	
@@ -212,6 +232,8 @@ void Update_SpritePlayer() {
 		archer_state = STATE_NORMAL;
 	}
 	
+	UINT8 scroll_tile;
+	struct Sprite* ispr;
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
 		if(ispr->type == SpriteItem) {
@@ -236,12 +258,6 @@ void Update_SpritePlayer() {
 							archer_data->ups += 1;
 							SpriteManagerRemoveSprite(ispr);
 						break;
-						case 6u: //wrench
-							if (archer_data->tool == 0){
-								archer_data->tool = 6;
-								SpriteManagerRemoveSprite(ispr);	
-							}
-						break;
 						case 7u: //dcoin
 							archer_data->coins+=10;
 							if (archer_data->coins >= 100){
@@ -258,6 +274,21 @@ void Update_SpritePlayer() {
 				}
 			}			
 		}
+		if(ispr->type == SpriteKey) {
+			if(CheckCollision(THIS, ispr)) {
+				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
+				switch(datakey->type){
+					case 1: //wrench
+						archer_data->tool = 6;
+						SpriteManagerRemoveSprite(ispr);	
+					break;
+					case 2: //key
+						archer_data->tool = 7;
+						SpriteManagerRemoveSprite(ispr);	
+					break;
+				}
+			}
+		}
 		if(ispr->type == SpritePlatform) {
 			if(CheckCollision(THIS, ispr)) {
 				if (archer_accel_y > 0){//se sono in salita non collido !
@@ -271,14 +302,14 @@ void Update_SpritePlayer() {
 				}
 			}
 		}
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine) { //collision con l' enemy
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteWolf) { //collision con l' enemy
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
 					return;
 				}
 				UINT8 being_hit = 1;
-				if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
+				if (KEY_PRESSED(J_DOWN) & ispr->type != SpriteWolf){ //se mi sto riparando e lo sono girato dove serve
 					if (ispr->x < THIS->x){
 						if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
 							ispr->x -= 16;
@@ -326,6 +357,7 @@ void Update_SpritePlayer() {
 				if (archer_accel_y > 0 & THIS->y < (ispr->y-4)){//se sono in salita non collido !
 					//archer_accel_y = 0;
 					ispr->coll_x = 0;
+					ispr->coll_y = 2;
 					ispr->coll_w = 8;	
 					platform_vx = datap->vx;
 					if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
@@ -340,7 +372,6 @@ void Update_SpritePlayer() {
 }
 
 void Die(){
-	SetSpriteAnim(THIS, anim_dead, 12u);	
 	archer_state = STATE_DEAD;
 }
 
@@ -405,10 +436,6 @@ void MoveArcher() {
 		}
 		SPRITE_UNSET_VMIRROR(THIS);
 	}
-	MoveArcherRelativePlatform();
-}
-
-void MoveArcherRelativePlatform(){
 	tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);
 }
 
@@ -427,17 +454,30 @@ void CheckCollisionTile() {
 				Hit();
 			}
 		break;
+		case 7u: //fine level - goto boss!
+			if(archer_data->tool){
+				archer_data->tool = 0; //tool consumato
+				load_next_b = 1;
+			}			
+		break;
+		case 8u: //fine boss!
+			if(archer_data->tool){
+				archer_data->tool = 0; //tool consumato
+				load_next_b = 2;
+			}			
+		break;
+		case 19u: //exit secret room
+			load_next_s = -1;
+		break;
+		case 40u: //instant death
+			archer_data->hp = 0;
+			Die();
+		break;
 		case 41u: //next map
 			load_next = 1;
 		break;
 		case 42u: //previous map
 			load_next = -1;
-		break;
-		case 7u: //fine level
-			load_next = 10;
-		break;
-		case 19u: //exit secret room
-			load_next_s = -1;
 		break;
 		case 46u: //secret room
 			load_next_s = 1;

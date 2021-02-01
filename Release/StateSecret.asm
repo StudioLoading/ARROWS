@@ -9,8 +9,8 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _Update_StateSecret
-	.globl _populate_secret0
 	.globl _Start_StateSecret
+	.globl _WriteTOOL
 	.globl _WriteMap
 	.globl _WriteUPS
 	.globl _WriteHP
@@ -32,6 +32,8 @@
 	.globl _current_level_s
 	.globl _attack_wait
 	.globl _damage_cooldown
+	.globl _ShowSWindow
+	.globl _populate_secret0
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -68,24 +70,24 @@ _bank_StateSecret:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
-;StateSecret.c:40: UINT8 current_level_s = 0;
+;StateSecret.c:44: UINT8 current_level_s = 0;
 	ld	hl, #_current_level_s
 	ld	(hl), #0x00
-;StateSecret.c:41: UINT8 current_map_s = 0;
+;StateSecret.c:45: UINT8 current_map_s = 0;
 	ld	hl, #_current_map_s
 	ld	(hl), #0x00
-;StateSecret.c:42: const struct MapInfo* secret_1[] = {
+;StateSecret.c:46: const struct MapInfo* secret_1[] = {
 	ld	hl, #_secret_1
 	ld	(hl), #<(_mapsecret0)
 	inc	hl
 	ld	(hl), #>(_mapsecret0)
-;StateSecret.c:45: const struct MapInfo** secrets[] = {secret_1};
+;StateSecret.c:49: const struct MapInfo** secrets[] = {secret_1};
 	ld	hl, #_secrets
 	ld	(hl), #<(_secret_1)
 	inc	hl
@@ -105,39 +107,42 @@ _empty::
 ; code
 ;--------------------------------------------------------
 	.area _CODE_2
-;StateSecret.c:50: void Start_StateSecret() {
+;StateSecret.c:62: void Start_StateSecret() {
 ;	---------------------------------
 ; Function Start_StateSecret
 ; ---------------------------------
 _Start_StateSecret::
 	add	sp, #-8
-;StateSecret.c:55: SPRITES_8x16;
+;StateSecret.c:67: SPRITES_8x16;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x04
 	ldh	(_LCDC_REG+0),a
-;StateSecret.c:57: for(i = 0; i != N_SPRITE_TYPES; ++ i) {
-	ld	b, #0x00
-00110$:
-;StateSecret.c:58: SpriteManagerLoad(i);
-	push	bc
-	push	bc
+;StateSecret.c:68: SpriteManagerLoad(SpritePlayer);
+	xor	a, a
+	push	af
 	inc	sp
 	call	_SpriteManagerLoad
 	inc	sp
-	pop	bc
-;StateSecret.c:57: for(i = 0; i != N_SPRITE_TYPES; ++ i) {
-	inc	b
-	ld	a, b
-	sub	a, #0x07
-	jr	NZ,00110$
-;StateSecret.c:60: SHOW_SPRITES;
+;StateSecret.c:69: SpriteManagerLoad(SpriteArrow);
+	ld	a, #0x01
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateSecret.c:70: SpriteManagerLoad(SpriteItem);
+	ld	a, #0x03
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateSecret.c:71: SHOW_SPRITES;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x02
 	ldh	(_LCDC_REG+0),a
-;StateSecret.c:63: scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
+;StateSecret.c:73: scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
 	ld	hl, #_scroll_bottom_movement_limit
 	ld	(hl), #0x3c
-;StateSecret.c:64: const struct MapInfo** level_maps_s = secrets[current_level_s];
+;StateSecret.c:74: const struct MapInfo** level_maps_s = secrets[current_level_s];
 	ld	hl, #_current_level_s
 	ld	c, (hl)
 	ld	b, #0x00
@@ -155,7 +160,7 @@ _Start_StateSecret::
 	inc	de
 	ld	a, (de)
 	ld	(hl), a
-;StateSecret.c:66: GetMapSize(level_maps_s[current_map_s], &map_w, &map_h);
+;StateSecret.c:76: GetMapSize(level_maps_s[current_map_s], &map_w, &map_h);
 	ldhl	sp,	#3
 	ld	c, l
 	ld	b, h
@@ -196,7 +201,7 @@ _Start_StateSecret::
 	push	bc
 	call	_GetMapSize
 	add	sp, #6
-;StateSecret.c:67: ScrollFindTile(level_maps_s[current_map_s], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+;StateSecret.c:77: ScrollFindTile(level_maps_s[current_map_s], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	ld	hl, #_current_map_s
 	ld	c, (hl)
 	ld	b, #0x00
@@ -234,7 +239,7 @@ _Start_StateSecret::
 	push	bc
 	call	_ScrollFindTile
 	add	sp, #11
-;StateSecret.c:68: scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+;StateSecret.c:78: scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
 	ld	hl, #_drop_player_y
 	ld	a, (hl)
 	ld	e, a
@@ -270,7 +275,7 @@ _Start_StateSecret::
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-;StateSecret.c:69: InitScroll(level_maps_s[current_map_s], collision_tiles, 0);
+;StateSecret.c:79: InitScroll(level_maps_s[current_map_s], collision_tiles, 0);
 	ld	hl, #_current_map_s
 	ld	c, (hl)
 	ld	b, #0x00
@@ -291,11 +296,11 @@ _Start_StateSecret::
 	push	bc
 	call	_InitScroll
 	add	sp, #6
-;StateSecret.c:70: SHOW_BKG;
+;StateSecret.c:80: SHOW_BKG;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x01
 	ldh	(_LCDC_REG+0),a
-;StateSecret.c:73: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+;StateSecret.c:83: struct ArcherInfo* archer_data_s = (struct ArcherInfo*)scroll_target->custom_data;
 	ld	hl, #_scroll_target
 	ld	b, (hl)
 	inc	hl
@@ -303,14 +308,14 @@ _Start_StateSecret::
 	ld	a, b
 	add	a, #0x19
 	ld	b, a
-	jr	NC,00159$
+	jr	NC,00143$
 	inc	c
-00159$:
+00143$:
 	ldhl	sp,	#4
 	ld	(hl), b
 	inc	hl
 	ld	(hl), c
-;StateSecret.c:74: if (archer_data->ups > 0 & archer_data->ups != ups){
+;StateSecret.c:84: if (archer_data_s->ups > 0 & archer_data_s->ups != ups){
 	dec	hl
 	ld	c, (hl)
 	inc	hl
@@ -328,16 +333,16 @@ _Start_StateSecret::
 	xor	a, a
 	sub	a, (hl)
 	bit	7, e
-	jr	Z,00160$
+	jr	Z,00144$
 	bit	7, d
-	jr	NZ,00161$
+	jr	NZ,00145$
 	cp	a, a
-	jr	00161$
-00160$:
+	jr	00145$
+00144$:
 	bit	7, d
-	jr	Z,00161$
+	jr	Z,00145$
 	scf
-00161$:
+00145$:
 	ld	a, #0x00
 	rla
 	ldhl	sp,	#7
@@ -347,39 +352,39 @@ _Start_StateSecret::
 	ldhl	sp,	#6
 	sub	a, (hl)
 	ld	a, #0x01
-	jr	Z,00163$
+	jr	Z,00147$
 	xor	a, a
-00163$:
+00147$:
 	xor	a, #0x01
 	ldhl	sp,	#7
 	ld	e, (hl)
 	and	a,e
-	jr	Z,00103$
-;StateSecret.c:75: ups = archer_data->ups;
+	jr	Z,00102$
+;StateSecret.c:85: ups = archer_data_s->ups;
 	push	hl
 	dec	hl
 	ld	a, (hl)
 	ld	hl, #_ups
 	ld	(hl), a
 	pop	hl
-00103$:
-;StateSecret.c:77: if (ups == -1){ //cioè vengo dal gameOver
+00102$:
+;StateSecret.c:87: if (ups == -1){ //cioè vengo dal gameOver
 	ld	hl, #_ups
 	ld	a, (hl)
 	inc	a
-	jr	NZ,00105$
-;StateSecret.c:78: ups = 3;
+	jr	NZ,00104$
+;StateSecret.c:88: ups = 3;
 	ld	hl, #_ups
 	ld	(hl), #0x03
-;StateSecret.c:79: coins = 99u;
+;StateSecret.c:89: coins = 99u;
 	ld	hl, #_coins
 	ld	(hl), #0x63
-00105$:
-;StateSecret.c:81: archer_data->ups =ups;
+00104$:
+;StateSecret.c:91: archer_data_s->ups =ups;
 	ld	hl, #_ups
 	ld	a, (hl)
 	ld	(bc), a
-;StateSecret.c:82: archer_data->hp = hp;
+;StateSecret.c:92: archer_data_s->hp = hp;
 	ldhl	sp,#(5 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -389,7 +394,7 @@ _Start_StateSecret::
 	ld	hl, #_hp
 	ld	a, (hl)
 	ld	(bc), a
-;StateSecret.c:83: archer_data->coins = coins;
+;StateSecret.c:93: archer_data_s->coins = coins;
 	ldhl	sp,#(5 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -398,25 +403,59 @@ _Start_StateSecret::
 	ld	hl, #_coins
 	ld	a, (hl)
 	ld	(bc), a
-;StateSecret.c:87: INIT_FONT(font, PRINT_WIN);
+;StateSecret.c:96: INIT_FONT(font, PRINT_WIN);
 	ld	hl, #_font
 	push	hl
-	ld	a, #0xcc
+	ld	a, #0xca
 	push	af
 	inc	sp
 	call	_ScrollSetTiles
 	add	sp, #3
 	ld	hl, #_font_idx
-	ld	(hl), #0xcc
+	ld	(hl), #0xca
 	ld	hl, #_print_target
 	ld	(hl), #0x01
-;StateSecret.c:89: WX_REG = 7;
+;StateSecret.c:98: ShowSWindow();
+	call	_ShowSWindow
+;StateSecret.c:101: switch(current_level_s){
+	ld	hl, #_current_level_s
+	ld	a, (hl)
+	or	a, a
+	jr	NZ,00108$
+;StateSecret.c:103: switch(current_map_s){
+	ld	hl, #_current_map_s
+	ld	a, (hl)
+	or	a, a
+	jr	NZ,00108$
+;StateSecret.c:105: populate_secret0();
+	call	_populate_secret0
+;StateSecret.c:109: }
+00108$:
+;StateSecret.c:112: NR52_REG = 0x80; //Enables sound, you should always setup this first
+	ld	a, #0x80
+	ldh	(_NR52_REG+0),a
+;StateSecret.c:113: NR51_REG = 0xFF; //Enables all channels (left and right)
+	ld	a, #0xff
+	ldh	(_NR51_REG+0),a
+;StateSecret.c:115: }
+	add	sp, #8
+	ret
+;StateSecret.c:118: void ShowSWindow(){
+;	---------------------------------
+; Function ShowSWindow
+; ---------------------------------
+_ShowSWindow::
+;StateSecret.c:119: HIDE_WIN;
+	ldh	a, (_LCDC_REG+0)
+	and	a, #0xdf
+	ldh	(_LCDC_REG+0),a
+;StateSecret.c:121: WX_REG = 7;
 	ld	a, #0x07
 	ldh	(_WX_REG+0),a
-;StateSecret.c:90: WY_REG = 144 - 32;
+;StateSecret.c:122: WY_REG = 144 - 32;
 	ld	a, #0x70
 	ldh	(_WY_REG+0),a
-;StateSecret.c:91: InitWindow(0, 0, &window);
+;StateSecret.c:123: InitWindow(0, 0, &window);
 	ld	hl, #_window
 	push	hl
 	xor	a, a
@@ -427,50 +466,28 @@ _Start_StateSecret::
 	inc	sp
 	call	_InitWindow
 	add	sp, #4
-;StateSecret.c:92: SHOW_WIN;
+;StateSecret.c:124: SHOW_WIN;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x20
 	ldh	(_LCDC_REG+0),a
-;StateSecret.c:93: WriteAMULET();
+;StateSecret.c:126: WriteAMULET();
 	call	_WriteAMULET
-;StateSecret.c:94: WriteCOINS();
+;StateSecret.c:127: WriteCOINS();
 	call	_WriteCOINS
-;StateSecret.c:95: WriteHP();
+;StateSecret.c:128: WriteHP();
 	call	_WriteHP
-;StateSecret.c:96: WriteUPS();
+;StateSecret.c:129: WriteUPS();
 	call	_WriteUPS
-;StateSecret.c:97: WriteMap();
-	call	_WriteMap
-;StateSecret.c:99: switch(current_level_s){
-	ld	hl, #_current_level_s
-	ld	a, (hl)
-	or	a, a
-	jr	NZ,00109$
-;StateSecret.c:101: switch(current_map_s){
-	ld	hl, #_current_map_s
-	ld	a, (hl)
-	or	a, a
-	jr	NZ,00109$
-;StateSecret.c:103: populate_secret0();
-	call	_populate_secret0
-;StateSecret.c:107: }
-00109$:
-;StateSecret.c:110: NR52_REG = 0x80; //Enables sound, you should always setup this first
-	ld	a, #0x80
-	ldh	(_NR52_REG+0),a
-;StateSecret.c:111: NR51_REG = 0xFF; //Enables all channels (left and right)
-	ld	a, #0xff
-	ldh	(_NR51_REG+0),a
-;StateSecret.c:113: }
-	add	sp, #8
-	ret
-;StateSecret.c:115: void populate_secret0(){
+;StateSecret.c:130: WriteMap();
+;StateSecret.c:132: }
+	jp	_WriteMap
+;StateSecret.c:134: void populate_secret0(){
 ;	---------------------------------
 ; Function populate_secret0
 ; ---------------------------------
 _populate_secret0::
 	add	sp, #-22
-;StateSecret.c:118: INT8 invitems_positions_x[] = {6,7,8};
+;StateSecret.c:137: INT8 invitems_positions_x[] = {6,7,8};
 	ldhl	sp,	#0
 	ld	a, l
 	ld	d, h
@@ -497,7 +514,7 @@ _populate_secret0::
 	inc	bc
 	ld	a, #0x08
 	ld	(bc), a
-;StateSecret.c:119: INT8 invitems_positions_y[] = {14,14,14};
+;StateSecret.c:138: INT8 invitems_positions_y[] = {14,14,14};
 	ldhl	sp,	#3
 	ld	a, l
 	ld	d, h
@@ -524,7 +541,7 @@ _populate_secret0::
 	inc	bc
 	ld	a, #0x0e
 	ld	(bc), a
-;StateSecret.c:120: INT8 iit [] = {7, 7, 7};
+;StateSecret.c:139: INT8 iit [] = {7, 7, 7};
 	ldhl	sp,	#6
 	ld	a, l
 	ld	d, h
@@ -551,7 +568,7 @@ _populate_secret0::
 	inc	bc
 	ld	a, #0x07
 	ld	(bc), a
-;StateSecret.c:121: for(invc=0; invc < invcount; invc++){
+;StateSecret.c:140: for(invc=0; invc < invcount; invc++){
 	xor	a, a
 	ldhl	sp,	#21
 	ld	(hl), a
@@ -561,7 +578,7 @@ _populate_secret0::
 	xor	a, #0x80
 	sub	a, #0x83
 	jp	NC, 00105$
-;StateSecret.c:122: struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
+;StateSecret.c:141: struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
 	ld	a, (hl)
 	ldhl	sp,	#15
 	ld	(hl), a
@@ -629,13 +646,13 @@ _populate_secret0::
 	add	sp, #5
 	ld	c, e
 	ld	b, d
-;StateSecret.c:123: struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
+;StateSecret.c:142: struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
 	ld	hl, #0x0019
 	add	hl, bc
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;StateSecret.c:124: dataitem->type = iit[invc];
+;StateSecret.c:143: dataitem->type = iit[invc];
 	ld	hl, #0x0001
 	add	hl, bc
 	ld	a, l
@@ -671,31 +688,31 @@ _populate_secret0::
 	ld	l, a
 	pop	af
 	ld	(hl), a
-;StateSecret.c:125: dataitem->collided = 1u;
+;StateSecret.c:144: dataitem->collided = 1u;
 	ld	a, #0x01
 	ld	(bc), a
-;StateSecret.c:126: dataitem->setup = 1u;
+;StateSecret.c:145: dataitem->setup = 1u;
 	inc	bc
 	inc	bc
 	inc	bc
 	inc	bc
 	ld	a, #0x01
 	ld	(bc), a
-;StateSecret.c:121: for(invc=0; invc < invcount; invc++){
+;StateSecret.c:140: for(invc=0; invc < invcount; invc++){
 	ldhl	sp,	#21
 	inc	(hl)
 	jp	00103$
 00105$:
-;StateSecret.c:128: }
+;StateSecret.c:147: }
 	add	sp, #22
 	ret
-;StateSecret.c:131: void Update_StateSecret() {
+;StateSecret.c:149: void Update_StateSecret() {
 ;	---------------------------------
 ; Function Update_StateSecret
 ; ---------------------------------
 _Update_StateSecret::
 	add	sp, #-2
-;StateSecret.c:133: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+;StateSecret.c:151: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	ld	hl, #_scroll_target
 	ld	b, (hl)
 	inc	hl
@@ -703,14 +720,14 @@ _Update_StateSecret::
 	ld	a, b
 	add	a, #0x19
 	ld	b, a
-	jr	NC,00151$
+	jr	NC,00158$
 	inc	c
-00151$:
+00158$:
 	ldhl	sp,	#0
 	ld	(hl), b
 	inc	hl
 	ld	(hl), c
-;StateSecret.c:135: if (amulet != archer_data->amulet){
+;StateSecret.c:153: if (amulet != archer_data->amulet){
 	pop	de
 	push	de
 	ld	a,(de)
@@ -719,13 +736,13 @@ _Update_StateSecret::
 	ld	a, (hl)
 	sub	a, c
 	jr	Z,00102$
-;StateSecret.c:136: amulet = archer_data->amulet;
+;StateSecret.c:154: amulet = archer_data->amulet;
 	ld	hl, #_amulet
 	ld	(hl), c
-;StateSecret.c:137: WriteAMULET();		
+;StateSecret.c:155: WriteAMULET();		
 	call	_WriteAMULET
 00102$:
-;StateSecret.c:139: if (coins != archer_data->coins){
+;StateSecret.c:157: if (coins != archer_data->coins){
 	pop	bc
 	push	bc
 	inc	bc
@@ -735,13 +752,13 @@ _Update_StateSecret::
 	ld	a, (hl)
 	sub	a, c
 	jr	Z,00104$
-;StateSecret.c:140: coins = archer_data->coins;
+;StateSecret.c:158: coins = archer_data->coins;
 	ld	hl, #_coins
 	ld	(hl), c
-;StateSecret.c:141: WriteCOINS();
+;StateSecret.c:159: WriteCOINS();
 	call	_WriteCOINS
 00104$:
-;StateSecret.c:143: if (hp != archer_data->hp){
+;StateSecret.c:161: if (hp != archer_data->hp){
 	pop	bc
 	push	bc
 	inc	bc
@@ -752,13 +769,13 @@ _Update_StateSecret::
 	ld	a, (hl)
 	sub	a, c
 	jr	Z,00106$
-;StateSecret.c:144: hp = archer_data->hp;
+;StateSecret.c:162: hp = archer_data->hp;
 	ld	hl, #_hp
 	ld	(hl), c
-;StateSecret.c:145: WriteHP();
+;StateSecret.c:163: WriteHP();
 	call	_WriteHP
 00106$:
-;StateSecret.c:147: if (ups != archer_data->ups){
+;StateSecret.c:165: if (ups != archer_data->ups){
 	pop	bc
 	push	bc
 	inc	bc
@@ -770,56 +787,71 @@ _Update_StateSecret::
 	ld	a, (hl)
 	sub	a, c
 	jr	Z,00108$
-;StateSecret.c:148: ups = archer_data->ups;
+;StateSecret.c:166: ups = archer_data->ups;
 	ld	hl, #_ups
 	ld	(hl), c
-;StateSecret.c:149: WriteUPS();
+;StateSecret.c:167: WriteUPS();
 	call	_WriteUPS
 00108$:
-;StateSecret.c:153: if(load_next_s){
+;StateSecret.c:169: if(archer_data->tool == level_tool){
+	pop	de
+	push	de
+	ld	hl, #0x0004
+	add	hl, de
+	ld	c,l
+	ld	a,h
+	ld	c, (hl)
+	ld	hl, #_level_tool
+	ld	a, (hl)
+	sub	a, c
+	jr	NZ,00110$
+;StateSecret.c:170: WriteTOOL();
+	call	_WriteTOOL
+00110$:
+;StateSecret.c:173: if(load_next_s){
 	ld	hl, #_load_next_s
 	ld	a, (hl)
 	or	a, a
-	jr	Z,00114$
-;StateSecret.c:154: switch(load_next_s){
+	jr	Z,00116$
+;StateSecret.c:174: switch(load_next_s){
 	ld	a, (hl)
 	inc	a
-	jr	Z,00110$
+	jr	Z,00112$
 	ld	hl, #_load_next_s
 	ld	a, (hl)
 	dec	a
-	jr	NZ,00114$
-;StateSecret.c:156: current_map_s += load_next_s;
+	jr	NZ,00116$
+;StateSecret.c:176: current_map_s += load_next_s;
 	ld	hl, #_current_map_s
 	ld	a, (hl)
 	ld	hl, #_load_next_s
 	add	a, (hl)
 	ld	hl, #_current_map_s
 	ld	(hl), a
-;StateSecret.c:157: WriteMap();
+;StateSecret.c:177: WriteMap();
 	call	_WriteMap
-;StateSecret.c:158: load_next_s = 0;
+;StateSecret.c:178: load_next_s = 0;
 	ld	hl, #_load_next_s
 	ld	(hl), #0x00
-;StateSecret.c:159: SetState(StateSecret);
+;StateSecret.c:179: SetState(StateSecret);
 	ld	a, #0x01
 	push	af
 	inc	sp
 	call	_SetState
 	inc	sp
-;StateSecret.c:160: break;
-	jr	00114$
-;StateSecret.c:161: case -1: //torno dalla secret a game
-00110$:
-;StateSecret.c:163: SetState(StateGame);
+;StateSecret.c:180: break;
+	jr	00116$
+;StateSecret.c:181: case -1: //torno dalla secret a game
+00112$:
+;StateSecret.c:183: SetState(StateGame);
 	xor	a, a
 	push	af
 	inc	sp
 	call	_SetState
 	inc	sp
-;StateSecret.c:165: }
-00114$:
-;StateSecret.c:168: }
+;StateSecret.c:185: }
+00116$:
+;StateSecret.c:188: }
 	add	sp, #2
 	ret
 	.area _CODE_2

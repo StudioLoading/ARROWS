@@ -46,10 +46,10 @@ _bank_SpritePlatform:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
 ;--------------------------------------------------------

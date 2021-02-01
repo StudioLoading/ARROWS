@@ -17,72 +17,78 @@ Symbol Table
     _ScrollFindTile                                                **** GX
     _ScrollSetTiles                                                **** GX
     _SetState                                                      **** GX
+  6 _ShowDiag                                                      02FA GR
+  6 _ShowWindow                                                    02C8 GR
     _SpriteManagerAdd                                              **** GX
     _SpriteManagerLoad                                             **** GX
   6 _Start_StateGame                                               0000 GR
-  6 _Update_StateGame                                              062C GR
+  6 _Update_StateGame                                              06B6 GR
     _WX_REG                                                        **** GX
     _WY_REG                                                        **** GX
-  6 _WriteAMULET                                                   0706 GR
-  6 _WriteCOINS                                                    07A3 GR
-  6 _WriteHP                                                       07D5 GR
-  6 _WriteMap                                                      077F GR
-  6 _WriteTOOL                                                     0859 GR
-  6 _WriteUPS                                                      087F GR
-  6 ___str_10                                                      0852 R
-  6 ___str_11                                                      0856 R
-  6 ___str_12                                                      087D R
-  6 ___str_13                                                      08C1 R
-  6 ___str_14                                                      08C4 R
-  6 ___str_2                                                       0775 R
-  6 ___str_3                                                       0777 R
-  6 ___str_4                                                       0779 R
-  6 ___str_5                                                       077B R
-  6 ___str_6                                                       077D R
-  6 ___str_7                                                       07CE R
-  6 ___str_8                                                       07D1 R
-  6 ___str_9                                                       084D R
-  6 __str_0                                                        029C R
-  6 __str_1                                                        02A4 R
-  1 _amulet                                                        009A GR
+  6 _WriteAMULET                                                   07E2 GR
+  6 _WriteCOINS                                                    087F GR
+  6 _WriteHP                                                       08B1 GR
+  6 _WriteMap                                                      085B GR
+  6 _WriteTOOL                                                     0935 GR
+  6 _WriteUPS                                                      0972 GR
+  6 ___str_10                                                      092E R
+  6 ___str_11                                                      0932 R
+  6 ___str_12                                                      096E R
+  6 ___str_13                                                      0970 R
+  6 ___str_14                                                      09B4 R
+  6 ___str_15                                                      09B7 R
+  6 ___str_2                                                       0851 R
+  6 ___str_3                                                       0853 R
+  6 ___str_4                                                       0855 R
+  6 ___str_5                                                       0857 R
+  6 ___str_6                                                       0859 R
+  6 ___str_7                                                       08AA R
+  6 ___str_8                                                       08AD R
+  6 ___str_9                                                       0929 R
+  6 __str_0                                                        02B5 R
+  6 __str_1                                                        02BD R
+  1 _amulet                                                        009B GR
+  1 _archer_state                                                  00AF GR
   1 _attack_wait                                                   0001 GR
   0 _bank_StateGame                                                0000 GR
   1 _bg_palette                                                    0002 GR
-  1 _coins                                                         009B GR
+  1 _coins                                                         009C GR
   1 _collision_tiles                                               0082 GR
-  1 _current_level                                                 00A1 GR
-  1 _current_map                                                   00A2 GR
+  1 _current_level                                                 00A3 GR
+  1 _current_map                                                   00A4 GR
   1 _damage_cooldown                                               0000 GR
-  1 _drop_player_x                                                 00A9 GR
-  1 _drop_player_y                                                 00AB GR
-  3 _empty                                                         0000 GR
-    _font                                                          **** GX
-    _font_idx                                                      **** GX
+    _diag                                                          **** GX
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [16-Bits]
 
 Symbol Table
 
-  1 _hp                                                            009D GR
-  1 _level_1                                                       00A3 GR
-  6 _level_names                                                   0298 GR
-  1 _level_tool                                                    009E GR
-  1 _levels                                                        00A7 GR
-  1 _load_next                                                     009F GR
-  1 _load_next_s                                                   00A0 GR
+  1 _drop_player_x                                                 00AB GR
+  1 _drop_player_y                                                 00AD GR
+  3 _empty                                                         0000 GR
+    _font                                                          **** GX
+    _font_idx                                                      **** GX
+  1 _hp                                                            009E GR
+  1 _level_1                                                       00A5 GR
+  6 _level_names                                                   02B1 GR
+  1 _level_tool                                                    009F GR
+  1 _levels                                                        00A9 GR
+  1 _load_next                                                     00A0 GR
+  1 _load_next_b                                                   00A2 GR
+  1 _load_next_s                                                   00A1 GR
     _map                                                           **** GX
     _map2                                                          **** GX
-  6 _populate_00                                                   0422 GR
-  6 _populate_01                                                   02AF GR
+  6 _populate_00                                                   04AC GR
+  6 _populate_01                                                   031E GR
     _print_target                                                  **** GX
     _print_x                                                       **** GX
     _print_y                                                       **** GX
     _scroll_bottom_movement_limit                                  **** GX
     _scroll_target                                                 **** GX
+  1 _show_diag                                                     00B0 GR
   1 _sprites_palette                                               0042 GR
-  1 _ups                                                           009C GR
+  1 _ups                                                           009D GR
     _window                                                        **** GX
-
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
 Hexadecimal [16-Bits]
@@ -90,11 +96,11 @@ Hexadecimal [16-Bits]
 Area Table
 
    0 _CODE                                      size    1   flags    0
-   1 _DATA                                      size   AD   flags    0
+   1 _DATA                                      size   B1   flags    0
    2 _DABS                                      size    0   flags    8
    3 _HOME                                      size    1   flags    0
-   4 _GSINIT                                    size  2C5   flags    0
+   4 _GSINIT                                    size  2CF   flags    0
    5 _GSFINAL                                   size    0   flags    0
-   6 _CODE_2                                    size  8C8   flags    0
+   6 _CODE_2                                    size  9BB   flags    0
    7 _CABS                                      size    0   flags    8
 

@@ -10,17 +10,19 @@
 
 //PORCUPINE
 const UINT8 porcupine_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 porcupine_walk[] = {2, 0, 1}; //The first number indicates the number of frames
+const UINT8 porcupine_walk[] = {4, 0, 6, 1, 6}; //The first number indicates the number of frames
 const UINT8 porcupine_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
 const UINT8 porcupine_dead[] = {1, 5}; //The first number indicates the number of frames
 const UINT8 porcupine_attack[] = {4, 6, 7, 7, 7}; //The first number indicates the number of frames
 
+extern void CheckCollisionETile();
+
 void Start_SpritePorcupine() {
 	
 	THIS->coll_x = 2;
-	THIS->coll_y = 0;
-	THIS->coll_w = 12;
-	THIS->coll_h = 16;
+	THIS->coll_y = 8;
+	THIS->coll_w = 8;
+	THIS->coll_h = 8;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	

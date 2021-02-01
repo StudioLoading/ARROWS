@@ -291,7 +291,7 @@ _Printf::
 	ldhl	sp,	#19
 	ld	(hl+), a
 	ld	(hl), e
-00140$:
+00142$:
 	ldhl	sp,#(26 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -299,11 +299,11 @@ _Printf::
 	ld	a, (de)
 	ld	c,a
 	or	a, a
-	jp	Z, 00143$
+	jp	Z, 00145$
 ;C:/GB/ZGB/common/src/Print.c:56: if(*txt == ' ') {
 	ld	a, c
 	sub	a, #0x20
-	jr	NZ,00135$
+	jr	NZ,00137$
 ;C:/GB/ZGB/common/src/Print.c:57: c = font_idx;
 	push	hl
 	ld	hl, #_font_idx
@@ -311,13 +311,13 @@ _Printf::
 	ldhl	sp,	#2
 	ld	(hl), a
 	pop	hl
-	jp	00136$
-00135$:
+	jp	00138$
+00137$:
 ;C:/GB/ZGB/common/src/Print.c:58: } else if(*txt >= 'A' && *txt <= 'Z'){
 	ld	a, c
 	xor	a, #0x80
 	sub	a, #0xc1
-	jr	C,00131$
+	jr	C,00133$
 	ld	a, c
 	ld	e, a
 	ld	a, #0x5a
@@ -325,17 +325,17 @@ _Printf::
 	ld	a, #0x5a
 	sub	a, c
 	bit	7, e
-	jr	Z,00292$
+	jr	Z,00304$
 	bit	7, d
-	jr	NZ,00293$
+	jr	NZ,00305$
 	cp	a, a
-	jr	00293$
-00292$:
+	jr	00305$
+00304$:
 	bit	7, d
-	jr	Z,00293$
+	jr	Z,00305$
 	scf
-00293$:
-	jr	C,00131$
+00305$:
+	jr	C,00133$
 ;C:/GB/ZGB/common/src/Print.c:59: c = font_idx +  1 + *txt - 'A';
 	ld	a, c
 	add	a, #0xc0
@@ -344,8 +344,8 @@ _Printf::
 	add	a, c
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
-00131$:
+	jp	00138$
+00133$:
 ;C:/GB/ZGB/common/src/Print.c:60: } else if(*txt >= 'a' && *txt <= 'z') {
 	ldhl	sp,#(26 - 1)
 	ld	e, (hl)
@@ -355,7 +355,7 @@ _Printf::
 	ld	c,a
 	xor	a, #0x80
 	sub	a, #0xe1
-	jr	C,00127$
+	jr	C,00129$
 	ld	a, c
 	ld	e, a
 	ld	a, #0x7a
@@ -363,17 +363,17 @@ _Printf::
 	ld	a, #0x7a
 	sub	a, c
 	bit	7, e
-	jr	Z,00294$
+	jr	Z,00306$
 	bit	7, d
-	jr	NZ,00295$
+	jr	NZ,00307$
 	cp	a, a
-	jr	00295$
-00294$:
+	jr	00307$
+00306$:
 	bit	7, d
-	jr	Z,00295$
+	jr	Z,00307$
 	scf
-00295$:
-	jr	C,00127$
+00307$:
+	jr	C,00129$
 ;C:/GB/ZGB/common/src/Print.c:61: c = font_idx +  1 + *txt - 'a';
 	ld	a, c
 	add	a, #0xa0
@@ -382,8 +382,8 @@ _Printf::
 	add	a, c
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
-00127$:
+	jp	00138$
+00129$:
 ;C:/GB/ZGB/common/src/Print.c:62: } else if(*txt >= '0' && *txt <= '9') {
 	ldhl	sp,#(26 - 1)
 	ld	e, (hl)
@@ -393,7 +393,7 @@ _Printf::
 	ld	c,a
 	xor	a, #0x80
 	sub	a, #0xb0
-	jr	C,00123$
+	jr	C,00125$
 	ld	a, c
 	ld	e, a
 	ld	a, #0x39
@@ -401,17 +401,17 @@ _Printf::
 	ld	a, #0x39
 	sub	a, c
 	bit	7, e
-	jr	Z,00296$
+	jr	Z,00308$
 	bit	7, d
-	jr	NZ,00297$
+	jr	NZ,00309$
 	cp	a, a
-	jr	00297$
-00296$:
+	jr	00309$
+00308$:
 	bit	7, d
-	jr	Z,00297$
+	jr	Z,00309$
 	scf
-00297$:
-	jr	C,00123$
+00309$:
+	jr	C,00125$
 ;C:/GB/ZGB/common/src/Print.c:63: c = font_idx + 27 + *txt - '0';
 	ld	a, c
 	add	a, #0xeb
@@ -420,8 +420,8 @@ _Printf::
 	add	a, c
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
-00123$:
+	jp	00138$
+00125$:
 ;C:/GB/ZGB/common/src/Print.c:65: switch(*txt) {
 	ldhl	sp,#(26 - 1)
 	ld	c, (hl)
@@ -429,15 +429,15 @@ _Printf::
 	ld	b, (hl)
 	ld	a, (bc)
 	cp	a, #0x21
-	jr	Z,00101$
+	jp	Z,00101$
 	cp	a, #0x23
 	jp	Z,00112$
 	cp	a, #0x24
 	jp	Z,00109$
 	cp	a, #0x25
-	jp	Z,00115$
+	jp	Z,00117$
 	cp	a, #0x27
-	jr	Z,00102$
+	jp	Z,00102$
 	cp	a, #0x28
 	jp	Z,00103$
 	cp	a, #0x29
@@ -450,15 +450,19 @@ _Printf::
 	jp	Z,00107$
 	cp	a, #0x3c
 	jp	Z,00114$
+	cp	a, #0x3e
+	jp	Z,00115$
 	cp	a, #0x3f
 	jp	Z,00108$
 	cp	a, #0x40
 	jp	Z,00113$
 	cp	a, #0x5b
 	jp	Z,00111$
-	sub	a, #0x5d
+	cp	a, #0x5d
 	jp	Z,00110$
-	jp	00136$
+	sub	a, #0x7b
+	jp	Z,00116$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:66: case  '!': c= font_idx + 37; break;
 00101$:
 	ld	hl, #_font_idx
@@ -466,7 +470,7 @@ _Printf::
 	add	a, #0x25
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:67: case '\'': c= font_idx + 38; break;
 00102$:
 	ld	hl, #_font_idx
@@ -474,7 +478,7 @@ _Printf::
 	add	a, #0x26
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:68: case  '(': c= font_idx + 39; break;
 00103$:
 	ld	hl, #_font_idx
@@ -482,7 +486,7 @@ _Printf::
 	add	a, #0x27
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:69: case  ')': c= font_idx + 40; break;
 00104$:
 	ld	hl, #_font_idx
@@ -490,7 +494,7 @@ _Printf::
 	add	a, #0x28
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:70: case  '-': c= font_idx + 41; break;
 00105$:
 	ld	hl, #_font_idx
@@ -498,7 +502,7 @@ _Printf::
 	add	a, #0x29
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:71: case  '.': c= font_idx + 42; break;
 00106$:
 	ld	hl, #_font_idx
@@ -506,7 +510,7 @@ _Printf::
 	add	a, #0x2a
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:72: case  ':': c= font_idx + 43; break;
 00107$:
 	ld	hl, #_font_idx
@@ -514,7 +518,7 @@ _Printf::
 	add	a, #0x2b
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:73: case  '?': c= font_idx + 44; break;
 00108$:
 	ld	hl, #_font_idx
@@ -522,7 +526,7 @@ _Printf::
 	add	a, #0x2c
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:76: case  '$': c= font_idx + 45; break;
 00109$:
 	ld	hl, #_font_idx
@@ -530,7 +534,7 @@ _Printf::
 	add	a, #0x2d
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:77: case  ']': c= font_idx + 46; break;
 00110$:
 	ld	hl, #_font_idx
@@ -538,7 +542,7 @@ _Printf::
 	add	a, #0x2e
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:78: case  '[': c= font_idx + 47; break;
 00111$:
 	ld	hl, #_font_idx
@@ -546,7 +550,7 @@ _Printf::
 	add	a, #0x2f
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:79: case  '#': c= font_idx + 48; break;
 00112$:
 	ld	hl, #_font_idx
@@ -554,7 +558,7 @@ _Printf::
 	add	a, #0x30
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:80: case  '@': c= font_idx + 49; break;
 00113$:
 	ld	hl, #_font_idx
@@ -562,7 +566,7 @@ _Printf::
 	add	a, #0x31
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
+	jp	00138$
 ;C:/GB/ZGB/common/src/Print.c:81: case  '<': c= font_idx + 50; break;
 00114$:
 	ld	hl, #_font_idx
@@ -570,24 +574,40 @@ _Printf::
 	add	a, #0x32
 	ldhl	sp,	#0
 	ld	(hl), a
-	jp	00136$
-;C:/GB/ZGB/common/src/Print.c:83: case  '%':
+	jp	00138$
+;C:/GB/ZGB/common/src/Print.c:82: case  '>': c= font_idx + 51; break;
 00115$:
-;C:/GB/ZGB/common/src/Print.c:84: switch(*(txt + 1)) {
+	ld	hl, #_font_idx
+	ld	a, (hl)
+	add	a, #0x33
+	ldhl	sp,	#0
+	ld	(hl), a
+	jp	00138$
+;C:/GB/ZGB/common/src/Print.c:83: case  '{': c= font_idx + 52; break;
+00116$:
+	ld	hl, #_font_idx
+	ld	a, (hl)
+	add	a, #0x34
+	ldhl	sp,	#0
+	ld	(hl), a
+	jp	00138$
+;C:/GB/ZGB/common/src/Print.c:85: case  '%':
+00117$:
+;C:/GB/ZGB/common/src/Print.c:86: switch(*(txt + 1)) {
 	inc	bc
 	ld	a, (bc)
 	cp	a, #0x64
-	jr	Z,00117$
+	jr	Z,00119$
 	cp	a, #0x69
-	jr	Z,00117$
+	jr	Z,00119$
 	cp	a, #0x73
-	jp	Z,00119$
+	jp	Z,00121$
 	sub	a, #0x75
-	jp	Z,00118$
-	jp	00136$
-;C:/GB/ZGB/common/src/Print.c:86: case 'i':
-00117$:
-;C:/GB/ZGB/common/src/Print.c:87: IntToString(va_arg(list, INT16), tmp);
+	jp	Z,00120$
+	jp	00138$
+;C:/GB/ZGB/common/src/Print.c:88: case 'i':
+00119$:
+;C:/GB/ZGB/common/src/Print.c:89: IntToString(va_arg(list, INT16), tmp);
 	ldhl	sp,	#13
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -619,7 +639,7 @@ _Printf::
 	push	bc
 	call	_IntToString
 	add	sp, #4
-;C:/GB/ZGB/common/src/Print.c:88: Printf(tmp);
+;C:/GB/ZGB/common/src/Print.c:90: Printf(tmp);
 	ldhl	sp,#(16 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -627,7 +647,7 @@ _Printf::
 	push	bc
 	call	_Printf
 	add	sp, #2
-;C:/GB/ZGB/common/src/Print.c:89: txt += 2;
+;C:/GB/ZGB/common/src/Print.c:91: txt += 2;
 	ldhl	sp,#(26 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -639,11 +659,11 @@ _Printf::
 	ldhl	sp,	#25
 	ld	(hl+), a
 	ld	(hl), d
-;C:/GB/ZGB/common/src/Print.c:90: continue;
-	jp	00140$
-;C:/GB/ZGB/common/src/Print.c:92: case 'u':
-00118$:
-;C:/GB/ZGB/common/src/Print.c:93: UIntToString(va_arg(list, UINT16), tmp);
+;C:/GB/ZGB/common/src/Print.c:92: continue;
+	jp	00142$
+;C:/GB/ZGB/common/src/Print.c:94: case 'u':
+00120$:
+;C:/GB/ZGB/common/src/Print.c:95: UIntToString(va_arg(list, UINT16), tmp);
 	ldhl	sp,	#17
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -675,7 +695,7 @@ _Printf::
 	push	bc
 	call	_UIntToString
 	add	sp, #4
-;C:/GB/ZGB/common/src/Print.c:94: Printf(tmp);
+;C:/GB/ZGB/common/src/Print.c:96: Printf(tmp);
 	ldhl	sp,#(20 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -683,7 +703,7 @@ _Printf::
 	push	bc
 	call	_Printf
 	add	sp, #2
-;C:/GB/ZGB/common/src/Print.c:95: txt += 2;
+;C:/GB/ZGB/common/src/Print.c:97: txt += 2;
 	ldhl	sp,#(26 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -695,11 +715,11 @@ _Printf::
 	ldhl	sp,	#25
 	ld	(hl+), a
 	ld	(hl), d
-;C:/GB/ZGB/common/src/Print.c:96: continue;
-	jp	00140$
-;C:/GB/ZGB/common/src/Print.c:98: case 's':
-00119$:
-;C:/GB/ZGB/common/src/Print.c:99: Printf(va_arg(list, char*));
+;C:/GB/ZGB/common/src/Print.c:98: continue;
+	jp	00142$
+;C:/GB/ZGB/common/src/Print.c:100: case 's':
+00121$:
+;C:/GB/ZGB/common/src/Print.c:101: Printf(va_arg(list, char*));
 	ldhl	sp,#(12 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -720,7 +740,7 @@ _Printf::
 	push	bc
 	call	_Printf
 	add	sp, #2
-;C:/GB/ZGB/common/src/Print.c:100: txt += 2;
+;C:/GB/ZGB/common/src/Print.c:102: txt += 2;
 	ldhl	sp,#(26 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -732,14 +752,14 @@ _Printf::
 	ldhl	sp,	#25
 	ld	(hl+), a
 	ld	(hl), d
-;C:/GB/ZGB/common/src/Print.c:104: }
-00136$:
-;C:/GB/ZGB/common/src/Print.c:106: if(print_target == PRINT_BKG)
+;C:/GB/ZGB/common/src/Print.c:106: }
+00138$:
+;C:/GB/ZGB/common/src/Print.c:108: if(print_target == PRINT_BKG)
 	ld	hl, #_print_target
 	ld	a, (hl)
 	or	a, a
-	jr	NZ,00138$
-;C:/GB/ZGB/common/src/Print.c:107: set_bkg_tiles(0x1F & (print_x + scroll_offset_x), 0x1F & (print_y + scroll_offset_y), 1, 1, &c);
+	jr	NZ,00140$
+;C:/GB/ZGB/common/src/Print.c:109: set_bkg_tiles(0x1F & (print_x + scroll_offset_x), 0x1F & (print_y + scroll_offset_y), 1, 1, &c);
 	ldhl	sp,	#0
 	ld	c, l
 	ld	b, h
@@ -769,9 +789,9 @@ _Printf::
 	inc	sp
 	call	_set_bkg_tiles
 	add	sp, #6
-	jr	00139$
-00138$:
-;C:/GB/ZGB/common/src/Print.c:109: set_win_tiles(print_x, print_y, 1, 1, &c);
+	jr	00141$
+00140$:
+;C:/GB/ZGB/common/src/Print.c:111: set_win_tiles(print_x, print_y, 1, 1, &c);
 	ldhl	sp,	#0
 	ld	c, l
 	ld	b, h
@@ -792,19 +812,19 @@ _Printf::
 	inc	sp
 	call	_set_win_tiles
 	add	sp, #6
-00139$:
-;C:/GB/ZGB/common/src/Print.c:111: print_x ++;
+00141$:
+;C:/GB/ZGB/common/src/Print.c:113: print_x ++;
 	ld	hl, #_print_x
 	inc	(hl)
-;C:/GB/ZGB/common/src/Print.c:112: txt ++;
+;C:/GB/ZGB/common/src/Print.c:114: txt ++;
 	ldhl	sp,	#25
 	inc	(hl)
-	jp	NZ,00140$
+	jp	NZ,00142$
 	inc	hl
 	inc	(hl)
-	jp	00140$
-00143$:
-;C:/GB/ZGB/common/src/Print.c:115: }
+	jp	00142$
+00145$:
+;C:/GB/ZGB/common/src/Print.c:117: }
 	add	sp, #23
 	ret
 	.area _CODE

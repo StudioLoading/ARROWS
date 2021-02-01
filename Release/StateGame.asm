@@ -9,6 +9,7 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _Update_StateGame
+	.globl _ShowDiag
 	.globl _Start_StateGame
 	.globl _Printf
 	.globl _SpriteManagerAdd
@@ -21,12 +22,15 @@
 	.globl _SetState
 	.globl _empty
 	.globl _bank_StateGame
+	.globl _show_diag
+	.globl _archer_state
 	.globl _drop_player_y
 	.globl _drop_player_x
 	.globl _levels
 	.globl _level_1
 	.globl _current_map
 	.globl _current_level
+	.globl _load_next_b
 	.globl _load_next_s
 	.globl _load_next
 	.globl _level_tool
@@ -40,6 +44,7 @@
 	.globl _attack_wait
 	.globl _damage_cooldown
 	.globl _level_names
+	.globl _ShowWindow
 	.globl _populate_01
 	.globl _populate_00
 	.globl _WriteAMULET
@@ -64,7 +69,7 @@ _bg_palette::
 _sprites_palette::
 	.ds 64
 _collision_tiles::
-	.ds 24
+	.ds 25
 _amulet::
 	.ds 1
 _coins::
@@ -79,6 +84,8 @@ _load_next::
 	.ds 1
 _load_next_s::
 	.ds 1
+_load_next_b::
+	.ds 1
 _current_level::
 	.ds 1
 _current_map::
@@ -91,6 +98,10 @@ _drop_player_x::
 	.ds 2
 _drop_player_y::
 	.ds 2
+_archer_state::
+	.ds 1
+_show_diag::
+	.ds 1
 ;--------------------------------------------------------
 ; CODE rom data
 ;--------------------------------------------------------
@@ -108,13 +119,13 @@ _bank_StateGame:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
-;StateGame.c:27: UINT16 bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
+;StateGame.c:31: UINT16 bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 	ld	hl, #_bg_palette
 	ld	(hl), #0xbc
 	inc	hl
@@ -243,7 +254,7 @@ _bank_StateGame:
 	ld	(hl), #0xe0
 	inc	hl
 	ld	(hl), #0x14
-;StateGame.c:29: UINT16 sprites_palette[] = {
+;StateGame.c:33: UINT16 sprites_palette[] = {
 	ld	hl, #_sprites_palette
 	ld	(hl), #0xbc
 	inc	hl
@@ -372,7 +383,7 @@ _bank_StateGame:
 	ld	(hl), #0xe0
 	inc	hl
 	ld	(hl), #0x14
-;StateGame.c:40: UINT8 collision_tiles[] = {1, 2, 3, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
+;StateGame.c:44: UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
 	ld	hl, #_collision_tiles
 	ld	(hl), #0x01
 	ld	hl, #(_collision_tiles + 0x0001)
@@ -382,73 +393,78 @@ _bank_StateGame:
 	ld	hl, #(_collision_tiles + 0x0003)
 	ld	(hl), #0x07
 	ld	hl, #(_collision_tiles + 0x0004)
-	ld	(hl), #0x09
+	ld	(hl), #0x08
 	ld	hl, #(_collision_tiles + 0x0005)
-	ld	(hl), #0x0a
+	ld	(hl), #0x09
 	ld	hl, #(_collision_tiles + 0x0006)
-	ld	(hl), #0x0b
+	ld	(hl), #0x0a
 	ld	hl, #(_collision_tiles + 0x0007)
-	ld	(hl), #0x0c
+	ld	(hl), #0x0b
 	ld	hl, #(_collision_tiles + 0x0008)
-	ld	(hl), #0x0d
+	ld	(hl), #0x0c
 	ld	hl, #(_collision_tiles + 0x0009)
-	ld	(hl), #0x0e
+	ld	(hl), #0x0d
 	ld	hl, #(_collision_tiles + 0x000a)
-	ld	(hl), #0x0f
+	ld	(hl), #0x0e
 	ld	hl, #(_collision_tiles + 0x000b)
-	ld	(hl), #0x10
+	ld	(hl), #0x0f
 	ld	hl, #(_collision_tiles + 0x000c)
-	ld	(hl), #0x11
+	ld	(hl), #0x10
 	ld	hl, #(_collision_tiles + 0x000d)
-	ld	(hl), #0x12
+	ld	(hl), #0x11
 	ld	hl, #(_collision_tiles + 0x000e)
-	ld	(hl), #0x13
+	ld	(hl), #0x12
 	ld	hl, #(_collision_tiles + 0x000f)
-	ld	(hl), #0x14
+	ld	(hl), #0x13
 	ld	hl, #(_collision_tiles + 0x0010)
-	ld	(hl), #0x15
+	ld	(hl), #0x14
 	ld	hl, #(_collision_tiles + 0x0011)
-	ld	(hl), #0x16
+	ld	(hl), #0x15
 	ld	hl, #(_collision_tiles + 0x0012)
-	ld	(hl), #0x17
+	ld	(hl), #0x16
 	ld	hl, #(_collision_tiles + 0x0013)
-	ld	(hl), #0x28
+	ld	(hl), #0x17
 	ld	hl, #(_collision_tiles + 0x0014)
-	ld	(hl), #0x29
+	ld	(hl), #0x28
 	ld	hl, #(_collision_tiles + 0x0015)
-	ld	(hl), #0x2a
+	ld	(hl), #0x29
 	ld	hl, #(_collision_tiles + 0x0016)
-	ld	(hl), #0x2e
+	ld	(hl), #0x2a
 	ld	hl, #(_collision_tiles + 0x0017)
+	ld	(hl), #0x2e
+	ld	hl, #(_collision_tiles + 0x0018)
 	ld	(hl), #0x00
-;StateGame.c:42: UINT8 amulet = 2u;
+;StateGame.c:46: UINT8 amulet = 1u;
 	ld	hl, #_amulet
-	ld	(hl), #0x02
-;StateGame.c:43: UINT8 coins = 99u;
+	ld	(hl), #0x01
+;StateGame.c:47: UINT8 coins = 0u;
 	ld	hl, #_coins
-	ld	(hl), #0x63
-;StateGame.c:44: INT8 ups = 3;
+	ld	(hl), #0x00
+;StateGame.c:48: INT8 ups = 3;
 	ld	hl, #_ups
 	ld	(hl), #0x03
-;StateGame.c:45: INT8 hp = 100;
+;StateGame.c:49: INT8 hp = 100;
 	ld	hl, #_hp
 	ld	(hl), #0x64
-;StateGame.c:46: INT8 level_tool = -1;
+;StateGame.c:50: INT8 level_tool = -1;
 	ld	hl, #_level_tool
 	ld	(hl), #0xff
-;StateGame.c:58: INT8 load_next = 0;
+;StateGame.c:63: INT8 load_next = 0;
 	ld	hl, #_load_next
 	ld	(hl), #0x00
-;StateGame.c:59: INT8 load_next_s = 0;
+;StateGame.c:64: INT8 load_next_s = 0;
 	ld	hl, #_load_next_s
 	ld	(hl), #0x00
-;StateGame.c:60: UINT8 current_level = 0;
+;StateGame.c:65: INT8 load_next_b = 0;
+	ld	hl, #_load_next_b
+	ld	(hl), #0x00
+;StateGame.c:66: UINT8 current_level = 0;
 	ld	hl, #_current_level
 	ld	(hl), #0x00
-;StateGame.c:61: UINT8 current_map = 0;
+;StateGame.c:67: UINT8 current_map = 0;
 	ld	hl, #_current_map
 	ld	(hl), #0x00
-;StateGame.c:62: const struct MapInfo* level_1[] = {
+;StateGame.c:68: const struct MapInfo* level_1[] = {
 	ld	hl, #_level_1
 	ld	(hl), #<(_map)
 	inc	hl
@@ -457,7 +473,7 @@ _bank_StateGame:
 	ld	(hl), #<(_map2)
 	inc	hl
 	ld	(hl), #>(_map2)
-;StateGame.c:66: const struct MapInfo** levels[] = {level_1};
+;StateGame.c:72: const struct MapInfo** levels[] = {level_1};
 	ld	hl, #_levels
 	ld	(hl), #<(_level_1)
 	inc	hl
@@ -477,39 +493,78 @@ _empty::
 ; code
 ;--------------------------------------------------------
 	.area _CODE_2
-;StateGame.c:76: void Start_StateGame() {
+;StateGame.c:84: void Start_StateGame() {
 ;	---------------------------------
 ; Function Start_StateGame
 ; ---------------------------------
 _Start_StateGame::
 	add	sp, #-8
-;StateGame.c:81: SPRITES_8x16;
+;StateGame.c:89: SPRITES_8x16;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x04
 	ldh	(_LCDC_REG+0),a
-;StateGame.c:83: for(i = 0; i != N_SPRITE_TYPES; ++ i) {
-	ld	b, #0x00
-00118$:
-;StateGame.c:84: SpriteManagerLoad(i);
-	push	bc
-	push	bc
+;StateGame.c:90: SpriteManagerLoad(SpritePlayer);
+	xor	a, a
+	push	af
 	inc	sp
 	call	_SpriteManagerLoad
 	inc	sp
-	pop	bc
-;StateGame.c:83: for(i = 0; i != N_SPRITE_TYPES; ++ i) {
-	inc	b
-	ld	a, b
-	sub	a, #0x07
-	jr	NZ,00118$
-;StateGame.c:86: SHOW_SPRITES;
+;StateGame.c:91: SpriteManagerLoad(SpriteArrow);
+	ld	a, #0x01
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:92: SpriteManagerLoad(SpritePlatform);
+	ld	a, #0x02
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:93: SpriteManagerLoad(SpriteItem);
+	ld	a, #0x03
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:94: SpriteManagerLoad(SpriteKey);
+	ld	a, #0x04
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:95: SpriteManagerLoad(SpriteEnemy);
+	ld	a, #0x06
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:96: SpriteManagerLoad(SpriteScorpion);
+	ld	a, #0x07
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:97: SpriteManagerLoad(SpritePorcupine);
+	ld	a, #0x08
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:98: SpriteManagerLoad(SpriteDiagface);
+	ld	a, #0x05
+	push	af
+	inc	sp
+	call	_SpriteManagerLoad
+	inc	sp
+;StateGame.c:99: SHOW_SPRITES;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x02
 	ldh	(_LCDC_REG+0),a
-;StateGame.c:89: scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
+;StateGame.c:102: scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
 	ld	hl, #_scroll_bottom_movement_limit
 	ld	(hl), #0x3c
-;StateGame.c:91: const struct MapInfo** lvls = levels[current_level];
+;StateGame.c:104: const struct MapInfo** lvls = levels[current_level];
 	ld	hl, #_current_level
 	ld	c, (hl)
 	ld	b, #0x00
@@ -527,7 +582,7 @@ _Start_StateGame::
 	inc	de
 	ld	a, (de)
 	ld	(hl), a
-;StateGame.c:93: GetMapSize(lvls[current_map], &map_w, &map_h);
+;StateGame.c:106: GetMapSize(lvls[current_map], &map_w, &map_h);
 	ldhl	sp,	#3
 	ld	c, l
 	ld	b, h
@@ -571,7 +626,7 @@ _Start_StateGame::
 	ld	hl, #_current_map
 	ld	c, (hl)
 	ld	b, #0x00
-;StateGame.c:96: ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+;StateGame.c:109: ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	sla	c
 	rl	b
 	pop	hl
@@ -582,14 +637,14 @@ _Start_StateGame::
 	ldhl	sp,	#6
 	ld	(hl+), a
 	ld	(hl), d
-;StateGame.c:94: if (load_next_s){ //vengo da secret!
+;StateGame.c:107: if (load_next_s){ //vengo da secret!
 	ld	hl, #_load_next_s
 	ld	a, (hl)
 	or	a, a
-	jp	Z, 00103$
-;StateGame.c:95: load_next_s = 0;
+	jp	Z, 00102$
+;StateGame.c:108: load_next_s = 0;
 	ld	(hl), #0x00
-;StateGame.c:96: ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+;StateGame.c:109: ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	ldhl	sp,#(7 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -623,9 +678,9 @@ _Start_StateGame::
 	push	bc
 	call	_ScrollFindTile
 	add	sp, #11
-	jp	00104$
-00103$:
-;StateGame.c:98: ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	jp	00103$
+00102$:
+;StateGame.c:111: ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	ldhl	sp,#(7 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -659,8 +714,8 @@ _Start_StateGame::
 	push	bc
 	call	_ScrollFindTile
 	add	sp, #11
-00104$:
-;StateGame.c:100: scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+00103$:
+;StateGame.c:113: scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
 	ld	hl, #_drop_player_y + 1
 	dec	hl
 	ld	c, (hl)
@@ -694,7 +749,7 @@ _Start_StateGame::
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-;StateGame.c:101: InitScroll(lvls[current_map], collision_tiles, 0);
+;StateGame.c:114: InitScroll(lvls[current_map], collision_tiles, 0);
 	ld	hl, #_current_map
 	ld	c, (hl)
 	ld	b, #0x00
@@ -715,11 +770,23 @@ _Start_StateGame::
 	push	bc
 	call	_InitScroll
 	add	sp, #6
-;StateGame.c:102: SHOW_BKG;
+;StateGame.c:115: SHOW_BKG;
 	ldh	a, (_LCDC_REG+0)
 	or	a, #0x01
 	ldh	(_LCDC_REG+0),a
-;StateGame.c:105: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+;StateGame.c:118: INIT_FONT(font, PRINT_WIN);
+	ld	hl, #_font
+	push	hl
+	ld	a, #0xca
+	push	af
+	inc	sp
+	call	_ScrollSetTiles
+	add	sp, #3
+	ld	hl, #_font_idx
+	ld	(hl), #0xca
+	ld	hl, #_print_target
+	ld	(hl), #0x01
+;StateGame.c:124: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	ld	hl, #_scroll_target
 	ld	b, (hl)
 	inc	hl
@@ -727,14 +794,14 @@ _Start_StateGame::
 	ld	a, b
 	add	a, #0x19
 	ld	b, a
-	jr	NC,00182$
+	jr	NC,00173$
 	inc	c
-00182$:
+00173$:
 	ldhl	sp,	#4
 	ld	(hl), b
 	inc	hl
 	ld	(hl), c
-;StateGame.c:106: if (archer_data->ups > 0 & archer_data->ups != ups){
+;StateGame.c:125: if (archer_data->ups > 0 & archer_data->ups != ups){
 	dec	hl
 	ld	c, (hl)
 	inc	hl
@@ -752,16 +819,16 @@ _Start_StateGame::
 	xor	a, a
 	sub	a, (hl)
 	bit	7, e
-	jr	Z,00183$
+	jr	Z,00174$
 	bit	7, d
-	jr	NZ,00184$
+	jr	NZ,00175$
 	cp	a, a
-	jr	00184$
-00183$:
+	jr	00175$
+00174$:
 	bit	7, d
-	jr	Z,00184$
+	jr	Z,00175$
 	scf
-00184$:
+00175$:
 	ld	a, #0x00
 	rla
 	ldhl	sp,	#7
@@ -771,39 +838,39 @@ _Start_StateGame::
 	ldhl	sp,	#6
 	sub	a, (hl)
 	ld	a, #0x01
-	jr	Z,00186$
+	jr	Z,00177$
 	xor	a, a
-00186$:
+00177$:
 	xor	a, #0x01
 	ldhl	sp,	#7
 	ld	e, (hl)
 	and	a,e
-	jr	Z,00106$
-;StateGame.c:107: ups = archer_data->ups;
+	jr	Z,00105$
+;StateGame.c:126: ups = archer_data->ups;
 	push	hl
 	dec	hl
 	ld	a, (hl)
 	ld	hl, #_ups
 	ld	(hl), a
 	pop	hl
-00106$:
-;StateGame.c:109: if (ups == -1){ //cioè vengo dal gameOver
+00105$:
+;StateGame.c:128: if (ups == -1){ //cioè vengo dal gameOver
 	ld	hl, #_ups
 	ld	a, (hl)
 	inc	a
-	jr	NZ,00108$
-;StateGame.c:110: ups = 3;
+	jr	NZ,00107$
+;StateGame.c:129: ups = 3;
 	ld	hl, #_ups
 	ld	(hl), #0x03
-;StateGame.c:111: coins = 99u;
+;StateGame.c:130: coins = 99u;
 	ld	hl, #_coins
 	ld	(hl), #0x63
-00108$:
-;StateGame.c:113: archer_data->ups =ups;
+00107$:
+;StateGame.c:132: archer_data->ups =ups;
 	ld	hl, #_ups
 	ld	a, (hl)
 	ld	(bc), a
-;StateGame.c:114: archer_data->hp = hp;
+;StateGame.c:133: archer_data->hp = hp;
 	ldhl	sp,#(5 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -813,7 +880,7 @@ _Start_StateGame::
 	ld	hl, #_hp
 	ld	a, (hl)
 	ld	(bc), a
-;StateGame.c:115: archer_data->coins = coins;
+;StateGame.c:134: archer_data->coins = coins;
 	ldhl	sp,#(5 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -822,72 +889,9 @@ _Start_StateGame::
 	ld	hl, #_coins
 	ld	a, (hl)
 	ld	(bc), a
-;StateGame.c:119: INIT_FONT(font, PRINT_WIN);
-	ld	hl, #_font
-	push	hl
-	ld	a, #0xcc
-	push	af
-	inc	sp
-	call	_ScrollSetTiles
-	add	sp, #3
-	ld	hl, #_font_idx
-	ld	(hl), #0xcc
-	ld	hl, #_print_target
-	ld	(hl), #0x01
-;StateGame.c:121: WX_REG = 7;
-	ld	a, #0x07
-	ldh	(_WX_REG+0),a
-;StateGame.c:122: WY_REG = 144 - 32;
-	ld	a, #0x70
-	ldh	(_WY_REG+0),a
-;StateGame.c:123: InitWindow(0, 0, &window);
-	ld	hl, #_window
-	push	hl
-	xor	a, a
-	push	af
-	inc	sp
-	xor	a, a
-	push	af
-	inc	sp
-	call	_InitWindow
-	add	sp, #4
-;StateGame.c:124: SHOW_WIN;
-	ldh	a, (_LCDC_REG+0)
-	or	a, #0x20
-	ldh	(_LCDC_REG+0),a
-;StateGame.c:125: WriteAMULET();
-	call	_WriteAMULET
-;StateGame.c:126: WriteCOINS();
-	call	_WriteCOINS
-;StateGame.c:127: WriteHP();
-	call	_WriteHP
-;StateGame.c:128: WriteUPS();
-	call	_WriteUPS
-;StateGame.c:129: WriteMap();
-	call	_WriteMap
-;StateGame.c:132: switch(current_level){
-	ld	hl, #_current_level
-	ld	a, (hl)
-	or	a, a
-	jp	NZ,00116$
-;StateGame.c:134: switch(current_map){
-	ld	hl, #_current_map
-	ld	a, (hl)
-	or	a, a
-	jr	Z,00110$
-	ld	hl, #_current_map
-	ld	a, (hl)
-	dec	a
-	jp	Z,00113$
-	jp	00114$
-;StateGame.c:135: case 0:
-00110$:
-;StateGame.c:136: populate_00();
-	call	_populate_00
-;StateGame.c:137: level_tool = 6;
-	ld	hl, #_level_tool
-	ld	(hl), #0x06
-;StateGame.c:139: if(archer_data->tool == 0){
+;StateGame.c:136: ShowWindow();
+	call	_ShowWindow
+;StateGame.c:138: if(archer_data->tool == level_tool){
 	ldhl	sp,#(5 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -897,27 +901,61 @@ _Start_StateGame::
 	ld	c, l
 	ld	b, h
 	ld	a, (bc)
+	ld	e, a
+	ld	hl, #_level_tool
+	ld	a, (hl)
+	sub	a, e
+	jr	NZ,00109$
+;StateGame.c:139: WriteTOOL();
+	push	bc
+	call	_WriteTOOL
+	pop	bc
+00109$:
+;StateGame.c:142: switch(current_level){
+	ld	hl, #_current_level
+	ld	a, (hl)
 	or	a, a
-	jp	NZ, 00117$
-;StateGame.c:140: struct Sprite* wrench_sprite = SpriteManagerAdd(SpriteItem, 46*8, 2*8);
+	jp	NZ,00117$
+;StateGame.c:144: switch(current_map){
+	ld	hl, #_current_map
+	ld	a, (hl)
+	or	a, a
+	jr	Z,00111$
+	ld	hl, #_current_map
+	ld	a, (hl)
+	dec	a
+	jp	Z,00114$
+	jp	00115$
+;StateGame.c:145: case 0:
+00111$:
+;StateGame.c:146: level_tool = 6;
+	ld	hl, #_level_tool
+	ld	(hl), #0x06
+;StateGame.c:148: if(archer_data->tool == 0){
+	ld	a, (bc)
+	or	a, a
+	jp	NZ, 00118$
+;StateGame.c:149: populate_00();
+	call	_populate_00
+;StateGame.c:150: struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
 	ld	hl, #0x0010
 	push	hl
 	ld	hl, #0x0170
 	push	hl
-	ld	a, #0x03
+	ld	a, #0x04
 	push	af
 	inc	sp
 	call	_SpriteManagerAdd
 	add	sp, #5
 	ld	c, e
 	ld	b, d
-;StateGame.c:141: struct ItemInfo* datawrench = (struct ItemInfo*)wrench_sprite->custom_data;
+;StateGame.c:151: struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 	ld	hl, #0x0019
 	add	hl, bc
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;StateGame.c:142: datawrench->type = 6;
+;StateGame.c:152: datakey->type = 1;
 	ld	hl, #0x0001
 	add	hl, bc
 	ld	a, l
@@ -929,53 +967,50 @@ _Start_StateGame::
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
-	ld	(hl), #0x06
-;StateGame.c:143: datawrench->collided = 1;
-	ld	a, #0x01
-	ld	(bc), a
-;StateGame.c:144: datawrench->setup = 1u;
+	ld	(hl), #0x01
+;StateGame.c:153: datakey->setup = 1u;
 	inc	bc
 	inc	bc
 	inc	bc
 	inc	bc
 	ld	a, #0x01
 	ld	(bc), a
-;StateGame.c:146: break;
-	jr	00117$
-;StateGame.c:147: case 1:
-00113$:
-;StateGame.c:148: populate_01();
-	call	_populate_01
-;StateGame.c:149: break;
-	jr	00117$
-;StateGame.c:150: default:
+;StateGame.c:155: break;
+	jr	00118$
+;StateGame.c:156: case 1:
 00114$:
-;StateGame.c:151: current_map = 0;
+;StateGame.c:157: populate_01();
+	call	_populate_01
+;StateGame.c:158: break;
+	jr	00118$
+;StateGame.c:159: default:
+00115$:
+;StateGame.c:160: current_map = 0;
 	ld	hl, #_current_map
 	ld	(hl), #0x00
-;StateGame.c:152: populate_00();
+;StateGame.c:161: populate_00();
 	call	_populate_00
-;StateGame.c:155: break;
-	jr	00117$
-;StateGame.c:156: default:
-00116$:
-;StateGame.c:157: current_level = 0;
+;StateGame.c:164: break;
+	jr	00118$
+;StateGame.c:165: default:
+00117$:
+;StateGame.c:166: current_level = 0;
 	ld	hl, #_current_level
 	ld	(hl), #0x00
-;StateGame.c:158: current_map = 0;
+;StateGame.c:167: current_map = 0;
 	ld	hl, #_current_map
 	ld	(hl), #0x00
-;StateGame.c:159: populate_00();
+;StateGame.c:168: populate_00();
 	call	_populate_00
-;StateGame.c:161: }
-00117$:
-;StateGame.c:164: NR52_REG = 0x80; //Enables sound, you should always setup this first
+;StateGame.c:170: }
+00118$:
+;StateGame.c:173: NR52_REG = 0x80; //Enables sound, you should always setup this first
 	ld	a, #0x80
 	ldh	(_NR52_REG+0),a
-;StateGame.c:165: NR51_REG = 0xFF; //Enables all channels (left and right)
+;StateGame.c:174: NR51_REG = 0xFF; //Enables all channels (left and right)
 	ld	a, #0xff
 	ldh	(_NR51_REG+0),a
-;StateGame.c:167: }
+;StateGame.c:176: }
 	add	sp, #8
 	ret
 _level_names:
@@ -987,17 +1022,90 @@ __str_0:
 __str_1:
 	.ascii "THE SEWERS"
 	.db 0x00
-;StateGame.c:170: void populate_01(){
+;StateGame.c:178: void ShowWindow(){
+;	---------------------------------
+; Function ShowWindow
+; ---------------------------------
+_ShowWindow::
+;StateGame.c:179: HIDE_WIN;
+	ldh	a, (_LCDC_REG+0)
+	and	a, #0xdf
+	ldh	(_LCDC_REG+0),a
+;StateGame.c:181: WX_REG = 7;
+	ld	a, #0x07
+	ldh	(_WX_REG+0),a
+;StateGame.c:182: WY_REG = 144 - 32;
+	ld	a, #0x70
+	ldh	(_WY_REG+0),a
+;StateGame.c:183: InitWindow(0, 0, &window);
+	ld	hl, #_window
+	push	hl
+	xor	a, a
+	push	af
+	inc	sp
+	xor	a, a
+	push	af
+	inc	sp
+	call	_InitWindow
+	add	sp, #4
+;StateGame.c:184: SHOW_WIN;
+	ldh	a, (_LCDC_REG+0)
+	or	a, #0x20
+	ldh	(_LCDC_REG+0),a
+;StateGame.c:186: WriteAMULET();
+	call	_WriteAMULET
+;StateGame.c:187: WriteCOINS();
+	call	_WriteCOINS
+;StateGame.c:188: WriteHP();
+	call	_WriteHP
+;StateGame.c:189: WriteUPS();
+	call	_WriteUPS
+;StateGame.c:190: WriteMap();
+;StateGame.c:192: }
+	jp	_WriteMap
+;StateGame.c:194: void ShowDiag(){
+;	---------------------------------
+; Function ShowDiag
+; ---------------------------------
+_ShowDiag::
+;StateGame.c:195: HIDE_WIN;
+	ldh	a, (_LCDC_REG+0)
+	and	a, #0xdf
+	ldh	(_LCDC_REG+0),a
+;StateGame.c:197: WX_REG = 7;
+	ld	a, #0x07
+	ldh	(_WX_REG+0),a
+;StateGame.c:198: WY_REG = 144 - 32;
+	ld	a, #0x70
+	ldh	(_WY_REG+0),a
+;StateGame.c:199: InitWindow(0, 0, &diag);
+	ld	hl, #_diag
+	push	hl
+	xor	a, a
+	push	af
+	inc	sp
+	xor	a, a
+	push	af
+	inc	sp
+	call	_InitWindow
+	add	sp, #4
+;StateGame.c:200: SHOW_WIN;
+	ldh	a, (_LCDC_REG+0)
+	or	a, #0x20
+	ldh	(_LCDC_REG+0),a
+;StateGame.c:201: }
+	ret
+;StateGame.c:203: void populate_01(){
 ;	---------------------------------
 ; Function populate_01
 ; ---------------------------------
 _populate_01::
-	add	sp, #-18
-;StateGame.c:173: UINT8 platform_positions_x[] = {9}; //10
+	add	sp, #-21
+;StateGame.c:206: UINT8 platform_positions_x[] = {9}; //10
 	ldhl	sp,	#0
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#11
+	ldhl	sp,	#14
 	ld	(hl+), a
 	ld	(hl), d
 	dec	hl
@@ -1005,11 +1113,11 @@ _populate_01::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x09
-;StateGame.c:174: UINT8 platform_positions_y[] = {21}; //30
+;StateGame.c:207: UINT8 platform_positions_y[] = {21}; //30
 	ldhl	sp,	#1
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#13
+	ldhl	sp,	#16
 	ld	(hl+), a
 	ld	(hl), d
 	dec	hl
@@ -1017,21 +1125,21 @@ _populate_01::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x15
-;StateGame.c:176: for(plc=0; plc < platform_count; plc++){
+;StateGame.c:209: for(plc=0; plc < platform_count; plc++){
 	xor	a, a
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	(hl), a
 00108$:
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	a, (hl)
 	sub	a, #0x01
 	jp	NC, 00101$
-;StateGame.c:177: struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, platform_positions_x[plc]*8, platform_positions_y[plc]*8);
-	ldhl	sp,#(14 - 1)
+;StateGame.c:210: struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, platform_positions_x[plc]*8, platform_positions_y[plc]*8);
+	ldhl	sp,#(17 - 1)
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
@@ -1046,17 +1154,17 @@ _populate_01::
 	rl	b
 	sla	c
 	rl	b
-	ldhl	sp,#(12 - 1)
+	ldhl	sp,#(15 - 1)
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#15
+	ldhl	sp,	#18
 	ld	(hl+), a
 	ld	(hl), d
 	dec	hl
@@ -1081,17 +1189,17 @@ _populate_01::
 	add	sp, #5
 	ld	c, e
 	ld	b, d
-;StateGame.c:178: struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
+;StateGame.c:211: struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
 	ld	hl, #0x0019
 	add	hl, bc
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;StateGame.c:179: dataplatform->initx = platform_positions_x[plc]*8;	
+;StateGame.c:212: dataplatform->initx = platform_positions_x[plc]*8;	
 	inc	bc
 	inc	bc
 	inc	bc
-	ldhl	sp,#(16 - 1)
+	ldhl	sp,#(19 - 1)
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
@@ -1100,16 +1208,16 @@ _populate_01::
 	add	a, a
 	add	a, a
 	ld	(bc), a
-;StateGame.c:176: for(plc=0; plc < platform_count; plc++){
+;StateGame.c:209: for(plc=0; plc < platform_count; plc++){
 	inc	hl
 	inc	(hl)
 	jp	00108$
 00101$:
-;StateGame.c:184: UINT8 e_positions_x[] = {32, 17};
+;StateGame.c:217: UINT8 e_positions_x[] = {32, 15, 17};
 	ldhl	sp,	#2
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#8
+	ldhl	sp,	#11
 	ld	(hl+), a
 	ld	(hl), d
 	dec	hl
@@ -1117,18 +1225,26 @@ _populate_01::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x20
-	ldhl	sp,#(9 - 1)
+	ldhl	sp,#(12 - 1)
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
 	inc	bc
+	ld	a, #0x0f
+	ld	(bc), a
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	inc	bc
+	inc	bc
 	ld	a, #0x11
 	ld	(bc), a
-;StateGame.c:185: UINT8 e_positions_y[] = {9, 39};
-	ldhl	sp,	#4
+;StateGame.c:218: UINT8 e_positions_y[] = {9, 4, 39};
+	ldhl	sp,	#5
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#10
+	ldhl	sp,	#13
 	ld	(hl+), a
 	ld	(hl), d
 	dec	hl
@@ -1136,77 +1252,93 @@ _populate_01::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x09
-	ldhl	sp,#(11 - 1)
+	ldhl	sp,#(14 - 1)
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
 	inc	bc
+	ld	a, #0x04
+	ld	(bc), a
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	inc	bc
+	inc	bc
 	ld	a, #0x27
 	ld	(bc), a
-;StateGame.c:186: INT8 e_types[] = {1, 2}; //0=snake, 1=scorpion, 2=porcupine
-	ldhl	sp,	#6
+;StateGame.c:219: INT8 e_types[] = {0, 1, 2}; //0=snake, 1=scorpion, 2=porcupine
+	ldhl	sp,	#8
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#12
+	ldhl	sp,	#15
 	ld	(hl+), a
 	ld	(hl), d
 	dec	hl
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
-	ld	(hl), #0x01
-	ldhl	sp,#(13 - 1)
+	ld	(hl), #0x00
+	ldhl	sp,#(16 - 1)
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
 	inc	bc
+	ld	a, #0x01
+	ld	(bc), a
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	inc	bc
+	inc	bc
 	ld	a, #0x02
 	ld	(bc), a
-;StateGame.c:187: for(plc=0; plc < e_count; plc++){
+;StateGame.c:220: for(plc=0; plc < e_count; plc++){
 	xor	a, a
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	(hl), a
 00111$:
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	a, (hl)
-	sub	a, #0x02
+	sub	a, #0x03
 	jp	NC, 00113$
-;StateGame.c:188: switch(e_types[plc]){
-	ldhl	sp,#(13 - 1)
+;StateGame.c:221: switch(e_types[plc]){
+	ldhl	sp,#(16 - 1)
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
 	ld	c, l
 	ld	b, h
 	ld	a, (bc)
-	ldhl	sp,	#14
+	ldhl	sp,	#17
 	ld	(hl), a
-;StateGame.c:189: case 1: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
-	ldhl	sp,#(11 - 1)
+;StateGame.c:222: case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
+	ldhl	sp,#(14 - 1)
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
 	ld	c, l
 	ld	b, h
-	ldhl	sp,#(9 - 1)
+	ldhl	sp,#(12 - 1)
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
-	ldhl	sp,	#17
+	ldhl	sp,	#20
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
 	ld	a, l
 	ld	d, h
-	ldhl	sp,	#15
+	ldhl	sp,	#18
 	ld	(hl+), a
 	ld	(hl), d
 	ld	a, (bc)
@@ -1231,29 +1363,39 @@ _populate_01::
 	rl	d
 	sla	e
 	rl	d
-;StateGame.c:188: switch(e_types[plc]){
+;StateGame.c:221: switch(e_types[plc]){
 	dec	hl
 	dec	hl
 	ld	a, (hl)
 	dec	a
 	jr	Z,00102$
-	ldhl	sp,	#14
+	ldhl	sp,	#17
 	ld	a, (hl)
 	sub	a, #0x02
 	jr	Z,00103$
 	jr	00104$
-;StateGame.c:189: case 1: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
+;StateGame.c:222: case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
 00102$:
 	push	bc
 	push	de
-	ld	a, #0x04
+	ld	a, #0x07
 	push	af
 	inc	sp
 	call	_SpriteManagerAdd
 	add	sp, #5
 	jr	00112$
-;StateGame.c:190: case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
+;StateGame.c:223: case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
 00103$:
+	push	bc
+	push	de
+	ld	a, #0x08
+	push	af
+	inc	sp
+	call	_SpriteManagerAdd
+	add	sp, #5
+	jr	00112$
+;StateGame.c:224: default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc]*8, e_positions_y[plc]*8);
+00104$:
 	push	bc
 	push	de
 	ld	a, #0x06
@@ -1261,33 +1403,23 @@ _populate_01::
 	inc	sp
 	call	_SpriteManagerAdd
 	add	sp, #5
-	jr	00112$
-;StateGame.c:191: default: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc]*8, e_positions_y[plc]*8);
-00104$:
-	push	bc
-	push	de
-	ld	a, #0x05
-	push	af
-	inc	sp
-	call	_SpriteManagerAdd
-	add	sp, #5
-;StateGame.c:192: }
+;StateGame.c:225: }
 00112$:
-;StateGame.c:187: for(plc=0; plc < e_count; plc++){
-	ldhl	sp,	#17
+;StateGame.c:220: for(plc=0; plc < e_count; plc++){
+	ldhl	sp,	#20
 	inc	(hl)
 	jp	00111$
 00113$:
-;StateGame.c:194: }
-	add	sp, #18
+;StateGame.c:227: }
+	add	sp, #21
 	ret
-;StateGame.c:196: void populate_00(){
+;StateGame.c:229: void populate_00(){
 ;	---------------------------------
 ; Function populate_00
 ; ---------------------------------
 _populate_00::
 	add	sp, #-29
-;StateGame.c:199: INT8 scrigni_positions_x[] = {7, 12, 9, 17};
+;StateGame.c:232: INT8 scrigni_positions_x[] = {9, 12, 6, 17};
 	ldhl	sp,	#0
 	ld	a, l
 	ld	d, h
@@ -1298,7 +1430,7 @@ _populate_00::
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
-	ld	(hl), #0x07
+	ld	(hl), #0x09
 	ldhl	sp,#(19 - 1)
 	ld	c, (hl)
 	inc	hl
@@ -1312,7 +1444,7 @@ _populate_00::
 	ld	b, (hl)
 	inc	bc
 	inc	bc
-	ld	a, #0x09
+	ld	a, #0x06
 	ld	(bc), a
 	dec	hl
 	ld	c, (hl)
@@ -1323,7 +1455,7 @@ _populate_00::
 	inc	bc
 	ld	a, #0x11
 	ld	(bc), a
-;StateGame.c:200: INT8 scrigni_positions_y[] = {14, 23, 7, 36};
+;StateGame.c:233: INT8 scrigni_positions_y[] = {14, 23, 4, 36};
 	ldhl	sp,	#4
 	ld	a, l
 	ld	d, h
@@ -1348,7 +1480,7 @@ _populate_00::
 	ld	b, (hl)
 	inc	bc
 	inc	bc
-	ld	a, #0x07
+	ld	a, #0x04
 	ld	(bc), a
 	dec	hl
 	ld	c, (hl)
@@ -1359,7 +1491,7 @@ _populate_00::
 	inc	bc
 	ld	a, #0x24
 	ld	(bc), a
-;StateGame.c:201: INT8 st [] = {1, 1, 1, 3};
+;StateGame.c:234: INT8 st [] = {1, 1, 1, 3};
 	ldhl	sp,	#8
 	ld	a, l
 	ld	d, h
@@ -1395,7 +1527,7 @@ _populate_00::
 	inc	bc
 	ld	a, #0x03
 	ld	(bc), a
-;StateGame.c:204: for(c=0; c < count; c++){
+;StateGame.c:237: for(c=0; c < count; c++){
 	xor	a, a
 	ldhl	sp,	#28
 	ld	(hl), a
@@ -1405,7 +1537,7 @@ _populate_00::
 	xor	a, #0x80
 	sub	a, #0x83
 	jp	NC, 00101$
-;StateGame.c:205: struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, scrigni_positions_x[c]*8, scrigni_positions_y[c]*8);
+;StateGame.c:238: struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, scrigni_positions_x[c]*8, scrigni_positions_y[c]*8);
 	ld	a, (hl)
 	ldhl	sp,	#24
 	ld	(hl), a
@@ -1475,13 +1607,13 @@ _populate_00::
 	add	sp, #5
 	ld	c, e
 	ld	b, d
-;StateGame.c:206: struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
+;StateGame.c:239: struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
 	ld	hl, #0x0019
 	add	hl, bc
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;StateGame.c:207: datascrigno->type = 10;
+;StateGame.c:240: datascrigno->type = 10;
 	ld	hl, #0x0001
 	add	hl, bc
 	ld	a, l
@@ -1494,7 +1626,7 @@ _populate_00::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x0a
-;StateGame.c:208: datascrigno->setup = 1u;
+;StateGame.c:241: datascrigno->setup = 1u;
 	ld	hl, #0x0004
 	add	hl, bc
 	ld	a, l
@@ -1507,7 +1639,7 @@ _populate_00::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x01
-;StateGame.c:209: datascrigno->content_type = st[c]; 
+;StateGame.c:242: datascrigno->content_type = st[c]; 
 	inc	bc
 	inc	bc
 	inc	bc
@@ -1533,12 +1665,12 @@ _populate_00::
 	ld	d, (hl)
 	ld	a,(de)
 	ld	(bc), a
-;StateGame.c:204: for(c=0; c < count; c++){
+;StateGame.c:237: for(c=0; c < count; c++){
 	inc	hl
 	inc	(hl)
 	jp	00104$
 00101$:
-;StateGame.c:215: INT8 invitems_positions_x[] = {31}; //13
+;StateGame.c:248: INT8 invitems_positions_x[] = {31}; //13
 	ldhl	sp,	#12
 	ld	a, l
 	ld	d, h
@@ -1550,7 +1682,7 @@ _populate_00::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x1f
-;StateGame.c:216: INT8 invitems_positions_y[] = {27};//11
+;StateGame.c:249: INT8 invitems_positions_y[] = {27};//11
 	ldhl	sp,	#13
 	ld	a, l
 	ld	d, h
@@ -1562,7 +1694,7 @@ _populate_00::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x1b
-;StateGame.c:217: INT8 iit [] = {3, 1};
+;StateGame.c:250: INT8 iit [] = {3, 1};
 	ldhl	sp,	#14
 	ld	a, l
 	ld	d, h
@@ -1581,7 +1713,7 @@ _populate_00::
 	inc	bc
 	ld	a, #0x01
 	ld	(bc), a
-;StateGame.c:218: for(invc=0; invc < invcount; invc++){
+;StateGame.c:251: for(invc=0; invc < invcount; invc++){
 	xor	a, a
 	ldhl	sp,	#28
 	ld	(hl), a
@@ -1591,7 +1723,7 @@ _populate_00::
 	xor	a, #0x80
 	sub	a, #0x81
 	jp	NC, 00109$
-;StateGame.c:219: struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
+;StateGame.c:252: struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
 	ld	a, (hl)
 	ldhl	sp,	#22
 	ld	(hl), a
@@ -1659,13 +1791,13 @@ _populate_00::
 	add	sp, #5
 	ld	c, e
 	ld	b, d
-;StateGame.c:220: struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
+;StateGame.c:253: struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
 	ld	hl, #0x0019
 	add	hl, bc
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;StateGame.c:221: dataitem->type = iit[invc];
+;StateGame.c:254: dataitem->type = iit[invc];
 	ld	hl, #0x0001
 	add	hl, bc
 	ld	a, l
@@ -1701,28 +1833,28 @@ _populate_00::
 	ld	l, a
 	pop	af
 	ld	(hl), a
-;StateGame.c:222: dataitem->setup = 1u;
+;StateGame.c:255: dataitem->setup = 1u;
 	inc	bc
 	inc	bc
 	inc	bc
 	inc	bc
 	ld	a, #0x01
 	ld	(bc), a
-;StateGame.c:218: for(invc=0; invc < invcount; invc++){
+;StateGame.c:251: for(invc=0; invc < invcount; invc++){
 	ldhl	sp,	#28
 	inc	(hl)
 	jp	00107$
 00109$:
-;StateGame.c:226: }
+;StateGame.c:259: }
 	add	sp, #29
 	ret
-;StateGame.c:228: void Update_StateGame() {
+;StateGame.c:261: void Update_StateGame() {
 ;	---------------------------------
 ; Function Update_StateGame
 ; ---------------------------------
 _Update_StateGame::
 	add	sp, #-2
-;StateGame.c:230: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+;StateGame.c:263: struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	ld	hl, #_scroll_target
 	ld	b, (hl)
 	inc	hl
@@ -1730,14 +1862,151 @@ _Update_StateGame::
 	ld	a, b
 	add	a, #0x19
 	ld	b, a
-	jr	NC,00178$
+	jr	NC,00208$
 	inc	c
-00178$:
+00208$:
 	ldhl	sp,	#0
 	ld	(hl), b
 	inc	hl
 	ld	(hl), c
-;StateGame.c:232: if (amulet != archer_data->amulet){
+;StateGame.c:265: if(load_next) {
+	ld	hl, #_load_next
+	ld	a, (hl)
+	or	a, a
+	jr	Z,00105$
+;StateGame.c:266: switch(load_next){
+	ld	a, (hl)
+	inc	a
+	jr	Z,00102$
+	ld	hl, #_load_next
+	ld	a, (hl)
+	dec	a
+	jr	NZ,00103$
+;StateGame.c:268: case -1:
+00102$:
+;StateGame.c:269: current_map += load_next;
+	ld	hl, #_current_map
+	ld	a, (hl)
+	ld	hl, #_load_next
+	add	a, (hl)
+	ld	hl, #_current_map
+	ld	(hl), a
+;StateGame.c:271: }
+00103$:
+;StateGame.c:272: load_next = 0;
+	ld	hl, #_load_next
+	ld	(hl), #0x00
+;StateGame.c:273: SetState(StateGame);
+	xor	a, a
+	push	af
+	inc	sp
+	call	_SetState
+	inc	sp
+00105$:
+;StateGame.c:276: if(load_next_s){
+	ld	hl, #_load_next_s
+	ld	a, (hl)
+	or	a, a
+	jr	Z,00107$
+;StateGame.c:277: load_next_s = 0;
+	ld	(hl), #0x00
+;StateGame.c:278: SetState(StateSecret);
+	ld	a, #0x01
+	push	af
+	inc	sp
+	call	_SetState
+	inc	sp
+00107$:
+;StateGame.c:281: if(load_next_b){
+	ld	hl, #_load_next_b
+	ld	a, (hl)
+	or	a, a
+	jr	Z,00112$
+;StateGame.c:282: switch(load_next_b){
+	ld	a, (hl)
+	dec	a
+	jr	Z,00108$
+	ld	hl, #_load_next_b
+	ld	a, (hl)
+	sub	a, #0x02
+	jr	Z,00109$
+	jr	00112$
+;StateGame.c:283: case 1: //vado allo StateBoss
+00108$:
+;StateGame.c:284: load_next_b = 0;
+	ld	hl, #_load_next_b
+	ld	(hl), #0x00
+;StateGame.c:285: SetState(StateBoss);
+	ld	a, #0x02
+	push	af
+	inc	sp
+	call	_SetState
+	inc	sp
+;StateGame.c:286: break;
+	jr	00112$
+;StateGame.c:287: case 2: // provengo dal boss TODO
+00109$:
+;StateGame.c:288: load_next_b = 0;
+	ld	hl, #_load_next_b
+	ld	(hl), #0x00
+;StateGame.c:289: current_level++;
+	ld	hl, #_current_level
+	inc	(hl)
+;StateGame.c:290: current_map = 0;
+	ld	hl, #_current_map
+	ld	(hl), #0x00
+;StateGame.c:292: }
+00112$:
+;StateGame.c:295: if(archer_state == STATE_DIAG){
+	ld	hl, #_archer_state
+	ld	a, (hl)
+	sub	a, #0x05
+	jr	NZ,00118$
+;StateGame.c:296: if(show_diag > 0){
+	ld	hl, #_show_diag
+	ld	a, (hl)
+	ld	e, a
+	ld	a, #0x00
+	ld	d, a
+	xor	a, a
+	sub	a, (hl)
+	bit	7, e
+	jr	Z,00216$
+	bit	7, d
+	jr	NZ,00217$
+	cp	a, a
+	jr	00217$
+00216$:
+	bit	7, d
+	jr	Z,00217$
+	scf
+00217$:
+	jr	NC,00114$
+;StateGame.c:297: show_diag = 0;
+	ld	hl, #_show_diag
+	ld	(hl), #0x00
+;StateGame.c:298: ShowDiag();
+	call	_ShowDiag
+00114$:
+;StateGame.c:300: if(show_diag < 0 ){
+	ld	hl, #_show_diag
+	ld	a, (hl)
+	bit	7, a
+	jr	Z,00118$
+;StateGame.c:301: show_diag = 0;
+	ld	(hl), #0x00
+;StateGame.c:302: archer_state = STATE_NORMAL;
+	ld	hl, #_archer_state
+	ld	(hl), #0x00
+;StateGame.c:303: ShowWindow();
+	call	_ShowWindow
+00118$:
+;StateGame.c:306: if(archer_state != STATE_DIAG){
+	ld	hl, #_archer_state
+	ld	a, (hl)
+	sub	a, #0x05
+	jp	Z,00131$
+;StateGame.c:307: if (amulet != archer_data->amulet){
 	pop	de
 	push	de
 	ld	a,(de)
@@ -1745,14 +2014,14 @@ _Update_StateGame::
 	ld	hl, #_amulet
 	ld	a, (hl)
 	sub	a, c
-	jr	Z,00102$
-;StateGame.c:233: amulet = archer_data->amulet;
+	jr	Z,00120$
+;StateGame.c:308: amulet = archer_data->amulet;
 	ld	hl, #_amulet
 	ld	(hl), c
-;StateGame.c:234: WriteAMULET();		
+;StateGame.c:309: WriteAMULET();		
 	call	_WriteAMULET
-00102$:
-;StateGame.c:236: if (coins != archer_data->coins){
+00120$:
+;StateGame.c:311: if (coins != archer_data->coins){
 	pop	bc
 	push	bc
 	inc	bc
@@ -1761,14 +2030,14 @@ _Update_StateGame::
 	ld	hl, #_coins
 	ld	a, (hl)
 	sub	a, c
-	jr	Z,00104$
-;StateGame.c:237: coins = archer_data->coins;
+	jr	Z,00122$
+;StateGame.c:312: coins = archer_data->coins;
 	ld	hl, #_coins
 	ld	(hl), c
-;StateGame.c:238: WriteCOINS();
+;StateGame.c:313: WriteCOINS();
 	call	_WriteCOINS
-00104$:
-;StateGame.c:240: if (hp != archer_data->hp){
+00122$:
+;StateGame.c:315: if (hp != archer_data->hp){
 	pop	bc
 	push	bc
 	inc	bc
@@ -1778,14 +2047,14 @@ _Update_StateGame::
 	ld	hl, #_hp
 	ld	a, (hl)
 	sub	a, c
-	jr	Z,00106$
-;StateGame.c:241: hp = archer_data->hp;
+	jr	Z,00124$
+;StateGame.c:316: hp = archer_data->hp;
 	ld	hl, #_hp
 	ld	(hl), c
-;StateGame.c:242: WriteHP();
+;StateGame.c:317: WriteHP();
 	call	_WriteHP
-00106$:
-;StateGame.c:244: if (ups != archer_data->ups){
+00124$:
+;StateGame.c:319: if (ups != archer_data->ups){
 	pop	bc
 	push	bc
 	inc	bc
@@ -1796,118 +2065,42 @@ _Update_StateGame::
 	ld	hl, #_ups
 	ld	a, (hl)
 	sub	a, c
-	jr	Z,00108$
-;StateGame.c:245: ups = archer_data->ups;
+	jr	Z,00126$
+;StateGame.c:320: ups = archer_data->ups;
 	ld	hl, #_ups
 	ld	(hl), c
-;StateGame.c:246: WriteUPS();
+;StateGame.c:321: WriteUPS();
 	call	_WriteUPS
-00108$:
-;StateGame.c:248: if(archer_data->tool == level_tool){
+00126$:
+;StateGame.c:323: if(archer_data->tool == level_tool){
 	pop	de
 	push	de
 	ld	hl, #0x0004
 	add	hl, de
-	ld	c, l
-	ld	b, h
-	ld	a, (bc)
-	ld	e, a
-	ld	hl, #_level_tool
-	ld	a, (hl)
-	sub	a, e
-	jr	NZ,00110$
-;StateGame.c:249: WriteTOOL();
-	push	bc
-	call	_WriteTOOL
-	pop	bc
-;StateGame.c:250: level_tool = -1; //TODO non sono sicurissimo
-	ld	hl, #_level_tool
-	ld	(hl), #0xff
-00110$:
-;StateGame.c:253: if(load_next) {
-	ld	hl, #_load_next
-	ld	a, (hl)
-	or	a, a
-	jp	Z, 00118$
-;StateGame.c:254: switch(load_next){
-	ld	a, (hl)
-	inc	a
-	jr	Z,00112$
-	ld	hl, #_load_next
-	ld	a, (hl)
-	dec	a
-	jr	Z,00112$
-	ld	hl, #_load_next
-	ld	a, (hl)
-	sub	a, #0x0a
-	jr	Z,00113$
-	jr	00116$
-;StateGame.c:256: case -1:
-00112$:
-;StateGame.c:257: current_map += load_next;
-	ld	hl, #_current_map
-	ld	a, (hl)
-	ld	hl, #_load_next
-	add	a, (hl)
-	ld	hl, #_current_map
-	ld	(hl), a
-;StateGame.c:258: break;
-	jr	00116$
-;StateGame.c:259: case 10: //level
-00113$:
-;StateGame.c:260: if (archer_data->tool == level_tool){
-	ld	a, (bc)
-	ld	c, a
+	ld	c,l
+	ld	a,h
+	ld	c, (hl)
 	ld	hl, #_level_tool
 	ld	a, (hl)
 	sub	a, c
-	jr	NZ,00116$
-;StateGame.c:261: current_level++;
-	ld	hl, #_current_level
-	inc	(hl)
-;StateGame.c:262: current_map = 0;
-	ld	hl, #_current_map
-	ld	(hl), #0x00
-;StateGame.c:267: }
-00116$:
-;StateGame.c:269: load_next = 0;
-	ld	hl, #_load_next
-	ld	(hl), #0x00
-;StateGame.c:270: SetState(StateGame);
-	xor	a, a
-	push	af
-	inc	sp
-	call	_SetState
-	inc	sp
-00118$:
-;StateGame.c:273: if(load_next_s){
-	ld	hl, #_load_next_s
-	ld	a, (hl)
-	or	a, a
-	jr	Z,00121$
-;StateGame.c:274: load_next_s = 0;
-	ld	(hl), #0x00
-;StateGame.c:275: SetState(StateSecret);
-	ld	a, #0x01
-	push	af
-	inc	sp
-	call	_SetState
-	inc	sp
-00121$:
-;StateGame.c:278: }
+	jr	NZ,00131$
+;StateGame.c:324: WriteTOOL();
+	call	_WriteTOOL
+00131$:
+;StateGame.c:328: }
 	add	sp, #2
 	ret
-;StateGame.c:280: void WriteAMULET(){
+;StateGame.c:330: void WriteAMULET(){
 ;	---------------------------------
 ; Function WriteAMULET
 ; ---------------------------------
 _WriteAMULET::
-;StateGame.c:281: PRINT_POS(13,1);
+;StateGame.c:331: PRINT_POS(13,1);
 	ld	hl, #_print_x
 	ld	(hl), #0x0d
 	ld	hl, #_print_y
 	ld	(hl), #0x01
-;StateGame.c:282: switch (amulet){
+;StateGame.c:332: switch (amulet){
 	ld	hl, #_amulet
 	ld	a, (hl)
 	dec	a
@@ -1929,49 +2122,49 @@ _WriteAMULET::
 	sub	a, #0x05
 	jr	Z,00105$
 	jr	00106$
-;StateGame.c:283: case 1: Printf("$"); break;
+;StateGame.c:333: case 1: Printf("$"); break;
 00101$:
 	ld	hl, #___str_2
 	push	hl
 	call	_Printf
 	add	sp, #2
 	ret
-;StateGame.c:284: case 2: Printf("]"); break;
+;StateGame.c:334: case 2: Printf("]"); break;
 00102$:
 	ld	hl, #___str_3
 	push	hl
 	call	_Printf
 	add	sp, #2
 	ret
-;StateGame.c:285: case 3: Printf("["); break;
+;StateGame.c:335: case 3: Printf("["); break;
 00103$:
 	ld	hl, #___str_4
 	push	hl
 	call	_Printf
 	add	sp, #2
 	ret
-;StateGame.c:286: case 4: Printf("#"); break;
+;StateGame.c:336: case 4: Printf("#"); break;
 00104$:
 	ld	hl, #___str_5
 	push	hl
 	call	_Printf
 	add	sp, #2
 	ret
-;StateGame.c:287: case 5: Printf("@"); break;
+;StateGame.c:337: case 5: Printf("@"); break;
 00105$:
 	ld	hl, #___str_6
 	push	hl
 	call	_Printf
 	add	sp, #2
 	ret
-;StateGame.c:288: default: Printf("$"); break;
+;StateGame.c:338: default: Printf("$"); break;
 00106$:
 	ld	hl, #___str_2
 	push	hl
 	call	_Printf
 	add	sp, #2
-;StateGame.c:289: }	
-;StateGame.c:290: }
+;StateGame.c:339: }	
+;StateGame.c:340: }
 	ret
 ___str_2:
 	.ascii "$"
@@ -1988,17 +2181,17 @@ ___str_5:
 ___str_6:
 	.ascii "@"
 	.db 0x00
-;StateGame.c:292: void WriteMap(){
+;StateGame.c:342: void WriteMap(){
 ;	---------------------------------
 ; Function WriteMap
 ; ---------------------------------
 _WriteMap::
-;StateGame.c:293: PRINT_POS(1, 3);
+;StateGame.c:343: PRINT_POS(1, 3);
 	ld	hl, #_print_x
 	ld	(hl), #0x01
 	ld	hl, #_print_y
 	ld	(hl), #0x03
-;StateGame.c:294: Printf(level_names[current_level]);	
+;StateGame.c:344: Printf(level_names[current_level]);	
 	ld	hl, #_current_level
 	ld	c, (hl)
 	ld	b, #0x00
@@ -2014,27 +2207,27 @@ _WriteMap::
 	push	bc
 	call	_Printf
 	add	sp, #2
-;StateGame.c:295: }
+;StateGame.c:345: }
 	ret
-;StateGame.c:297: void WriteCOINS(){
+;StateGame.c:347: void WriteCOINS(){
 ;	---------------------------------
 ; Function WriteCOINS
 ; ---------------------------------
 _WriteCOINS::
-;StateGame.c:298: PRINT_POS(17, 1);
+;StateGame.c:348: PRINT_POS(17, 1);
 	ld	hl, #_print_x
 	ld	(hl), #0x11
 	ld	hl, #_print_y
 	ld	(hl), #0x01
-;StateGame.c:300: Printf("%d", coins);
+;StateGame.c:350: Printf("%d", coins);
 	ld	hl, #_coins
 	ld	c, (hl)
 	ld	b, #0x00
-;StateGame.c:299: if (coins > 9u){
+;StateGame.c:349: if (coins > 9u){
 	ld	a, #0x09
 	sub	a, (hl)
 	jr	NC,00102$
-;StateGame.c:300: Printf("%d", coins);
+;StateGame.c:350: Printf("%d", coins);
 	push	bc
 	ld	hl, #___str_7
 	push	hl
@@ -2042,13 +2235,13 @@ _WriteCOINS::
 	add	sp, #4
 	ret
 00102$:
-;StateGame.c:302: Printf("0%d", coins);
+;StateGame.c:352: Printf("0%d", coins);
 	push	bc
 	ld	hl, #___str_8
 	push	hl
 	call	_Printf
 	add	sp, #4
-;StateGame.c:304: }
+;StateGame.c:354: }
 	ret
 ___str_7:
 	.ascii "%d"
@@ -2056,23 +2249,23 @@ ___str_7:
 ___str_8:
 	.ascii "0%d"
 	.db 0x00
-;StateGame.c:306: void WriteHP(){	
+;StateGame.c:356: void WriteHP(){	
 ;	---------------------------------
 ; Function WriteHP
 ; ---------------------------------
 _WriteHP::
-;StateGame.c:307: PRINT_POS(7, 1);
+;StateGame.c:357: PRINT_POS(7, 1);
 	ld	hl, #_print_x
 	ld	(hl), #0x07
 	ld	hl, #_print_y
 	ld	(hl), #0x01
-;StateGame.c:308: if (hp < 10){
+;StateGame.c:358: if (hp < 10){
 	ld	hl, #_hp
 	ld	a, (hl)
 	xor	a, #0x80
 	sub	a, #0x8a
 	jr	NC,00102$
-;StateGame.c:309: Printf("00%d", hp);
+;StateGame.c:359: Printf("00%d", hp);
 	ld	a, (hl)
 	ld	c, a
 	rla
@@ -2084,7 +2277,7 @@ _WriteHP::
 	call	_Printf
 	add	sp, #4
 00102$:
-;StateGame.c:311: if (hp > 9 & hp < 100){
+;StateGame.c:361: if (hp > 9 & hp < 100){
 	ld	hl, #_hp
 	ld	a, (hl)
 	ld	e, a
@@ -2114,7 +2307,7 @@ _WriteHP::
 	rla
 	and	a,c
 	jr	Z,00104$
-;StateGame.c:312: Printf("0%d", hp);
+;StateGame.c:362: Printf("0%d", hp);
 	ld	a, (hl)
 	ld	c, a
 	rla
@@ -2126,13 +2319,13 @@ _WriteHP::
 	call	_Printf
 	add	sp, #4
 00104$:
-;StateGame.c:314: if (hp >= 100){
+;StateGame.c:364: if (hp >= 100){
 	ld	hl, #_hp
 	ld	a, (hl)
 	xor	a, #0x80
 	sub	a, #0xe4
 	ret	C
-;StateGame.c:315: Printf("%d", hp);	
+;StateGame.c:365: Printf("%d", hp);	
 	ld	a, (hl)
 	ld	c, a
 	rla
@@ -2143,7 +2336,7 @@ _WriteHP::
 	push	hl
 	call	_Printf
 	add	sp, #4
-;StateGame.c:317: }
+;StateGame.c:367: }
 	ret
 ___str_9:
 	.ascii "00%d"
@@ -2154,50 +2347,67 @@ ___str_10:
 ___str_11:
 	.ascii "%d"
 	.db 0x00
-;StateGame.c:319: void WriteTOOL(){
+;StateGame.c:369: void WriteTOOL(){
 ;	---------------------------------
 ; Function WriteTOOL
 ; ---------------------------------
 _WriteTOOL::
-;StateGame.c:320: switch(level_tool){
+;StateGame.c:370: switch(level_tool){
 	ld	hl, #_level_tool
 	ld	a, (hl)
 	sub	a, #0x06
-	ret	NZ
-;StateGame.c:322: PRINT_POS(11, 1);
+	jr	Z,00101$
+	ld	hl, #_level_tool
+	ld	a, (hl)
+	sub	a, #0x07
+	jr	Z,00102$
+	ret
+;StateGame.c:371: case 6:
+00101$:
+;StateGame.c:372: PRINT_POS(11, 1);
 	ld	hl, #_print_x
 	ld	(hl), #0x0b
 	ld	hl, #_print_y
 	ld	(hl), #0x01
-;StateGame.c:323: Printf("<", level_tool);
-	ld	hl, #_level_tool
-	ld	a, (hl)
-	ld	c, a
-	rla
-	sbc	a, a
-	ld	b, a
-	push	bc
+;StateGame.c:373: Printf("{");
 	ld	hl, #___str_12
 	push	hl
 	call	_Printf
-	add	sp, #4
-;StateGame.c:325: }
-;StateGame.c:326: }
+	add	sp, #2
+;StateGame.c:374: break;
+	ret
+;StateGame.c:375: case 7:
+00102$:
+;StateGame.c:376: PRINT_POS(11, 1);
+	ld	hl, #_print_x
+	ld	(hl), #0x0b
+	ld	hl, #_print_y
+	ld	(hl), #0x01
+;StateGame.c:377: Printf("<");
+	ld	hl, #___str_13
+	push	hl
+	call	_Printf
+	add	sp, #2
+;StateGame.c:379: }
+;StateGame.c:380: }
 	ret
 ___str_12:
+	.ascii "{"
+	.db 0x00
+___str_13:
 	.ascii "<"
 	.db 0x00
-;StateGame.c:328: void WriteUPS(){
+;StateGame.c:382: void WriteUPS(){
 ;	---------------------------------
 ; Function WriteUPS
 ; ---------------------------------
 _WriteUPS::
-;StateGame.c:329: PRINT_POS(2, 1); //up
+;StateGame.c:383: PRINT_POS(2, 1); //up
 	ld	hl, #_print_x
 	ld	(hl), #0x02
 	ld	hl, #_print_y
 	ld	(hl), #0x01
-;StateGame.c:330: if (ups > 9){Printf("%d", ups);}
+;StateGame.c:384: if (ups > 9){Printf("%d", ups);}
 	ld	hl, #_ups
 	ld	a, (hl)
 	ld	c, a
@@ -2223,24 +2433,24 @@ _WriteUPS::
 00112$:
 	jr	NC,00102$
 	push	bc
-	ld	hl, #___str_13
+	ld	hl, #___str_14
 	push	hl
 	call	_Printf
 	add	sp, #4
 	ret
 00102$:
-;StateGame.c:331: else{Printf("0%d", ups);}
+;StateGame.c:385: else{Printf("0%d", ups);}
 	push	bc
-	ld	hl, #___str_14
+	ld	hl, #___str_15
 	push	hl
 	call	_Printf
 	add	sp, #4
-;StateGame.c:332: }
+;StateGame.c:386: }
 	ret
-___str_13:
+___str_14:
 	.ascii "%d"
 	.db 0x00
-___str_14:
+___str_15:
 	.ascii "0%d"
 	.db 0x00
 	.area _CODE_2

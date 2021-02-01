@@ -20,9 +20,9 @@ void ETurn();
 void Start_SpriteEnemy() {
 	
 	THIS->coll_x = 2;
-	THIS->coll_y = 0;
-	THIS->coll_w = 12;
-	THIS->coll_h = 16;
+	THIS->coll_y = 4;
+	THIS->coll_w = 6;
+	THIS->coll_h = 12;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
@@ -120,7 +120,6 @@ void Update_SpriteEnemy() {
 	}
 	
 }
-
 
 void CheckCollisionETile() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;

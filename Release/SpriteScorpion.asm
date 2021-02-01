@@ -11,6 +11,8 @@
 	.globl _Destroy_SpriteScorpion
 	.globl _Update_SpriteScorpion
 	.globl _Start_SpriteScorpion
+	.globl _ETurn
+	.globl _CheckCollisionETile
 	.globl _PlayFx
 	.globl _SpriteManagerRemoveSprite
 	.globl _CheckCollision
@@ -52,10 +54,10 @@ _bank_SpriteScorpion:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
 ;--------------------------------------------------------
@@ -73,13 +75,13 @@ _empty::
 ; code
 ;--------------------------------------------------------
 	.area _CODE_2
-;SpriteScorpion.c:20: void Start_SpriteScorpion() {
+;SpriteScorpion.c:21: void Start_SpriteScorpion() {
 ;	---------------------------------
 ; Function Start_SpriteScorpion
 ; ---------------------------------
 _Start_SpriteScorpion::
 	add	sp, #-2
-;SpriteScorpion.c:22: THIS->coll_x = 2;
+;SpriteScorpion.c:23: THIS->coll_x = 2;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -90,7 +92,7 @@ _Start_SpriteScorpion::
 	ld	c,l
 	ld	a,h
 	ld	(hl), #0x02
-;SpriteScorpion.c:23: THIS->coll_y = 0;
+;SpriteScorpion.c:24: THIS->coll_y = 5;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -98,11 +100,10 @@ _Start_SpriteScorpion::
 	ld	b, (hl)
 	ld	hl, #0x000e
 	add	hl, bc
-	ld	c, l
-	ld	b, h
-	xor	a, a
-	ld	(bc), a
-;SpriteScorpion.c:24: THIS->coll_w = 12;
+	ld	c,l
+	ld	a,h
+	ld	(hl), #0x05
+;SpriteScorpion.c:25: THIS->coll_w = 8;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -112,8 +113,8 @@ _Start_SpriteScorpion::
 	add	hl, bc
 	ld	c,l
 	ld	a,h
-	ld	(hl), #0x0c
-;SpriteScorpion.c:25: THIS->coll_h = 16;
+	ld	(hl), #0x08
+;SpriteScorpion.c:26: THIS->coll_h = 11;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -123,8 +124,8 @@ _Start_SpriteScorpion::
 	add	hl, bc
 	ld	c,l
 	ld	a,h
-	ld	(hl), #0x10
-;SpriteScorpion.c:26: THIS->lim_x = 255u;
+	ld	(hl), #0x0b
+;SpriteScorpion.c:27: THIS->lim_x = 255u;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -140,7 +141,7 @@ _Start_SpriteScorpion::
 	ld	(hl), #0xff
 	inc	hl
 	ld	(hl), #0x00
-;SpriteScorpion.c:27: THIS->lim_y = 244u;
+;SpriteScorpion.c:28: THIS->lim_y = 244u;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -156,7 +157,7 @@ _Start_SpriteScorpion::
 	ld	(hl), #0xf4
 	inc	hl
 	ld	(hl), #0x00
-;SpriteScorpion.c:28: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
+;SpriteScorpion.c:29: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -167,7 +168,7 @@ _Start_SpriteScorpion::
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;SpriteScorpion.c:29: SetSpriteAnim(THIS, scorpion_idle, 8u);
+;SpriteScorpion.c:30: SetSpriteAnim(THIS, scorpion_idle, 8u);
 	push	bc
 	ld	a, #0x08
 	push	af
@@ -182,13 +183,13 @@ _Start_SpriteScorpion::
 	call	_SetSpriteAnim
 	add	sp, #5
 	pop	bc
-;SpriteScorpion.c:30: data->enemy_accel_y = 24;
+;SpriteScorpion.c:31: data->enemy_accel_y = 24;
 	ld	l, c
 	ld	h, b
 	ld	(hl), #0x18
 	inc	hl
 	ld	(hl), #0x00
-;SpriteScorpion.c:31: data->vx = 1;
+;SpriteScorpion.c:32: data->vx = 1;
 	ld	hl, #0x0004
 	add	hl, bc
 	inc	sp
@@ -197,7 +198,7 @@ _Start_SpriteScorpion::
 	pop	hl
 	push	hl
 	ld	(hl), #0x01
-;SpriteScorpion.c:32: data->wait = 0u;
+;SpriteScorpion.c:33: data->wait = 0u;
 	ld	hl, #0x0005
 	add	hl, bc
 	inc	sp
@@ -206,7 +207,7 @@ _Start_SpriteScorpion::
 	pop	hl
 	push	hl
 	ld	(hl), #0x00
-;SpriteScorpion.c:33: data->enemydamage = 15u;
+;SpriteScorpion.c:34: data->enemydamage = 15u;
 	ld	hl, #0x0006
 	add	hl, bc
 	inc	sp
@@ -215,7 +216,7 @@ _Start_SpriteScorpion::
 	pop	hl
 	push	hl
 	ld	(hl), #0x0f
-;SpriteScorpion.c:34: data->hp = 60u;
+;SpriteScorpion.c:35: data->hp = 60u;
 	ld	hl, #0x0007
 	add	hl, bc
 	inc	sp
@@ -224,21 +225,23 @@ _Start_SpriteScorpion::
 	pop	hl
 	push	hl
 	ld	(hl), #0x3c
-;SpriteScorpion.c:35: data->enemy_state = ENEMY_STATE_NORMAL;
+;SpriteScorpion.c:36: data->enemy_state = ENEMY_STATE_NORMAL;
 	inc	bc
 	inc	bc
 	xor	a, a
 	ld	(bc), a
-;SpriteScorpion.c:36: }
+;SpriteScorpion.c:37: }
 	add	sp, #2
 	ret
 _scorpion_idle:
 	.db #0x01	; 1
 	.db #0x00	; 0
 _scorpion_walk:
-	.db #0x02	; 2
+	.db #0x04	; 4
 	.db #0x00	; 0
+	.db #0x06	; 6
 	.db #0x01	; 1
+	.db #0x06	; 6
 _scorpion_hit:
 	.db #0x03	; 3
 	.db #0x02	; 2
@@ -247,13 +250,13 @@ _scorpion_hit:
 _scorpion_dead:
 	.db #0x01	; 1
 	.db #0x05	; 5
-;SpriteScorpion.c:38: void Update_SpriteScorpion() {
+;SpriteScorpion.c:39: void Update_SpriteScorpion() {
 ;	---------------------------------
 ; Function Update_SpriteScorpion
 ; ---------------------------------
 _Update_SpriteScorpion::
 	add	sp, #-17
-;SpriteScorpion.c:40: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteScorpion.c:41: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -272,7 +275,7 @@ _Update_SpriteScorpion::
 	ldhl	sp,	#0
 	ld	(hl+), a
 	ld	(hl), e
-;SpriteScorpion.c:42: if (data->enemy_state == ENEMY_STATE_DEAD){
+;SpriteScorpion.c:43: if (data->enemy_state == ENEMY_STATE_DEAD){
 	pop	de
 	push	de
 	ld	hl, #0x0002
@@ -289,7 +292,7 @@ _Update_SpriteScorpion::
 	ld	a,(de)
 	ldhl	sp,	#15
 	ld	(hl), a
-;SpriteScorpion.c:43: if (data->wait > 0){
+;SpriteScorpion.c:44: if (data->wait > 0){
 	pop	de
 	push	de
 	ld	hl, #0x0005
@@ -305,12 +308,12 @@ _Update_SpriteScorpion::
 	ld	d, (hl)
 	ld	a,(de)
 	ldhl	sp,	#16
-;SpriteScorpion.c:42: if (data->enemy_state == ENEMY_STATE_DEAD){
+;SpriteScorpion.c:43: if (data->enemy_state == ENEMY_STATE_DEAD){
 	ld	(hl-), a
 	ld	a, (hl)
 	sub	a, #0x03
 	jp	NZ,00105$
-;SpriteScorpion.c:44: THIS->y--;
+;SpriteScorpion.c:45: THIS->y--;
 	ld	hl, #0x000a
 	add	hl, bc
 	ld	a, l
@@ -327,12 +330,12 @@ _Update_SpriteScorpion::
 	inc	de
 	ld	a,(de)
 	ld	b, a
-;SpriteScorpion.c:43: if (data->wait > 0){
+;SpriteScorpion.c:44: if (data->wait > 0){
 	inc	hl
 	ld	a, (hl)
 	or	a, a
 	jr	Z,00102$
-;SpriteScorpion.c:44: THIS->y--;
+;SpriteScorpion.c:45: THIS->y--;
 	dec	bc
 	dec	hl
 	dec	hl
@@ -342,7 +345,7 @@ _Update_SpriteScorpion::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteScorpion.c:45: data->wait--;
+;SpriteScorpion.c:46: data->wait--;
 	ldhl	sp,#(5 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -357,7 +360,7 @@ _Update_SpriteScorpion::
 	ld	(hl), c
 	jp	00143$
 00102$:
-;SpriteScorpion.c:47: THIS->y++;	
+;SpriteScorpion.c:48: THIS->y++;	
 	inc	bc
 	ldhl	sp,	#14
 	ld	a, (hl+)
@@ -366,7 +369,7 @@ _Update_SpriteScorpion::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteScorpion.c:48: THIS->y++;
+;SpriteScorpion.c:49: THIS->y++;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -396,10 +399,10 @@ _Update_SpriteScorpion::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteScorpion.c:50: return;
+;SpriteScorpion.c:51: return;
 	jp	00143$
 00105$:
-;SpriteScorpion.c:61: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+;SpriteScorpion.c:62: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
 	pop	de
 	push	de
 	ld	hl, #0x0003
@@ -409,12 +412,12 @@ _Update_SpriteScorpion::
 	ldhl	sp,	#6
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteScorpion.c:52: if (data->wait > 0u){
+;SpriteScorpion.c:53: if (data->wait > 0u){
 	ldhl	sp,	#16
 	ld	a, (hl)
 	or	a, a
 	jr	Z,00120$
-;SpriteScorpion.c:53: data->wait -= 1u;
+;SpriteScorpion.c:54: data->wait -= 1u;
 	ld	c, (hl)
 	dec	c
 	ldhl	sp,	#4
@@ -422,11 +425,11 @@ _Update_SpriteScorpion::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), c
-;SpriteScorpion.c:54: if (data->wait == 0u){
+;SpriteScorpion.c:55: if (data->wait == 0u){
 	ld	a, c
 	or	a, a
 	jp	NZ, 00121$
-;SpriteScorpion.c:55: SetSpriteAnim(THIS, scorpion_walk, 8u);
+;SpriteScorpion.c:56: SetSpriteAnim(THIS, scorpion_walk, 8u);
 	ld	a, #0x08
 	push	af
 	inc	sp
@@ -441,7 +444,7 @@ _Update_SpriteScorpion::
 	add	sp, #5
 	jp	00121$
 00120$:
-;SpriteScorpion.c:58: if(data->enemy_accel_y < 24) {
+;SpriteScorpion.c:59: if(data->enemy_accel_y < 24) {
 	pop	de
 	push	de
 	ld	a,(de)
@@ -457,7 +460,7 @@ _Update_SpriteScorpion::
 	rra
 	sbc	a, #0x80
 	jr	NC,00109$
-;SpriteScorpion.c:59: data->enemy_accel_y += 1;
+;SpriteScorpion.c:60: data->enemy_accel_y += 1;
 	inc	bc
 	pop	hl
 	push	hl
@@ -465,7 +468,7 @@ _Update_SpriteScorpion::
 	inc	hl
 	ld	(hl), b
 00109$:
-;SpriteScorpion.c:61: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+;SpriteScorpion.c:62: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
 	pop	de
 	push	de
 	ld	a,(de)
@@ -550,14 +553,14 @@ _Update_SpriteScorpion::
 	ld	l, a
 	pop	af
 	ld	(hl), a
-;SpriteScorpion.c:63: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+;SpriteScorpion.c:64: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
 	or	a, a
 	jp	NZ, 00111$
 	ld	hl, #_delta_time
 	ld	a, (hl)
 	or	a, a
 	jp	Z, 00111$
-;SpriteScorpion.c:58: if(data->enemy_accel_y < 24) {
+;SpriteScorpion.c:59: if(data->enemy_accel_y < 24) {
 	pop	de
 	push	de
 	ld	a,(de)
@@ -565,7 +568,7 @@ _Update_SpriteScorpion::
 	inc	de
 	ld	a,(de)
 	ld	b, a
-;SpriteScorpion.c:63: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+;SpriteScorpion.c:64: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
 	ld	a, c
 	sub	a, #0x18
 	ld	a, b
@@ -574,7 +577,7 @@ _Update_SpriteScorpion::
 	rra
 	sbc	a, #0x80
 	jp	NC, 00111$
-;SpriteScorpion.c:64: data->enemy_accel_y += 2;
+;SpriteScorpion.c:65: data->enemy_accel_y += 2;
 	inc	bc
 	inc	bc
 	pop	hl
@@ -582,7 +585,7 @@ _Update_SpriteScorpion::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteScorpion.c:65: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
+;SpriteScorpion.c:66: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
 	sra	b
 	rr	c
 	sra	b
@@ -620,7 +623,7 @@ _Update_SpriteScorpion::
 	ld	l, a
 	ld	(hl), c
 00111$:
-;SpriteScorpion.c:67: if(data->tile_e_collision) {
+;SpriteScorpion.c:68: if(data->tile_e_collision) {
 	ldhl	sp,#(7 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -628,7 +631,7 @@ _Update_SpriteScorpion::
 	ld	a,(de)
 	or	a, a
 	jp	Z, 00121$
-;SpriteScorpion.c:68: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
+;SpriteScorpion.c:69: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -670,7 +673,7 @@ _Update_SpriteScorpion::
 	ldhl	sp,	#16
 	and	a,(hl)
 	jr	Z,00115$
-;SpriteScorpion.c:69: data->enemy_state = ENEMY_STATE_NORMAL;
+;SpriteScorpion.c:70: data->enemy_state = ENEMY_STATE_NORMAL;
 	pop	bc
 	pop	hl
 	push	hl
@@ -678,17 +681,17 @@ _Update_SpriteScorpion::
 	ld	(hl), #0x00
 	jr	00116$
 00115$:
-;SpriteScorpion.c:71: data->enemy_accel_y = 0;	
+;SpriteScorpion.c:72: data->enemy_accel_y = 0;	
 	pop	hl
 	push	hl
 	xor	a, a
 	ld	(hl+), a
 	ld	(hl), a
 00116$:
-;SpriteScorpion.c:73: CheckCollisionETile();
+;SpriteScorpion.c:74: CheckCollisionETile();
 	call	_CheckCollisionETile
 00121$:
-;SpriteScorpion.c:81: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+;SpriteScorpion.c:82: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 	ld	a, (#(_sprite_manager_updatables + 0x0001) + 0)
 	ld	c, a
 	ld	b, #0x00
@@ -716,7 +719,7 @@ _Update_SpriteScorpion::
 	ld	a, (hl)
 	sub	a, c
 	jp	Z,00143$
-;SpriteScorpion.c:82: if(iespr->type == SpritePlayer) {
+;SpriteScorpion.c:83: if(iespr->type == SpritePlayer) {
 	ldhl	sp,#(9 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -728,7 +731,7 @@ _Update_SpriteScorpion::
 	ld	a, (bc)
 	or	a, a
 	jr	NZ,00125$
-;SpriteScorpion.c:83: if(CheckCollision(THIS, iespr)) {
+;SpriteScorpion.c:84: if(CheckCollision(THIS, iespr)) {
 	push	bc
 	ldhl	sp,	#10
 	ld	a, (hl+)
@@ -746,18 +749,18 @@ _Update_SpriteScorpion::
 	pop	bc
 	or	a, a
 	jr	Z,00125$
-;SpriteScorpion.c:84: data->wait = 24u;
+;SpriteScorpion.c:85: data->wait = 24u;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x18
 00125$:
-;SpriteScorpion.c:87: if(iespr->type == SpriteArrow) {
+;SpriteScorpion.c:88: if(iespr->type == SpriteArrow) {
 	ld	a, (bc)
 	dec	a
 	jp	NZ,00142$
-;SpriteScorpion.c:88: if(CheckCollision(THIS, iespr)) {
+;SpriteScorpion.c:89: if(CheckCollision(THIS, iespr)) {
 	ldhl	sp,	#8
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -773,13 +776,13 @@ _Update_SpriteScorpion::
 	ld	a, e
 	or	a, a
 	jp	Z, 00142$
-;SpriteScorpion.c:89: data->wait = 24u;
+;SpriteScorpion.c:90: data->wait = 24u;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x18
-;SpriteScorpion.c:90: SetSpriteAnim(THIS, scorpion_hit, 24u); 
+;SpriteScorpion.c:91: SetSpriteAnim(THIS, scorpion_hit, 24u); 
 	ld	a, #0x18
 	push	af
 	inc	sp
@@ -792,7 +795,7 @@ _Update_SpriteScorpion::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteScorpion.c:91: struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
+;SpriteScorpion.c:92: struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
 	ldhl	sp,#(9 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -802,7 +805,7 @@ _Update_SpriteScorpion::
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;SpriteScorpion.c:92: data->hp -= arrowdata->arrowdamage;
+;SpriteScorpion.c:93: data->hp -= arrowdata->arrowdamage;
 	pop	de
 	push	de
 	ld	hl, #0x0007
@@ -833,13 +836,13 @@ _Update_SpriteScorpion::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), c
-;SpriteScorpion.c:40: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteScorpion.c:41: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteScorpion.c:93: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
+;SpriteScorpion.c:94: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -878,7 +881,7 @@ _Update_SpriteScorpion::
 	inc	de
 	ld	a, (de)
 	ld	(hl), a
-;SpriteScorpion.c:94: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
+;SpriteScorpion.c:95: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 	ld	hl, #0x000c
 	add	hl, bc
 	ld	c, l
@@ -887,7 +890,7 @@ _Update_SpriteScorpion::
 	and	a, #0x20
 	ld	c, a
 	ld	b, #0x00
-;SpriteScorpion.c:93: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
+;SpriteScorpion.c:94: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
 	ldhl	sp,	#12
 	ld	e, l
 	ld	d, h
@@ -899,14 +902,14 @@ _Update_SpriteScorpion::
 	ld	a, (de)
 	sbc	a, (hl)
 	jp	NC, 00131$
-;SpriteScorpion.c:94: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
+;SpriteScorpion.c:95: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 	ld	a, b
 	or	a, c
 	jr	Z,00127$
-;SpriteScorpion.c:95: ETurn();
+;SpriteScorpion.c:96: ETurn();
 	call	_ETurn
 00127$:
-;SpriteScorpion.c:97: data->tile_e_collision = TranslateSprite(THIS, -4 << delta_time, (data->enemy_accel_y >> 4));
+;SpriteScorpion.c:98: data->tile_e_collision = TranslateSprite(THIS, -4 << delta_time, (data->enemy_accel_y >> 4));
 	pop	de
 	push	de
 	ld	a,(de)
@@ -951,14 +954,14 @@ _Update_SpriteScorpion::
 	ld	(hl), c
 	jp	00132$
 00131$:
-;SpriteScorpion.c:99: if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
+;SpriteScorpion.c:100: if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
 	ld	a, b
 	or	a, c
 	jr	NZ,00129$
-;SpriteScorpion.c:100: ETurn();
+;SpriteScorpion.c:101: ETurn();
 	call	_ETurn
 00129$:
-;SpriteScorpion.c:102: data->tile_e_collision = TranslateSprite(THIS, 4 << delta_time, (data->enemy_accel_y >> 4));
+;SpriteScorpion.c:103: data->tile_e_collision = TranslateSprite(THIS, 4 << delta_time, (data->enemy_accel_y >> 4));
 	pop	de
 	push	de
 	ld	a,(de)
@@ -1003,7 +1006,7 @@ _Update_SpriteScorpion::
 	ld	l, a
 	ld	(hl), c
 00132$:
-;SpriteScorpion.c:104: SpriteManagerRemoveSprite(iespr);
+;SpriteScorpion.c:105: SpriteManagerRemoveSprite(iespr);
 	ldhl	sp,	#8
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1011,7 +1014,7 @@ _Update_SpriteScorpion::
 	push	hl
 	call	_SpriteManagerRemoveSprite
 	add	sp, #2
-;SpriteScorpion.c:105: if (data->hp <= 0){
+;SpriteScorpion.c:106: if (data->hp <= 0){
 	ldhl	sp,#(11 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1035,13 +1038,13 @@ _Update_SpriteScorpion::
 	scf
 00268$:
 	jp	C, 00142$
-;SpriteScorpion.c:106: data->enemy_state = ENEMY_STATE_DEAD;
+;SpriteScorpion.c:107: data->enemy_state = ENEMY_STATE_DEAD;
 	pop	bc
 	pop	hl
 	push	hl
 	push	bc
 	ld	(hl), #0x03
-;SpriteScorpion.c:107: SetSpriteAnim(THIS, scorpion_dead, 16u);
+;SpriteScorpion.c:108: SetSpriteAnim(THIS, scorpion_dead, 16u);
 	ld	a, #0x10
 	push	af
 	inc	sp
@@ -1054,10 +1057,10 @@ _Update_SpriteScorpion::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteScorpion.c:108: NR50_REG = 0x55; //Max volume		
+;SpriteScorpion.c:109: NR50_REG = 0x55; //Max volume		
 	ld	a, #0x55
 	ldh	(_NR50_REG+0),a
-;SpriteScorpion.c:109: PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+;SpriteScorpion.c:110: PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 	ld	hl, #0x0086
 	push	hl
 	ld	l, #0x68
@@ -1076,13 +1079,13 @@ _Update_SpriteScorpion::
 	inc	sp
 	call	_PlayFx
 	add	sp, #12
-;SpriteScorpion.c:110: data->wait = 8u;
+;SpriteScorpion.c:111: data->wait = 8u;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x08
-;SpriteScorpion.c:111: THIS->lim_x = 8u;
+;SpriteScorpion.c:112: THIS->lim_x = 8u;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -1098,7 +1101,7 @@ _Update_SpriteScorpion::
 	ld	(hl), #0x08
 	inc	hl
 	ld	(hl), #0x00
-;SpriteScorpion.c:112: THIS->lim_y = 16u;
+;SpriteScorpion.c:113: THIS->lim_y = 16u;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -1115,7 +1118,7 @@ _Update_SpriteScorpion::
 	inc	hl
 	ld	(hl), #0x00
 00142$:
-;SpriteScorpion.c:81: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+;SpriteScorpion.c:82: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 	ldhl	sp,	#16
 	inc	(hl)
 	ld	c, (hl)
@@ -1143,15 +1146,15 @@ _Update_SpriteScorpion::
 	ld	(hl), a
 	jp	00141$
 00143$:
-;SpriteScorpion.c:118: }
+;SpriteScorpion.c:119: }
 	add	sp, #17
 	ret
-;SpriteScorpion.c:122: void Destroy_SpriteScorpion() {
+;SpriteScorpion.c:123: void Destroy_SpriteScorpion() {
 ;	---------------------------------
 ; Function Destroy_SpriteScorpion
 ; ---------------------------------
 _Destroy_SpriteScorpion::
-;SpriteScorpion.c:123: }
+;SpriteScorpion.c:124: }
 	ret
 	.area _CODE_2
 	.area _CABS (ABS)

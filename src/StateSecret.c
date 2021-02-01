@@ -1,6 +1,7 @@
 #include "Banks/SetBank2.h"
 
 #include "../res/src/window.h"
+#include "../res/src/diag.h"
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\mapsecret0.h"
@@ -33,6 +34,9 @@ extern void WriteCOINS();
 extern void WriteHP();
 extern void WriteUPS();
 extern void WriteMap();
+extern void WriteTOOL();
+
+extern void ShowDiag();
 
 
 //Secrets
@@ -44,8 +48,16 @@ const struct MapInfo* secret_1[] = {
 };
 const struct MapInfo** secrets[] = {secret_1};
 
+extern INT8 level_tool;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
+extern STATE archer_state;
+extern INT8 show_diag;
+
+
+void populate_secret0();
+void ShowSWindow();
+
 
 void Start_StateSecret() {
 
@@ -53,12 +65,10 @@ void Start_StateSecret() {
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
 
 	SPRITES_8x16;
-	UINT8 i;
-	for(i = 0; i != N_SPRITE_TYPES; ++ i) {
-		SpriteManagerLoad(i);
-	}
+	SpriteManagerLoad(SpritePlayer);
+	SpriteManagerLoad(SpriteArrow);
+	SpriteManagerLoad(SpriteItem);
 	SHOW_SPRITES;
-
 	//SCROLL
 	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
 	const struct MapInfo** level_maps_s = secrets[current_level_s];
@@ -70,32 +80,24 @@ void Start_StateSecret() {
 	SHOW_BKG;
 
 	//INIT ARCHER
-	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
-	if (archer_data->ups > 0 & archer_data->ups != ups){
-		 ups = archer_data->ups;
+	struct ArcherInfo* archer_data_s = (struct ArcherInfo*)scroll_target->custom_data;
+	if (archer_data_s->ups > 0 & archer_data_s->ups != ups){
+		 ups = archer_data_s->ups;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 99u;
 	}
-	archer_data->ups =ups;
-	archer_data->hp = hp;
-	archer_data->coins = coins;
-	
+	archer_data_s->ups =ups;
+	archer_data_s->hp = hp;
+	archer_data_s->coins = coins;
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	WX_REG = 7;
-	WY_REG = 144 - 32;
-	InitWindow(0, 0, &window);
-	SHOW_WIN;
-	WriteAMULET();
-	WriteCOINS();
-	WriteHP();
-	WriteUPS();
-	WriteMap();
+	ShowSWindow();
 	
+	//ITEMS
 	switch(current_level_s){
 		case 0:
 			switch(current_map_s){
@@ -112,6 +114,23 @@ void Start_StateSecret() {
 
 }
 
+
+void ShowSWindow(){
+	HIDE_WIN;
+	//WINDOW
+	WX_REG = 7;
+	WY_REG = 144 - 32;
+	InitWindow(0, 0, &window);
+	SHOW_WIN;
+	
+	WriteAMULET();
+	WriteCOINS();
+	WriteHP();
+	WriteUPS();
+	WriteMap();
+	
+}
+
 void populate_secret0(){
 	INT8 invcount = 3;
 	INT8 invc = 0;
@@ -126,7 +145,6 @@ void populate_secret0(){
 		dataitem->setup = 1u;
 	}
 }
-
 
 void Update_StateSecret() {
 	
@@ -148,7 +166,9 @@ void Update_StateSecret() {
 		ups = archer_data->ups;
 		WriteUPS();
 	}	
-	
+	if(archer_data->tool == level_tool){
+		WriteTOOL();
+	}
 	
 	if(load_next_s){
 		switch(load_next_s){
@@ -164,5 +184,5 @@ void Update_StateSecret() {
 			break;
 		}
 	}
-	
+
 }

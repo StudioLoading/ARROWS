@@ -77,11 +77,6 @@ void Update_SpriteArrow() {
 				item_data->collided = 1u;
 			}
 		}
-		/*if(iaspr->type == SpriteEnemy) {
-			if(CheckCollision(THIS, iaspr)) {
-				//SpriteManagerRemove(THIS_IDX);
-			}
-		}*/
 	}
 }
 

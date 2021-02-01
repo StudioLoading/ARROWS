@@ -1,6 +1,8 @@
 #include "Banks/SetBank2.h"
 
 #include "../res/src/window.h"
+#include "../res/src/diag.h"
+#include "../res/src/diagface.h"
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\map.h"
@@ -9,6 +11,8 @@
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
 #include "../res/src/platform.h"
+#include "../res/src/item.h"
+#include "../res/src/key.h"
 #include "../res/src/enemy.h"
 #include "../res/src/scorpion.h"
 #include "../res/src/porcupine.h"
@@ -37,10 +41,10 @@ UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-UINT8 collision_tiles[] = {1, 2, 3, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
+UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
 
-UINT8 amulet = 2u;
-UINT8 coins = 99u;
+UINT8 amulet = 1u;
+UINT8 coins = 0u;
 INT8 ups = 3;
 INT8 hp = 100;
 INT8 level_tool = -1;
@@ -53,10 +57,12 @@ void WriteMap();
 void WriteTOOL();
 void populate_00();
 void populate_01();
+void ShowWindow();
 
 //Levels
 INT8 load_next = 0;
 INT8 load_next_s = 0;
+INT8 load_next_b = 0;
 UINT8 current_level = 0;
 UINT8 current_map = 0;
 const struct MapInfo* level_1[] = {
@@ -70,19 +76,26 @@ const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 UINT16 drop_player_x;
 UINT16 drop_player_y;
 
+STATE archer_state;
 
+INT8 show_diag;
 
 
 void Start_StateGame() {
-
+	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
 
 	SPRITES_8x16;
-	UINT8 i;
-	for(i = 0; i != N_SPRITE_TYPES; ++ i) {
-		SpriteManagerLoad(i);
-	}
+	SpriteManagerLoad(SpritePlayer);
+	SpriteManagerLoad(SpriteArrow);
+	SpriteManagerLoad(SpritePlatform);
+	SpriteManagerLoad(SpriteItem);
+	SpriteManagerLoad(SpriteKey);
+	SpriteManagerLoad(SpriteEnemy);
+	SpriteManagerLoad(SpriteScorpion);
+	SpriteManagerLoad(SpritePorcupine);
+	SpriteManagerLoad(SpriteDiagface);
 	SHOW_SPRITES;
 
 	//SCROLL
@@ -100,6 +113,12 @@ void Start_StateGame() {
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
 	InitScroll(lvls[current_map], collision_tiles, 0);
 	SHOW_BKG;
+	
+	//WINDOW
+	INIT_FONT(font, PRINT_WIN);
+	INIT_CONSOLE(font, 10, 2);
+	
+	
 
 	//INIT ARCHER
 	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
@@ -114,34 +133,24 @@ void Start_StateGame() {
 	archer_data->hp = hp;
 	archer_data->coins = coins;
 	
+	ShowWindow();
 	
-	//WINDOW
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
-	WX_REG = 7;
-	WY_REG = 144 - 32;
-	InitWindow(0, 0, &window);
-	SHOW_WIN;
-	WriteAMULET();
-	WriteCOINS();
-	WriteHP();
-	WriteUPS();
-	WriteMap();
-	//WriteTOOL();
-
+	if(archer_data->tool == level_tool){
+		WriteTOOL();
+	}
+	
 	switch(current_level){
 		case 0:
 			switch(current_map){
 				case 0:
-					populate_00();
 					level_tool = 6;
 					//wrench
 					if(archer_data->tool == 0){
-						struct Sprite* wrench_sprite = SpriteManagerAdd(SpriteItem, 46*8, 2*8);
-						struct ItemInfo* datawrench = (struct ItemInfo*)wrench_sprite->custom_data;
-						datawrench->type = 6;
-						datawrench->collided = 1;
-						datawrench->setup = 1u;
+						populate_00();
+						struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
+						struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+						datakey->type = 1;
+						datakey->setup = 1u;
 					}
 				break;
 				case 1:
@@ -163,9 +172,33 @@ void Start_StateGame() {
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-
+	
 }
 
+void ShowWindow(){
+	HIDE_WIN;
+	//WINDOW
+	WX_REG = 7;
+	WY_REG = 144 - 32;
+	InitWindow(0, 0, &window);
+	SHOW_WIN;
+	
+	WriteAMULET();
+	WriteCOINS();
+	WriteHP();
+	WriteUPS();
+	WriteMap();
+	
+}
+
+void ShowDiag(){
+	HIDE_WIN;
+	//WINDOW
+	WX_REG = 7;
+	WY_REG = 144 - 32;
+	InitWindow(0, 0, &diag);
+	SHOW_WIN;
+}
 
 void populate_01(){
 	//PLATFORMS
@@ -180,15 +213,15 @@ void populate_01(){
 	}
 	
 	//ENEMIES
-	UINT8 e_count = 2;
-	UINT8 e_positions_x[] = {32, 17};
-	UINT8 e_positions_y[] = {9, 39};
-	INT8 e_types[] = {1, 2}; //0=snake, 1=scorpion, 2=porcupine
+	UINT8 e_count = 3;
+	UINT8 e_positions_x[] = {32, 15, 17};
+	UINT8 e_positions_y[] = {9, 4, 39};
+	INT8 e_types[] = {0, 1, 2}; //0=snake, 1=scorpion, 2=porcupine
 	for(plc=0; plc < e_count; plc++){
 		switch(e_types[plc]){
-			case 1: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
+			case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
 			case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
-			default: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc]*8, e_positions_y[plc]*8);
+			default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc]*8, e_positions_y[plc]*8);
 		}
 	}
 }
@@ -196,8 +229,8 @@ void populate_01(){
 void populate_00(){
 
 	INT8 count = 3;
-	INT8 scrigni_positions_x[] = {7, 12, 9, 17};
-	INT8 scrigni_positions_y[] = {14, 23, 7, 36};
+	INT8 scrigni_positions_x[] = {9, 12, 6, 17};
+	INT8 scrigni_positions_y[] = {14, 23, 4, 36};
 	INT8 st [] = {1, 1, 1, 3};
 	INT8 c = 0;
 	//ITEM SCRIGNI
@@ -229,43 +262,13 @@ void Update_StateGame() {
 	
 	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 
-	if (amulet != archer_data->amulet){
-		amulet = archer_data->amulet;
-		WriteAMULET();		
-	}
-	if (coins != archer_data->coins){
-		coins = archer_data->coins;
-		WriteCOINS();
-	}
-	if (hp != archer_data->hp){
-		hp = archer_data->hp;
-		WriteHP();
-	}
-	if (ups != archer_data->ups){
-		ups = archer_data->ups;
-		WriteUPS();
-	}
-	if(archer_data->tool == level_tool){
-		WriteTOOL();
-		level_tool = -1; //TODO non sono sicurissimo
-	}
-	
 	if(load_next) {
 		switch(load_next){
 			case 1: //stage
 			case -1:
 				current_map += load_next;
 			break;
-			case 10: //level
-			if (archer_data->tool == level_tool){
-				current_level++;
-				current_map = 0;
-			}else{
-				//TODO mostra qualcosa per far capire che manca il tool.
-			}				
-			break;
 		}
-		//WriteMap();
 		load_next = 0;
 		SetState(StateGame);
 	}
@@ -274,6 +277,53 @@ void Update_StateGame() {
 		load_next_s = 0;
 		SetState(StateSecret);
 	}
+	
+	if(load_next_b){
+		switch(load_next_b){
+			case 1: //vado allo StateBoss
+				load_next_b = 0;
+				SetState(StateBoss);
+			break;
+			case 2: // provengo dal boss TODO
+				load_next_b = 0;
+				current_level++;
+				current_map = 0;
+			break;
+		}
+	}
+	
+	if(archer_state == STATE_DIAG){
+		if(show_diag > 0){
+			show_diag = 0;
+			ShowDiag();
+		}
+		if(show_diag < 0 ){
+			show_diag = 0;
+			archer_state = STATE_NORMAL;
+			ShowWindow();
+		}
+	}
+	if(archer_state != STATE_DIAG){
+		if (amulet != archer_data->amulet){
+			amulet = archer_data->amulet;
+			WriteAMULET();		
+		}
+		if (coins != archer_data->coins){
+			coins = archer_data->coins;
+			WriteCOINS();
+		}
+		if (hp != archer_data->hp){
+			hp = archer_data->hp;
+			WriteHP();
+		}
+		if (ups != archer_data->ups){
+			ups = archer_data->ups;
+			WriteUPS();
+		}
+		if(archer_data->tool == level_tool){
+			WriteTOOL();
+		}
+	}	
 	
 }
 
@@ -320,7 +370,11 @@ void WriteTOOL(){
 	switch(level_tool){
 		case 6:
 			PRINT_POS(11, 1);
-			Printf("<", level_tool);
+			Printf("{");
+		break;
+		case 7:
+			PRINT_POS(11, 1);
+			Printf("<");
 		break;
 	}
 }

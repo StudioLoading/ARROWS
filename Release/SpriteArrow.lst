@@ -77,10 +77,10 @@
                              77 	.area _GSINIT
                              78 	.area _GSFINAL
                              79 	.area _GSINIT
-                             80 ;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+                             80 ;custom_datas.h:54: UINT8 damage_cooldown = 30u;
    0000 21r00r00             81 	ld	hl, #_damage_cooldown
    0003 36 1E                82 	ld	(hl), #0x1e
-                             83 ;custom_datas.h:45: UINT8 attack_wait = 32u;
+                             83 ;custom_datas.h:55: UINT8 attack_wait = 32u;
    0005 21r01r00             84 	ld	hl, #_attack_wait
    0008 36 20                85 	ld	(hl), #0x20
                              86 ;--------------------------------------------------------
@@ -575,16 +575,16 @@
    022A 46                  575 	ld	b, (hl)
    022B C3rBDr01            576 	jp	00116$
    022E                     577 00118$:
-                            578 ;SpriteArrow.c:86: }
+                            578 ;SpriteArrow.c:81: }
    022E E8 07               579 	add	sp, #7
    0230 C9                  580 	ret
-                            581 ;SpriteArrow.c:88: void SetupArrow(){
+                            581 ;SpriteArrow.c:83: void SetupArrow(){
                             582 ;	---------------------------------
                             583 ; Function SetupArrow
                             584 ; ---------------------------------
    0231                     585 _SetupArrow::
    0231 E8 FA               586 	add	sp, #-6
-                            587 ;SpriteArrow.c:89: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                            587 ;SpriteArrow.c:84: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0233 21r00r00            588 	ld	hl, #_THIS
    0236 46                  589 	ld	b, (hl)
    0237 23                  590 	inc	hl
@@ -599,7 +599,7 @@
    0242 70                  599 	ld	(hl), b
    0243 23                  600 	inc	hl
    0244 71                  601 	ld	(hl), c
-                            602 ;SpriteArrow.c:90: data->arrowdamage = 10u;
+                            602 ;SpriteArrow.c:85: data->arrowdamage = 10u;
    0245 D1                  603 	pop	de
    0246 D5                  604 	push	de
    0247 21 04 00            605 	ld	hl, #0x0004
@@ -607,12 +607,12 @@
    024B 4D                  607 	ld	c,l
    024C 7C                  608 	ld	a,h
    024D 36 0A               609 	ld	(hl), #0x0a
-                            610 ;SpriteArrow.c:91: switch(internal_t) {
+                            610 ;SpriteArrow.c:86: switch(internal_t) {
    024F 3E 06               611 	ld	a, #0x06
    0251 21r03r00            612 	ld	hl, #_internal_t
    0254 96                  613 	sub	a, (hl)
    0255 DAr2Ar06            614 	jp	C, 00135$
-                            615 ;SpriteArrow.c:93: switch(data->arrowdir){
+                            615 ;SpriteArrow.c:88: switch(data->arrowdir){
    0258 D1                  616 	pop	de
    0259 D5                  617 	push	de
    025A 21 03 00            618 	ld	hl, #0x0003
@@ -622,12 +622,12 @@
    0260 F8 02               622 	ldhl	sp,	#2
    0262 22                  623 	ld	(hl+), a
    0263 72                  624 	ld	(hl), d
-                            625 ;SpriteArrow.c:95: data->vy = 0;
+                            625 ;SpriteArrow.c:90: data->vy = 0;
    0264 C1                  626 	pop	bc
    0265 C5                  627 	push	bc
    0266 03                  628 	inc	bc
    0267 03                  629 	inc	bc
-                            630 ;SpriteArrow.c:96: data->vx = 2;
+                            630 ;SpriteArrow.c:91: data->vx = 2;
    0268 D1                  631 	pop	de
    0269 D5                  632 	push	de
    026A 21 01 00            633 	ld	hl, #0x0001
@@ -637,7 +637,7 @@
    0270 F8 04               637 	ldhl	sp,	#4
    0272 22                  638 	ld	(hl+), a
    0273 72                  639 	ld	(hl), d
-                            640 ;SpriteArrow.c:91: switch(internal_t) {
+                            640 ;SpriteArrow.c:86: switch(internal_t) {
    0274 21r03r00            641 	ld	hl, #_internal_t
    0277 5E                  642 	ld	e, (hl)
    0278 16 00               643 	ld	d, #0x00
@@ -654,9 +654,9 @@
    028D C3rA3r04            654 	jp	00119$
    0290 C3r52r05            655 	jp	00125$
    0293 C3r01r06            656 	jp	00131$
-                            657 ;SpriteArrow.c:92: case 1:
+                            657 ;SpriteArrow.c:87: case 1:
    0296                     658 00101$:
-                            659 ;SpriteArrow.c:93: switch(data->arrowdir){
+                            659 ;SpriteArrow.c:88: switch(data->arrowdir){
    0296 F8 02               660 	ldhl	sp,#(3 - 1)
    0298 5E                  661 	ld	e, (hl)
    0299 23                  662 	inc	hl
@@ -671,12 +671,12 @@
    02A9 D6 04               671 	sub	a, #0x04
    02AB CAr1Cr03            672 	jp	Z,00105$
    02AE C3r3Cr03            673 	jp	00106$
-                            674 ;SpriteArrow.c:94: case 1: //orizzontale
+                            674 ;SpriteArrow.c:89: case 1: //orizzontale
    02B1                     675 00102$:
-                            676 ;SpriteArrow.c:95: data->vy = 0;
+                            676 ;SpriteArrow.c:90: data->vy = 0;
    02B1 AF                  677 	xor	a, a
    02B2 02                  678 	ld	(bc), a
-                            679 ;SpriteArrow.c:96: data->vx = 2;
+                            679 ;SpriteArrow.c:91: data->vx = 2;
    02B3 F8 04               680 	ldhl	sp,	#4
    02B5 2A                  681 	ld	a, (hl+)
    02B6 66                  682 	ld	h, (hl)
@@ -685,7 +685,7 @@
    02B9 E6 F0               685 	and	a, #0xf0
    02BB F6 02               686 	or	a, #0x02
    02BD 77                  687 	ld	(hl),a
-                            688 ;SpriteArrow.c:97: SetSpriteAnim(THIS, arrow_normal, 18u);	
+                            688 ;SpriteArrow.c:92: SetSpriteAnim(THIS, arrow_normal, 18u);	
    02BE 3E 12               689 	ld	a, #0x12
    02C0 F5                  690 	push	af
    02C1 33                  691 	inc	sp
@@ -698,14 +698,14 @@
    02CC E5                  698 	push	hl
    02CD CDr00r00            699 	call	_SetSpriteAnim
    02D0 E8 05               700 	add	sp, #5
-                            701 ;SpriteArrow.c:98: break;
+                            701 ;SpriteArrow.c:93: break;
    02D2 C3r3Cr03            702 	jp	00106$
-                            703 ;SpriteArrow.c:99: case 2: //diagonale
+                            703 ;SpriteArrow.c:94: case 2: //diagonale
    02D5                     704 00103$:
-                            705 ;SpriteArrow.c:100: data->vy = -1;
+                            705 ;SpriteArrow.c:95: data->vy = -1;
    02D5 3E FF               706 	ld	a, #0xff
    02D7 02                  707 	ld	(bc), a
-                            708 ;SpriteArrow.c:101: data->vx = 2;
+                            708 ;SpriteArrow.c:96: data->vx = 2;
    02D8 F8 04               709 	ldhl	sp,	#4
    02DA 2A                  710 	ld	a, (hl+)
    02DB 66                  711 	ld	h, (hl)
@@ -714,7 +714,7 @@
    02DE E6 F0               714 	and	a, #0xf0
    02E0 F6 02               715 	or	a, #0x02
    02E2 77                  716 	ld	(hl),a
-                            717 ;SpriteArrow.c:102: SetSpriteAnim(THIS, arrow_normal_d, 18u);	
+                            717 ;SpriteArrow.c:97: SetSpriteAnim(THIS, arrow_normal_d, 18u);	
    02E3 3E 12               718 	ld	a, #0x12
    02E5 F5                  719 	push	af
    02E6 33                  720 	inc	sp
@@ -727,14 +727,14 @@
    02F1 E5                  727 	push	hl
    02F2 CDr00r00            728 	call	_SetSpriteAnim
    02F5 E8 05               729 	add	sp, #5
-                            730 ;SpriteArrow.c:103: break;
+                            730 ;SpriteArrow.c:98: break;
    02F7 C3r3Cr03            731 	jp	00106$
-                            732 ;SpriteArrow.c:104: case 3: //verticale in su
+                            732 ;SpriteArrow.c:99: case 3: //verticale in su
    02FA                     733 00104$:
-                            734 ;SpriteArrow.c:105: data->vy = -2;
+                            734 ;SpriteArrow.c:100: data->vy = -2;
    02FA 3E FE               735 	ld	a, #0xfe
    02FC 02                  736 	ld	(bc), a
-                            737 ;SpriteArrow.c:106: data->vx = 0;
+                            737 ;SpriteArrow.c:101: data->vx = 0;
    02FD F8 04               738 	ldhl	sp,	#4
    02FF 2A                  739 	ld	a, (hl+)
    0300 66                  740 	ld	h, (hl)
@@ -742,7 +742,7 @@
    0302 7E                  742 	ld	a, (hl)
    0303 E6 F0               743 	and	a, #0xf0
    0305 77                  744 	ld	(hl),a
-                            745 ;SpriteArrow.c:107: SetSpriteAnim(THIS, arrow_normal_v, 18u);	
+                            745 ;SpriteArrow.c:102: SetSpriteAnim(THIS, arrow_normal_v, 18u);	
    0306 3E 12               746 	ld	a, #0x12
    0308 F5                  747 	push	af
    0309 33                  748 	inc	sp
@@ -755,14 +755,14 @@
    0314 E5                  755 	push	hl
    0315 CDr00r00            756 	call	_SetSpriteAnim
    0318 E8 05               757 	add	sp, #5
-                            758 ;SpriteArrow.c:108: break;
+                            758 ;SpriteArrow.c:103: break;
    031A 18 20               759 	jr	00106$
-                            760 ;SpriteArrow.c:109: case 4: //verticale in giu
+                            760 ;SpriteArrow.c:104: case 4: //verticale in giu
    031C                     761 00105$:
-                            762 ;SpriteArrow.c:110: data->vy = 2;
+                            762 ;SpriteArrow.c:105: data->vy = 2;
    031C 3E 02               763 	ld	a, #0x02
    031E 02                  764 	ld	(bc), a
-                            765 ;SpriteArrow.c:111: data->vx = 0;
+                            765 ;SpriteArrow.c:106: data->vx = 0;
    031F F8 04               766 	ldhl	sp,	#4
    0321 2A                  767 	ld	a, (hl+)
    0322 66                  768 	ld	h, (hl)
@@ -770,7 +770,7 @@
    0324 7E                  770 	ld	a, (hl)
    0325 E6 F0               771 	and	a, #0xf0
    0327 77                  772 	ld	(hl),a
-                            773 ;SpriteArrow.c:112: SetSpriteAnim(THIS, arrow_normal_g, 18u);	
+                            773 ;SpriteArrow.c:107: SetSpriteAnim(THIS, arrow_normal_g, 18u);	
    0328 3E 12               774 	ld	a, #0x12
    032A F5                  775 	push	af
    032B 33                  776 	inc	sp
@@ -783,19 +783,19 @@
    0336 E5                  783 	push	hl
    0337 CDr00r00            784 	call	_SetSpriteAnim
    033A E8 05               785 	add	sp, #5
-                            786 ;SpriteArrow.c:114: }
+                            786 ;SpriteArrow.c:109: }
    033C                     787 00106$:
-                            788 ;SpriteArrow.c:115: data->type = 0;
+                            788 ;SpriteArrow.c:110: data->type = 0;
    033C C1                  789 	pop	bc
    033D C5                  790 	push	bc
    033E 0A                  791 	ld	a, (bc)
    033F E6 F0               792 	and	a, #0xf0
    0341 02                  793 	ld	(bc),a
-                            794 ;SpriteArrow.c:116: break;
+                            794 ;SpriteArrow.c:111: break;
    0342 C3r2Ar06            795 	jp	00135$
-                            796 ;SpriteArrow.c:117: case 2:
+                            796 ;SpriteArrow.c:112: case 2:
    0345                     797 00107$:
-                            798 ;SpriteArrow.c:118: switch(data->arrowdir){
+                            798 ;SpriteArrow.c:113: switch(data->arrowdir){
    0345 F8 02               799 	ldhl	sp,#(3 - 1)
    0347 5E                  800 	ld	e, (hl)
    0348 23                  801 	inc	hl
@@ -810,12 +810,12 @@
    0358 D6 04               810 	sub	a, #0x04
    035A CArCBr03            811 	jp	Z,00111$
    035D C3rEBr03            812 	jp	00112$
-                            813 ;SpriteArrow.c:119: case 1:
+                            813 ;SpriteArrow.c:114: case 1:
    0360                     814 00108$:
-                            815 ;SpriteArrow.c:120: data->vy = 0;
+                            815 ;SpriteArrow.c:115: data->vy = 0;
    0360 AF                  816 	xor	a, a
    0361 02                  817 	ld	(bc), a
-                            818 ;SpriteArrow.c:121: data->vx = 2;
+                            818 ;SpriteArrow.c:116: data->vx = 2;
    0362 F8 04               819 	ldhl	sp,	#4
    0364 2A                  820 	ld	a, (hl+)
    0365 66                  821 	ld	h, (hl)
@@ -824,7 +824,7 @@
    0368 E6 F0               824 	and	a, #0xf0
    036A F6 02               825 	or	a, #0x02
    036C 77                  826 	ld	(hl),a
-                            827 ;SpriteArrow.c:122: SetSpriteAnim(THIS, arrow_water, 18u);	
+                            827 ;SpriteArrow.c:117: SetSpriteAnim(THIS, arrow_water, 18u);	
    036D 3E 12               828 	ld	a, #0x12
    036F F5                  829 	push	af
    0370 33                  830 	inc	sp
@@ -837,14 +837,14 @@
    037B E5                  837 	push	hl
    037C CDr00r00            838 	call	_SetSpriteAnim
    037F E8 05               839 	add	sp, #5
-                            840 ;SpriteArrow.c:123: break;
+                            840 ;SpriteArrow.c:118: break;
    0381 C3rEBr03            841 	jp	00112$
-                            842 ;SpriteArrow.c:124: case 2:
+                            842 ;SpriteArrow.c:119: case 2:
    0384                     843 00109$:
-                            844 ;SpriteArrow.c:125: data->vy = -1;
+                            844 ;SpriteArrow.c:120: data->vy = -1;
    0384 3E FF               845 	ld	a, #0xff
    0386 02                  846 	ld	(bc), a
-                            847 ;SpriteArrow.c:126: data->vx = 2;
+                            847 ;SpriteArrow.c:121: data->vx = 2;
    0387 F8 04               848 	ldhl	sp,	#4
    0389 2A                  849 	ld	a, (hl+)
    038A 66                  850 	ld	h, (hl)
@@ -853,7 +853,7 @@
    038D E6 F0               853 	and	a, #0xf0
    038F F6 02               854 	or	a, #0x02
    0391 77                  855 	ld	(hl),a
-                            856 ;SpriteArrow.c:127: SetSpriteAnim(THIS, arrow_water_d, 18u);	
+                            856 ;SpriteArrow.c:122: SetSpriteAnim(THIS, arrow_water_d, 18u);	
    0392 3E 12               857 	ld	a, #0x12
    0394 F5                  858 	push	af
    0395 33                  859 	inc	sp
@@ -866,14 +866,14 @@
    03A0 E5                  866 	push	hl
    03A1 CDr00r00            867 	call	_SetSpriteAnim
    03A4 E8 05               868 	add	sp, #5
-                            869 ;SpriteArrow.c:128: break;
+                            869 ;SpriteArrow.c:123: break;
    03A6 C3rEBr03            870 	jp	00112$
-                            871 ;SpriteArrow.c:129: case 3:
+                            871 ;SpriteArrow.c:124: case 3:
    03A9                     872 00110$:
-                            873 ;SpriteArrow.c:130: data->vy = -2;
+                            873 ;SpriteArrow.c:125: data->vy = -2;
    03A9 3E FE               874 	ld	a, #0xfe
    03AB 02                  875 	ld	(bc), a
-                            876 ;SpriteArrow.c:131: data->vx = 0;
+                            876 ;SpriteArrow.c:126: data->vx = 0;
    03AC F8 04               877 	ldhl	sp,	#4
    03AE 2A                  878 	ld	a, (hl+)
    03AF 66                  879 	ld	h, (hl)
@@ -881,7 +881,7 @@
    03B1 7E                  881 	ld	a, (hl)
    03B2 E6 F0               882 	and	a, #0xf0
    03B4 77                  883 	ld	(hl),a
-                            884 ;SpriteArrow.c:132: SetSpriteAnim(THIS, arrow_water_v, 18u);	
+                            884 ;SpriteArrow.c:127: SetSpriteAnim(THIS, arrow_water_v, 18u);	
    03B5 3E 12               885 	ld	a, #0x12
    03B7 F5                  886 	push	af
    03B8 33                  887 	inc	sp
@@ -894,14 +894,14 @@
    03C3 E5                  894 	push	hl
    03C4 CDr00r00            895 	call	_SetSpriteAnim
    03C7 E8 05               896 	add	sp, #5
-                            897 ;SpriteArrow.c:133: break;
+                            897 ;SpriteArrow.c:128: break;
    03C9 18 20               898 	jr	00112$
-                            899 ;SpriteArrow.c:134: case 4:
+                            899 ;SpriteArrow.c:129: case 4:
    03CB                     900 00111$:
-                            901 ;SpriteArrow.c:135: data->vy = 2;
+                            901 ;SpriteArrow.c:130: data->vy = 2;
    03CB 3E 02               902 	ld	a, #0x02
    03CD 02                  903 	ld	(bc), a
-                            904 ;SpriteArrow.c:136: data->vx = 0;
+                            904 ;SpriteArrow.c:131: data->vx = 0;
    03CE F8 04               905 	ldhl	sp,	#4
    03D0 2A                  906 	ld	a, (hl+)
    03D1 66                  907 	ld	h, (hl)
@@ -909,7 +909,7 @@
    03D3 7E                  909 	ld	a, (hl)
    03D4 E6 F0               910 	and	a, #0xf0
    03D6 77                  911 	ld	(hl),a
-                            912 ;SpriteArrow.c:137: SetSpriteAnim(THIS, arrow_water_g, 18u);	
+                            912 ;SpriteArrow.c:132: SetSpriteAnim(THIS, arrow_water_g, 18u);	
    03D7 3E 12               913 	ld	a, #0x12
    03D9 F5                  914 	push	af
    03DA 33                  915 	inc	sp
@@ -922,19 +922,19 @@
    03E5 E5                  922 	push	hl
    03E6 CDr00r00            923 	call	_SetSpriteAnim
    03E9 E8 05               924 	add	sp, #5
-                            925 ;SpriteArrow.c:139: }						
+                            925 ;SpriteArrow.c:134: }						
    03EB                     926 00112$:
-                            927 ;SpriteArrow.c:140: data->type = 0;
+                            927 ;SpriteArrow.c:135: data->type = 0;
    03EB C1                  928 	pop	bc
    03EC C5                  929 	push	bc
    03ED 0A                  930 	ld	a, (bc)
    03EE E6 F0               931 	and	a, #0xf0
    03F0 02                  932 	ld	(bc),a
-                            933 ;SpriteArrow.c:141: break;
+                            933 ;SpriteArrow.c:136: break;
    03F1 C3r2Ar06            934 	jp	00135$
-                            935 ;SpriteArrow.c:142: case 3:
+                            935 ;SpriteArrow.c:137: case 3:
    03F4                     936 00113$:
-                            937 ;SpriteArrow.c:143: switch(data->arrowdir){
+                            937 ;SpriteArrow.c:138: switch(data->arrowdir){
    03F4 F8 02               938 	ldhl	sp,#(3 - 1)
    03F6 5E                  939 	ld	e, (hl)
    03F7 23                  940 	inc	hl
@@ -949,12 +949,12 @@
    0407 D6 04               949 	sub	a, #0x04
    0409 CAr7Ar04            950 	jp	Z,00117$
    040C C3r9Ar04            951 	jp	00118$
-                            952 ;SpriteArrow.c:144: case 1:
+                            952 ;SpriteArrow.c:139: case 1:
    040F                     953 00114$:
-                            954 ;SpriteArrow.c:145: data->vy = 0;
+                            954 ;SpriteArrow.c:140: data->vy = 0;
    040F AF                  955 	xor	a, a
    0410 02                  956 	ld	(bc), a
-                            957 ;SpriteArrow.c:146: data->vx = 1;
+                            957 ;SpriteArrow.c:141: data->vx = 1;
    0411 F8 04               958 	ldhl	sp,	#4
    0413 2A                  959 	ld	a, (hl+)
    0414 66                  960 	ld	h, (hl)
@@ -963,7 +963,7 @@
    0417 E6 F0               963 	and	a, #0xf0
    0419 F6 01               964 	or	a, #0x01
    041B 77                  965 	ld	(hl),a
-                            966 ;SpriteArrow.c:147: SetSpriteAnim(THIS, arrow_stone, 18u);	
+                            966 ;SpriteArrow.c:142: SetSpriteAnim(THIS, arrow_stone, 18u);	
    041C 3E 12               967 	ld	a, #0x12
    041E F5                  968 	push	af
    041F 33                  969 	inc	sp
@@ -976,14 +976,14 @@
    042A E5                  976 	push	hl
    042B CDr00r00            977 	call	_SetSpriteAnim
    042E E8 05               978 	add	sp, #5
-                            979 ;SpriteArrow.c:148: break;
+                            979 ;SpriteArrow.c:143: break;
    0430 C3r9Ar04            980 	jp	00118$
-                            981 ;SpriteArrow.c:149: case 2:
+                            981 ;SpriteArrow.c:144: case 2:
    0433                     982 00115$:
-                            983 ;SpriteArrow.c:150: data->vy = -1;
+                            983 ;SpriteArrow.c:145: data->vy = -1;
    0433 3E FF               984 	ld	a, #0xff
    0435 02                  985 	ld	(bc), a
-                            986 ;SpriteArrow.c:151: data->vx = 2;
+                            986 ;SpriteArrow.c:146: data->vx = 2;
    0436 F8 04               987 	ldhl	sp,	#4
    0438 2A                  988 	ld	a, (hl+)
    0439 66                  989 	ld	h, (hl)
@@ -992,7 +992,7 @@
    043C E6 F0               992 	and	a, #0xf0
    043E F6 02               993 	or	a, #0x02
    0440 77                  994 	ld	(hl),a
-                            995 ;SpriteArrow.c:152: SetSpriteAnim(THIS, arrow_stone_d, 18u);	
+                            995 ;SpriteArrow.c:147: SetSpriteAnim(THIS, arrow_stone_d, 18u);	
    0441 3E 12               996 	ld	a, #0x12
    0443 F5                  997 	push	af
    0444 33                  998 	inc	sp
@@ -1005,14 +1005,14 @@
    044F E5                 1005 	push	hl
    0450 CDr00r00           1006 	call	_SetSpriteAnim
    0453 E8 05              1007 	add	sp, #5
-                           1008 ;SpriteArrow.c:153: break;
+                           1008 ;SpriteArrow.c:148: break;
    0455 C3r9Ar04           1009 	jp	00118$
-                           1010 ;SpriteArrow.c:154: case 3:
+                           1010 ;SpriteArrow.c:149: case 3:
    0458                    1011 00116$:
-                           1012 ;SpriteArrow.c:155: data->vy = -1;
+                           1012 ;SpriteArrow.c:150: data->vy = -1;
    0458 3E FF              1013 	ld	a, #0xff
    045A 02                 1014 	ld	(bc), a
-                           1015 ;SpriteArrow.c:156: data->vx = 0;
+                           1015 ;SpriteArrow.c:151: data->vx = 0;
    045B F8 04              1016 	ldhl	sp,	#4
    045D 2A                 1017 	ld	a, (hl+)
    045E 66                 1018 	ld	h, (hl)
@@ -1020,7 +1020,7 @@
    0460 7E                 1020 	ld	a, (hl)
    0461 E6 F0              1021 	and	a, #0xf0
    0463 77                 1022 	ld	(hl),a
-                           1023 ;SpriteArrow.c:157: SetSpriteAnim(THIS, arrow_stone_v, 18u);	
+                           1023 ;SpriteArrow.c:152: SetSpriteAnim(THIS, arrow_stone_v, 18u);	
    0464 3E 12              1024 	ld	a, #0x12
    0466 F5                 1025 	push	af
    0467 33                 1026 	inc	sp
@@ -1033,14 +1033,14 @@
    0472 E5                 1033 	push	hl
    0473 CDr00r00           1034 	call	_SetSpriteAnim
    0476 E8 05              1035 	add	sp, #5
-                           1036 ;SpriteArrow.c:158: break;
+                           1036 ;SpriteArrow.c:153: break;
    0478 18 20              1037 	jr	00118$
-                           1038 ;SpriteArrow.c:159: case 4:
+                           1038 ;SpriteArrow.c:154: case 4:
    047A                    1039 00117$:
-                           1040 ;SpriteArrow.c:160: data->vy = 1;
+                           1040 ;SpriteArrow.c:155: data->vy = 1;
    047A 3E 01              1041 	ld	a, #0x01
    047C 02                 1042 	ld	(bc), a
-                           1043 ;SpriteArrow.c:161: data->vx = 0;
+                           1043 ;SpriteArrow.c:156: data->vx = 0;
    047D F8 04              1044 	ldhl	sp,	#4
    047F 2A                 1045 	ld	a, (hl+)
    0480 66                 1046 	ld	h, (hl)
@@ -1048,7 +1048,7 @@
    0482 7E                 1048 	ld	a, (hl)
    0483 E6 F0              1049 	and	a, #0xf0
    0485 77                 1050 	ld	(hl),a
-                           1051 ;SpriteArrow.c:162: SetSpriteAnim(THIS, arrow_stone_g, 18u);
+                           1051 ;SpriteArrow.c:157: SetSpriteAnim(THIS, arrow_stone_g, 18u);
    0486 3E 12              1052 	ld	a, #0x12
    0488 F5                 1053 	push	af
    0489 33                 1054 	inc	sp
@@ -1061,19 +1061,19 @@
    0494 E5                 1061 	push	hl
    0495 CDr00r00           1062 	call	_SetSpriteAnim
    0498 E8 05              1063 	add	sp, #5
-                           1064 ;SpriteArrow.c:164: }						
+                           1064 ;SpriteArrow.c:159: }						
    049A                    1065 00118$:
-                           1066 ;SpriteArrow.c:165: data->type = 0;
+                           1066 ;SpriteArrow.c:160: data->type = 0;
    049A C1                 1067 	pop	bc
    049B C5                 1068 	push	bc
    049C 0A                 1069 	ld	a, (bc)
    049D E6 F0              1070 	and	a, #0xf0
    049F 02                 1071 	ld	(bc),a
-                           1072 ;SpriteArrow.c:166: break;
+                           1072 ;SpriteArrow.c:161: break;
    04A0 C3r2Ar06           1073 	jp	00135$
-                           1074 ;SpriteArrow.c:167: case 4:
+                           1074 ;SpriteArrow.c:162: case 4:
    04A3                    1075 00119$:
-                           1076 ;SpriteArrow.c:168: switch(data->arrowdir){
+                           1076 ;SpriteArrow.c:163: switch(data->arrowdir){
    04A3 F8 02              1077 	ldhl	sp,#(3 - 1)
    04A5 5E                 1078 	ld	e, (hl)
    04A6 23                 1079 	inc	hl
@@ -1088,12 +1088,12 @@
    04B6 D6 04              1088 	sub	a, #0x04
    04B8 CAr29r05           1089 	jp	Z,00123$
    04BB C3r49r05           1090 	jp	00124$
-                           1091 ;SpriteArrow.c:169: case 1:
+                           1091 ;SpriteArrow.c:164: case 1:
    04BE                    1092 00120$:
-                           1093 ;SpriteArrow.c:170: data->vy = 0;
+                           1093 ;SpriteArrow.c:165: data->vy = 0;
    04BE AF                 1094 	xor	a, a
    04BF 02                 1095 	ld	(bc), a
-                           1096 ;SpriteArrow.c:171: data->vx = 3;
+                           1096 ;SpriteArrow.c:166: data->vx = 3;
    04C0 F8 04              1097 	ldhl	sp,	#4
    04C2 2A                 1098 	ld	a, (hl+)
    04C3 66                 1099 	ld	h, (hl)
@@ -1102,7 +1102,7 @@
    04C6 E6 F0              1102 	and	a, #0xf0
    04C8 F6 03              1103 	or	a, #0x03
    04CA 77                 1104 	ld	(hl),a
-                           1105 ;SpriteArrow.c:172: SetSpriteAnim(THIS, arrow_blast, 18u);	
+                           1105 ;SpriteArrow.c:167: SetSpriteAnim(THIS, arrow_blast, 18u);	
    04CB 3E 12              1106 	ld	a, #0x12
    04CD F5                 1107 	push	af
    04CE 33                 1108 	inc	sp
@@ -1115,14 +1115,14 @@
    04D9 E5                 1115 	push	hl
    04DA CDr00r00           1116 	call	_SetSpriteAnim
    04DD E8 05              1117 	add	sp, #5
-                           1118 ;SpriteArrow.c:173: break;
+                           1118 ;SpriteArrow.c:168: break;
    04DF C3r49r05           1119 	jp	00124$
-                           1120 ;SpriteArrow.c:174: case 2:
+                           1120 ;SpriteArrow.c:169: case 2:
    04E2                    1121 00121$:
-                           1122 ;SpriteArrow.c:175: data->vy = -2;
+                           1122 ;SpriteArrow.c:170: data->vy = -2;
    04E2 3E FE              1123 	ld	a, #0xfe
    04E4 02                 1124 	ld	(bc), a
-                           1125 ;SpriteArrow.c:176: data->vx = 3;
+                           1125 ;SpriteArrow.c:171: data->vx = 3;
    04E5 F8 04              1126 	ldhl	sp,	#4
    04E7 2A                 1127 	ld	a, (hl+)
    04E8 66                 1128 	ld	h, (hl)
@@ -1131,7 +1131,7 @@
    04EB E6 F0              1131 	and	a, #0xf0
    04ED F6 03              1132 	or	a, #0x03
    04EF 77                 1133 	ld	(hl),a
-                           1134 ;SpriteArrow.c:177: SetSpriteAnim(THIS, arrow_blast_d, 18u);	
+                           1134 ;SpriteArrow.c:172: SetSpriteAnim(THIS, arrow_blast_d, 18u);	
    04F0 3E 12              1135 	ld	a, #0x12
    04F2 F5                 1136 	push	af
    04F3 33                 1137 	inc	sp
@@ -1144,14 +1144,14 @@
    04FE E5                 1144 	push	hl
    04FF CDr00r00           1145 	call	_SetSpriteAnim
    0502 E8 05              1146 	add	sp, #5
-                           1147 ;SpriteArrow.c:178: break;
+                           1147 ;SpriteArrow.c:173: break;
    0504 C3r49r05           1148 	jp	00124$
-                           1149 ;SpriteArrow.c:179: case 3:
+                           1149 ;SpriteArrow.c:174: case 3:
    0507                    1150 00122$:
-                           1151 ;SpriteArrow.c:180: data->vy = -3;
+                           1151 ;SpriteArrow.c:175: data->vy = -3;
    0507 3E FD              1152 	ld	a, #0xfd
    0509 02                 1153 	ld	(bc), a
-                           1154 ;SpriteArrow.c:181: data->vx = 0;
+                           1154 ;SpriteArrow.c:176: data->vx = 0;
    050A F8 04              1155 	ldhl	sp,	#4
    050C 2A                 1156 	ld	a, (hl+)
    050D 66                 1157 	ld	h, (hl)
@@ -1159,7 +1159,7 @@
    050F 7E                 1159 	ld	a, (hl)
    0510 E6 F0              1160 	and	a, #0xf0
    0512 77                 1161 	ld	(hl),a
-                           1162 ;SpriteArrow.c:182: SetSpriteAnim(THIS, arrow_blast_v, 18u);	
+                           1162 ;SpriteArrow.c:177: SetSpriteAnim(THIS, arrow_blast_v, 18u);	
    0513 3E 12              1163 	ld	a, #0x12
    0515 F5                 1164 	push	af
    0516 33                 1165 	inc	sp
@@ -1172,14 +1172,14 @@
    0521 E5                 1172 	push	hl
    0522 CDr00r00           1173 	call	_SetSpriteAnim
    0525 E8 05              1174 	add	sp, #5
-                           1175 ;SpriteArrow.c:183: break;
+                           1175 ;SpriteArrow.c:178: break;
    0527 18 20              1176 	jr	00124$
-                           1177 ;SpriteArrow.c:184: case 4:
+                           1177 ;SpriteArrow.c:179: case 4:
    0529                    1178 00123$:
-                           1179 ;SpriteArrow.c:185: data->vy = 3;
+                           1179 ;SpriteArrow.c:180: data->vy = 3;
    0529 3E 03              1180 	ld	a, #0x03
    052B 02                 1181 	ld	(bc), a
-                           1182 ;SpriteArrow.c:186: data->vx = 0;
+                           1182 ;SpriteArrow.c:181: data->vx = 0;
    052C F8 04              1183 	ldhl	sp,	#4
    052E 2A                 1184 	ld	a, (hl+)
    052F 66                 1185 	ld	h, (hl)
@@ -1187,7 +1187,7 @@
    0531 7E                 1187 	ld	a, (hl)
    0532 E6 F0              1188 	and	a, #0xf0
    0534 77                 1189 	ld	(hl),a
-                           1190 ;SpriteArrow.c:187: SetSpriteAnim(THIS, arrow_blast_g, 18u);	
+                           1190 ;SpriteArrow.c:182: SetSpriteAnim(THIS, arrow_blast_g, 18u);	
    0535 3E 12              1191 	ld	a, #0x12
    0537 F5                 1192 	push	af
    0538 33                 1193 	inc	sp
@@ -1200,19 +1200,19 @@
    0543 E5                 1200 	push	hl
    0544 CDr00r00           1201 	call	_SetSpriteAnim
    0547 E8 05              1202 	add	sp, #5
-                           1203 ;SpriteArrow.c:189: }						
+                           1203 ;SpriteArrow.c:184: }						
    0549                    1204 00124$:
-                           1205 ;SpriteArrow.c:190: data->type = 0;
+                           1205 ;SpriteArrow.c:185: data->type = 0;
    0549 C1                 1206 	pop	bc
    054A C5                 1207 	push	bc
    054B 0A                 1208 	ld	a, (bc)
    054C E6 F0              1209 	and	a, #0xf0
    054E 02                 1210 	ld	(bc),a
-                           1211 ;SpriteArrow.c:191: break;
+                           1211 ;SpriteArrow.c:186: break;
    054F C3r2Ar06           1212 	jp	00135$
-                           1213 ;SpriteArrow.c:192: case 5:
+                           1213 ;SpriteArrow.c:187: case 5:
    0552                    1214 00125$:
-                           1215 ;SpriteArrow.c:193: switch(data->arrowdir){
+                           1215 ;SpriteArrow.c:188: switch(data->arrowdir){
    0552 F8 02              1216 	ldhl	sp,#(3 - 1)
    0554 5E                 1217 	ld	e, (hl)
    0555 23                 1218 	inc	hl
@@ -1227,12 +1227,12 @@
    0565 D6 04              1227 	sub	a, #0x04
    0567 CArD8r05           1228 	jp	Z,00129$
    056A C3rF8r05           1229 	jp	00130$
-                           1230 ;SpriteArrow.c:194: case 1:
+                           1230 ;SpriteArrow.c:189: case 1:
    056D                    1231 00126$:
-                           1232 ;SpriteArrow.c:195: data->vy = 0;
+                           1232 ;SpriteArrow.c:190: data->vy = 0;
    056D AF                 1233 	xor	a, a
    056E 02                 1234 	ld	(bc), a
-                           1235 ;SpriteArrow.c:196: data->vx = 2;
+                           1235 ;SpriteArrow.c:191: data->vx = 2;
    056F F8 04              1236 	ldhl	sp,	#4
    0571 2A                 1237 	ld	a, (hl+)
    0572 66                 1238 	ld	h, (hl)
@@ -1241,7 +1241,7 @@
    0575 E6 F0              1241 	and	a, #0xf0
    0577 F6 02              1242 	or	a, #0x02
    0579 77                 1243 	ld	(hl),a
-                           1244 ;SpriteArrow.c:197: SetSpriteAnim(THIS, arrow_fire, 18u);	
+                           1244 ;SpriteArrow.c:192: SetSpriteAnim(THIS, arrow_fire, 18u);	
    057A 3E 12              1245 	ld	a, #0x12
    057C F5                 1246 	push	af
    057D 33                 1247 	inc	sp
@@ -1254,14 +1254,14 @@
    0588 E5                 1254 	push	hl
    0589 CDr00r00           1255 	call	_SetSpriteAnim
    058C E8 05              1256 	add	sp, #5
-                           1257 ;SpriteArrow.c:198: break;
+                           1257 ;SpriteArrow.c:193: break;
    058E C3rF8r05           1258 	jp	00130$
-                           1259 ;SpriteArrow.c:199: case 2:
+                           1259 ;SpriteArrow.c:194: case 2:
    0591                    1260 00127$:
-                           1261 ;SpriteArrow.c:200: data->vy = -1;
+                           1261 ;SpriteArrow.c:195: data->vy = -1;
    0591 3E FF              1262 	ld	a, #0xff
    0593 02                 1263 	ld	(bc), a
-                           1264 ;SpriteArrow.c:201: data->vx = 2;
+                           1264 ;SpriteArrow.c:196: data->vx = 2;
    0594 F8 04              1265 	ldhl	sp,	#4
    0596 2A                 1266 	ld	a, (hl+)
    0597 66                 1267 	ld	h, (hl)
@@ -1270,7 +1270,7 @@
    059A E6 F0              1270 	and	a, #0xf0
    059C F6 02              1271 	or	a, #0x02
    059E 77                 1272 	ld	(hl),a
-                           1273 ;SpriteArrow.c:202: SetSpriteAnim(THIS, arrow_fire_d, 18u);	
+                           1273 ;SpriteArrow.c:197: SetSpriteAnim(THIS, arrow_fire_d, 18u);	
    059F 3E 12              1274 	ld	a, #0x12
    05A1 F5                 1275 	push	af
    05A2 33                 1276 	inc	sp
@@ -1283,14 +1283,14 @@
    05AD E5                 1283 	push	hl
    05AE CDr00r00           1284 	call	_SetSpriteAnim
    05B1 E8 05              1285 	add	sp, #5
-                           1286 ;SpriteArrow.c:203: break;
+                           1286 ;SpriteArrow.c:198: break;
    05B3 C3rF8r05           1287 	jp	00130$
-                           1288 ;SpriteArrow.c:204: case 3:
+                           1288 ;SpriteArrow.c:199: case 3:
    05B6                    1289 00128$:
-                           1290 ;SpriteArrow.c:205: data->vy = -2;
+                           1290 ;SpriteArrow.c:200: data->vy = -2;
    05B6 3E FE              1291 	ld	a, #0xfe
    05B8 02                 1292 	ld	(bc), a
-                           1293 ;SpriteArrow.c:206: data->vx = 0;
+                           1293 ;SpriteArrow.c:201: data->vx = 0;
    05B9 F8 04              1294 	ldhl	sp,	#4
    05BB 2A                 1295 	ld	a, (hl+)
    05BC 66                 1296 	ld	h, (hl)
@@ -1298,7 +1298,7 @@
    05BE 7E                 1298 	ld	a, (hl)
    05BF E6 F0              1299 	and	a, #0xf0
    05C1 77                 1300 	ld	(hl),a
-                           1301 ;SpriteArrow.c:207: SetSpriteAnim(THIS, arrow_fire_v, 18u);	
+                           1301 ;SpriteArrow.c:202: SetSpriteAnim(THIS, arrow_fire_v, 18u);	
    05C2 3E 12              1302 	ld	a, #0x12
    05C4 F5                 1303 	push	af
    05C5 33                 1304 	inc	sp
@@ -1311,14 +1311,14 @@
    05D0 E5                 1311 	push	hl
    05D1 CDr00r00           1312 	call	_SetSpriteAnim
    05D4 E8 05              1313 	add	sp, #5
-                           1314 ;SpriteArrow.c:208: break;
+                           1314 ;SpriteArrow.c:203: break;
    05D6 18 20              1315 	jr	00130$
-                           1316 ;SpriteArrow.c:209: case 4:
+                           1316 ;SpriteArrow.c:204: case 4:
    05D8                    1317 00129$:
-                           1318 ;SpriteArrow.c:210: data->vy = 2;
+                           1318 ;SpriteArrow.c:205: data->vy = 2;
    05D8 3E 02              1319 	ld	a, #0x02
    05DA 02                 1320 	ld	(bc), a
-                           1321 ;SpriteArrow.c:211: data->vx = 0;
+                           1321 ;SpriteArrow.c:206: data->vx = 0;
    05DB F8 04              1322 	ldhl	sp,	#4
    05DD 2A                 1323 	ld	a, (hl+)
    05DE 66                 1324 	ld	h, (hl)
@@ -1326,7 +1326,7 @@
    05E0 7E                 1326 	ld	a, (hl)
    05E1 E6 F0              1327 	and	a, #0xf0
    05E3 77                 1328 	ld	(hl),a
-                           1329 ;SpriteArrow.c:212: SetSpriteAnim(THIS, arrow_fire_g, 18u);	
+                           1329 ;SpriteArrow.c:207: SetSpriteAnim(THIS, arrow_fire_g, 18u);	
    05E4 3E 12              1330 	ld	a, #0x12
    05E6 F5                 1331 	push	af
    05E7 33                 1332 	inc	sp
@@ -1339,19 +1339,19 @@
    05F2 E5                 1339 	push	hl
    05F3 CDr00r00           1340 	call	_SetSpriteAnim
    05F6 E8 05              1341 	add	sp, #5
-                           1342 ;SpriteArrow.c:214: }						
+                           1342 ;SpriteArrow.c:209: }						
    05F8                    1343 00130$:
-                           1344 ;SpriteArrow.c:215: data->type = 0;
+                           1344 ;SpriteArrow.c:210: data->type = 0;
    05F8 C1                 1345 	pop	bc
    05F9 C5                 1346 	push	bc
    05FA 0A                 1347 	ld	a, (bc)
    05FB E6 F0              1348 	and	a, #0xf0
    05FD 02                 1349 	ld	(bc),a
-                           1350 ;SpriteArrow.c:216: break;
+                           1350 ;SpriteArrow.c:211: break;
    05FE C3r2Ar06           1351 	jp	00135$
-                           1352 ;SpriteArrow.c:217: case 6:
+                           1352 ;SpriteArrow.c:212: case 6:
    0601                    1353 00131$:
-                           1354 ;SpriteArrow.c:218: switch(data->arrowdir){
+                           1354 ;SpriteArrow.c:213: switch(data->arrowdir){
    0601 F8 02              1355 	ldhl	sp,#(3 - 1)
    0603 5E                 1356 	ld	e, (hl)
    0604 23                 1357 	inc	hl
@@ -1359,10 +1359,10 @@
    0606 1A                 1359 	ld	a,(de)
    0607 3D                 1360 	dec	a
    0608 20 20              1361 	jr	NZ,00135$
-                           1362 ;SpriteArrow.c:220: data->vy = 0;
+                           1362 ;SpriteArrow.c:215: data->vy = 0;
    060A AF                 1363 	xor	a, a
    060B 02                 1364 	ld	(bc), a
-                           1365 ;SpriteArrow.c:221: data->vx = 2;
+                           1365 ;SpriteArrow.c:216: data->vx = 2;
    060C 23                 1366 	inc	hl
    060D 2A                 1367 	ld	a, (hl+)
    060E 66                 1368 	ld	h, (hl)
@@ -1371,7 +1371,7 @@
    0611 E6 F0              1371 	and	a, #0xf0
    0613 F6 02              1372 	or	a, #0x02
    0615 77                 1373 	ld	(hl),a
-                           1374 ;SpriteArrow.c:222: SetSpriteAnim(THIS, spine, 18u);	
+                           1374 ;SpriteArrow.c:217: SetSpriteAnim(THIS, spine, 18u);	
    0616 3E 12              1375 	ld	a, #0x12
    0618 F5                 1376 	push	af
    0619 33                 1377 	inc	sp
@@ -1384,17 +1384,17 @@
    0624 E5                 1384 	push	hl
    0625 CDr00r00           1385 	call	_SetSpriteAnim
    0628 E8 05              1386 	add	sp, #5
-                           1387 ;SpriteArrow.c:227: }
+                           1387 ;SpriteArrow.c:222: }
    062A                    1388 00135$:
-                           1389 ;SpriteArrow.c:228: }
+                           1389 ;SpriteArrow.c:223: }
    062A E8 06              1390 	add	sp, #6
    062C C9                 1391 	ret
-                           1392 ;SpriteArrow.c:230: void CheckCollisionArrowTile() {	
+                           1392 ;SpriteArrow.c:225: void CheckCollisionArrowTile() {	
                            1393 ;	---------------------------------
                            1394 ; Function CheckCollisionArrowTile
                            1395 ; ---------------------------------
    062D                    1396 _CheckCollisionArrowTile::
-                           1397 ;SpriteArrow.c:231: if (tile_a_collision < 18u & tile_a_collision > 9u){
+                           1397 ;SpriteArrow.c:226: if (tile_a_collision < 18u & tile_a_collision > 9u){
    062D 21r02r00           1398 	ld	hl, #_tile_a_collision
    0630 7E                 1399 	ld	a, (hl)
    0631 D6 12              1400 	sub	a, #0x12
@@ -1407,25 +1407,25 @@
    063C 17                 1407 	rla
    063D A1                 1408 	and	a,c
    063E 28 03              1409 	jr	Z,00102$
-                           1410 ;SpriteArrow.c:232: RedirectArrow();
+                           1410 ;SpriteArrow.c:227: RedirectArrow();
    0640 C3r50r06           1411 	jp	_RedirectArrow
    0643                    1412 00102$:
-                           1413 ;SpriteArrow.c:234: SpriteManagerRemove(THIS_IDX);
+                           1413 ;SpriteArrow.c:229: SpriteManagerRemove(THIS_IDX);
    0643 21r00r00           1414 	ld	hl, #_THIS_IDX
    0646 4E                 1415 	ld	c, (hl)
    0647 06 00              1416 	ld	b, #0x00
    0649 C5                 1417 	push	bc
    064A CDr00r00           1418 	call	_SpriteManagerRemove
    064D E8 02              1419 	add	sp, #2
-                           1420 ;SpriteArrow.c:236: }
+                           1420 ;SpriteArrow.c:231: }
    064F C9                 1421 	ret
-                           1422 ;SpriteArrow.c:238: void RedirectArrow(){
+                           1422 ;SpriteArrow.c:233: void RedirectArrow(){
                            1423 ;	---------------------------------
                            1424 ; Function RedirectArrow
                            1425 ; ---------------------------------
    0650                    1426 _RedirectArrow::
    0650 E8 FB              1427 	add	sp, #-5
-                           1428 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1428 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0652 21r01r00           1429 	ld	hl, #_THIS + 1
    0655 2B                 1430 	dec	hl
    0656 4E                 1431 	ld	c, (hl)
@@ -1444,7 +1444,7 @@
    0666 F8 00              1444 	ldhl	sp,	#0
    0668 22                 1445 	ld	(hl+), a
    0669 73                 1446 	ld	(hl), e
-                           1447 ;SpriteArrow.c:240: switch(tile_a_collision) {
+                           1447 ;SpriteArrow.c:235: switch(tile_a_collision) {
    066A 21r02r00           1448 	ld	hl, #_tile_a_collision
    066D 7E                 1449 	ld	a, (hl)
    066E D6 0A              1450 	sub	a, #0x0a
@@ -1456,7 +1456,7 @@
    067A C6 F6              1456 	add	a, #0xf6
    067C F8 02              1457 	ldhl	sp,	#2
    067E 77                 1458 	ld	(hl), a
-                           1459 ;SpriteArrow.c:242: data->arrowdir = 4;
+                           1459 ;SpriteArrow.c:237: data->arrowdir = 4;
    067F D1                 1460 	pop	de
    0680 D5                 1461 	push	de
    0681 21 03 00           1462 	ld	hl, #0x0003
@@ -1466,12 +1466,12 @@
    0687 F8 03              1466 	ldhl	sp,	#3
    0689 22                 1467 	ld	(hl+), a
    068A 72                 1468 	ld	(hl), d
-                           1469 ;SpriteArrow.c:260: SPRITE_SET_VMIRROR(THIS);
+                           1469 ;SpriteArrow.c:255: SPRITE_SET_VMIRROR(THIS);
    068B 21 0C 00           1470 	ld	hl, #0x000c
    068E 09                 1471 	add	hl, bc
    068F 4D                 1472 	ld	c, l
    0690 44                 1473 	ld	b, h
-                           1474 ;SpriteArrow.c:240: switch(tile_a_collision) {
+                           1474 ;SpriteArrow.c:235: switch(tile_a_collision) {
    0691 F8 02              1475 	ldhl	sp,	#2
    0693 5E                 1476 	ld	e, (hl)
    0694 16 00              1477 	ld	d, #0x00
@@ -1489,21 +1489,21 @@
    06AC C3rF4r07           1489 	jp	00106$
    06AF C3r4Fr08           1490 	jp	00107$
    06B2 C3rABr08           1491 	jp	00108$
-                           1492 ;SpriteArrow.c:241: case 10u: //da SX a GIU
+                           1492 ;SpriteArrow.c:236: case 10u: //da SX a GIU
    06B5                    1493 00101$:
-                           1494 ;SpriteArrow.c:242: data->arrowdir = 4;
+                           1494 ;SpriteArrow.c:237: data->arrowdir = 4;
    06B5 F8 03              1495 	ldhl	sp,	#3
    06B7 2A                 1496 	ld	a, (hl+)
    06B8 66                 1497 	ld	h, (hl)
    06B9 6F                 1498 	ld	l, a
    06BA 36 04              1499 	ld	(hl), #0x04
-                           1500 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1500 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    06BC 21r01r00           1501 	ld	hl, #_THIS + 1
    06BF 2B                 1502 	dec	hl
    06C0 4E                 1503 	ld	c, (hl)
    06C1 23                 1504 	inc	hl
    06C2 46                 1505 	ld	b, (hl)
-                           1506 ;SpriteArrow.c:243: THIS->x += 4;
+                           1506 ;SpriteArrow.c:238: THIS->x += 4;
    06C3 21 08 00           1507 	ld	hl, #0x0008
    06C6 09                 1508 	add	hl, bc
    06C7 7D                 1509 	ld	a, l
@@ -1531,13 +1531,13 @@
    06DE 71                 1531 	ld	(hl), c
    06DF 23                 1532 	inc	hl
    06E0 70                 1533 	ld	(hl), b
-                           1534 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1534 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    06E1 21r01r00           1535 	ld	hl, #_THIS + 1
    06E4 2B                 1536 	dec	hl
    06E5 4E                 1537 	ld	c, (hl)
    06E6 23                 1538 	inc	hl
    06E7 46                 1539 	ld	b, (hl)
-                           1540 ;SpriteArrow.c:244: THIS->y += 4;
+                           1540 ;SpriteArrow.c:239: THIS->y += 4;
    06E8 21 0A 00           1541 	ld	hl, #0x000a
    06EB 09                 1542 	add	hl, bc
    06EC 7D                 1543 	ld	a, l
@@ -1565,23 +1565,23 @@
    0703 71                 1565 	ld	(hl), c
    0704 23                 1566 	inc	hl
    0705 70                 1567 	ld	(hl), b
-                           1568 ;SpriteArrow.c:245: break;
+                           1568 ;SpriteArrow.c:240: break;
    0706 C3r08r09           1569 	jp	00109$
-                           1570 ;SpriteArrow.c:246: case 11u: //da DX a GIU
+                           1570 ;SpriteArrow.c:241: case 11u: //da DX a GIU
    0709                    1571 00102$:
-                           1572 ;SpriteArrow.c:247: data->arrowdir = 4;
+                           1572 ;SpriteArrow.c:242: data->arrowdir = 4;
    0709 F8 03              1573 	ldhl	sp,	#3
    070B 2A                 1574 	ld	a, (hl+)
    070C 66                 1575 	ld	h, (hl)
    070D 6F                 1576 	ld	l, a
    070E 36 04              1577 	ld	(hl), #0x04
-                           1578 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1578 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0710 21r01r00           1579 	ld	hl, #_THIS + 1
    0713 2B                 1580 	dec	hl
    0714 4E                 1581 	ld	c, (hl)
    0715 23                 1582 	inc	hl
    0716 46                 1583 	ld	b, (hl)
-                           1584 ;SpriteArrow.c:243: THIS->x += 4;
+                           1584 ;SpriteArrow.c:238: THIS->x += 4;
    0717 21 08 00           1585 	ld	hl, #0x0008
    071A 09                 1586 	add	hl, bc
    071B 7D                 1587 	ld	a, l
@@ -1589,7 +1589,7 @@
    071D F8 03              1589 	ldhl	sp,	#3
    071F 22                 1590 	ld	(hl+), a
    0720 72                 1591 	ld	(hl), d
-                           1592 ;SpriteArrow.c:248: THIS->x -= 2;
+                           1592 ;SpriteArrow.c:243: THIS->x -= 2;
    0721 2B                 1593 	dec	hl
    0722 5E                 1594 	ld	e, (hl)
    0723 23                 1595 	inc	hl
@@ -1608,13 +1608,13 @@
    0730 71                 1608 	ld	(hl), c
    0731 23                 1609 	inc	hl
    0732 70                 1610 	ld	(hl), b
-                           1611 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1611 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0733 21r01r00           1612 	ld	hl, #_THIS + 1
    0736 2B                 1613 	dec	hl
    0737 4E                 1614 	ld	c, (hl)
    0738 23                 1615 	inc	hl
    0739 46                 1616 	ld	b, (hl)
-                           1617 ;SpriteArrow.c:244: THIS->y += 4;
+                           1617 ;SpriteArrow.c:239: THIS->y += 4;
    073A 21 0A 00           1618 	ld	hl, #0x000a
    073D 09                 1619 	add	hl, bc
    073E 7D                 1620 	ld	a, l
@@ -1622,7 +1622,7 @@
    0740 F8 03              1622 	ldhl	sp,	#3
    0742 22                 1623 	ld	(hl+), a
    0743 72                 1624 	ld	(hl), d
-                           1625 ;SpriteArrow.c:249: THIS->y += 4;
+                           1625 ;SpriteArrow.c:244: THIS->y += 4;
    0744 2B                 1626 	dec	hl
    0745 5E                 1627 	ld	e, (hl)
    0746 23                 1628 	inc	hl
@@ -1643,23 +1643,23 @@
    0755 71                 1643 	ld	(hl), c
    0756 23                 1644 	inc	hl
    0757 70                 1645 	ld	(hl), b
-                           1646 ;SpriteArrow.c:250: break;
+                           1646 ;SpriteArrow.c:245: break;
    0758 C3r08r09           1647 	jp	00109$
-                           1648 ;SpriteArrow.c:251: case 12u: //da SX a SU
+                           1648 ;SpriteArrow.c:246: case 12u: //da SX a SU
    075B                    1649 00103$:
-                           1650 ;SpriteArrow.c:252: data->arrowdir = 3;
+                           1650 ;SpriteArrow.c:247: data->arrowdir = 3;
    075B F8 03              1651 	ldhl	sp,	#3
    075D 2A                 1652 	ld	a, (hl+)
    075E 66                 1653 	ld	h, (hl)
    075F 6F                 1654 	ld	l, a
    0760 36 03              1655 	ld	(hl), #0x03
-                           1656 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1656 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0762 21r01r00           1657 	ld	hl, #_THIS + 1
    0765 2B                 1658 	dec	hl
    0766 4E                 1659 	ld	c, (hl)
    0767 23                 1660 	inc	hl
    0768 46                 1661 	ld	b, (hl)
-                           1662 ;SpriteArrow.c:243: THIS->x += 4;
+                           1662 ;SpriteArrow.c:238: THIS->x += 4;
    0769 21 08 00           1663 	ld	hl, #0x0008
    076C 09                 1664 	add	hl, bc
    076D 7D                 1665 	ld	a, l
@@ -1667,7 +1667,7 @@
    076F F8 03              1667 	ldhl	sp,	#3
    0771 22                 1668 	ld	(hl+), a
    0772 72                 1669 	ld	(hl), d
-                           1670 ;SpriteArrow.c:253: THIS->x += 4;
+                           1670 ;SpriteArrow.c:248: THIS->x += 4;
    0773 2B                 1671 	dec	hl
    0774 5E                 1672 	ld	e, (hl)
    0775 23                 1673 	inc	hl
@@ -1688,23 +1688,23 @@
    0784 71                 1688 	ld	(hl), c
    0785 23                 1689 	inc	hl
    0786 70                 1690 	ld	(hl), b
-                           1691 ;SpriteArrow.c:254: break;
+                           1691 ;SpriteArrow.c:249: break;
    0787 C3r08r09           1692 	jp	00109$
-                           1693 ;SpriteArrow.c:255: case 13u: // da DX a SU
+                           1693 ;SpriteArrow.c:250: case 13u: // da DX a SU
    078A                    1694 00104$:
-                           1695 ;SpriteArrow.c:256: data->arrowdir = 3;
+                           1695 ;SpriteArrow.c:251: data->arrowdir = 3;
    078A F8 03              1696 	ldhl	sp,	#3
    078C 2A                 1697 	ld	a, (hl+)
    078D 66                 1698 	ld	h, (hl)
    078E 6F                 1699 	ld	l, a
    078F 36 03              1700 	ld	(hl), #0x03
-                           1701 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1701 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0791 21r01r00           1702 	ld	hl, #_THIS + 1
    0794 2B                 1703 	dec	hl
    0795 4E                 1704 	ld	c, (hl)
    0796 23                 1705 	inc	hl
    0797 46                 1706 	ld	b, (hl)
-                           1707 ;SpriteArrow.c:243: THIS->x += 4;
+                           1707 ;SpriteArrow.c:238: THIS->x += 4;
    0798 21 08 00           1708 	ld	hl, #0x0008
    079B 09                 1709 	add	hl, bc
    079C 7D                 1710 	ld	a, l
@@ -1712,7 +1712,7 @@
    079E F8 03              1712 	ldhl	sp,	#3
    07A0 22                 1713 	ld	(hl+), a
    07A1 72                 1714 	ld	(hl), d
-                           1715 ;SpriteArrow.c:257: THIS->x -= 4;
+                           1715 ;SpriteArrow.c:252: THIS->x -= 4;
    07A2 2B                 1716 	dec	hl
    07A3 5E                 1717 	ld	e, (hl)
    07A4 23                 1718 	inc	hl
@@ -1735,27 +1735,27 @@
    07B7 71                 1735 	ld	(hl), c
    07B8 23                 1736 	inc	hl
    07B9 70                 1737 	ld	(hl), b
-                           1738 ;SpriteArrow.c:258: break;
+                           1738 ;SpriteArrow.c:253: break;
    07BA C3r08r09           1739 	jp	00109$
-                           1740 ;SpriteArrow.c:259: case 14u: //da SU a SX
+                           1740 ;SpriteArrow.c:254: case 14u: //da SU a SX
    07BD                    1741 00105$:
-                           1742 ;SpriteArrow.c:260: SPRITE_SET_VMIRROR(THIS);
+                           1742 ;SpriteArrow.c:255: SPRITE_SET_VMIRROR(THIS);
    07BD 0A                 1743 	ld	a, (bc)
    07BE CB EF              1744 	set	5, a
    07C0 02                 1745 	ld	(bc), a
-                           1746 ;SpriteArrow.c:261: data->arrowdir = 1;
+                           1746 ;SpriteArrow.c:256: data->arrowdir = 1;
    07C1 F8 03              1747 	ldhl	sp,	#3
    07C3 2A                 1748 	ld	a, (hl+)
    07C4 66                 1749 	ld	h, (hl)
    07C5 6F                 1750 	ld	l, a
    07C6 36 01              1751 	ld	(hl), #0x01
-                           1752 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1752 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    07C8 21r01r00           1753 	ld	hl, #_THIS + 1
    07CB 2B                 1754 	dec	hl
    07CC 4E                 1755 	ld	c, (hl)
    07CD 23                 1756 	inc	hl
    07CE 46                 1757 	ld	b, (hl)
-                           1758 ;SpriteArrow.c:243: THIS->x += 4;
+                           1758 ;SpriteArrow.c:238: THIS->x += 4;
    07CF 21 08 00           1759 	ld	hl, #0x0008
    07D2 09                 1760 	add	hl, bc
    07D3 7D                 1761 	ld	a, l
@@ -1763,7 +1763,7 @@
    07D5 F8 03              1763 	ldhl	sp,	#3
    07D7 22                 1764 	ld	(hl+), a
    07D8 72                 1765 	ld	(hl), d
-                           1766 ;SpriteArrow.c:262: THIS->x -= 4;
+                           1766 ;SpriteArrow.c:257: THIS->x -= 4;
    07D9 2B                 1767 	dec	hl
    07DA 5E                 1768 	ld	e, (hl)
    07DB 23                 1769 	inc	hl
@@ -1786,27 +1786,27 @@
    07EE 71                 1786 	ld	(hl), c
    07EF 23                 1787 	inc	hl
    07F0 70                 1788 	ld	(hl), b
-                           1789 ;SpriteArrow.c:263: break;
+                           1789 ;SpriteArrow.c:258: break;
    07F1 C3r08r09           1790 	jp	00109$
-                           1791 ;SpriteArrow.c:264: case 15u: //da SU a DX
+                           1791 ;SpriteArrow.c:259: case 15u: //da SU a DX
    07F4                    1792 00106$:
-                           1793 ;SpriteArrow.c:265: SPRITE_UNSET_VMIRROR(THIS);
+                           1793 ;SpriteArrow.c:260: SPRITE_UNSET_VMIRROR(THIS);
    07F4 0A                 1794 	ld	a, (bc)
    07F5 CB AF              1795 	res	5, a
    07F7 02                 1796 	ld	(bc), a
-                           1797 ;SpriteArrow.c:266: data->arrowdir = 1;
+                           1797 ;SpriteArrow.c:261: data->arrowdir = 1;
    07F8 F8 03              1798 	ldhl	sp,	#3
    07FA 2A                 1799 	ld	a, (hl+)
    07FB 66                 1800 	ld	h, (hl)
    07FC 6F                 1801 	ld	l, a
    07FD 36 01              1802 	ld	(hl), #0x01
-                           1803 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1803 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    07FF 21r01r00           1804 	ld	hl, #_THIS + 1
    0802 2B                 1805 	dec	hl
    0803 4E                 1806 	ld	c, (hl)
    0804 23                 1807 	inc	hl
    0805 46                 1808 	ld	b, (hl)
-                           1809 ;SpriteArrow.c:243: THIS->x += 4;
+                           1809 ;SpriteArrow.c:238: THIS->x += 4;
    0806 21 08 00           1810 	ld	hl, #0x0008
    0809 09                 1811 	add	hl, bc
    080A 7D                 1812 	ld	a, l
@@ -1814,7 +1814,7 @@
    080C F8 03              1814 	ldhl	sp,	#3
    080E 22                 1815 	ld	(hl+), a
    080F 72                 1816 	ld	(hl), d
-                           1817 ;SpriteArrow.c:267: THIS->x += 4;
+                           1817 ;SpriteArrow.c:262: THIS->x += 4;
    0810 2B                 1818 	dec	hl
    0811 5E                 1819 	ld	e, (hl)
    0812 23                 1820 	inc	hl
@@ -1835,13 +1835,13 @@
    0821 71                 1835 	ld	(hl), c
    0822 23                 1836 	inc	hl
    0823 70                 1837 	ld	(hl), b
-                           1838 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1838 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    0824 21r01r00           1839 	ld	hl, #_THIS + 1
    0827 2B                 1840 	dec	hl
    0828 4E                 1841 	ld	c, (hl)
    0829 23                 1842 	inc	hl
    082A 46                 1843 	ld	b, (hl)
-                           1844 ;SpriteArrow.c:244: THIS->y += 4;
+                           1844 ;SpriteArrow.c:239: THIS->y += 4;
    082B 21 0A 00           1845 	ld	hl, #0x000a
    082E 09                 1846 	add	hl, bc
    082F 7D                 1847 	ld	a, l
@@ -1849,7 +1849,7 @@
    0831 F8 03              1849 	ldhl	sp,	#3
    0833 22                 1850 	ld	(hl+), a
    0834 72                 1851 	ld	(hl), d
-                           1852 ;SpriteArrow.c:268: THIS->y += 6;
+                           1852 ;SpriteArrow.c:263: THIS->y += 6;
    0835 2B                 1853 	dec	hl
    0836 5E                 1854 	ld	e, (hl)
    0837 23                 1855 	inc	hl
@@ -1872,27 +1872,27 @@
    0849 70                 1872 	ld	(hl), b
    084A 23                 1873 	inc	hl
    084B 71                 1874 	ld	(hl), c
-                           1875 ;SpriteArrow.c:269: break;
+                           1875 ;SpriteArrow.c:264: break;
    084C C3r08r09           1876 	jp	00109$
-                           1877 ;SpriteArrow.c:270: case 16u://da GIU a DX
+                           1877 ;SpriteArrow.c:265: case 16u://da GIU a DX
    084F                    1878 00107$:
-                           1879 ;SpriteArrow.c:271: SPRITE_UNSET_VMIRROR(THIS);
+                           1879 ;SpriteArrow.c:266: SPRITE_UNSET_VMIRROR(THIS);
    084F 0A                 1880 	ld	a, (bc)
    0850 CB AF              1881 	res	5, a
    0852 02                 1882 	ld	(bc), a
-                           1883 ;SpriteArrow.c:272: data->arrowdir = 1;
+                           1883 ;SpriteArrow.c:267: data->arrowdir = 1;
    0853 F8 03              1884 	ldhl	sp,	#3
    0855 2A                 1885 	ld	a, (hl+)
    0856 66                 1886 	ld	h, (hl)
    0857 6F                 1887 	ld	l, a
    0858 36 01              1888 	ld	(hl), #0x01
-                           1889 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1889 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    085A 21r01r00           1890 	ld	hl, #_THIS + 1
    085D 2B                 1891 	dec	hl
    085E 4E                 1892 	ld	c, (hl)
    085F 23                 1893 	inc	hl
    0860 46                 1894 	ld	b, (hl)
-                           1895 ;SpriteArrow.c:243: THIS->x += 4;
+                           1895 ;SpriteArrow.c:238: THIS->x += 4;
    0861 21 08 00           1896 	ld	hl, #0x0008
    0864 09                 1897 	add	hl, bc
    0865 7D                 1898 	ld	a, l
@@ -1900,7 +1900,7 @@
    0867 F8 03              1900 	ldhl	sp,	#3
    0869 22                 1901 	ld	(hl+), a
    086A 72                 1902 	ld	(hl), d
-                           1903 ;SpriteArrow.c:273: THIS->x += 4;
+                           1903 ;SpriteArrow.c:268: THIS->x += 4;
    086B 2B                 1904 	dec	hl
    086C 5E                 1905 	ld	e, (hl)
    086D 23                 1906 	inc	hl
@@ -1921,13 +1921,13 @@
    087C 71                 1921 	ld	(hl), c
    087D 23                 1922 	inc	hl
    087E 70                 1923 	ld	(hl), b
-                           1924 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1924 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    087F 21r01r00           1925 	ld	hl, #_THIS + 1
    0882 2B                 1926 	dec	hl
    0883 4E                 1927 	ld	c, (hl)
    0884 23                 1928 	inc	hl
    0885 46                 1929 	ld	b, (hl)
-                           1930 ;SpriteArrow.c:244: THIS->y += 4;
+                           1930 ;SpriteArrow.c:239: THIS->y += 4;
    0886 21 0A 00           1931 	ld	hl, #0x000a
    0889 09                 1932 	add	hl, bc
    088A 7D                 1933 	ld	a, l
@@ -1935,7 +1935,7 @@
    088C F8 03              1935 	ldhl	sp,	#3
    088E 22                 1936 	ld	(hl+), a
    088F 72                 1937 	ld	(hl), d
-                           1938 ;SpriteArrow.c:274: THIS->y -= 4;
+                           1938 ;SpriteArrow.c:269: THIS->y -= 4;
    0890 2B                 1939 	dec	hl
    0891 5E                 1940 	ld	e, (hl)
    0892 23                 1941 	inc	hl
@@ -1958,27 +1958,27 @@
    08A5 71                 1958 	ld	(hl), c
    08A6 23                 1959 	inc	hl
    08A7 70                 1960 	ld	(hl), b
-                           1961 ;SpriteArrow.c:275: break;
+                           1961 ;SpriteArrow.c:270: break;
    08A8 C3r08r09           1962 	jp	00109$
-                           1963 ;SpriteArrow.c:276: case 17u: //da GIU a SX
+                           1963 ;SpriteArrow.c:271: case 17u: //da GIU a SX
    08AB                    1964 00108$:
-                           1965 ;SpriteArrow.c:277: SPRITE_SET_VMIRROR(THIS);
+                           1965 ;SpriteArrow.c:272: SPRITE_SET_VMIRROR(THIS);
    08AB 0A                 1966 	ld	a, (bc)
    08AC CB EF              1967 	set	5, a
    08AE 02                 1968 	ld	(bc), a
-                           1969 ;SpriteArrow.c:278: data->arrowdir = 1;
+                           1969 ;SpriteArrow.c:273: data->arrowdir = 1;
    08AF F8 03              1970 	ldhl	sp,	#3
    08B1 2A                 1971 	ld	a, (hl+)
    08B2 66                 1972 	ld	h, (hl)
    08B3 6F                 1973 	ld	l, a
    08B4 36 01              1974 	ld	(hl), #0x01
-                           1975 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           1975 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    08B6 21r01r00           1976 	ld	hl, #_THIS + 1
    08B9 2B                 1977 	dec	hl
    08BA 4E                 1978 	ld	c, (hl)
    08BB 23                 1979 	inc	hl
    08BC 46                 1980 	ld	b, (hl)
-                           1981 ;SpriteArrow.c:243: THIS->x += 4;
+                           1981 ;SpriteArrow.c:238: THIS->x += 4;
    08BD 21 08 00           1982 	ld	hl, #0x0008
    08C0 09                 1983 	add	hl, bc
    08C1 7D                 1984 	ld	a, l
@@ -1986,7 +1986,7 @@
    08C3 F8 03              1986 	ldhl	sp,	#3
    08C5 22                 1987 	ld	(hl+), a
    08C6 72                 1988 	ld	(hl), d
-                           1989 ;SpriteArrow.c:279: THIS->x -= 4;
+                           1989 ;SpriteArrow.c:274: THIS->x -= 4;
    08C7 2B                 1990 	dec	hl
    08C8 5E                 1991 	ld	e, (hl)
    08C9 23                 1992 	inc	hl
@@ -2009,13 +2009,13 @@
    08DC 71                 2009 	ld	(hl), c
    08DD 23                 2010 	inc	hl
    08DE 70                 2011 	ld	(hl), b
-                           2012 ;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+                           2012 ;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
    08DF 21r01r00           2013 	ld	hl, #_THIS + 1
    08E2 2B                 2014 	dec	hl
    08E3 4E                 2015 	ld	c, (hl)
    08E4 23                 2016 	inc	hl
    08E5 46                 2017 	ld	b, (hl)
-                           2018 ;SpriteArrow.c:244: THIS->y += 4;
+                           2018 ;SpriteArrow.c:239: THIS->y += 4;
    08E6 21 0A 00           2019 	ld	hl, #0x000a
    08E9 09                 2020 	add	hl, bc
    08EA 7D                 2021 	ld	a, l
@@ -2023,7 +2023,7 @@
    08EC F8 03              2023 	ldhl	sp,	#3
    08EE 22                 2024 	ld	(hl+), a
    08EF 72                 2025 	ld	(hl), d
-                           2026 ;SpriteArrow.c:280: THIS->y -= 4;
+                           2026 ;SpriteArrow.c:275: THIS->y -= 4;
    08F0 2B                 2027 	dec	hl
    08F1 5E                 2028 	ld	e, (hl)
    08F2 23                 2029 	inc	hl
@@ -2046,9 +2046,9 @@
    0905 71                 2046 	ld	(hl), c
    0906 23                 2047 	inc	hl
    0907 70                 2048 	ld	(hl), b
-                           2049 ;SpriteArrow.c:282: }
+                           2049 ;SpriteArrow.c:277: }
    0908                    2050 00109$:
-                           2051 ;SpriteArrow.c:283: data->type = data->original_type;
+                           2051 ;SpriteArrow.c:278: data->type = data->original_type;
    0908 C1                 2052 	pop	bc
    0909 C5                 2053 	push	bc
    090A D1                 2054 	pop	de
@@ -2064,15 +2064,15 @@
    0917 E6 F0              2064 	and	a, #0xf0
    0919 B5                 2065 	or	a, l
    091A 02                 2066 	ld	(bc), a
-                           2067 ;SpriteArrow.c:284: }
+                           2067 ;SpriteArrow.c:279: }
    091B E8 05              2068 	add	sp, #5
    091D C9                 2069 	ret
-                           2070 ;SpriteArrow.c:286: void Destroy_SpriteArrow() {
+                           2070 ;SpriteArrow.c:281: void Destroy_SpriteArrow() {
                            2071 ;	---------------------------------
                            2072 ; Function Destroy_SpriteArrow
                            2073 ; ---------------------------------
    091E                    2074 _Destroy_SpriteArrow::
-                           2075 ;SpriteArrow.c:287: }
+                           2075 ;SpriteArrow.c:282: }
    091E C9                 2076 	ret
                            2077 	.area _CODE_2
                            2078 	.area _CABS (ABS)

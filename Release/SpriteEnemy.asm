@@ -54,10 +54,10 @@ _bank_SpriteEnemy:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
 ;--------------------------------------------------------
@@ -92,7 +92,7 @@ _Start_SpriteEnemy::
 	ld	c,l
 	ld	a,h
 	ld	(hl), #0x02
-;SpriteEnemy.c:23: THIS->coll_y = 0;
+;SpriteEnemy.c:23: THIS->coll_y = 4;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -100,11 +100,10 @@ _Start_SpriteEnemy::
 	ld	b, (hl)
 	ld	hl, #0x000e
 	add	hl, bc
-	ld	c, l
-	ld	b, h
-	xor	a, a
-	ld	(bc), a
-;SpriteEnemy.c:24: THIS->coll_w = 12;
+	ld	c,l
+	ld	a,h
+	ld	(hl), #0x04
+;SpriteEnemy.c:24: THIS->coll_w = 6;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -114,8 +113,8 @@ _Start_SpriteEnemy::
 	add	hl, bc
 	ld	c,l
 	ld	a,h
-	ld	(hl), #0x0c
-;SpriteEnemy.c:25: THIS->coll_h = 16;
+	ld	(hl), #0x06
+;SpriteEnemy.c:25: THIS->coll_h = 12;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -125,7 +124,7 @@ _Start_SpriteEnemy::
 	add	hl, bc
 	ld	c,l
 	ld	a,h
-	ld	(hl), #0x10
+	ld	(hl), #0x0c
 ;SpriteEnemy.c:26: THIS->lim_x = 255u;
 	ld	hl, #_THIS
 	ld	b, (hl)
@@ -1174,12 +1173,12 @@ _Update_SpriteEnemy::
 ;SpriteEnemy.c:122: }
 	add	sp, #17
 	ret
-;SpriteEnemy.c:125: void CheckCollisionETile() {
+;SpriteEnemy.c:124: void CheckCollisionETile() {
 ;	---------------------------------
 ; Function CheckCollisionETile
 ; ---------------------------------
 _CheckCollisionETile::
-;SpriteEnemy.c:126: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteEnemy.c:125: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -1190,7 +1189,7 @@ _CheckCollisionETile::
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;SpriteEnemy.c:127: switch(data->tile_e_collision) {
+;SpriteEnemy.c:126: switch(data->tile_e_collision) {
 	inc	bc
 	inc	bc
 	inc	bc
@@ -1210,19 +1209,19 @@ _CheckCollisionETile::
 	jr	Z,00106$
 	sub	a, #0x13
 	ret	NZ
-;SpriteEnemy.c:133: case 19u:
+;SpriteEnemy.c:132: case 19u:
 00106$:
-;SpriteEnemy.c:134: ETurn();
+;SpriteEnemy.c:133: ETurn();
+;SpriteEnemy.c:135: }
 ;SpriteEnemy.c:136: }
-;SpriteEnemy.c:137: }
 	jp	_ETurn
-;SpriteEnemy.c:139: void ETurn(){
+;SpriteEnemy.c:138: void ETurn(){
 ;	---------------------------------
 ; Function ETurn
 ; ---------------------------------
 _ETurn::
 	add	sp, #-8
-;SpriteEnemy.c:140: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteEnemy.c:139: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -1241,7 +1240,7 @@ _ETurn::
 	ldhl	sp,	#0
 	ld	(hl+), a
 	ld	(hl), e
-;SpriteEnemy.c:141: if (data->vx == 1){
+;SpriteEnemy.c:140: if (data->vx == 1){
 	pop	de
 	push	de
 	ld	hl, #0x0004
@@ -1258,7 +1257,7 @@ _ETurn::
 	ld	a,(de)
 	ldhl	sp,	#7
 	ld	(hl), a
-;SpriteEnemy.c:144: data->wait = 48u;
+;SpriteEnemy.c:143: data->wait = 48u;
 	pop	de
 	push	de
 	ld	hl, #0x0005
@@ -1268,13 +1267,13 @@ _ETurn::
 	ldhl	sp,	#4
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteEnemy.c:141: if (data->vx == 1){
+;SpriteEnemy.c:140: if (data->vx == 1){
 	inc	hl
 	inc	hl
 	ld	a, (hl)
 	dec	a
 	jp	NZ,00102$
-;SpriteEnemy.c:142: SPRITE_SET_VMIRROR(THIS);
+;SpriteEnemy.c:141: SPRITE_SET_VMIRROR(THIS);
 	ld	hl, #0x000c
 	add	hl, bc
 	ld	c, l
@@ -1282,13 +1281,13 @@ _ETurn::
 	ld	a, (bc)
 	set	5, a
 	ld	(bc), a
-;SpriteEnemy.c:140: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteEnemy.c:139: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteEnemy.c:143: THIS->x -= 4;
+;SpriteEnemy.c:142: THIS->x -= 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1318,14 +1317,14 @@ _ETurn::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteEnemy.c:144: data->wait = 48u;
+;SpriteEnemy.c:143: data->wait = 48u;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x30
 00102$:
-;SpriteEnemy.c:146: if (data->vx == -1){
+;SpriteEnemy.c:145: if (data->vx == -1){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1333,28 +1332,28 @@ _ETurn::
 	ld	a,(de)
 	inc	a
 	jp	NZ,00104$
-;SpriteEnemy.c:140: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteEnemy.c:139: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteEnemy.c:142: SPRITE_SET_VMIRROR(THIS);
+;SpriteEnemy.c:141: SPRITE_SET_VMIRROR(THIS);
 	ld	hl, #0x000c
 	add	hl, bc
 	ld	c, l
 	ld	b, h
-;SpriteEnemy.c:147: SPRITE_UNSET_VMIRROR(THIS);
+;SpriteEnemy.c:146: SPRITE_UNSET_VMIRROR(THIS);
 	ld	a, (bc)
 	res	5, a
 	ld	(bc), a
-;SpriteEnemy.c:140: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpriteEnemy.c:139: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteEnemy.c:143: THIS->x -= 4;
+;SpriteEnemy.c:142: THIS->x -= 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1362,7 +1361,7 @@ _ETurn::
 	ldhl	sp,	#6
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteEnemy.c:148: THIS->x += 4;
+;SpriteEnemy.c:147: THIS->x += 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1383,14 +1382,14 @@ _ETurn::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteEnemy.c:149: data->wait = 48u;			
+;SpriteEnemy.c:148: data->wait = 48u;			
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x30
 00104$:
-;SpriteEnemy.c:151: data->vx = -data->vx;
+;SpriteEnemy.c:150: data->vx = -data->vx;
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1405,7 +1404,7 @@ _ETurn::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), c
-;SpriteEnemy.c:152: if(THIS->type == SpritePorcupine){
+;SpriteEnemy.c:151: if(THIS->type == SpritePorcupine){
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -1416,16 +1415,16 @@ _ETurn::
 	ld	c, l
 	ld	b, h
 	ld	a, (bc)
-	sub	a, #0x06
+	sub	a, #0x08
 	jr	NZ,00107$
-;SpriteEnemy.c:153: data->enemy_state = ENEMY_STATE_ATTACK;
+;SpriteEnemy.c:152: data->enemy_state = ENEMY_STATE_ATTACK;
 	pop	bc
 	push	bc
 	inc	bc
 	inc	bc
 	ld	a, #0x04
 	ld	(bc), a
-;SpriteEnemy.c:154: data->wait = attack_wait;
+;SpriteEnemy.c:153: data->wait = attack_wait;
 	ldhl	sp,#(5 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1434,15 +1433,15 @@ _ETurn::
 	ld	a, (hl)
 	ld	(de), a
 00107$:
-;SpriteEnemy.c:157: }
+;SpriteEnemy.c:156: }
 	add	sp, #8
 	ret
-;SpriteEnemy.c:159: void Destroy_SpriteEnemy() {
+;SpriteEnemy.c:158: void Destroy_SpriteEnemy() {
 ;	---------------------------------
 ; Function Destroy_SpriteEnemy
 ; ---------------------------------
 _Destroy_SpriteEnemy::
-;SpriteEnemy.c:160: }
+;SpriteEnemy.c:159: }
 	ret
 	.area _CODE_2
 	.area _CABS (ABS)

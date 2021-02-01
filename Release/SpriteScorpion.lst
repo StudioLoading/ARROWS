@@ -11,1147 +11,1150 @@
                              11 	.globl _Destroy_SpriteScorpion
                              12 	.globl _Update_SpriteScorpion
                              13 	.globl _Start_SpriteScorpion
-                             14 	.globl _PlayFx
-                             15 	.globl _SpriteManagerRemoveSprite
-                             16 	.globl _CheckCollision
-                             17 	.globl _TranslateSprite
-                             18 	.globl _SetSpriteAnim
-                             19 	.globl _empty
-                             20 	.globl _bank_SpriteScorpion
-                             21 	.globl _attack_wait
-                             22 	.globl _damage_cooldown
-                             23 	.globl _scorpion_dead
-                             24 	.globl _scorpion_hit
-                             25 	.globl _scorpion_walk
-                             26 	.globl _scorpion_idle
-                             27 ;--------------------------------------------------------
-                             28 ; special function registers
+                             14 	.globl _ETurn
+                             15 	.globl _CheckCollisionETile
+                             16 	.globl _PlayFx
+                             17 	.globl _SpriteManagerRemoveSprite
+                             18 	.globl _CheckCollision
+                             19 	.globl _TranslateSprite
+                             20 	.globl _SetSpriteAnim
+                             21 	.globl _empty
+                             22 	.globl _bank_SpriteScorpion
+                             23 	.globl _attack_wait
+                             24 	.globl _damage_cooldown
+                             25 	.globl _scorpion_dead
+                             26 	.globl _scorpion_hit
+                             27 	.globl _scorpion_walk
+                             28 	.globl _scorpion_idle
                              29 ;--------------------------------------------------------
-                             30 ;--------------------------------------------------------
-                             31 ; ram data
+                             30 ; special function registers
+                             31 ;--------------------------------------------------------
                              32 ;--------------------------------------------------------
-                             33 	.area _DATA
-   0000                      34 _damage_cooldown::
-   0000                      35 	.ds 1
-   0001                      36 _attack_wait::
-   0001                      37 	.ds 1
-                             38 ;--------------------------------------------------------
-                             39 ; CODE rom data
+                             33 ; ram data
+                             34 ;--------------------------------------------------------
+                             35 	.area _DATA
+   0000                      36 _damage_cooldown::
+   0000                      37 	.ds 1
+   0001                      38 _attack_wait::
+   0001                      39 	.ds 1
                              40 ;--------------------------------------------------------
-                             41 	.area _CODE
-   0000                      42 _bank_SpriteScorpion:
-   0000 02                   43 	.db #0x02	; 2
-                             44 ;--------------------------------------------------------
-                             45 ; absolute external ram data
+                             41 ; CODE rom data
+                             42 ;--------------------------------------------------------
+                             43 	.area _CODE
+   0000                      44 _bank_SpriteScorpion:
+   0000 02                   45 	.db #0x02	; 2
                              46 ;--------------------------------------------------------
-                             47 	.area _DABS (ABS)
+                             47 ; absolute external ram data
                              48 ;--------------------------------------------------------
-                             49 ; global & static initialisations
+                             49 	.area _DABS (ABS)
                              50 ;--------------------------------------------------------
-                             51 	.area _HOME
-                             52 	.area _GSINIT
-                             53 	.area _GSFINAL
+                             51 ; global & static initialisations
+                             52 ;--------------------------------------------------------
+                             53 	.area _HOME
                              54 	.area _GSINIT
-                             55 ;custom_datas.h:44: UINT8 damage_cooldown = 30u;
-   0000 21r00r00             56 	ld	hl, #_damage_cooldown
-   0003 36 1E                57 	ld	(hl), #0x1e
-                             58 ;custom_datas.h:45: UINT8 attack_wait = 32u;
-   0005 21r01r00             59 	ld	hl, #_attack_wait
-   0008 36 20                60 	ld	(hl), #0x20
-                             61 ;--------------------------------------------------------
-                             62 ; Home
+                             55 	.area _GSFINAL
+                             56 	.area _GSINIT
+                             57 ;custom_datas.h:54: UINT8 damage_cooldown = 30u;
+   0000 21r00r00             58 	ld	hl, #_damage_cooldown
+   0003 36 1E                59 	ld	(hl), #0x1e
+                             60 ;custom_datas.h:55: UINT8 attack_wait = 32u;
+   0005 21r01r00             61 	ld	hl, #_attack_wait
+   0008 36 20                62 	ld	(hl), #0x20
                              63 ;--------------------------------------------------------
-                             64 	.area _HOME
-                             65 ;C:/GB/ZGB/common/include/Banks/SetBankCommon.h:4: void empty(void) __nonbanked {}
-                             66 ;	---------------------------------
-                             67 ; Function empty
-                             68 ; ---------------------------------
-   0000                      69 _empty::
-   0000 C9                   70 	ret
-                             71 	.area _HOME
-                             72 ;--------------------------------------------------------
-                             73 ; code
+                             64 ; Home
+                             65 ;--------------------------------------------------------
+                             66 	.area _HOME
+                             67 ;C:/GB/ZGB/common/include/Banks/SetBankCommon.h:4: void empty(void) __nonbanked {}
+                             68 ;	---------------------------------
+                             69 ; Function empty
+                             70 ; ---------------------------------
+   0000                      71 _empty::
+   0000 C9                   72 	ret
+                             73 	.area _HOME
                              74 ;--------------------------------------------------------
-                             75 	.area _CODE_2
-                             76 ;SpriteScorpion.c:20: void Start_SpriteScorpion() {
-                             77 ;	---------------------------------
-                             78 ; Function Start_SpriteScorpion
-                             79 ; ---------------------------------
-   0000                      80 _Start_SpriteScorpion::
-   0000 E8 FE                81 	add	sp, #-2
-                             82 ;SpriteScorpion.c:22: THIS->coll_x = 2;
-   0002 21r01r00             83 	ld	hl, #_THIS + 1
-   0005 2B                   84 	dec	hl
-   0006 4E                   85 	ld	c, (hl)
-   0007 23                   86 	inc	hl
-   0008 46                   87 	ld	b, (hl)
-   0009 21 0D 00             88 	ld	hl, #0x000d
-   000C 09                   89 	add	hl, bc
-   000D 4D                   90 	ld	c,l
-   000E 7C                   91 	ld	a,h
-   000F 36 02                92 	ld	(hl), #0x02
-                             93 ;SpriteScorpion.c:23: THIS->coll_y = 0;
-   0011 21r01r00             94 	ld	hl, #_THIS + 1
-   0014 2B                   95 	dec	hl
-   0015 4E                   96 	ld	c, (hl)
-   0016 23                   97 	inc	hl
-   0017 46                   98 	ld	b, (hl)
-   0018 21 0E 00             99 	ld	hl, #0x000e
-   001B 09                  100 	add	hl, bc
-   001C 4D                  101 	ld	c, l
-   001D 44                  102 	ld	b, h
-   001E AF                  103 	xor	a, a
-   001F 02                  104 	ld	(bc), a
-                            105 ;SpriteScorpion.c:24: THIS->coll_w = 12;
-   0020 21r01r00            106 	ld	hl, #_THIS + 1
-   0023 2B                  107 	dec	hl
-   0024 4E                  108 	ld	c, (hl)
-   0025 23                  109 	inc	hl
-   0026 46                  110 	ld	b, (hl)
-   0027 21 0F 00            111 	ld	hl, #0x000f
-   002A 09                  112 	add	hl, bc
-   002B 4D                  113 	ld	c,l
-   002C 7C                  114 	ld	a,h
-   002D 36 0C               115 	ld	(hl), #0x0c
-                            116 ;SpriteScorpion.c:25: THIS->coll_h = 16;
-   002F 21r01r00            117 	ld	hl, #_THIS + 1
-   0032 2B                  118 	dec	hl
-   0033 4E                  119 	ld	c, (hl)
-   0034 23                  120 	inc	hl
-   0035 46                  121 	ld	b, (hl)
-   0036 21 10 00            122 	ld	hl, #0x0010
-   0039 09                  123 	add	hl, bc
-   003A 4D                  124 	ld	c,l
-   003B 7C                  125 	ld	a,h
-   003C 36 10               126 	ld	(hl), #0x10
-                            127 ;SpriteScorpion.c:26: THIS->lim_x = 255u;
-   003E 21r00r00            128 	ld	hl, #_THIS
-   0041 46                  129 	ld	b, (hl)
-   0042 23                  130 	inc	hl
-   0043 4E                  131 	ld	c, (hl)
-   0044 78                  132 	ld	a, b
-   0045 C6 13               133 	add	a, #0x13
-   0047 47                  134 	ld	b, a
-   0048 30 01               135 	jr	NC,00103$
-   004A 0C                  136 	inc	c
-   004B                     137 00103$:
-   004B 68                  138 	ld	l, b
-   004C 61                  139 	ld	h, c
-   004D 36 FF               140 	ld	(hl), #0xff
-   004F 23                  141 	inc	hl
-   0050 36 00               142 	ld	(hl), #0x00
-                            143 ;SpriteScorpion.c:27: THIS->lim_y = 244u;
-   0052 21r00r00            144 	ld	hl, #_THIS
-   0055 46                  145 	ld	b, (hl)
-   0056 23                  146 	inc	hl
-   0057 4E                  147 	ld	c, (hl)
-   0058 78                  148 	ld	a, b
-   0059 C6 15               149 	add	a, #0x15
-   005B 47                  150 	ld	b, a
-   005C 30 01               151 	jr	NC,00104$
-   005E 0C                  152 	inc	c
-   005F                     153 00104$:
-   005F 68                  154 	ld	l, b
-   0060 61                  155 	ld	h, c
-   0061 36 F4               156 	ld	(hl), #0xf4
-   0063 23                  157 	inc	hl
-   0064 36 00               158 	ld	(hl), #0x00
-                            159 ;SpriteScorpion.c:28: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
-   0066 21r01r00            160 	ld	hl, #_THIS + 1
-   0069 2B                  161 	dec	hl
-   006A 4E                  162 	ld	c, (hl)
-   006B 23                  163 	inc	hl
-   006C 46                  164 	ld	b, (hl)
-   006D 21 19 00            165 	ld	hl, #0x0019
-   0070 09                  166 	add	hl, bc
-   0071 4D                  167 	ld	c, l
-   0072 7C                  168 	ld	a, h
-   0073 47                  169 	ld	b, a
-                            170 ;SpriteScorpion.c:29: SetSpriteAnim(THIS, scorpion_idle, 8u);
-   0074 C5                  171 	push	bc
-   0075 3E 08               172 	ld	a, #0x08
-   0077 F5                  173 	push	af
-   0078 33                  174 	inc	sp
-   0079 21rC4r00            175 	ld	hl, #_scorpion_idle
-   007C E5                  176 	push	hl
-   007D 21r00r00            177 	ld	hl, #_THIS
-   0080 2A                  178 	ld	a, (hl+)
-   0081 66                  179 	ld	h, (hl)
-   0082 6F                  180 	ld	l, a
-   0083 E5                  181 	push	hl
-   0084 CDr00r00            182 	call	_SetSpriteAnim
-   0087 E8 05               183 	add	sp, #5
-   0089 C1                  184 	pop	bc
-                            185 ;SpriteScorpion.c:30: data->enemy_accel_y = 24;
-   008A 69                  186 	ld	l, c
-   008B 60                  187 	ld	h, b
-   008C 36 18               188 	ld	(hl), #0x18
-   008E 23                  189 	inc	hl
-   008F 36 00               190 	ld	(hl), #0x00
-                            191 ;SpriteScorpion.c:31: data->vx = 1;
-   0091 21 04 00            192 	ld	hl, #0x0004
-   0094 09                  193 	add	hl, bc
-   0095 33                  194 	inc	sp
-   0096 33                  195 	inc	sp
-   0097 E5                  196 	push	hl
-   0098 E1                  197 	pop	hl
-   0099 E5                  198 	push	hl
-   009A 36 01               199 	ld	(hl), #0x01
-                            200 ;SpriteScorpion.c:32: data->wait = 0u;
-   009C 21 05 00            201 	ld	hl, #0x0005
-   009F 09                  202 	add	hl, bc
-   00A0 33                  203 	inc	sp
-   00A1 33                  204 	inc	sp
-   00A2 E5                  205 	push	hl
-   00A3 E1                  206 	pop	hl
-   00A4 E5                  207 	push	hl
-   00A5 36 00               208 	ld	(hl), #0x00
-                            209 ;SpriteScorpion.c:33: data->enemydamage = 15u;
-   00A7 21 06 00            210 	ld	hl, #0x0006
-   00AA 09                  211 	add	hl, bc
-   00AB 33                  212 	inc	sp
-   00AC 33                  213 	inc	sp
-   00AD E5                  214 	push	hl
-   00AE E1                  215 	pop	hl
-   00AF E5                  216 	push	hl
-   00B0 36 0F               217 	ld	(hl), #0x0f
-                            218 ;SpriteScorpion.c:34: data->hp = 60u;
-   00B2 21 07 00            219 	ld	hl, #0x0007
-   00B5 09                  220 	add	hl, bc
-   00B6 33                  221 	inc	sp
-   00B7 33                  222 	inc	sp
-   00B8 E5                  223 	push	hl
-   00B9 E1                  224 	pop	hl
-   00BA E5                  225 	push	hl
-   00BB 36 3C               226 	ld	(hl), #0x3c
-                            227 ;SpriteScorpion.c:35: data->enemy_state = ENEMY_STATE_NORMAL;
-   00BD 03                  228 	inc	bc
-   00BE 03                  229 	inc	bc
-   00BF AF                  230 	xor	a, a
-   00C0 02                  231 	ld	(bc), a
-                            232 ;SpriteScorpion.c:36: }
-   00C1 E8 02               233 	add	sp, #2
-   00C3 C9                  234 	ret
-   00C4                     235 _scorpion_idle:
-   00C4 01                  236 	.db #0x01	; 1
-   00C5 00                  237 	.db #0x00	; 0
-   00C6                     238 _scorpion_walk:
-   00C6 02                  239 	.db #0x02	; 2
-   00C7 00                  240 	.db #0x00	; 0
-   00C8 01                  241 	.db #0x01	; 1
-   00C9                     242 _scorpion_hit:
-   00C9 03                  243 	.db #0x03	; 3
-   00CA 02                  244 	.db #0x02	; 2
-   00CB 03                  245 	.db #0x03	; 3
-   00CC 04                  246 	.db #0x04	; 4
-   00CD                     247 _scorpion_dead:
-   00CD 01                  248 	.db #0x01	; 1
-   00CE 05                  249 	.db #0x05	; 5
-                            250 ;SpriteScorpion.c:38: void Update_SpriteScorpion() {
-                            251 ;	---------------------------------
-                            252 ; Function Update_SpriteScorpion
-                            253 ; ---------------------------------
-   00CF                     254 _Update_SpriteScorpion::
-   00CF E8 EF               255 	add	sp, #-17
-                            256 ;SpriteScorpion.c:40: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
-   00D1 21r01r00            257 	ld	hl, #_THIS + 1
-   00D4 2B                  258 	dec	hl
-   00D5 4E                  259 	ld	c, (hl)
-   00D6 23                  260 	inc	hl
-   00D7 46                  261 	ld	b, (hl)
-   00D8 21 19 00            262 	ld	hl, #0x0019
-   00DB 09                  263 	add	hl, bc
-   00DC 7D                  264 	ld	a, l
-   00DD 54                  265 	ld	d, h
-   00DE F8 0F               266 	ldhl	sp,	#15
-   00E0 22                  267 	ld	(hl+), a
-   00E1 72                  268 	ld	(hl), d
-   00E2 2B                  269 	dec	hl
-   00E3 2A                  270 	ld	a, (hl+)
-   00E4 5E                  271 	ld	e, (hl)
-   00E5 F8 00               272 	ldhl	sp,	#0
-   00E7 22                  273 	ld	(hl+), a
-   00E8 73                  274 	ld	(hl), e
-                            275 ;SpriteScorpion.c:42: if (data->enemy_state == ENEMY_STATE_DEAD){
-   00E9 D1                  276 	pop	de
-   00EA D5                  277 	push	de
-   00EB 21 02 00            278 	ld	hl, #0x0002
-   00EE 19                  279 	add	hl, de
-   00EF 7D                  280 	ld	a, l
-   00F0 54                  281 	ld	d, h
-   00F1 F8 02               282 	ldhl	sp,	#2
-   00F3 22                  283 	ld	(hl+), a
-   00F4 72                  284 	ld	(hl), d
-   00F5 2B                  285 	dec	hl
-   00F6 5E                  286 	ld	e, (hl)
-   00F7 23                  287 	inc	hl
-   00F8 56                  288 	ld	d, (hl)
-   00F9 1A                  289 	ld	a,(de)
-   00FA F8 0F               290 	ldhl	sp,	#15
-   00FC 77                  291 	ld	(hl), a
-                            292 ;SpriteScorpion.c:43: if (data->wait > 0){
-   00FD D1                  293 	pop	de
-   00FE D5                  294 	push	de
-   00FF 21 05 00            295 	ld	hl, #0x0005
-   0102 19                  296 	add	hl, de
-   0103 7D                  297 	ld	a, l
-   0104 54                  298 	ld	d, h
-   0105 F8 04               299 	ldhl	sp,	#4
-   0107 22                  300 	ld	(hl+), a
-   0108 72                  301 	ld	(hl), d
-   0109 2B                  302 	dec	hl
-   010A 5E                  303 	ld	e, (hl)
-   010B 23                  304 	inc	hl
-   010C 56                  305 	ld	d, (hl)
-   010D 1A                  306 	ld	a,(de)
-   010E F8 10               307 	ldhl	sp,	#16
-                            308 ;SpriteScorpion.c:42: if (data->enemy_state == ENEMY_STATE_DEAD){
-   0110 32                  309 	ld	(hl-), a
-   0111 7E                  310 	ld	a, (hl)
-   0112 D6 03               311 	sub	a, #0x03
-   0114 C2r76r01            312 	jp	NZ,00105$
-                            313 ;SpriteScorpion.c:44: THIS->y--;
-   0117 21 0A 00            314 	ld	hl, #0x000a
-   011A 09                  315 	add	hl, bc
-   011B 7D                  316 	ld	a, l
-   011C 54                  317 	ld	d, h
-   011D F8 0E               318 	ldhl	sp,	#14
-   011F 22                  319 	ld	(hl+), a
-   0120 72                  320 	ld	(hl), d
-   0121 2B                  321 	dec	hl
-   0122 5E                  322 	ld	e, (hl)
-   0123 23                  323 	inc	hl
-   0124 56                  324 	ld	d, (hl)
-   0125 1A                  325 	ld	a,(de)
-   0126 4F                  326 	ld	c, a
-   0127 13                  327 	inc	de
-   0128 1A                  328 	ld	a,(de)
-   0129 47                  329 	ld	b, a
-                            330 ;SpriteScorpion.c:43: if (data->wait > 0){
-   012A 23                  331 	inc	hl
-   012B 7E                  332 	ld	a, (hl)
-   012C B7                  333 	or	a, a
-   012D 28 19               334 	jr	Z,00102$
-                            335 ;SpriteScorpion.c:44: THIS->y--;
-   012F 0B                  336 	dec	bc
-   0130 2B                  337 	dec	hl
-   0131 2B                  338 	dec	hl
-   0132 2A                  339 	ld	a, (hl+)
-   0133 66                  340 	ld	h, (hl)
-   0134 6F                  341 	ld	l, a
-   0135 71                  342 	ld	(hl), c
-   0136 23                  343 	inc	hl
-   0137 70                  344 	ld	(hl), b
-                            345 ;SpriteScorpion.c:45: data->wait--;
-   0138 F8 04               346 	ldhl	sp,#(5 - 1)
-   013A 5E                  347 	ld	e, (hl)
-   013B 23                  348 	inc	hl
-   013C 56                  349 	ld	d, (hl)
-   013D 1A                  350 	ld	a,(de)
-   013E 4F                  351 	ld	c, a
-   013F 0D                  352 	dec	c
-   0140 2B                  353 	dec	hl
-   0141 2A                  354 	ld	a, (hl+)
-   0142 66                  355 	ld	h, (hl)
-   0143 6F                  356 	ld	l, a
-   0144 71                  357 	ld	(hl), c
-   0145 C3r2Dr05            358 	jp	00143$
-   0148                     359 00102$:
-                            360 ;SpriteScorpion.c:47: THIS->y++;	
-   0148 03                  361 	inc	bc
-   0149 F8 0E               362 	ldhl	sp,	#14
-   014B 2A                  363 	ld	a, (hl+)
-   014C 66                  364 	ld	h, (hl)
-   014D 6F                  365 	ld	l, a
-   014E 71                  366 	ld	(hl), c
-   014F 23                  367 	inc	hl
-   0150 70                  368 	ld	(hl), b
-                            369 ;SpriteScorpion.c:48: THIS->y++;
-   0151 21r01r00            370 	ld	hl, #_THIS + 1
-   0154 2B                  371 	dec	hl
-   0155 4E                  372 	ld	c, (hl)
-   0156 23                  373 	inc	hl
-   0157 46                  374 	ld	b, (hl)
-   0158 21 0A 00            375 	ld	hl, #0x000a
-   015B 09                  376 	add	hl, bc
-   015C 7D                  377 	ld	a, l
-   015D 54                  378 	ld	d, h
-   015E F8 0F               379 	ldhl	sp,	#15
-   0160 22                  380 	ld	(hl+), a
-   0161 72                  381 	ld	(hl), d
-   0162 2B                  382 	dec	hl
-   0163 5E                  383 	ld	e, (hl)
-   0164 23                  384 	inc	hl
-   0165 56                  385 	ld	d, (hl)
-   0166 1A                  386 	ld	a,(de)
-   0167 4F                  387 	ld	c, a
-   0168 13                  388 	inc	de
-   0169 1A                  389 	ld	a,(de)
-   016A 47                  390 	ld	b, a
-   016B 03                  391 	inc	bc
-   016C 2B                  392 	dec	hl
-   016D 2A                  393 	ld	a, (hl+)
-   016E 66                  394 	ld	h, (hl)
-   016F 6F                  395 	ld	l, a
-   0170 71                  396 	ld	(hl), c
-   0171 23                  397 	inc	hl
-   0172 70                  398 	ld	(hl), b
-                            399 ;SpriteScorpion.c:50: return;
-   0173 C3r2Dr05            400 	jp	00143$
-   0176                     401 00105$:
-                            402 ;SpriteScorpion.c:61: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
-   0176 D1                  403 	pop	de
-   0177 D5                  404 	push	de
-   0178 21 03 00            405 	ld	hl, #0x0003
-   017B 19                  406 	add	hl, de
-   017C 7D                  407 	ld	a, l
-   017D 54                  408 	ld	d, h
-   017E F8 06               409 	ldhl	sp,	#6
-   0180 22                  410 	ld	(hl+), a
-   0181 72                  411 	ld	(hl), d
-                            412 ;SpriteScorpion.c:52: if (data->wait > 0u){
-   0182 F8 10               413 	ldhl	sp,	#16
-   0184 7E                  414 	ld	a, (hl)
-   0185 B7                  415 	or	a, a
-   0186 28 24               416 	jr	Z,00120$
-                            417 ;SpriteScorpion.c:53: data->wait -= 1u;
-   0188 4E                  418 	ld	c, (hl)
-   0189 0D                  419 	dec	c
-   018A F8 04               420 	ldhl	sp,	#4
-   018C 2A                  421 	ld	a, (hl+)
-   018D 66                  422 	ld	h, (hl)
-   018E 6F                  423 	ld	l, a
-   018F 71                  424 	ld	(hl), c
-                            425 ;SpriteScorpion.c:54: if (data->wait == 0u){
-   0190 79                  426 	ld	a, c
-   0191 B7                  427 	or	a, a
-   0192 C2rDDr02            428 	jp	NZ, 00121$
-                            429 ;SpriteScorpion.c:55: SetSpriteAnim(THIS, scorpion_walk, 8u);
-   0195 3E 08               430 	ld	a, #0x08
-   0197 F5                  431 	push	af
-   0198 33                  432 	inc	sp
-   0199 21rC6r00            433 	ld	hl, #_scorpion_walk
-   019C E5                  434 	push	hl
-   019D 21r00r00            435 	ld	hl, #_THIS
-   01A0 2A                  436 	ld	a, (hl+)
-   01A1 66                  437 	ld	h, (hl)
-   01A2 6F                  438 	ld	l, a
-   01A3 E5                  439 	push	hl
-   01A4 CDr00r00            440 	call	_SetSpriteAnim
-   01A7 E8 05               441 	add	sp, #5
-   01A9 C3rDDr02            442 	jp	00121$
-   01AC                     443 00120$:
-                            444 ;SpriteScorpion.c:58: if(data->enemy_accel_y < 24) {
-   01AC D1                  445 	pop	de
-   01AD D5                  446 	push	de
-   01AE 1A                  447 	ld	a,(de)
-   01AF 4F                  448 	ld	c, a
-   01B0 13                  449 	inc	de
-   01B1 1A                  450 	ld	a,(de)
-   01B2 47                  451 	ld	b, a
-   01B3 79                  452 	ld	a, c
-   01B4 D6 18               453 	sub	a, #0x18
-   01B6 78                  454 	ld	a, b
-   01B7 17                  455 	rla
-   01B8 3F                  456 	ccf
-   01B9 1F                  457 	rra
-   01BA DE 80               458 	sbc	a, #0x80
-   01BC 30 06               459 	jr	NC,00109$
-                            460 ;SpriteScorpion.c:59: data->enemy_accel_y += 1;
-   01BE 03                  461 	inc	bc
-   01BF E1                  462 	pop	hl
-   01C0 E5                  463 	push	hl
-   01C1 71                  464 	ld	(hl), c
-   01C2 23                  465 	inc	hl
-   01C3 70                  466 	ld	(hl), b
-   01C4                     467 00109$:
-                            468 ;SpriteScorpion.c:61: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
-   01C4 D1                  469 	pop	de
-   01C5 D5                  470 	push	de
-   01C6 1A                  471 	ld	a,(de)
-   01C7 4F                  472 	ld	c, a
-   01C8 13                  473 	inc	de
-   01C9 1A                  474 	ld	a,(de)
-   01CA 47                  475 	ld	b, a
-   01CB CB 28               476 	sra	b
-   01CD CB 19               477 	rr	c
-   01CF CB 28               478 	sra	b
-   01D1 CB 19               479 	rr	c
-   01D3 CB 28               480 	sra	b
-   01D5 CB 19               481 	rr	c
-   01D7 CB 28               482 	sra	b
-   01D9 CB 19               483 	rr	c
-   01DB F8 10               484 	ldhl	sp,	#16
-   01DD 71                  485 	ld	(hl), c
-   01DE E5                  486 	push	hl
-   01DF 21r00r00            487 	ld	hl, #_delta_time
-   01E2 7E                  488 	ld	a, (hl)
-   01E3 F8 0F               489 	ldhl	sp,	#15
-   01E5 77                  490 	ld	(hl), a
-   01E6 E1                  491 	pop	hl
-   01E7 F8 0D               492 	ldhl	sp,	#13
-   01E9 7E                  493 	ld	a, (hl)
-   01EA F5                  494 	push	af
-   01EB F8 12               495 	ldhl	sp,	#18
-   01ED 3A                  496 	ld	a, (hl-)
-   01EE 2B                  497 	dec	hl
-   01EF 77                  498 	ld	(hl), a
-   01F0 F1                  499 	pop	af
-   01F1 3C                  500 	inc	a
-   01F2 18 04               501 	jr	00249$
-   01F4                     502 00248$:
-   01F4 F8 0E               503 	ldhl	sp,	#14
-   01F6 CB 26               504 	sla	(hl)
-   01F8                     505 00249$:
-   01F8 3D                  506 	dec	a
-   01F9 20 F9               507 	jr	NZ,00248$
-   01FB D1                  508 	pop	de
-   01FC D5                  509 	push	de
-   01FD 21 04 00            510 	ld	hl, #0x0004
-   0200 19                  511 	add	hl, de
-   0201 7D                  512 	ld	a, l
-   0202 54                  513 	ld	d, h
-   0203 F8 0F               514 	ldhl	sp,	#15
-   0205 22                  515 	ld	(hl+), a
-   0206 72                  516 	ld	(hl), d
-   0207 2B                  517 	dec	hl
-   0208 5E                  518 	ld	e, (hl)
-   0209 23                  519 	inc	hl
-   020A 56                  520 	ld	d, (hl)
-   020B 1A                  521 	ld	a,(de)
-   020C 47                  522 	ld	b, a
-   020D F8 0D               523 	ldhl	sp,	#13
-   020F 7E                  524 	ld	a, (hl)
-   0210 3C                  525 	inc	a
-   0211 18 02               526 	jr	00251$
-   0213                     527 00250$:
-   0213 CB 20               528 	sla	b
-   0215                     529 00251$:
-   0215 3D                  530 	dec	a
-   0216 20 FB               531 	jr	NZ,00250$
-   0218 23                  532 	inc	hl
-   0219 7E                  533 	ld	a, (hl)
-   021A F5                  534 	push	af
-   021B 33                  535 	inc	sp
-   021C C5                  536 	push	bc
-   021D 33                  537 	inc	sp
-   021E 21r00r00            538 	ld	hl, #_THIS
-   0221 2A                  539 	ld	a, (hl+)
-   0222 66                  540 	ld	h, (hl)
-   0223 6F                  541 	ld	l, a
-   0224 E5                  542 	push	hl
-   0225 CDr00r00            543 	call	_TranslateSprite
-   0228 E8 04               544 	add	sp, #4
-   022A 7B                  545 	ld	a, e
-   022B F8 06               546 	ldhl	sp,	#6
-   022D F5                  547 	push	af
-   022E 2A                  548 	ld	a, (hl+)
-   022F 66                  549 	ld	h, (hl)
-   0230 6F                  550 	ld	l, a
-   0231 F1                  551 	pop	af
-   0232 77                  552 	ld	(hl), a
-                            553 ;SpriteScorpion.c:63: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
-   0233 B7                  554 	or	a, a
-   0234 C2r8Er02            555 	jp	NZ, 00111$
-   0237 21r00r00            556 	ld	hl, #_delta_time
-   023A 7E                  557 	ld	a, (hl)
-   023B B7                  558 	or	a, a
-   023C CAr8Er02            559 	jp	Z, 00111$
-                            560 ;SpriteScorpion.c:58: if(data->enemy_accel_y < 24) {
-   023F D1                  561 	pop	de
-   0240 D5                  562 	push	de
-   0241 1A                  563 	ld	a,(de)
-   0242 4F                  564 	ld	c, a
-   0243 13                  565 	inc	de
-   0244 1A                  566 	ld	a,(de)
-   0245 47                  567 	ld	b, a
-                            568 ;SpriteScorpion.c:63: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
-   0246 79                  569 	ld	a, c
-   0247 D6 18               570 	sub	a, #0x18
-   0249 78                  571 	ld	a, b
-   024A 17                  572 	rla
-   024B 3F                  573 	ccf
-   024C 1F                  574 	rra
-   024D DE 80               575 	sbc	a, #0x80
-   024F D2r8Er02            576 	jp	NC, 00111$
-                            577 ;SpriteScorpion.c:64: data->enemy_accel_y += 2;
-   0252 03                  578 	inc	bc
-   0253 03                  579 	inc	bc
-   0254 E1                  580 	pop	hl
-   0255 E5                  581 	push	hl
-   0256 71                  582 	ld	(hl), c
-   0257 23                  583 	inc	hl
-   0258 70                  584 	ld	(hl), b
-                            585 ;SpriteScorpion.c:65: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
-   0259 CB 28               586 	sra	b
-   025B CB 19               587 	rr	c
-   025D CB 28               588 	sra	b
-   025F CB 19               589 	rr	c
-   0261 CB 28               590 	sra	b
-   0263 CB 19               591 	rr	c
-   0265 CB 28               592 	sra	b
-   0267 CB 19               593 	rr	c
-   0269 21r00r00            594 	ld	hl, #_delta_time
-   026C 7E                  595 	ld	a, (hl)
-   026D 3C                  596 	inc	a
-   026E 18 02               597 	jr	00253$
-   0270                     598 00252$:
-   0270 CB 21               599 	sla	c
-   0272                     600 00253$:
-   0272 3D                  601 	dec	a
-   0273 20 FB               602 	jr	NZ,00252$
-   0275 79                  603 	ld	a, c
-   0276 F5                  604 	push	af
-   0277 33                  605 	inc	sp
-   0278 AF                  606 	xor	a, a
-   0279 F5                  607 	push	af
-   027A 33                  608 	inc	sp
-   027B 21r00r00            609 	ld	hl, #_THIS
-   027E 2A                  610 	ld	a, (hl+)
-   027F 66                  611 	ld	h, (hl)
-   0280 6F                  612 	ld	l, a
-   0281 E5                  613 	push	hl
-   0282 CDr00r00            614 	call	_TranslateSprite
-   0285 E8 04               615 	add	sp, #4
-   0287 4B                  616 	ld	c, e
-   0288 F8 06               617 	ldhl	sp,	#6
-   028A 2A                  618 	ld	a, (hl+)
-   028B 66                  619 	ld	h, (hl)
-   028C 6F                  620 	ld	l, a
-   028D 71                  621 	ld	(hl), c
-   028E                     622 00111$:
-                            623 ;SpriteScorpion.c:67: if(data->tile_e_collision) {
-   028E F8 06               624 	ldhl	sp,#(7 - 1)
-   0290 5E                  625 	ld	e, (hl)
-   0291 23                  626 	inc	hl
-   0292 56                  627 	ld	d, (hl)
-   0293 1A                  628 	ld	a,(de)
-   0294 B7                  629 	or	a, a
-   0295 CArDDr02            630 	jp	Z, 00121$
-                            631 ;SpriteScorpion.c:68: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
-   0298 F8 02               632 	ldhl	sp,#(3 - 1)
-   029A 5E                  633 	ld	e, (hl)
-   029B 23                  634 	inc	hl
-   029C 56                  635 	ld	d, (hl)
-   029D 1A                  636 	ld	a,(de)
-   029E 3D                  637 	dec	a
-   029F 3E 01               638 	ld	a, #0x01
-   02A1 28 01               639 	jr	Z,00255$
-   02A3 AF                  640 	xor	a, a
-   02A4                     641 00255$:
-   02A4 F8 10               642 	ldhl	sp,	#16
-   02A6 77                  643 	ld	(hl), a
-   02A7 D1                  644 	pop	de
-   02A8 D5                  645 	push	de
-   02A9 1A                  646 	ld	a,(de)
-   02AA 4F                  647 	ld	c, a
-   02AB 13                  648 	inc	de
-   02AC 1A                  649 	ld	a,(de)
-   02AD 47                  650 	ld	b,a
-   02AE 5F                  651 	ld	e, a
-   02AF 3E 00               652 	ld	a, #0x00
-   02B1 57                  653 	ld	d, a
-   02B2 AF                  654 	xor	a, a
-   02B3 B9                  655 	cp	a, c
-   02B4 98                  656 	sbc	a, b
-   02B5 CB 7B               657 	bit	7, e
-   02B7 28 07               658 	jr	Z,00256$
-   02B9 CB 7A               659 	bit	7, d
-   02BB 20 08               660 	jr	NZ,00257$
-   02BD BF                  661 	cp	a, a
-   02BE 18 05               662 	jr	00257$
-   02C0                     663 00256$:
-   02C0 CB 7A               664 	bit	7, d
-   02C2 28 01               665 	jr	Z,00257$
-   02C4 37                  666 	scf
-   02C5                     667 00257$:
-   02C5 3E 00               668 	ld	a, #0x00
-   02C7 17                  669 	rla
-   02C8 F8 10               670 	ldhl	sp,	#16
-   02CA A6                  671 	and	a,(hl)
-   02CB 28 08               672 	jr	Z,00115$
-                            673 ;SpriteScorpion.c:69: data->enemy_state = ENEMY_STATE_NORMAL;
-   02CD C1                  674 	pop	bc
-   02CE E1                  675 	pop	hl
-   02CF E5                  676 	push	hl
-   02D0 C5                  677 	push	bc
-   02D1 36 00               678 	ld	(hl), #0x00
-   02D3 18 05               679 	jr	00116$
-   02D5                     680 00115$:
-                            681 ;SpriteScorpion.c:71: data->enemy_accel_y = 0;	
-   02D5 E1                  682 	pop	hl
-   02D6 E5                  683 	push	hl
-   02D7 AF                  684 	xor	a, a
-   02D8 22                  685 	ld	(hl+), a
-   02D9 77                  686 	ld	(hl), a
-   02DA                     687 00116$:
-                            688 ;SpriteScorpion.c:73: CheckCollisionETile();
-   02DA CDr00r00            689 	call	_CheckCollisionETile
-   02DD                     690 00121$:
-                            691 ;SpriteScorpion.c:81: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
-   02DD FAr01r00            692 	ld	a, (#(_sprite_manager_updatables + 0x0001) + 0)
-   02E0 4F                  693 	ld	c, a
-   02E1 06 00               694 	ld	b, #0x00
-   02E3 CB 21               695 	sla	c
-   02E5 CB 10               696 	rl	b
-   02E7 21r00r00            697 	ld	hl, #_sprite_manager_sprites
-   02EA 09                  698 	add	hl, bc
-   02EB 4D                  699 	ld	c, l
-   02EC 44                  700 	ld	b, h
-   02ED 59                  701 	ld	e, c
-   02EE 50                  702 	ld	d, b
-   02EF 1A                  703 	ld	a,(de)
-   02F0 F8 08               704 	ldhl	sp,	#8
-   02F2 22                  705 	ld	(hl+), a
-   02F3 13                  706 	inc	de
-   02F4 1A                  707 	ld	a, (de)
-   02F5 77                  708 	ld	(hl), a
-   02F6 AF                  709 	xor	a, a
-   02F7 F8 10               710 	ldhl	sp,	#16
-   02F9 77                  711 	ld	(hl), a
-   02FA                     712 00141$:
-   02FA 21r00r00            713 	ld	hl, #_sprite_manager_updatables + 0
-   02FD 4E                  714 	ld	c, (hl)
-   02FE F8 10               715 	ldhl	sp,	#16
-   0300 7E                  716 	ld	a, (hl)
-   0301 91                  717 	sub	a, c
-   0302 CAr2Dr05            718 	jp	Z,00143$
-                            719 ;SpriteScorpion.c:82: if(iespr->type == SpritePlayer) {
-   0305 F8 08               720 	ldhl	sp,#(9 - 1)
-   0307 5E                  721 	ld	e, (hl)
-   0308 23                  722 	inc	hl
-   0309 56                  723 	ld	d, (hl)
-   030A 21 11 00            724 	ld	hl, #0x0011
-   030D 19                  725 	add	hl, de
-   030E 4D                  726 	ld	c, l
-   030F 44                  727 	ld	b, h
-   0310 0A                  728 	ld	a, (bc)
-   0311 B7                  729 	or	a, a
-   0312 20 1F               730 	jr	NZ,00125$
-                            731 ;SpriteScorpion.c:83: if(CheckCollision(THIS, iespr)) {
-   0314 C5                  732 	push	bc
-   0315 F8 0A               733 	ldhl	sp,	#10
-   0317 2A                  734 	ld	a, (hl+)
-   0318 66                  735 	ld	h, (hl)
-   0319 6F                  736 	ld	l, a
-   031A E5                  737 	push	hl
-   031B 21r00r00            738 	ld	hl, #_THIS
-   031E 2A                  739 	ld	a, (hl+)
-   031F 66                  740 	ld	h, (hl)
-   0320 6F                  741 	ld	l, a
-   0321 E5                  742 	push	hl
-   0322 CDr00r00            743 	call	_CheckCollision
-   0325 E8 04               744 	add	sp, #4
-   0327 7B                  745 	ld	a, e
-   0328 C1                  746 	pop	bc
-   0329 B7                  747 	or	a, a
-   032A 28 07               748 	jr	Z,00125$
-                            749 ;SpriteScorpion.c:84: data->wait = 24u;
-   032C F8 04               750 	ldhl	sp,	#4
-   032E 2A                  751 	ld	a, (hl+)
-   032F 66                  752 	ld	h, (hl)
-   0330 6F                  753 	ld	l, a
-   0331 36 18               754 	ld	(hl), #0x18
-   0333                     755 00125$:
-                            756 ;SpriteScorpion.c:87: if(iespr->type == SpriteArrow) {
-   0333 0A                  757 	ld	a, (bc)
-   0334 3D                  758 	dec	a
-   0335 C2r07r05            759 	jp	NZ,00142$
-                            760 ;SpriteScorpion.c:88: if(CheckCollision(THIS, iespr)) {
-   0338 F8 08               761 	ldhl	sp,	#8
-   033A 2A                  762 	ld	a, (hl+)
-   033B 66                  763 	ld	h, (hl)
-   033C 6F                  764 	ld	l, a
-   033D E5                  765 	push	hl
-   033E 21r00r00            766 	ld	hl, #_THIS
-   0341 2A                  767 	ld	a, (hl+)
-   0342 66                  768 	ld	h, (hl)
-   0343 6F                  769 	ld	l, a
-   0344 E5                  770 	push	hl
-   0345 CDr00r00            771 	call	_CheckCollision
-   0348 E8 04               772 	add	sp, #4
-   034A 7B                  773 	ld	a, e
-   034B B7                  774 	or	a, a
-   034C CAr07r05            775 	jp	Z, 00142$
-                            776 ;SpriteScorpion.c:89: data->wait = 24u;
-   034F F8 04               777 	ldhl	sp,	#4
-   0351 2A                  778 	ld	a, (hl+)
-   0352 66                  779 	ld	h, (hl)
-   0353 6F                  780 	ld	l, a
-   0354 36 18               781 	ld	(hl), #0x18
-                            782 ;SpriteScorpion.c:90: SetSpriteAnim(THIS, scorpion_hit, 24u); 
-   0356 3E 18               783 	ld	a, #0x18
-   0358 F5                  784 	push	af
-   0359 33                  785 	inc	sp
-   035A 21rC9r00            786 	ld	hl, #_scorpion_hit
-   035D E5                  787 	push	hl
-   035E 21r00r00            788 	ld	hl, #_THIS
-   0361 2A                  789 	ld	a, (hl+)
-   0362 66                  790 	ld	h, (hl)
-   0363 6F                  791 	ld	l, a
-   0364 E5                  792 	push	hl
-   0365 CDr00r00            793 	call	_SetSpriteAnim
-   0368 E8 05               794 	add	sp, #5
-                            795 ;SpriteScorpion.c:91: struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
-   036A F8 08               796 	ldhl	sp,#(9 - 1)
-   036C 5E                  797 	ld	e, (hl)
-   036D 23                  798 	inc	hl
-   036E 56                  799 	ld	d, (hl)
-   036F 21 19 00            800 	ld	hl, #0x0019
-   0372 19                  801 	add	hl, de
-   0373 4D                  802 	ld	c, l
-   0374 7C                  803 	ld	a, h
-   0375 47                  804 	ld	b, a
-                            805 ;SpriteScorpion.c:92: data->hp -= arrowdata->arrowdamage;
-   0376 D1                  806 	pop	de
-   0377 D5                  807 	push	de
-   0378 21 07 00            808 	ld	hl, #0x0007
-   037B 19                  809 	add	hl, de
-   037C 7D                  810 	ld	a, l
-   037D 54                  811 	ld	d, h
-   037E F8 0A               812 	ldhl	sp,	#10
-   0380 22                  813 	ld	(hl+), a
-   0381 72                  814 	ld	(hl), d
-   0382 2B                  815 	dec	hl
-   0383 5E                  816 	ld	e, (hl)
-   0384 23                  817 	inc	hl
-   0385 56                  818 	ld	d, (hl)
-   0386 1A                  819 	ld	a,(de)
-   0387 F8 0F               820 	ldhl	sp,	#15
-   0389 77                  821 	ld	(hl), a
-   038A 03                  822 	inc	bc
-   038B 03                  823 	inc	bc
-   038C 03                  824 	inc	bc
-   038D 03                  825 	inc	bc
-   038E 0A                  826 	ld	a, (bc)
-   038F 4F                  827 	ld	c, a
-   0390 7E                  828 	ld	a, (hl)
-   0391 91                  829 	sub	a, c
-   0392 4F                  830 	ld	c, a
-   0393 F8 0A               831 	ldhl	sp,	#10
-   0395 2A                  832 	ld	a, (hl+)
-   0396 66                  833 	ld	h, (hl)
-   0397 6F                  834 	ld	l, a
-   0398 71                  835 	ld	(hl), c
-                            836 ;SpriteScorpion.c:40: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
-   0399 21r01r00            837 	ld	hl, #_THIS + 1
-   039C 2B                  838 	dec	hl
-   039D 4E                  839 	ld	c, (hl)
-   039E 23                  840 	inc	hl
-   039F 46                  841 	ld	b, (hl)
-                            842 ;SpriteScorpion.c:93: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
-   03A0 21 08 00            843 	ld	hl, #0x0008
-   03A3 09                  844 	add	hl, bc
-   03A4 7D                  845 	ld	a, l
-   03A5 54                  846 	ld	d, h
-   03A6 F8 0E               847 	ldhl	sp,	#14
-   03A8 22                  848 	ld	(hl+), a
-   03A9 72                  849 	ld	(hl), d
-   03AA 2B                  850 	dec	hl
-   03AB 5E                  851 	ld	e, (hl)
-   03AC 23                  852 	inc	hl
-   03AD 56                  853 	ld	d, (hl)
-   03AE 1A                  854 	ld	a,(de)
-   03AF F8 0C               855 	ldhl	sp,	#12
-   03B1 22                  856 	ld	(hl+), a
-   03B2 13                  857 	inc	de
-   03B3 1A                  858 	ld	a, (de)
-   03B4 77                  859 	ld	(hl), a
-   03B5 F8 08               860 	ldhl	sp,#(9 - 1)
-   03B7 5E                  861 	ld	e, (hl)
-   03B8 23                  862 	inc	hl
-   03B9 56                  863 	ld	d, (hl)
-   03BA 21 08 00            864 	ld	hl, #0x0008
-   03BD 19                  865 	add	hl, de
-   03BE 7D                  866 	ld	a, l
-   03BF 54                  867 	ld	d, h
-   03C0 F8 0E               868 	ldhl	sp,	#14
-   03C2 22                  869 	ld	(hl+), a
-   03C3 72                  870 	ld	(hl), d
-   03C4 2B                  871 	dec	hl
-   03C5 5E                  872 	ld	e, (hl)
-   03C6 23                  873 	inc	hl
-   03C7 56                  874 	ld	d, (hl)
-   03C8 1A                  875 	ld	a,(de)
-   03C9 2B                  876 	dec	hl
-   03CA 22                  877 	ld	(hl+), a
-   03CB 13                  878 	inc	de
-   03CC 1A                  879 	ld	a, (de)
-   03CD 77                  880 	ld	(hl), a
-                            881 ;SpriteScorpion.c:94: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
-   03CE 21 0C 00            882 	ld	hl, #0x000c
-   03D1 09                  883 	add	hl, bc
-   03D2 4D                  884 	ld	c, l
-   03D3 44                  885 	ld	b, h
-   03D4 0A                  886 	ld	a, (bc)
-   03D5 E6 20               887 	and	a, #0x20
-   03D7 4F                  888 	ld	c, a
-   03D8 06 00               889 	ld	b, #0x00
-                            890 ;SpriteScorpion.c:93: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
-   03DA F8 0C               891 	ldhl	sp,	#12
-   03DC 5D                  892 	ld	e, l
-   03DD 54                  893 	ld	d, h
-   03DE F8 0E               894 	ldhl	sp,	#14
-   03E0 1A                  895 	ld	a, (de)
-   03E1 96                  896 	sub	a, (hl)
-   03E2 23                  897 	inc	hl
-   03E3 13                  898 	inc	de
-   03E4 1A                  899 	ld	a, (de)
-   03E5 9E                  900 	sbc	a, (hl)
-   03E6 D2r2Fr04            901 	jp	NC, 00131$
-                            902 ;SpriteScorpion.c:94: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
-   03E9 78                  903 	ld	a, b
-   03EA B1                  904 	or	a, c
-   03EB 28 03               905 	jr	Z,00127$
-                            906 ;SpriteScorpion.c:95: ETurn();
-   03ED CDr00r00            907 	call	_ETurn
-   03F0                     908 00127$:
-                            909 ;SpriteScorpion.c:97: data->tile_e_collision = TranslateSprite(THIS, -4 << delta_time, (data->enemy_accel_y >> 4));
-   03F0 D1                  910 	pop	de
-   03F1 D5                  911 	push	de
-   03F2 1A                  912 	ld	a,(de)
-   03F3 47                  913 	ld	b, a
-   03F4 13                  914 	inc	de
-   03F5 1A                  915 	ld	a,(de)
-   03F6 4F                  916 	ld	c, a
-   03F7 CB 29               917 	sra	c
-   03F9 CB 18               918 	rr	b
-   03FB CB 29               919 	sra	c
-   03FD CB 18               920 	rr	b
-   03FF CB 29               921 	sra	c
-   0401 CB 18               922 	rr	b
-   0403 CB 29               923 	sra	c
-   0405 CB 18               924 	rr	b
-   0407 21r00r00            925 	ld	hl, #_delta_time
-   040A 4E                  926 	ld	c, (hl)
-   040B 16 FC               927 	ld	d, #0xfc
-   040D 0C                  928 	inc	c
-   040E 18 02               929 	jr	00264$
-   0410                     930 00263$:
-   0410 CB 22               931 	sla	d
-   0412                     932 00264$:
-   0412 0D                  933 	dec	c
-   0413 20 FB               934 	jr	NZ,00263$
-   0415 C5                  935 	push	bc
-   0416 33                  936 	inc	sp
-   0417 D5                  937 	push	de
-   0418 33                  938 	inc	sp
-   0419 21r00r00            939 	ld	hl, #_THIS
-   041C 2A                  940 	ld	a, (hl+)
-   041D 66                  941 	ld	h, (hl)
-   041E 6F                  942 	ld	l, a
-   041F E5                  943 	push	hl
-   0420 CDr00r00            944 	call	_TranslateSprite
-   0423 E8 04               945 	add	sp, #4
-   0425 4B                  946 	ld	c, e
-   0426 F8 06               947 	ldhl	sp,	#6
-   0428 2A                  948 	ld	a, (hl+)
-   0429 66                  949 	ld	h, (hl)
-   042A 6F                  950 	ld	l, a
-   042B 71                  951 	ld	(hl), c
-   042C C3r73r04            952 	jp	00132$
-   042F                     953 00131$:
-                            954 ;SpriteScorpion.c:99: if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
-   042F 78                  955 	ld	a, b
-   0430 B1                  956 	or	a, c
-   0431 20 03               957 	jr	NZ,00129$
-                            958 ;SpriteScorpion.c:100: ETurn();
-   0433 CDr00r00            959 	call	_ETurn
-   0436                     960 00129$:
-                            961 ;SpriteScorpion.c:102: data->tile_e_collision = TranslateSprite(THIS, 4 << delta_time, (data->enemy_accel_y >> 4));
-   0436 D1                  962 	pop	de
-   0437 D5                  963 	push	de
-   0438 1A                  964 	ld	a,(de)
-   0439 4F                  965 	ld	c, a
-   043A 13                  966 	inc	de
-   043B 1A                  967 	ld	a,(de)
-   043C 47                  968 	ld	b, a
-   043D CB 28               969 	sra	b
-   043F CB 19               970 	rr	c
-   0441 CB 28               971 	sra	b
-   0443 CB 19               972 	rr	c
-   0445 CB 28               973 	sra	b
-   0447 CB 19               974 	rr	c
-   0449 CB 28               975 	sra	b
-   044B CB 19               976 	rr	c
-   044D 21r00r00            977 	ld	hl, #_delta_time
-   0450 46                  978 	ld	b, (hl)
-   0451 16 04               979 	ld	d, #0x04
-   0453 04                  980 	inc	b
-   0454 18 02               981 	jr	00266$
-   0456                     982 00265$:
-   0456 CB 22               983 	sla	d
-   0458                     984 00266$:
-   0458 05                  985 	dec	b
-   0459 20 FB               986 	jr	NZ,00265$
-   045B 79                  987 	ld	a, c
-   045C F5                  988 	push	af
-   045D 33                  989 	inc	sp
-   045E D5                  990 	push	de
-   045F 33                  991 	inc	sp
-   0460 21r00r00            992 	ld	hl, #_THIS
-   0463 2A                  993 	ld	a, (hl+)
-   0464 66                  994 	ld	h, (hl)
-   0465 6F                  995 	ld	l, a
-   0466 E5                  996 	push	hl
-   0467 CDr00r00            997 	call	_TranslateSprite
-   046A E8 04               998 	add	sp, #4
-   046C 4B                  999 	ld	c, e
-   046D F8 06              1000 	ldhl	sp,	#6
-   046F 2A                 1001 	ld	a, (hl+)
-   0470 66                 1002 	ld	h, (hl)
-   0471 6F                 1003 	ld	l, a
-   0472 71                 1004 	ld	(hl), c
-   0473                    1005 00132$:
-                           1006 ;SpriteScorpion.c:104: SpriteManagerRemoveSprite(iespr);
-   0473 F8 08              1007 	ldhl	sp,	#8
-   0475 2A                 1008 	ld	a, (hl+)
-   0476 66                 1009 	ld	h, (hl)
-   0477 6F                 1010 	ld	l, a
-   0478 E5                 1011 	push	hl
-   0479 CDr00r00           1012 	call	_SpriteManagerRemoveSprite
-   047C E8 02              1013 	add	sp, #2
-                           1014 ;SpriteScorpion.c:105: if (data->hp <= 0){
-   047E F8 0A              1015 	ldhl	sp,#(11 - 1)
-   0480 5E                 1016 	ld	e, (hl)
-   0481 23                 1017 	inc	hl
-   0482 56                 1018 	ld	d, (hl)
-   0483 1A                 1019 	ld	a,(de)
-   0484 4F                 1020 	ld	c,a
-   0485 5F                 1021 	ld	e, a
-   0486 3E 00              1022 	ld	a, #0x00
-   0488 57                 1023 	ld	d, a
-   0489 AF                 1024 	xor	a, a
-   048A 91                 1025 	sub	a, c
-   048B CB 7B              1026 	bit	7, e
-   048D 28 07              1027 	jr	Z,00267$
-   048F CB 7A              1028 	bit	7, d
-   0491 20 08              1029 	jr	NZ,00268$
-   0493 BF                 1030 	cp	a, a
-   0494 18 05              1031 	jr	00268$
-   0496                    1032 00267$:
-   0496 CB 7A              1033 	bit	7, d
-   0498 28 01              1034 	jr	Z,00268$
-   049A 37                 1035 	scf
-   049B                    1036 00268$:
-   049B DAr07r05           1037 	jp	C, 00142$
-                           1038 ;SpriteScorpion.c:106: data->enemy_state = ENEMY_STATE_DEAD;
-   049E C1                 1039 	pop	bc
-   049F E1                 1040 	pop	hl
-   04A0 E5                 1041 	push	hl
-   04A1 C5                 1042 	push	bc
-   04A2 36 03              1043 	ld	(hl), #0x03
-                           1044 ;SpriteScorpion.c:107: SetSpriteAnim(THIS, scorpion_dead, 16u);
-   04A4 3E 10              1045 	ld	a, #0x10
-   04A6 F5                 1046 	push	af
-   04A7 33                 1047 	inc	sp
-   04A8 21rCDr00           1048 	ld	hl, #_scorpion_dead
-   04AB E5                 1049 	push	hl
-   04AC 21r00r00           1050 	ld	hl, #_THIS
-   04AF 2A                 1051 	ld	a, (hl+)
-   04B0 66                 1052 	ld	h, (hl)
-   04B1 6F                 1053 	ld	l, a
-   04B2 E5                 1054 	push	hl
-   04B3 CDr00r00           1055 	call	_SetSpriteAnim
-   04B6 E8 05              1056 	add	sp, #5
-                           1057 ;SpriteScorpion.c:108: NR50_REG = 0x55; //Max volume		
-   04B8 3E 55              1058 	ld	a, #0x55
-   04BA E0r00              1059 	ldh	(_NR50_REG+0),a
-                           1060 ;SpriteScorpion.c:109: PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-   04BC 21 86 00           1061 	ld	hl, #0x0086
-   04BF E5                 1062 	push	hl
-   04C0 2E 68              1063 	ld	l, #0x68
-   04C2 E5                 1064 	push	hl
-   04C3 2E 43              1065 	ld	l, #0x43
-   04C5 E5                 1066 	push	hl
-   04C6 2E C2              1067 	ld	l, #0xc2
-   04C8 E5                 1068 	push	hl
-   04C9 2E 4B              1069 	ld	l, #0x4b
-   04CB E5                 1070 	push	hl
-   04CC 3E 05              1071 	ld	a, #0x05
-   04CE F5                 1072 	push	af
-   04CF 33                 1073 	inc	sp
-   04D0 AF                 1074 	xor	a, a
-   04D1 F5                 1075 	push	af
-   04D2 33                 1076 	inc	sp
-   04D3 CDr00r00           1077 	call	_PlayFx
-   04D6 E8 0C              1078 	add	sp, #12
-                           1079 ;SpriteScorpion.c:110: data->wait = 8u;
-   04D8 F8 04              1080 	ldhl	sp,	#4
-   04DA 2A                 1081 	ld	a, (hl+)
-   04DB 66                 1082 	ld	h, (hl)
-   04DC 6F                 1083 	ld	l, a
-   04DD 36 08              1084 	ld	(hl), #0x08
-                           1085 ;SpriteScorpion.c:111: THIS->lim_x = 8u;
-   04DF 21r00r00           1086 	ld	hl, #_THIS
-   04E2 46                 1087 	ld	b, (hl)
-   04E3 23                 1088 	inc	hl
-   04E4 4E                 1089 	ld	c, (hl)
-   04E5 78                 1090 	ld	a, b
-   04E6 C6 13              1091 	add	a, #0x13
-   04E8 47                 1092 	ld	b, a
-   04E9 30 01              1093 	jr	NC,00269$
-   04EB 0C                 1094 	inc	c
-   04EC                    1095 00269$:
-   04EC 68                 1096 	ld	l, b
-   04ED 61                 1097 	ld	h, c
-   04EE 36 08              1098 	ld	(hl), #0x08
-   04F0 23                 1099 	inc	hl
-   04F1 36 00              1100 	ld	(hl), #0x00
-                           1101 ;SpriteScorpion.c:112: THIS->lim_y = 16u;
-   04F3 21r00r00           1102 	ld	hl, #_THIS
-   04F6 46                 1103 	ld	b, (hl)
-   04F7 23                 1104 	inc	hl
-   04F8 4E                 1105 	ld	c, (hl)
-   04F9 78                 1106 	ld	a, b
-   04FA C6 15              1107 	add	a, #0x15
-   04FC 47                 1108 	ld	b, a
-   04FD 30 01              1109 	jr	NC,00270$
-   04FF 0C                 1110 	inc	c
-   0500                    1111 00270$:
-   0500 68                 1112 	ld	l, b
-   0501 61                 1113 	ld	h, c
-   0502 36 10              1114 	ld	(hl), #0x10
-   0504 23                 1115 	inc	hl
-   0505 36 00              1116 	ld	(hl), #0x00
-   0507                    1117 00142$:
-                           1118 ;SpriteScorpion.c:81: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
-   0507 F8 10              1119 	ldhl	sp,	#16
-   0509 34                 1120 	inc	(hl)
-   050A 4E                 1121 	ld	c, (hl)
-   050B 06 00              1122 	ld	b, #0x00
-   050D 03                 1123 	inc	bc
-   050E 21r00r00           1124 	ld	hl, #_sprite_manager_updatables
-   0511 09                 1125 	add	hl, bc
-   0512 4D                 1126 	ld	c,l
-   0513 7C                 1127 	ld	a,h
-   0514 4E                 1128 	ld	c, (hl)
-   0515 06 00              1129 	ld	b, #0x00
-   0517 CB 21              1130 	sla	c
-   0519 CB 10              1131 	rl	b
-   051B 21r00r00           1132 	ld	hl, #_sprite_manager_sprites
-   051E 09                 1133 	add	hl, bc
-   051F 4D                 1134 	ld	c, l
-   0520 44                 1135 	ld	b, h
-   0521 59                 1136 	ld	e, c
-   0522 50                 1137 	ld	d, b
-   0523 1A                 1138 	ld	a,(de)
-   0524 F8 08              1139 	ldhl	sp,	#8
-   0526 22                 1140 	ld	(hl+), a
-   0527 13                 1141 	inc	de
-   0528 1A                 1142 	ld	a, (de)
-   0529 77                 1143 	ld	(hl), a
-   052A C3rFAr02           1144 	jp	00141$
-   052D                    1145 00143$:
-                           1146 ;SpriteScorpion.c:118: }
-   052D E8 11              1147 	add	sp, #17
-   052F C9                 1148 	ret
-                           1149 ;SpriteScorpion.c:122: void Destroy_SpriteScorpion() {
-                           1150 ;	---------------------------------
-                           1151 ; Function Destroy_SpriteScorpion
-                           1152 ; ---------------------------------
-   0530                    1153 _Destroy_SpriteScorpion::
-                           1154 ;SpriteScorpion.c:123: }
-   0530 C9                 1155 	ret
-                           1156 	.area _CODE_2
-                           1157 	.area _CABS (ABS)
+                             75 ; code
+                             76 ;--------------------------------------------------------
+                             77 	.area _CODE_2
+                             78 ;SpriteScorpion.c:21: void Start_SpriteScorpion() {
+                             79 ;	---------------------------------
+                             80 ; Function Start_SpriteScorpion
+                             81 ; ---------------------------------
+   0000                      82 _Start_SpriteScorpion::
+   0000 E8 FE                83 	add	sp, #-2
+                             84 ;SpriteScorpion.c:23: THIS->coll_x = 2;
+   0002 21r01r00             85 	ld	hl, #_THIS + 1
+   0005 2B                   86 	dec	hl
+   0006 4E                   87 	ld	c, (hl)
+   0007 23                   88 	inc	hl
+   0008 46                   89 	ld	b, (hl)
+   0009 21 0D 00             90 	ld	hl, #0x000d
+   000C 09                   91 	add	hl, bc
+   000D 4D                   92 	ld	c,l
+   000E 7C                   93 	ld	a,h
+   000F 36 02                94 	ld	(hl), #0x02
+                             95 ;SpriteScorpion.c:24: THIS->coll_y = 5;
+   0011 21r01r00             96 	ld	hl, #_THIS + 1
+   0014 2B                   97 	dec	hl
+   0015 4E                   98 	ld	c, (hl)
+   0016 23                   99 	inc	hl
+   0017 46                  100 	ld	b, (hl)
+   0018 21 0E 00            101 	ld	hl, #0x000e
+   001B 09                  102 	add	hl, bc
+   001C 4D                  103 	ld	c,l
+   001D 7C                  104 	ld	a,h
+   001E 36 05               105 	ld	(hl), #0x05
+                            106 ;SpriteScorpion.c:25: THIS->coll_w = 8;
+   0020 21r01r00            107 	ld	hl, #_THIS + 1
+   0023 2B                  108 	dec	hl
+   0024 4E                  109 	ld	c, (hl)
+   0025 23                  110 	inc	hl
+   0026 46                  111 	ld	b, (hl)
+   0027 21 0F 00            112 	ld	hl, #0x000f
+   002A 09                  113 	add	hl, bc
+   002B 4D                  114 	ld	c,l
+   002C 7C                  115 	ld	a,h
+   002D 36 08               116 	ld	(hl), #0x08
+                            117 ;SpriteScorpion.c:26: THIS->coll_h = 11;
+   002F 21r01r00            118 	ld	hl, #_THIS + 1
+   0032 2B                  119 	dec	hl
+   0033 4E                  120 	ld	c, (hl)
+   0034 23                  121 	inc	hl
+   0035 46                  122 	ld	b, (hl)
+   0036 21 10 00            123 	ld	hl, #0x0010
+   0039 09                  124 	add	hl, bc
+   003A 4D                  125 	ld	c,l
+   003B 7C                  126 	ld	a,h
+   003C 36 0B               127 	ld	(hl), #0x0b
+                            128 ;SpriteScorpion.c:27: THIS->lim_x = 255u;
+   003E 21r00r00            129 	ld	hl, #_THIS
+   0041 46                  130 	ld	b, (hl)
+   0042 23                  131 	inc	hl
+   0043 4E                  132 	ld	c, (hl)
+   0044 78                  133 	ld	a, b
+   0045 C6 13               134 	add	a, #0x13
+   0047 47                  135 	ld	b, a
+   0048 30 01               136 	jr	NC,00103$
+   004A 0C                  137 	inc	c
+   004B                     138 00103$:
+   004B 68                  139 	ld	l, b
+   004C 61                  140 	ld	h, c
+   004D 36 FF               141 	ld	(hl), #0xff
+   004F 23                  142 	inc	hl
+   0050 36 00               143 	ld	(hl), #0x00
+                            144 ;SpriteScorpion.c:28: THIS->lim_y = 244u;
+   0052 21r00r00            145 	ld	hl, #_THIS
+   0055 46                  146 	ld	b, (hl)
+   0056 23                  147 	inc	hl
+   0057 4E                  148 	ld	c, (hl)
+   0058 78                  149 	ld	a, b
+   0059 C6 15               150 	add	a, #0x15
+   005B 47                  151 	ld	b, a
+   005C 30 01               152 	jr	NC,00104$
+   005E 0C                  153 	inc	c
+   005F                     154 00104$:
+   005F 68                  155 	ld	l, b
+   0060 61                  156 	ld	h, c
+   0061 36 F4               157 	ld	(hl), #0xf4
+   0063 23                  158 	inc	hl
+   0064 36 00               159 	ld	(hl), #0x00
+                            160 ;SpriteScorpion.c:29: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
+   0066 21r01r00            161 	ld	hl, #_THIS + 1
+   0069 2B                  162 	dec	hl
+   006A 4E                  163 	ld	c, (hl)
+   006B 23                  164 	inc	hl
+   006C 46                  165 	ld	b, (hl)
+   006D 21 19 00            166 	ld	hl, #0x0019
+   0070 09                  167 	add	hl, bc
+   0071 4D                  168 	ld	c, l
+   0072 7C                  169 	ld	a, h
+   0073 47                  170 	ld	b, a
+                            171 ;SpriteScorpion.c:30: SetSpriteAnim(THIS, scorpion_idle, 8u);
+   0074 C5                  172 	push	bc
+   0075 3E 08               173 	ld	a, #0x08
+   0077 F5                  174 	push	af
+   0078 33                  175 	inc	sp
+   0079 21rC4r00            176 	ld	hl, #_scorpion_idle
+   007C E5                  177 	push	hl
+   007D 21r00r00            178 	ld	hl, #_THIS
+   0080 2A                  179 	ld	a, (hl+)
+   0081 66                  180 	ld	h, (hl)
+   0082 6F                  181 	ld	l, a
+   0083 E5                  182 	push	hl
+   0084 CDr00r00            183 	call	_SetSpriteAnim
+   0087 E8 05               184 	add	sp, #5
+   0089 C1                  185 	pop	bc
+                            186 ;SpriteScorpion.c:31: data->enemy_accel_y = 24;
+   008A 69                  187 	ld	l, c
+   008B 60                  188 	ld	h, b
+   008C 36 18               189 	ld	(hl), #0x18
+   008E 23                  190 	inc	hl
+   008F 36 00               191 	ld	(hl), #0x00
+                            192 ;SpriteScorpion.c:32: data->vx = 1;
+   0091 21 04 00            193 	ld	hl, #0x0004
+   0094 09                  194 	add	hl, bc
+   0095 33                  195 	inc	sp
+   0096 33                  196 	inc	sp
+   0097 E5                  197 	push	hl
+   0098 E1                  198 	pop	hl
+   0099 E5                  199 	push	hl
+   009A 36 01               200 	ld	(hl), #0x01
+                            201 ;SpriteScorpion.c:33: data->wait = 0u;
+   009C 21 05 00            202 	ld	hl, #0x0005
+   009F 09                  203 	add	hl, bc
+   00A0 33                  204 	inc	sp
+   00A1 33                  205 	inc	sp
+   00A2 E5                  206 	push	hl
+   00A3 E1                  207 	pop	hl
+   00A4 E5                  208 	push	hl
+   00A5 36 00               209 	ld	(hl), #0x00
+                            210 ;SpriteScorpion.c:34: data->enemydamage = 15u;
+   00A7 21 06 00            211 	ld	hl, #0x0006
+   00AA 09                  212 	add	hl, bc
+   00AB 33                  213 	inc	sp
+   00AC 33                  214 	inc	sp
+   00AD E5                  215 	push	hl
+   00AE E1                  216 	pop	hl
+   00AF E5                  217 	push	hl
+   00B0 36 0F               218 	ld	(hl), #0x0f
+                            219 ;SpriteScorpion.c:35: data->hp = 60u;
+   00B2 21 07 00            220 	ld	hl, #0x0007
+   00B5 09                  221 	add	hl, bc
+   00B6 33                  222 	inc	sp
+   00B7 33                  223 	inc	sp
+   00B8 E5                  224 	push	hl
+   00B9 E1                  225 	pop	hl
+   00BA E5                  226 	push	hl
+   00BB 36 3C               227 	ld	(hl), #0x3c
+                            228 ;SpriteScorpion.c:36: data->enemy_state = ENEMY_STATE_NORMAL;
+   00BD 03                  229 	inc	bc
+   00BE 03                  230 	inc	bc
+   00BF AF                  231 	xor	a, a
+   00C0 02                  232 	ld	(bc), a
+                            233 ;SpriteScorpion.c:37: }
+   00C1 E8 02               234 	add	sp, #2
+   00C3 C9                  235 	ret
+   00C4                     236 _scorpion_idle:
+   00C4 01                  237 	.db #0x01	; 1
+   00C5 00                  238 	.db #0x00	; 0
+   00C6                     239 _scorpion_walk:
+   00C6 04                  240 	.db #0x04	; 4
+   00C7 00                  241 	.db #0x00	; 0
+   00C8 06                  242 	.db #0x06	; 6
+   00C9 01                  243 	.db #0x01	; 1
+   00CA 06                  244 	.db #0x06	; 6
+   00CB                     245 _scorpion_hit:
+   00CB 03                  246 	.db #0x03	; 3
+   00CC 02                  247 	.db #0x02	; 2
+   00CD 03                  248 	.db #0x03	; 3
+   00CE 04                  249 	.db #0x04	; 4
+   00CF                     250 _scorpion_dead:
+   00CF 01                  251 	.db #0x01	; 1
+   00D0 05                  252 	.db #0x05	; 5
+                            253 ;SpriteScorpion.c:39: void Update_SpriteScorpion() {
+                            254 ;	---------------------------------
+                            255 ; Function Update_SpriteScorpion
+                            256 ; ---------------------------------
+   00D1                     257 _Update_SpriteScorpion::
+   00D1 E8 EF               258 	add	sp, #-17
+                            259 ;SpriteScorpion.c:41: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+   00D3 21r01r00            260 	ld	hl, #_THIS + 1
+   00D6 2B                  261 	dec	hl
+   00D7 4E                  262 	ld	c, (hl)
+   00D8 23                  263 	inc	hl
+   00D9 46                  264 	ld	b, (hl)
+   00DA 21 19 00            265 	ld	hl, #0x0019
+   00DD 09                  266 	add	hl, bc
+   00DE 7D                  267 	ld	a, l
+   00DF 54                  268 	ld	d, h
+   00E0 F8 0F               269 	ldhl	sp,	#15
+   00E2 22                  270 	ld	(hl+), a
+   00E3 72                  271 	ld	(hl), d
+   00E4 2B                  272 	dec	hl
+   00E5 2A                  273 	ld	a, (hl+)
+   00E6 5E                  274 	ld	e, (hl)
+   00E7 F8 00               275 	ldhl	sp,	#0
+   00E9 22                  276 	ld	(hl+), a
+   00EA 73                  277 	ld	(hl), e
+                            278 ;SpriteScorpion.c:43: if (data->enemy_state == ENEMY_STATE_DEAD){
+   00EB D1                  279 	pop	de
+   00EC D5                  280 	push	de
+   00ED 21 02 00            281 	ld	hl, #0x0002
+   00F0 19                  282 	add	hl, de
+   00F1 7D                  283 	ld	a, l
+   00F2 54                  284 	ld	d, h
+   00F3 F8 02               285 	ldhl	sp,	#2
+   00F5 22                  286 	ld	(hl+), a
+   00F6 72                  287 	ld	(hl), d
+   00F7 2B                  288 	dec	hl
+   00F8 5E                  289 	ld	e, (hl)
+   00F9 23                  290 	inc	hl
+   00FA 56                  291 	ld	d, (hl)
+   00FB 1A                  292 	ld	a,(de)
+   00FC F8 0F               293 	ldhl	sp,	#15
+   00FE 77                  294 	ld	(hl), a
+                            295 ;SpriteScorpion.c:44: if (data->wait > 0){
+   00FF D1                  296 	pop	de
+   0100 D5                  297 	push	de
+   0101 21 05 00            298 	ld	hl, #0x0005
+   0104 19                  299 	add	hl, de
+   0105 7D                  300 	ld	a, l
+   0106 54                  301 	ld	d, h
+   0107 F8 04               302 	ldhl	sp,	#4
+   0109 22                  303 	ld	(hl+), a
+   010A 72                  304 	ld	(hl), d
+   010B 2B                  305 	dec	hl
+   010C 5E                  306 	ld	e, (hl)
+   010D 23                  307 	inc	hl
+   010E 56                  308 	ld	d, (hl)
+   010F 1A                  309 	ld	a,(de)
+   0110 F8 10               310 	ldhl	sp,	#16
+                            311 ;SpriteScorpion.c:43: if (data->enemy_state == ENEMY_STATE_DEAD){
+   0112 32                  312 	ld	(hl-), a
+   0113 7E                  313 	ld	a, (hl)
+   0114 D6 03               314 	sub	a, #0x03
+   0116 C2r78r01            315 	jp	NZ,00105$
+                            316 ;SpriteScorpion.c:45: THIS->y--;
+   0119 21 0A 00            317 	ld	hl, #0x000a
+   011C 09                  318 	add	hl, bc
+   011D 7D                  319 	ld	a, l
+   011E 54                  320 	ld	d, h
+   011F F8 0E               321 	ldhl	sp,	#14
+   0121 22                  322 	ld	(hl+), a
+   0122 72                  323 	ld	(hl), d
+   0123 2B                  324 	dec	hl
+   0124 5E                  325 	ld	e, (hl)
+   0125 23                  326 	inc	hl
+   0126 56                  327 	ld	d, (hl)
+   0127 1A                  328 	ld	a,(de)
+   0128 4F                  329 	ld	c, a
+   0129 13                  330 	inc	de
+   012A 1A                  331 	ld	a,(de)
+   012B 47                  332 	ld	b, a
+                            333 ;SpriteScorpion.c:44: if (data->wait > 0){
+   012C 23                  334 	inc	hl
+   012D 7E                  335 	ld	a, (hl)
+   012E B7                  336 	or	a, a
+   012F 28 19               337 	jr	Z,00102$
+                            338 ;SpriteScorpion.c:45: THIS->y--;
+   0131 0B                  339 	dec	bc
+   0132 2B                  340 	dec	hl
+   0133 2B                  341 	dec	hl
+   0134 2A                  342 	ld	a, (hl+)
+   0135 66                  343 	ld	h, (hl)
+   0136 6F                  344 	ld	l, a
+   0137 71                  345 	ld	(hl), c
+   0138 23                  346 	inc	hl
+   0139 70                  347 	ld	(hl), b
+                            348 ;SpriteScorpion.c:46: data->wait--;
+   013A F8 04               349 	ldhl	sp,#(5 - 1)
+   013C 5E                  350 	ld	e, (hl)
+   013D 23                  351 	inc	hl
+   013E 56                  352 	ld	d, (hl)
+   013F 1A                  353 	ld	a,(de)
+   0140 4F                  354 	ld	c, a
+   0141 0D                  355 	dec	c
+   0142 2B                  356 	dec	hl
+   0143 2A                  357 	ld	a, (hl+)
+   0144 66                  358 	ld	h, (hl)
+   0145 6F                  359 	ld	l, a
+   0146 71                  360 	ld	(hl), c
+   0147 C3r2Fr05            361 	jp	00143$
+   014A                     362 00102$:
+                            363 ;SpriteScorpion.c:48: THIS->y++;	
+   014A 03                  364 	inc	bc
+   014B F8 0E               365 	ldhl	sp,	#14
+   014D 2A                  366 	ld	a, (hl+)
+   014E 66                  367 	ld	h, (hl)
+   014F 6F                  368 	ld	l, a
+   0150 71                  369 	ld	(hl), c
+   0151 23                  370 	inc	hl
+   0152 70                  371 	ld	(hl), b
+                            372 ;SpriteScorpion.c:49: THIS->y++;
+   0153 21r01r00            373 	ld	hl, #_THIS + 1
+   0156 2B                  374 	dec	hl
+   0157 4E                  375 	ld	c, (hl)
+   0158 23                  376 	inc	hl
+   0159 46                  377 	ld	b, (hl)
+   015A 21 0A 00            378 	ld	hl, #0x000a
+   015D 09                  379 	add	hl, bc
+   015E 7D                  380 	ld	a, l
+   015F 54                  381 	ld	d, h
+   0160 F8 0F               382 	ldhl	sp,	#15
+   0162 22                  383 	ld	(hl+), a
+   0163 72                  384 	ld	(hl), d
+   0164 2B                  385 	dec	hl
+   0165 5E                  386 	ld	e, (hl)
+   0166 23                  387 	inc	hl
+   0167 56                  388 	ld	d, (hl)
+   0168 1A                  389 	ld	a,(de)
+   0169 4F                  390 	ld	c, a
+   016A 13                  391 	inc	de
+   016B 1A                  392 	ld	a,(de)
+   016C 47                  393 	ld	b, a
+   016D 03                  394 	inc	bc
+   016E 2B                  395 	dec	hl
+   016F 2A                  396 	ld	a, (hl+)
+   0170 66                  397 	ld	h, (hl)
+   0171 6F                  398 	ld	l, a
+   0172 71                  399 	ld	(hl), c
+   0173 23                  400 	inc	hl
+   0174 70                  401 	ld	(hl), b
+                            402 ;SpriteScorpion.c:51: return;
+   0175 C3r2Fr05            403 	jp	00143$
+   0178                     404 00105$:
+                            405 ;SpriteScorpion.c:62: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+   0178 D1                  406 	pop	de
+   0179 D5                  407 	push	de
+   017A 21 03 00            408 	ld	hl, #0x0003
+   017D 19                  409 	add	hl, de
+   017E 7D                  410 	ld	a, l
+   017F 54                  411 	ld	d, h
+   0180 F8 06               412 	ldhl	sp,	#6
+   0182 22                  413 	ld	(hl+), a
+   0183 72                  414 	ld	(hl), d
+                            415 ;SpriteScorpion.c:53: if (data->wait > 0u){
+   0184 F8 10               416 	ldhl	sp,	#16
+   0186 7E                  417 	ld	a, (hl)
+   0187 B7                  418 	or	a, a
+   0188 28 24               419 	jr	Z,00120$
+                            420 ;SpriteScorpion.c:54: data->wait -= 1u;
+   018A 4E                  421 	ld	c, (hl)
+   018B 0D                  422 	dec	c
+   018C F8 04               423 	ldhl	sp,	#4
+   018E 2A                  424 	ld	a, (hl+)
+   018F 66                  425 	ld	h, (hl)
+   0190 6F                  426 	ld	l, a
+   0191 71                  427 	ld	(hl), c
+                            428 ;SpriteScorpion.c:55: if (data->wait == 0u){
+   0192 79                  429 	ld	a, c
+   0193 B7                  430 	or	a, a
+   0194 C2rDFr02            431 	jp	NZ, 00121$
+                            432 ;SpriteScorpion.c:56: SetSpriteAnim(THIS, scorpion_walk, 8u);
+   0197 3E 08               433 	ld	a, #0x08
+   0199 F5                  434 	push	af
+   019A 33                  435 	inc	sp
+   019B 21rC6r00            436 	ld	hl, #_scorpion_walk
+   019E E5                  437 	push	hl
+   019F 21r00r00            438 	ld	hl, #_THIS
+   01A2 2A                  439 	ld	a, (hl+)
+   01A3 66                  440 	ld	h, (hl)
+   01A4 6F                  441 	ld	l, a
+   01A5 E5                  442 	push	hl
+   01A6 CDr00r00            443 	call	_SetSpriteAnim
+   01A9 E8 05               444 	add	sp, #5
+   01AB C3rDFr02            445 	jp	00121$
+   01AE                     446 00120$:
+                            447 ;SpriteScorpion.c:59: if(data->enemy_accel_y < 24) {
+   01AE D1                  448 	pop	de
+   01AF D5                  449 	push	de
+   01B0 1A                  450 	ld	a,(de)
+   01B1 4F                  451 	ld	c, a
+   01B2 13                  452 	inc	de
+   01B3 1A                  453 	ld	a,(de)
+   01B4 47                  454 	ld	b, a
+   01B5 79                  455 	ld	a, c
+   01B6 D6 18               456 	sub	a, #0x18
+   01B8 78                  457 	ld	a, b
+   01B9 17                  458 	rla
+   01BA 3F                  459 	ccf
+   01BB 1F                  460 	rra
+   01BC DE 80               461 	sbc	a, #0x80
+   01BE 30 06               462 	jr	NC,00109$
+                            463 ;SpriteScorpion.c:60: data->enemy_accel_y += 1;
+   01C0 03                  464 	inc	bc
+   01C1 E1                  465 	pop	hl
+   01C2 E5                  466 	push	hl
+   01C3 71                  467 	ld	(hl), c
+   01C4 23                  468 	inc	hl
+   01C5 70                  469 	ld	(hl), b
+   01C6                     470 00109$:
+                            471 ;SpriteScorpion.c:62: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+   01C6 D1                  472 	pop	de
+   01C7 D5                  473 	push	de
+   01C8 1A                  474 	ld	a,(de)
+   01C9 4F                  475 	ld	c, a
+   01CA 13                  476 	inc	de
+   01CB 1A                  477 	ld	a,(de)
+   01CC 47                  478 	ld	b, a
+   01CD CB 28               479 	sra	b
+   01CF CB 19               480 	rr	c
+   01D1 CB 28               481 	sra	b
+   01D3 CB 19               482 	rr	c
+   01D5 CB 28               483 	sra	b
+   01D7 CB 19               484 	rr	c
+   01D9 CB 28               485 	sra	b
+   01DB CB 19               486 	rr	c
+   01DD F8 10               487 	ldhl	sp,	#16
+   01DF 71                  488 	ld	(hl), c
+   01E0 E5                  489 	push	hl
+   01E1 21r00r00            490 	ld	hl, #_delta_time
+   01E4 7E                  491 	ld	a, (hl)
+   01E5 F8 0F               492 	ldhl	sp,	#15
+   01E7 77                  493 	ld	(hl), a
+   01E8 E1                  494 	pop	hl
+   01E9 F8 0D               495 	ldhl	sp,	#13
+   01EB 7E                  496 	ld	a, (hl)
+   01EC F5                  497 	push	af
+   01ED F8 12               498 	ldhl	sp,	#18
+   01EF 3A                  499 	ld	a, (hl-)
+   01F0 2B                  500 	dec	hl
+   01F1 77                  501 	ld	(hl), a
+   01F2 F1                  502 	pop	af
+   01F3 3C                  503 	inc	a
+   01F4 18 04               504 	jr	00249$
+   01F6                     505 00248$:
+   01F6 F8 0E               506 	ldhl	sp,	#14
+   01F8 CB 26               507 	sla	(hl)
+   01FA                     508 00249$:
+   01FA 3D                  509 	dec	a
+   01FB 20 F9               510 	jr	NZ,00248$
+   01FD D1                  511 	pop	de
+   01FE D5                  512 	push	de
+   01FF 21 04 00            513 	ld	hl, #0x0004
+   0202 19                  514 	add	hl, de
+   0203 7D                  515 	ld	a, l
+   0204 54                  516 	ld	d, h
+   0205 F8 0F               517 	ldhl	sp,	#15
+   0207 22                  518 	ld	(hl+), a
+   0208 72                  519 	ld	(hl), d
+   0209 2B                  520 	dec	hl
+   020A 5E                  521 	ld	e, (hl)
+   020B 23                  522 	inc	hl
+   020C 56                  523 	ld	d, (hl)
+   020D 1A                  524 	ld	a,(de)
+   020E 47                  525 	ld	b, a
+   020F F8 0D               526 	ldhl	sp,	#13
+   0211 7E                  527 	ld	a, (hl)
+   0212 3C                  528 	inc	a
+   0213 18 02               529 	jr	00251$
+   0215                     530 00250$:
+   0215 CB 20               531 	sla	b
+   0217                     532 00251$:
+   0217 3D                  533 	dec	a
+   0218 20 FB               534 	jr	NZ,00250$
+   021A 23                  535 	inc	hl
+   021B 7E                  536 	ld	a, (hl)
+   021C F5                  537 	push	af
+   021D 33                  538 	inc	sp
+   021E C5                  539 	push	bc
+   021F 33                  540 	inc	sp
+   0220 21r00r00            541 	ld	hl, #_THIS
+   0223 2A                  542 	ld	a, (hl+)
+   0224 66                  543 	ld	h, (hl)
+   0225 6F                  544 	ld	l, a
+   0226 E5                  545 	push	hl
+   0227 CDr00r00            546 	call	_TranslateSprite
+   022A E8 04               547 	add	sp, #4
+   022C 7B                  548 	ld	a, e
+   022D F8 06               549 	ldhl	sp,	#6
+   022F F5                  550 	push	af
+   0230 2A                  551 	ld	a, (hl+)
+   0231 66                  552 	ld	h, (hl)
+   0232 6F                  553 	ld	l, a
+   0233 F1                  554 	pop	af
+   0234 77                  555 	ld	(hl), a
+                            556 ;SpriteScorpion.c:64: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+   0235 B7                  557 	or	a, a
+   0236 C2r90r02            558 	jp	NZ, 00111$
+   0239 21r00r00            559 	ld	hl, #_delta_time
+   023C 7E                  560 	ld	a, (hl)
+   023D B7                  561 	or	a, a
+   023E CAr90r02            562 	jp	Z, 00111$
+                            563 ;SpriteScorpion.c:59: if(data->enemy_accel_y < 24) {
+   0241 D1                  564 	pop	de
+   0242 D5                  565 	push	de
+   0243 1A                  566 	ld	a,(de)
+   0244 4F                  567 	ld	c, a
+   0245 13                  568 	inc	de
+   0246 1A                  569 	ld	a,(de)
+   0247 47                  570 	ld	b, a
+                            571 ;SpriteScorpion.c:64: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+   0248 79                  572 	ld	a, c
+   0249 D6 18               573 	sub	a, #0x18
+   024B 78                  574 	ld	a, b
+   024C 17                  575 	rla
+   024D 3F                  576 	ccf
+   024E 1F                  577 	rra
+   024F DE 80               578 	sbc	a, #0x80
+   0251 D2r90r02            579 	jp	NC, 00111$
+                            580 ;SpriteScorpion.c:65: data->enemy_accel_y += 2;
+   0254 03                  581 	inc	bc
+   0255 03                  582 	inc	bc
+   0256 E1                  583 	pop	hl
+   0257 E5                  584 	push	hl
+   0258 71                  585 	ld	(hl), c
+   0259 23                  586 	inc	hl
+   025A 70                  587 	ld	(hl), b
+                            588 ;SpriteScorpion.c:66: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
+   025B CB 28               589 	sra	b
+   025D CB 19               590 	rr	c
+   025F CB 28               591 	sra	b
+   0261 CB 19               592 	rr	c
+   0263 CB 28               593 	sra	b
+   0265 CB 19               594 	rr	c
+   0267 CB 28               595 	sra	b
+   0269 CB 19               596 	rr	c
+   026B 21r00r00            597 	ld	hl, #_delta_time
+   026E 7E                  598 	ld	a, (hl)
+   026F 3C                  599 	inc	a
+   0270 18 02               600 	jr	00253$
+   0272                     601 00252$:
+   0272 CB 21               602 	sla	c
+   0274                     603 00253$:
+   0274 3D                  604 	dec	a
+   0275 20 FB               605 	jr	NZ,00252$
+   0277 79                  606 	ld	a, c
+   0278 F5                  607 	push	af
+   0279 33                  608 	inc	sp
+   027A AF                  609 	xor	a, a
+   027B F5                  610 	push	af
+   027C 33                  611 	inc	sp
+   027D 21r00r00            612 	ld	hl, #_THIS
+   0280 2A                  613 	ld	a, (hl+)
+   0281 66                  614 	ld	h, (hl)
+   0282 6F                  615 	ld	l, a
+   0283 E5                  616 	push	hl
+   0284 CDr00r00            617 	call	_TranslateSprite
+   0287 E8 04               618 	add	sp, #4
+   0289 4B                  619 	ld	c, e
+   028A F8 06               620 	ldhl	sp,	#6
+   028C 2A                  621 	ld	a, (hl+)
+   028D 66                  622 	ld	h, (hl)
+   028E 6F                  623 	ld	l, a
+   028F 71                  624 	ld	(hl), c
+   0290                     625 00111$:
+                            626 ;SpriteScorpion.c:68: if(data->tile_e_collision) {
+   0290 F8 06               627 	ldhl	sp,#(7 - 1)
+   0292 5E                  628 	ld	e, (hl)
+   0293 23                  629 	inc	hl
+   0294 56                  630 	ld	d, (hl)
+   0295 1A                  631 	ld	a,(de)
+   0296 B7                  632 	or	a, a
+   0297 CArDFr02            633 	jp	Z, 00121$
+                            634 ;SpriteScorpion.c:69: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
+   029A F8 02               635 	ldhl	sp,#(3 - 1)
+   029C 5E                  636 	ld	e, (hl)
+   029D 23                  637 	inc	hl
+   029E 56                  638 	ld	d, (hl)
+   029F 1A                  639 	ld	a,(de)
+   02A0 3D                  640 	dec	a
+   02A1 3E 01               641 	ld	a, #0x01
+   02A3 28 01               642 	jr	Z,00255$
+   02A5 AF                  643 	xor	a, a
+   02A6                     644 00255$:
+   02A6 F8 10               645 	ldhl	sp,	#16
+   02A8 77                  646 	ld	(hl), a
+   02A9 D1                  647 	pop	de
+   02AA D5                  648 	push	de
+   02AB 1A                  649 	ld	a,(de)
+   02AC 4F                  650 	ld	c, a
+   02AD 13                  651 	inc	de
+   02AE 1A                  652 	ld	a,(de)
+   02AF 47                  653 	ld	b,a
+   02B0 5F                  654 	ld	e, a
+   02B1 3E 00               655 	ld	a, #0x00
+   02B3 57                  656 	ld	d, a
+   02B4 AF                  657 	xor	a, a
+   02B5 B9                  658 	cp	a, c
+   02B6 98                  659 	sbc	a, b
+   02B7 CB 7B               660 	bit	7, e
+   02B9 28 07               661 	jr	Z,00256$
+   02BB CB 7A               662 	bit	7, d
+   02BD 20 08               663 	jr	NZ,00257$
+   02BF BF                  664 	cp	a, a
+   02C0 18 05               665 	jr	00257$
+   02C2                     666 00256$:
+   02C2 CB 7A               667 	bit	7, d
+   02C4 28 01               668 	jr	Z,00257$
+   02C6 37                  669 	scf
+   02C7                     670 00257$:
+   02C7 3E 00               671 	ld	a, #0x00
+   02C9 17                  672 	rla
+   02CA F8 10               673 	ldhl	sp,	#16
+   02CC A6                  674 	and	a,(hl)
+   02CD 28 08               675 	jr	Z,00115$
+                            676 ;SpriteScorpion.c:70: data->enemy_state = ENEMY_STATE_NORMAL;
+   02CF C1                  677 	pop	bc
+   02D0 E1                  678 	pop	hl
+   02D1 E5                  679 	push	hl
+   02D2 C5                  680 	push	bc
+   02D3 36 00               681 	ld	(hl), #0x00
+   02D5 18 05               682 	jr	00116$
+   02D7                     683 00115$:
+                            684 ;SpriteScorpion.c:72: data->enemy_accel_y = 0;	
+   02D7 E1                  685 	pop	hl
+   02D8 E5                  686 	push	hl
+   02D9 AF                  687 	xor	a, a
+   02DA 22                  688 	ld	(hl+), a
+   02DB 77                  689 	ld	(hl), a
+   02DC                     690 00116$:
+                            691 ;SpriteScorpion.c:74: CheckCollisionETile();
+   02DC CDr00r00            692 	call	_CheckCollisionETile
+   02DF                     693 00121$:
+                            694 ;SpriteScorpion.c:82: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+   02DF FAr01r00            695 	ld	a, (#(_sprite_manager_updatables + 0x0001) + 0)
+   02E2 4F                  696 	ld	c, a
+   02E3 06 00               697 	ld	b, #0x00
+   02E5 CB 21               698 	sla	c
+   02E7 CB 10               699 	rl	b
+   02E9 21r00r00            700 	ld	hl, #_sprite_manager_sprites
+   02EC 09                  701 	add	hl, bc
+   02ED 4D                  702 	ld	c, l
+   02EE 44                  703 	ld	b, h
+   02EF 59                  704 	ld	e, c
+   02F0 50                  705 	ld	d, b
+   02F1 1A                  706 	ld	a,(de)
+   02F2 F8 08               707 	ldhl	sp,	#8
+   02F4 22                  708 	ld	(hl+), a
+   02F5 13                  709 	inc	de
+   02F6 1A                  710 	ld	a, (de)
+   02F7 77                  711 	ld	(hl), a
+   02F8 AF                  712 	xor	a, a
+   02F9 F8 10               713 	ldhl	sp,	#16
+   02FB 77                  714 	ld	(hl), a
+   02FC                     715 00141$:
+   02FC 21r00r00            716 	ld	hl, #_sprite_manager_updatables + 0
+   02FF 4E                  717 	ld	c, (hl)
+   0300 F8 10               718 	ldhl	sp,	#16
+   0302 7E                  719 	ld	a, (hl)
+   0303 91                  720 	sub	a, c
+   0304 CAr2Fr05            721 	jp	Z,00143$
+                            722 ;SpriteScorpion.c:83: if(iespr->type == SpritePlayer) {
+   0307 F8 08               723 	ldhl	sp,#(9 - 1)
+   0309 5E                  724 	ld	e, (hl)
+   030A 23                  725 	inc	hl
+   030B 56                  726 	ld	d, (hl)
+   030C 21 11 00            727 	ld	hl, #0x0011
+   030F 19                  728 	add	hl, de
+   0310 4D                  729 	ld	c, l
+   0311 44                  730 	ld	b, h
+   0312 0A                  731 	ld	a, (bc)
+   0313 B7                  732 	or	a, a
+   0314 20 1F               733 	jr	NZ,00125$
+                            734 ;SpriteScorpion.c:84: if(CheckCollision(THIS, iespr)) {
+   0316 C5                  735 	push	bc
+   0317 F8 0A               736 	ldhl	sp,	#10
+   0319 2A                  737 	ld	a, (hl+)
+   031A 66                  738 	ld	h, (hl)
+   031B 6F                  739 	ld	l, a
+   031C E5                  740 	push	hl
+   031D 21r00r00            741 	ld	hl, #_THIS
+   0320 2A                  742 	ld	a, (hl+)
+   0321 66                  743 	ld	h, (hl)
+   0322 6F                  744 	ld	l, a
+   0323 E5                  745 	push	hl
+   0324 CDr00r00            746 	call	_CheckCollision
+   0327 E8 04               747 	add	sp, #4
+   0329 7B                  748 	ld	a, e
+   032A C1                  749 	pop	bc
+   032B B7                  750 	or	a, a
+   032C 28 07               751 	jr	Z,00125$
+                            752 ;SpriteScorpion.c:85: data->wait = 24u;
+   032E F8 04               753 	ldhl	sp,	#4
+   0330 2A                  754 	ld	a, (hl+)
+   0331 66                  755 	ld	h, (hl)
+   0332 6F                  756 	ld	l, a
+   0333 36 18               757 	ld	(hl), #0x18
+   0335                     758 00125$:
+                            759 ;SpriteScorpion.c:88: if(iespr->type == SpriteArrow) {
+   0335 0A                  760 	ld	a, (bc)
+   0336 3D                  761 	dec	a
+   0337 C2r09r05            762 	jp	NZ,00142$
+                            763 ;SpriteScorpion.c:89: if(CheckCollision(THIS, iespr)) {
+   033A F8 08               764 	ldhl	sp,	#8
+   033C 2A                  765 	ld	a, (hl+)
+   033D 66                  766 	ld	h, (hl)
+   033E 6F                  767 	ld	l, a
+   033F E5                  768 	push	hl
+   0340 21r00r00            769 	ld	hl, #_THIS
+   0343 2A                  770 	ld	a, (hl+)
+   0344 66                  771 	ld	h, (hl)
+   0345 6F                  772 	ld	l, a
+   0346 E5                  773 	push	hl
+   0347 CDr00r00            774 	call	_CheckCollision
+   034A E8 04               775 	add	sp, #4
+   034C 7B                  776 	ld	a, e
+   034D B7                  777 	or	a, a
+   034E CAr09r05            778 	jp	Z, 00142$
+                            779 ;SpriteScorpion.c:90: data->wait = 24u;
+   0351 F8 04               780 	ldhl	sp,	#4
+   0353 2A                  781 	ld	a, (hl+)
+   0354 66                  782 	ld	h, (hl)
+   0355 6F                  783 	ld	l, a
+   0356 36 18               784 	ld	(hl), #0x18
+                            785 ;SpriteScorpion.c:91: SetSpriteAnim(THIS, scorpion_hit, 24u); 
+   0358 3E 18               786 	ld	a, #0x18
+   035A F5                  787 	push	af
+   035B 33                  788 	inc	sp
+   035C 21rCBr00            789 	ld	hl, #_scorpion_hit
+   035F E5                  790 	push	hl
+   0360 21r00r00            791 	ld	hl, #_THIS
+   0363 2A                  792 	ld	a, (hl+)
+   0364 66                  793 	ld	h, (hl)
+   0365 6F                  794 	ld	l, a
+   0366 E5                  795 	push	hl
+   0367 CDr00r00            796 	call	_SetSpriteAnim
+   036A E8 05               797 	add	sp, #5
+                            798 ;SpriteScorpion.c:92: struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
+   036C F8 08               799 	ldhl	sp,#(9 - 1)
+   036E 5E                  800 	ld	e, (hl)
+   036F 23                  801 	inc	hl
+   0370 56                  802 	ld	d, (hl)
+   0371 21 19 00            803 	ld	hl, #0x0019
+   0374 19                  804 	add	hl, de
+   0375 4D                  805 	ld	c, l
+   0376 7C                  806 	ld	a, h
+   0377 47                  807 	ld	b, a
+                            808 ;SpriteScorpion.c:93: data->hp -= arrowdata->arrowdamage;
+   0378 D1                  809 	pop	de
+   0379 D5                  810 	push	de
+   037A 21 07 00            811 	ld	hl, #0x0007
+   037D 19                  812 	add	hl, de
+   037E 7D                  813 	ld	a, l
+   037F 54                  814 	ld	d, h
+   0380 F8 0A               815 	ldhl	sp,	#10
+   0382 22                  816 	ld	(hl+), a
+   0383 72                  817 	ld	(hl), d
+   0384 2B                  818 	dec	hl
+   0385 5E                  819 	ld	e, (hl)
+   0386 23                  820 	inc	hl
+   0387 56                  821 	ld	d, (hl)
+   0388 1A                  822 	ld	a,(de)
+   0389 F8 0F               823 	ldhl	sp,	#15
+   038B 77                  824 	ld	(hl), a
+   038C 03                  825 	inc	bc
+   038D 03                  826 	inc	bc
+   038E 03                  827 	inc	bc
+   038F 03                  828 	inc	bc
+   0390 0A                  829 	ld	a, (bc)
+   0391 4F                  830 	ld	c, a
+   0392 7E                  831 	ld	a, (hl)
+   0393 91                  832 	sub	a, c
+   0394 4F                  833 	ld	c, a
+   0395 F8 0A               834 	ldhl	sp,	#10
+   0397 2A                  835 	ld	a, (hl+)
+   0398 66                  836 	ld	h, (hl)
+   0399 6F                  837 	ld	l, a
+   039A 71                  838 	ld	(hl), c
+                            839 ;SpriteScorpion.c:41: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+   039B 21r01r00            840 	ld	hl, #_THIS + 1
+   039E 2B                  841 	dec	hl
+   039F 4E                  842 	ld	c, (hl)
+   03A0 23                  843 	inc	hl
+   03A1 46                  844 	ld	b, (hl)
+                            845 ;SpriteScorpion.c:94: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
+   03A2 21 08 00            846 	ld	hl, #0x0008
+   03A5 09                  847 	add	hl, bc
+   03A6 7D                  848 	ld	a, l
+   03A7 54                  849 	ld	d, h
+   03A8 F8 0E               850 	ldhl	sp,	#14
+   03AA 22                  851 	ld	(hl+), a
+   03AB 72                  852 	ld	(hl), d
+   03AC 2B                  853 	dec	hl
+   03AD 5E                  854 	ld	e, (hl)
+   03AE 23                  855 	inc	hl
+   03AF 56                  856 	ld	d, (hl)
+   03B0 1A                  857 	ld	a,(de)
+   03B1 F8 0C               858 	ldhl	sp,	#12
+   03B3 22                  859 	ld	(hl+), a
+   03B4 13                  860 	inc	de
+   03B5 1A                  861 	ld	a, (de)
+   03B6 77                  862 	ld	(hl), a
+   03B7 F8 08               863 	ldhl	sp,#(9 - 1)
+   03B9 5E                  864 	ld	e, (hl)
+   03BA 23                  865 	inc	hl
+   03BB 56                  866 	ld	d, (hl)
+   03BC 21 08 00            867 	ld	hl, #0x0008
+   03BF 19                  868 	add	hl, de
+   03C0 7D                  869 	ld	a, l
+   03C1 54                  870 	ld	d, h
+   03C2 F8 0E               871 	ldhl	sp,	#14
+   03C4 22                  872 	ld	(hl+), a
+   03C5 72                  873 	ld	(hl), d
+   03C6 2B                  874 	dec	hl
+   03C7 5E                  875 	ld	e, (hl)
+   03C8 23                  876 	inc	hl
+   03C9 56                  877 	ld	d, (hl)
+   03CA 1A                  878 	ld	a,(de)
+   03CB 2B                  879 	dec	hl
+   03CC 22                  880 	ld	(hl+), a
+   03CD 13                  881 	inc	de
+   03CE 1A                  882 	ld	a, (de)
+   03CF 77                  883 	ld	(hl), a
+                            884 ;SpriteScorpion.c:95: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
+   03D0 21 0C 00            885 	ld	hl, #0x000c
+   03D3 09                  886 	add	hl, bc
+   03D4 4D                  887 	ld	c, l
+   03D5 44                  888 	ld	b, h
+   03D6 0A                  889 	ld	a, (bc)
+   03D7 E6 20               890 	and	a, #0x20
+   03D9 4F                  891 	ld	c, a
+   03DA 06 00               892 	ld	b, #0x00
+                            893 ;SpriteScorpion.c:94: if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
+   03DC F8 0C               894 	ldhl	sp,	#12
+   03DE 5D                  895 	ld	e, l
+   03DF 54                  896 	ld	d, h
+   03E0 F8 0E               897 	ldhl	sp,	#14
+   03E2 1A                  898 	ld	a, (de)
+   03E3 96                  899 	sub	a, (hl)
+   03E4 23                  900 	inc	hl
+   03E5 13                  901 	inc	de
+   03E6 1A                  902 	ld	a, (de)
+   03E7 9E                  903 	sbc	a, (hl)
+   03E8 D2r31r04            904 	jp	NC, 00131$
+                            905 ;SpriteScorpion.c:95: if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
+   03EB 78                  906 	ld	a, b
+   03EC B1                  907 	or	a, c
+   03ED 28 03               908 	jr	Z,00127$
+                            909 ;SpriteScorpion.c:96: ETurn();
+   03EF CDr00r00            910 	call	_ETurn
+   03F2                     911 00127$:
+                            912 ;SpriteScorpion.c:98: data->tile_e_collision = TranslateSprite(THIS, -4 << delta_time, (data->enemy_accel_y >> 4));
+   03F2 D1                  913 	pop	de
+   03F3 D5                  914 	push	de
+   03F4 1A                  915 	ld	a,(de)
+   03F5 47                  916 	ld	b, a
+   03F6 13                  917 	inc	de
+   03F7 1A                  918 	ld	a,(de)
+   03F8 4F                  919 	ld	c, a
+   03F9 CB 29               920 	sra	c
+   03FB CB 18               921 	rr	b
+   03FD CB 29               922 	sra	c
+   03FF CB 18               923 	rr	b
+   0401 CB 29               924 	sra	c
+   0403 CB 18               925 	rr	b
+   0405 CB 29               926 	sra	c
+   0407 CB 18               927 	rr	b
+   0409 21r00r00            928 	ld	hl, #_delta_time
+   040C 4E                  929 	ld	c, (hl)
+   040D 16 FC               930 	ld	d, #0xfc
+   040F 0C                  931 	inc	c
+   0410 18 02               932 	jr	00264$
+   0412                     933 00263$:
+   0412 CB 22               934 	sla	d
+   0414                     935 00264$:
+   0414 0D                  936 	dec	c
+   0415 20 FB               937 	jr	NZ,00263$
+   0417 C5                  938 	push	bc
+   0418 33                  939 	inc	sp
+   0419 D5                  940 	push	de
+   041A 33                  941 	inc	sp
+   041B 21r00r00            942 	ld	hl, #_THIS
+   041E 2A                  943 	ld	a, (hl+)
+   041F 66                  944 	ld	h, (hl)
+   0420 6F                  945 	ld	l, a
+   0421 E5                  946 	push	hl
+   0422 CDr00r00            947 	call	_TranslateSprite
+   0425 E8 04               948 	add	sp, #4
+   0427 4B                  949 	ld	c, e
+   0428 F8 06               950 	ldhl	sp,	#6
+   042A 2A                  951 	ld	a, (hl+)
+   042B 66                  952 	ld	h, (hl)
+   042C 6F                  953 	ld	l, a
+   042D 71                  954 	ld	(hl), c
+   042E C3r75r04            955 	jp	00132$
+   0431                     956 00131$:
+                            957 ;SpriteScorpion.c:100: if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
+   0431 78                  958 	ld	a, b
+   0432 B1                  959 	or	a, c
+   0433 20 03               960 	jr	NZ,00129$
+                            961 ;SpriteScorpion.c:101: ETurn();
+   0435 CDr00r00            962 	call	_ETurn
+   0438                     963 00129$:
+                            964 ;SpriteScorpion.c:103: data->tile_e_collision = TranslateSprite(THIS, 4 << delta_time, (data->enemy_accel_y >> 4));
+   0438 D1                  965 	pop	de
+   0439 D5                  966 	push	de
+   043A 1A                  967 	ld	a,(de)
+   043B 4F                  968 	ld	c, a
+   043C 13                  969 	inc	de
+   043D 1A                  970 	ld	a,(de)
+   043E 47                  971 	ld	b, a
+   043F CB 28               972 	sra	b
+   0441 CB 19               973 	rr	c
+   0443 CB 28               974 	sra	b
+   0445 CB 19               975 	rr	c
+   0447 CB 28               976 	sra	b
+   0449 CB 19               977 	rr	c
+   044B CB 28               978 	sra	b
+   044D CB 19               979 	rr	c
+   044F 21r00r00            980 	ld	hl, #_delta_time
+   0452 46                  981 	ld	b, (hl)
+   0453 16 04               982 	ld	d, #0x04
+   0455 04                  983 	inc	b
+   0456 18 02               984 	jr	00266$
+   0458                     985 00265$:
+   0458 CB 22               986 	sla	d
+   045A                     987 00266$:
+   045A 05                  988 	dec	b
+   045B 20 FB               989 	jr	NZ,00265$
+   045D 79                  990 	ld	a, c
+   045E F5                  991 	push	af
+   045F 33                  992 	inc	sp
+   0460 D5                  993 	push	de
+   0461 33                  994 	inc	sp
+   0462 21r00r00            995 	ld	hl, #_THIS
+   0465 2A                  996 	ld	a, (hl+)
+   0466 66                  997 	ld	h, (hl)
+   0467 6F                  998 	ld	l, a
+   0468 E5                  999 	push	hl
+   0469 CDr00r00           1000 	call	_TranslateSprite
+   046C E8 04              1001 	add	sp, #4
+   046E 4B                 1002 	ld	c, e
+   046F F8 06              1003 	ldhl	sp,	#6
+   0471 2A                 1004 	ld	a, (hl+)
+   0472 66                 1005 	ld	h, (hl)
+   0473 6F                 1006 	ld	l, a
+   0474 71                 1007 	ld	(hl), c
+   0475                    1008 00132$:
+                           1009 ;SpriteScorpion.c:105: SpriteManagerRemoveSprite(iespr);
+   0475 F8 08              1010 	ldhl	sp,	#8
+   0477 2A                 1011 	ld	a, (hl+)
+   0478 66                 1012 	ld	h, (hl)
+   0479 6F                 1013 	ld	l, a
+   047A E5                 1014 	push	hl
+   047B CDr00r00           1015 	call	_SpriteManagerRemoveSprite
+   047E E8 02              1016 	add	sp, #2
+                           1017 ;SpriteScorpion.c:106: if (data->hp <= 0){
+   0480 F8 0A              1018 	ldhl	sp,#(11 - 1)
+   0482 5E                 1019 	ld	e, (hl)
+   0483 23                 1020 	inc	hl
+   0484 56                 1021 	ld	d, (hl)
+   0485 1A                 1022 	ld	a,(de)
+   0486 4F                 1023 	ld	c,a
+   0487 5F                 1024 	ld	e, a
+   0488 3E 00              1025 	ld	a, #0x00
+   048A 57                 1026 	ld	d, a
+   048B AF                 1027 	xor	a, a
+   048C 91                 1028 	sub	a, c
+   048D CB 7B              1029 	bit	7, e
+   048F 28 07              1030 	jr	Z,00267$
+   0491 CB 7A              1031 	bit	7, d
+   0493 20 08              1032 	jr	NZ,00268$
+   0495 BF                 1033 	cp	a, a
+   0496 18 05              1034 	jr	00268$
+   0498                    1035 00267$:
+   0498 CB 7A              1036 	bit	7, d
+   049A 28 01              1037 	jr	Z,00268$
+   049C 37                 1038 	scf
+   049D                    1039 00268$:
+   049D DAr09r05           1040 	jp	C, 00142$
+                           1041 ;SpriteScorpion.c:107: data->enemy_state = ENEMY_STATE_DEAD;
+   04A0 C1                 1042 	pop	bc
+   04A1 E1                 1043 	pop	hl
+   04A2 E5                 1044 	push	hl
+   04A3 C5                 1045 	push	bc
+   04A4 36 03              1046 	ld	(hl), #0x03
+                           1047 ;SpriteScorpion.c:108: SetSpriteAnim(THIS, scorpion_dead, 16u);
+   04A6 3E 10              1048 	ld	a, #0x10
+   04A8 F5                 1049 	push	af
+   04A9 33                 1050 	inc	sp
+   04AA 21rCFr00           1051 	ld	hl, #_scorpion_dead
+   04AD E5                 1052 	push	hl
+   04AE 21r00r00           1053 	ld	hl, #_THIS
+   04B1 2A                 1054 	ld	a, (hl+)
+   04B2 66                 1055 	ld	h, (hl)
+   04B3 6F                 1056 	ld	l, a
+   04B4 E5                 1057 	push	hl
+   04B5 CDr00r00           1058 	call	_SetSpriteAnim
+   04B8 E8 05              1059 	add	sp, #5
+                           1060 ;SpriteScorpion.c:109: NR50_REG = 0x55; //Max volume		
+   04BA 3E 55              1061 	ld	a, #0x55
+   04BC E0r00              1062 	ldh	(_NR50_REG+0),a
+                           1063 ;SpriteScorpion.c:110: PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+   04BE 21 86 00           1064 	ld	hl, #0x0086
+   04C1 E5                 1065 	push	hl
+   04C2 2E 68              1066 	ld	l, #0x68
+   04C4 E5                 1067 	push	hl
+   04C5 2E 43              1068 	ld	l, #0x43
+   04C7 E5                 1069 	push	hl
+   04C8 2E C2              1070 	ld	l, #0xc2
+   04CA E5                 1071 	push	hl
+   04CB 2E 4B              1072 	ld	l, #0x4b
+   04CD E5                 1073 	push	hl
+   04CE 3E 05              1074 	ld	a, #0x05
+   04D0 F5                 1075 	push	af
+   04D1 33                 1076 	inc	sp
+   04D2 AF                 1077 	xor	a, a
+   04D3 F5                 1078 	push	af
+   04D4 33                 1079 	inc	sp
+   04D5 CDr00r00           1080 	call	_PlayFx
+   04D8 E8 0C              1081 	add	sp, #12
+                           1082 ;SpriteScorpion.c:111: data->wait = 8u;
+   04DA F8 04              1083 	ldhl	sp,	#4
+   04DC 2A                 1084 	ld	a, (hl+)
+   04DD 66                 1085 	ld	h, (hl)
+   04DE 6F                 1086 	ld	l, a
+   04DF 36 08              1087 	ld	(hl), #0x08
+                           1088 ;SpriteScorpion.c:112: THIS->lim_x = 8u;
+   04E1 21r00r00           1089 	ld	hl, #_THIS
+   04E4 46                 1090 	ld	b, (hl)
+   04E5 23                 1091 	inc	hl
+   04E6 4E                 1092 	ld	c, (hl)
+   04E7 78                 1093 	ld	a, b
+   04E8 C6 13              1094 	add	a, #0x13
+   04EA 47                 1095 	ld	b, a
+   04EB 30 01              1096 	jr	NC,00269$
+   04ED 0C                 1097 	inc	c
+   04EE                    1098 00269$:
+   04EE 68                 1099 	ld	l, b
+   04EF 61                 1100 	ld	h, c
+   04F0 36 08              1101 	ld	(hl), #0x08
+   04F2 23                 1102 	inc	hl
+   04F3 36 00              1103 	ld	(hl), #0x00
+                           1104 ;SpriteScorpion.c:113: THIS->lim_y = 16u;
+   04F5 21r00r00           1105 	ld	hl, #_THIS
+   04F8 46                 1106 	ld	b, (hl)
+   04F9 23                 1107 	inc	hl
+   04FA 4E                 1108 	ld	c, (hl)
+   04FB 78                 1109 	ld	a, b
+   04FC C6 15              1110 	add	a, #0x15
+   04FE 47                 1111 	ld	b, a
+   04FF 30 01              1112 	jr	NC,00270$
+   0501 0C                 1113 	inc	c
+   0502                    1114 00270$:
+   0502 68                 1115 	ld	l, b
+   0503 61                 1116 	ld	h, c
+   0504 36 10              1117 	ld	(hl), #0x10
+   0506 23                 1118 	inc	hl
+   0507 36 00              1119 	ld	(hl), #0x00
+   0509                    1120 00142$:
+                           1121 ;SpriteScorpion.c:82: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+   0509 F8 10              1122 	ldhl	sp,	#16
+   050B 34                 1123 	inc	(hl)
+   050C 4E                 1124 	ld	c, (hl)
+   050D 06 00              1125 	ld	b, #0x00
+   050F 03                 1126 	inc	bc
+   0510 21r00r00           1127 	ld	hl, #_sprite_manager_updatables
+   0513 09                 1128 	add	hl, bc
+   0514 4D                 1129 	ld	c,l
+   0515 7C                 1130 	ld	a,h
+   0516 4E                 1131 	ld	c, (hl)
+   0517 06 00              1132 	ld	b, #0x00
+   0519 CB 21              1133 	sla	c
+   051B CB 10              1134 	rl	b
+   051D 21r00r00           1135 	ld	hl, #_sprite_manager_sprites
+   0520 09                 1136 	add	hl, bc
+   0521 4D                 1137 	ld	c, l
+   0522 44                 1138 	ld	b, h
+   0523 59                 1139 	ld	e, c
+   0524 50                 1140 	ld	d, b
+   0525 1A                 1141 	ld	a,(de)
+   0526 F8 08              1142 	ldhl	sp,	#8
+   0528 22                 1143 	ld	(hl+), a
+   0529 13                 1144 	inc	de
+   052A 1A                 1145 	ld	a, (de)
+   052B 77                 1146 	ld	(hl), a
+   052C C3rFCr02           1147 	jp	00141$
+   052F                    1148 00143$:
+                           1149 ;SpriteScorpion.c:119: }
+   052F E8 11              1150 	add	sp, #17
+   0531 C9                 1151 	ret
+                           1152 ;SpriteScorpion.c:123: void Destroy_SpriteScorpion() {
+                           1153 ;	---------------------------------
+                           1154 ; Function Destroy_SpriteScorpion
+                           1155 ; ---------------------------------
+   0532                    1156 _Destroy_SpriteScorpion::
+                           1157 ;SpriteScorpion.c:124: }
+   0532 C9                 1158 	ret
+                           1159 	.area _CODE_2
+                           1160 	.area _CABS (ABS)

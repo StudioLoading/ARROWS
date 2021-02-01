@@ -77,10 +77,10 @@ _bank_SpriteArrow:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
 ;--------------------------------------------------------
@@ -575,16 +575,16 @@ _Update_SpriteArrow::
 	ld	b, (hl)
 	jp	00116$
 00118$:
-;SpriteArrow.c:86: }
+;SpriteArrow.c:81: }
 	add	sp, #7
 	ret
-;SpriteArrow.c:88: void SetupArrow(){
+;SpriteArrow.c:83: void SetupArrow(){
 ;	---------------------------------
 ; Function SetupArrow
 ; ---------------------------------
 _SetupArrow::
 	add	sp, #-6
-;SpriteArrow.c:89: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:84: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -599,7 +599,7 @@ _SetupArrow::
 	ld	(hl), b
 	inc	hl
 	ld	(hl), c
-;SpriteArrow.c:90: data->arrowdamage = 10u;
+;SpriteArrow.c:85: data->arrowdamage = 10u;
 	pop	de
 	push	de
 	ld	hl, #0x0004
@@ -607,12 +607,12 @@ _SetupArrow::
 	ld	c,l
 	ld	a,h
 	ld	(hl), #0x0a
-;SpriteArrow.c:91: switch(internal_t) {
+;SpriteArrow.c:86: switch(internal_t) {
 	ld	a, #0x06
 	ld	hl, #_internal_t
 	sub	a, (hl)
 	jp	C, 00135$
-;SpriteArrow.c:93: switch(data->arrowdir){
+;SpriteArrow.c:88: switch(data->arrowdir){
 	pop	de
 	push	de
 	ld	hl, #0x0003
@@ -622,12 +622,12 @@ _SetupArrow::
 	ldhl	sp,	#2
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:95: data->vy = 0;
+;SpriteArrow.c:90: data->vy = 0;
 	pop	bc
 	push	bc
 	inc	bc
 	inc	bc
-;SpriteArrow.c:96: data->vx = 2;
+;SpriteArrow.c:91: data->vx = 2;
 	pop	de
 	push	de
 	ld	hl, #0x0001
@@ -637,7 +637,7 @@ _SetupArrow::
 	ldhl	sp,	#4
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:91: switch(internal_t) {
+;SpriteArrow.c:86: switch(internal_t) {
 	ld	hl, #_internal_t
 	ld	e, (hl)
 	ld	d, #0x00
@@ -654,9 +654,9 @@ _SetupArrow::
 	jp	00119$
 	jp	00125$
 	jp	00131$
-;SpriteArrow.c:92: case 1:
+;SpriteArrow.c:87: case 1:
 00101$:
-;SpriteArrow.c:93: switch(data->arrowdir){
+;SpriteArrow.c:88: switch(data->arrowdir){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -671,12 +671,12 @@ _SetupArrow::
 	sub	a, #0x04
 	jp	Z,00105$
 	jp	00106$
-;SpriteArrow.c:94: case 1: //orizzontale
+;SpriteArrow.c:89: case 1: //orizzontale
 00102$:
-;SpriteArrow.c:95: data->vy = 0;
+;SpriteArrow.c:90: data->vy = 0;
 	xor	a, a
 	ld	(bc), a
-;SpriteArrow.c:96: data->vx = 2;
+;SpriteArrow.c:91: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -685,7 +685,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:97: SetSpriteAnim(THIS, arrow_normal, 18u);	
+;SpriteArrow.c:92: SetSpriteAnim(THIS, arrow_normal, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -698,14 +698,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:98: break;
+;SpriteArrow.c:93: break;
 	jp	00106$
-;SpriteArrow.c:99: case 2: //diagonale
+;SpriteArrow.c:94: case 2: //diagonale
 00103$:
-;SpriteArrow.c:100: data->vy = -1;
+;SpriteArrow.c:95: data->vy = -1;
 	ld	a, #0xff
 	ld	(bc), a
-;SpriteArrow.c:101: data->vx = 2;
+;SpriteArrow.c:96: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -714,7 +714,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:102: SetSpriteAnim(THIS, arrow_normal_d, 18u);	
+;SpriteArrow.c:97: SetSpriteAnim(THIS, arrow_normal_d, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -727,14 +727,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:103: break;
+;SpriteArrow.c:98: break;
 	jp	00106$
-;SpriteArrow.c:104: case 3: //verticale in su
+;SpriteArrow.c:99: case 3: //verticale in su
 00104$:
-;SpriteArrow.c:105: data->vy = -2;
+;SpriteArrow.c:100: data->vy = -2;
 	ld	a, #0xfe
 	ld	(bc), a
-;SpriteArrow.c:106: data->vx = 0;
+;SpriteArrow.c:101: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -742,7 +742,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:107: SetSpriteAnim(THIS, arrow_normal_v, 18u);	
+;SpriteArrow.c:102: SetSpriteAnim(THIS, arrow_normal_v, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -755,14 +755,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:108: break;
+;SpriteArrow.c:103: break;
 	jr	00106$
-;SpriteArrow.c:109: case 4: //verticale in giu
+;SpriteArrow.c:104: case 4: //verticale in giu
 00105$:
-;SpriteArrow.c:110: data->vy = 2;
+;SpriteArrow.c:105: data->vy = 2;
 	ld	a, #0x02
 	ld	(bc), a
-;SpriteArrow.c:111: data->vx = 0;
+;SpriteArrow.c:106: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -770,7 +770,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:112: SetSpriteAnim(THIS, arrow_normal_g, 18u);	
+;SpriteArrow.c:107: SetSpriteAnim(THIS, arrow_normal_g, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -783,19 +783,19 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:114: }
+;SpriteArrow.c:109: }
 00106$:
-;SpriteArrow.c:115: data->type = 0;
+;SpriteArrow.c:110: data->type = 0;
 	pop	bc
 	push	bc
 	ld	a, (bc)
 	and	a, #0xf0
 	ld	(bc),a
-;SpriteArrow.c:116: break;
+;SpriteArrow.c:111: break;
 	jp	00135$
-;SpriteArrow.c:117: case 2:
+;SpriteArrow.c:112: case 2:
 00107$:
-;SpriteArrow.c:118: switch(data->arrowdir){
+;SpriteArrow.c:113: switch(data->arrowdir){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -810,12 +810,12 @@ _SetupArrow::
 	sub	a, #0x04
 	jp	Z,00111$
 	jp	00112$
-;SpriteArrow.c:119: case 1:
+;SpriteArrow.c:114: case 1:
 00108$:
-;SpriteArrow.c:120: data->vy = 0;
+;SpriteArrow.c:115: data->vy = 0;
 	xor	a, a
 	ld	(bc), a
-;SpriteArrow.c:121: data->vx = 2;
+;SpriteArrow.c:116: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -824,7 +824,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:122: SetSpriteAnim(THIS, arrow_water, 18u);	
+;SpriteArrow.c:117: SetSpriteAnim(THIS, arrow_water, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -837,14 +837,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:123: break;
+;SpriteArrow.c:118: break;
 	jp	00112$
-;SpriteArrow.c:124: case 2:
+;SpriteArrow.c:119: case 2:
 00109$:
-;SpriteArrow.c:125: data->vy = -1;
+;SpriteArrow.c:120: data->vy = -1;
 	ld	a, #0xff
 	ld	(bc), a
-;SpriteArrow.c:126: data->vx = 2;
+;SpriteArrow.c:121: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -853,7 +853,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:127: SetSpriteAnim(THIS, arrow_water_d, 18u);	
+;SpriteArrow.c:122: SetSpriteAnim(THIS, arrow_water_d, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -866,14 +866,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:128: break;
+;SpriteArrow.c:123: break;
 	jp	00112$
-;SpriteArrow.c:129: case 3:
+;SpriteArrow.c:124: case 3:
 00110$:
-;SpriteArrow.c:130: data->vy = -2;
+;SpriteArrow.c:125: data->vy = -2;
 	ld	a, #0xfe
 	ld	(bc), a
-;SpriteArrow.c:131: data->vx = 0;
+;SpriteArrow.c:126: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -881,7 +881,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:132: SetSpriteAnim(THIS, arrow_water_v, 18u);	
+;SpriteArrow.c:127: SetSpriteAnim(THIS, arrow_water_v, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -894,14 +894,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:133: break;
+;SpriteArrow.c:128: break;
 	jr	00112$
-;SpriteArrow.c:134: case 4:
+;SpriteArrow.c:129: case 4:
 00111$:
-;SpriteArrow.c:135: data->vy = 2;
+;SpriteArrow.c:130: data->vy = 2;
 	ld	a, #0x02
 	ld	(bc), a
-;SpriteArrow.c:136: data->vx = 0;
+;SpriteArrow.c:131: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -909,7 +909,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:137: SetSpriteAnim(THIS, arrow_water_g, 18u);	
+;SpriteArrow.c:132: SetSpriteAnim(THIS, arrow_water_g, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -922,19 +922,19 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:139: }						
+;SpriteArrow.c:134: }						
 00112$:
-;SpriteArrow.c:140: data->type = 0;
+;SpriteArrow.c:135: data->type = 0;
 	pop	bc
 	push	bc
 	ld	a, (bc)
 	and	a, #0xf0
 	ld	(bc),a
-;SpriteArrow.c:141: break;
+;SpriteArrow.c:136: break;
 	jp	00135$
-;SpriteArrow.c:142: case 3:
+;SpriteArrow.c:137: case 3:
 00113$:
-;SpriteArrow.c:143: switch(data->arrowdir){
+;SpriteArrow.c:138: switch(data->arrowdir){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -949,12 +949,12 @@ _SetupArrow::
 	sub	a, #0x04
 	jp	Z,00117$
 	jp	00118$
-;SpriteArrow.c:144: case 1:
+;SpriteArrow.c:139: case 1:
 00114$:
-;SpriteArrow.c:145: data->vy = 0;
+;SpriteArrow.c:140: data->vy = 0;
 	xor	a, a
 	ld	(bc), a
-;SpriteArrow.c:146: data->vx = 1;
+;SpriteArrow.c:141: data->vx = 1;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -963,7 +963,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x01
 	ld	(hl),a
-;SpriteArrow.c:147: SetSpriteAnim(THIS, arrow_stone, 18u);	
+;SpriteArrow.c:142: SetSpriteAnim(THIS, arrow_stone, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -976,14 +976,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:148: break;
+;SpriteArrow.c:143: break;
 	jp	00118$
-;SpriteArrow.c:149: case 2:
+;SpriteArrow.c:144: case 2:
 00115$:
-;SpriteArrow.c:150: data->vy = -1;
+;SpriteArrow.c:145: data->vy = -1;
 	ld	a, #0xff
 	ld	(bc), a
-;SpriteArrow.c:151: data->vx = 2;
+;SpriteArrow.c:146: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -992,7 +992,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:152: SetSpriteAnim(THIS, arrow_stone_d, 18u);	
+;SpriteArrow.c:147: SetSpriteAnim(THIS, arrow_stone_d, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1005,14 +1005,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:153: break;
+;SpriteArrow.c:148: break;
 	jp	00118$
-;SpriteArrow.c:154: case 3:
+;SpriteArrow.c:149: case 3:
 00116$:
-;SpriteArrow.c:155: data->vy = -1;
+;SpriteArrow.c:150: data->vy = -1;
 	ld	a, #0xff
 	ld	(bc), a
-;SpriteArrow.c:156: data->vx = 0;
+;SpriteArrow.c:151: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1020,7 +1020,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:157: SetSpriteAnim(THIS, arrow_stone_v, 18u);	
+;SpriteArrow.c:152: SetSpriteAnim(THIS, arrow_stone_v, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1033,14 +1033,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:158: break;
+;SpriteArrow.c:153: break;
 	jr	00118$
-;SpriteArrow.c:159: case 4:
+;SpriteArrow.c:154: case 4:
 00117$:
-;SpriteArrow.c:160: data->vy = 1;
+;SpriteArrow.c:155: data->vy = 1;
 	ld	a, #0x01
 	ld	(bc), a
-;SpriteArrow.c:161: data->vx = 0;
+;SpriteArrow.c:156: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1048,7 +1048,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:162: SetSpriteAnim(THIS, arrow_stone_g, 18u);
+;SpriteArrow.c:157: SetSpriteAnim(THIS, arrow_stone_g, 18u);
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1061,19 +1061,19 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:164: }						
+;SpriteArrow.c:159: }						
 00118$:
-;SpriteArrow.c:165: data->type = 0;
+;SpriteArrow.c:160: data->type = 0;
 	pop	bc
 	push	bc
 	ld	a, (bc)
 	and	a, #0xf0
 	ld	(bc),a
-;SpriteArrow.c:166: break;
+;SpriteArrow.c:161: break;
 	jp	00135$
-;SpriteArrow.c:167: case 4:
+;SpriteArrow.c:162: case 4:
 00119$:
-;SpriteArrow.c:168: switch(data->arrowdir){
+;SpriteArrow.c:163: switch(data->arrowdir){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1088,12 +1088,12 @@ _SetupArrow::
 	sub	a, #0x04
 	jp	Z,00123$
 	jp	00124$
-;SpriteArrow.c:169: case 1:
+;SpriteArrow.c:164: case 1:
 00120$:
-;SpriteArrow.c:170: data->vy = 0;
+;SpriteArrow.c:165: data->vy = 0;
 	xor	a, a
 	ld	(bc), a
-;SpriteArrow.c:171: data->vx = 3;
+;SpriteArrow.c:166: data->vx = 3;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1102,7 +1102,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x03
 	ld	(hl),a
-;SpriteArrow.c:172: SetSpriteAnim(THIS, arrow_blast, 18u);	
+;SpriteArrow.c:167: SetSpriteAnim(THIS, arrow_blast, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1115,14 +1115,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:173: break;
+;SpriteArrow.c:168: break;
 	jp	00124$
-;SpriteArrow.c:174: case 2:
+;SpriteArrow.c:169: case 2:
 00121$:
-;SpriteArrow.c:175: data->vy = -2;
+;SpriteArrow.c:170: data->vy = -2;
 	ld	a, #0xfe
 	ld	(bc), a
-;SpriteArrow.c:176: data->vx = 3;
+;SpriteArrow.c:171: data->vx = 3;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1131,7 +1131,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x03
 	ld	(hl),a
-;SpriteArrow.c:177: SetSpriteAnim(THIS, arrow_blast_d, 18u);	
+;SpriteArrow.c:172: SetSpriteAnim(THIS, arrow_blast_d, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1144,14 +1144,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:178: break;
+;SpriteArrow.c:173: break;
 	jp	00124$
-;SpriteArrow.c:179: case 3:
+;SpriteArrow.c:174: case 3:
 00122$:
-;SpriteArrow.c:180: data->vy = -3;
+;SpriteArrow.c:175: data->vy = -3;
 	ld	a, #0xfd
 	ld	(bc), a
-;SpriteArrow.c:181: data->vx = 0;
+;SpriteArrow.c:176: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1159,7 +1159,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:182: SetSpriteAnim(THIS, arrow_blast_v, 18u);	
+;SpriteArrow.c:177: SetSpriteAnim(THIS, arrow_blast_v, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1172,14 +1172,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:183: break;
+;SpriteArrow.c:178: break;
 	jr	00124$
-;SpriteArrow.c:184: case 4:
+;SpriteArrow.c:179: case 4:
 00123$:
-;SpriteArrow.c:185: data->vy = 3;
+;SpriteArrow.c:180: data->vy = 3;
 	ld	a, #0x03
 	ld	(bc), a
-;SpriteArrow.c:186: data->vx = 0;
+;SpriteArrow.c:181: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1187,7 +1187,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:187: SetSpriteAnim(THIS, arrow_blast_g, 18u);	
+;SpriteArrow.c:182: SetSpriteAnim(THIS, arrow_blast_g, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1200,19 +1200,19 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:189: }						
+;SpriteArrow.c:184: }						
 00124$:
-;SpriteArrow.c:190: data->type = 0;
+;SpriteArrow.c:185: data->type = 0;
 	pop	bc
 	push	bc
 	ld	a, (bc)
 	and	a, #0xf0
 	ld	(bc),a
-;SpriteArrow.c:191: break;
+;SpriteArrow.c:186: break;
 	jp	00135$
-;SpriteArrow.c:192: case 5:
+;SpriteArrow.c:187: case 5:
 00125$:
-;SpriteArrow.c:193: switch(data->arrowdir){
+;SpriteArrow.c:188: switch(data->arrowdir){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1227,12 +1227,12 @@ _SetupArrow::
 	sub	a, #0x04
 	jp	Z,00129$
 	jp	00130$
-;SpriteArrow.c:194: case 1:
+;SpriteArrow.c:189: case 1:
 00126$:
-;SpriteArrow.c:195: data->vy = 0;
+;SpriteArrow.c:190: data->vy = 0;
 	xor	a, a
 	ld	(bc), a
-;SpriteArrow.c:196: data->vx = 2;
+;SpriteArrow.c:191: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1241,7 +1241,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:197: SetSpriteAnim(THIS, arrow_fire, 18u);	
+;SpriteArrow.c:192: SetSpriteAnim(THIS, arrow_fire, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1254,14 +1254,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:198: break;
+;SpriteArrow.c:193: break;
 	jp	00130$
-;SpriteArrow.c:199: case 2:
+;SpriteArrow.c:194: case 2:
 00127$:
-;SpriteArrow.c:200: data->vy = -1;
+;SpriteArrow.c:195: data->vy = -1;
 	ld	a, #0xff
 	ld	(bc), a
-;SpriteArrow.c:201: data->vx = 2;
+;SpriteArrow.c:196: data->vx = 2;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1270,7 +1270,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:202: SetSpriteAnim(THIS, arrow_fire_d, 18u);	
+;SpriteArrow.c:197: SetSpriteAnim(THIS, arrow_fire_d, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1283,14 +1283,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:203: break;
+;SpriteArrow.c:198: break;
 	jp	00130$
-;SpriteArrow.c:204: case 3:
+;SpriteArrow.c:199: case 3:
 00128$:
-;SpriteArrow.c:205: data->vy = -2;
+;SpriteArrow.c:200: data->vy = -2;
 	ld	a, #0xfe
 	ld	(bc), a
-;SpriteArrow.c:206: data->vx = 0;
+;SpriteArrow.c:201: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1298,7 +1298,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:207: SetSpriteAnim(THIS, arrow_fire_v, 18u);	
+;SpriteArrow.c:202: SetSpriteAnim(THIS, arrow_fire_v, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1311,14 +1311,14 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:208: break;
+;SpriteArrow.c:203: break;
 	jr	00130$
-;SpriteArrow.c:209: case 4:
+;SpriteArrow.c:204: case 4:
 00129$:
-;SpriteArrow.c:210: data->vy = 2;
+;SpriteArrow.c:205: data->vy = 2;
 	ld	a, #0x02
 	ld	(bc), a
-;SpriteArrow.c:211: data->vx = 0;
+;SpriteArrow.c:206: data->vx = 0;
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1326,7 +1326,7 @@ _SetupArrow::
 	ld	a, (hl)
 	and	a, #0xf0
 	ld	(hl),a
-;SpriteArrow.c:212: SetSpriteAnim(THIS, arrow_fire_g, 18u);	
+;SpriteArrow.c:207: SetSpriteAnim(THIS, arrow_fire_g, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1339,19 +1339,19 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:214: }						
+;SpriteArrow.c:209: }						
 00130$:
-;SpriteArrow.c:215: data->type = 0;
+;SpriteArrow.c:210: data->type = 0;
 	pop	bc
 	push	bc
 	ld	a, (bc)
 	and	a, #0xf0
 	ld	(bc),a
-;SpriteArrow.c:216: break;
+;SpriteArrow.c:211: break;
 	jp	00135$
-;SpriteArrow.c:217: case 6:
+;SpriteArrow.c:212: case 6:
 00131$:
-;SpriteArrow.c:218: switch(data->arrowdir){
+;SpriteArrow.c:213: switch(data->arrowdir){
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -1359,10 +1359,10 @@ _SetupArrow::
 	ld	a,(de)
 	dec	a
 	jr	NZ,00135$
-;SpriteArrow.c:220: data->vy = 0;
+;SpriteArrow.c:215: data->vy = 0;
 	xor	a, a
 	ld	(bc), a
-;SpriteArrow.c:221: data->vx = 2;
+;SpriteArrow.c:216: data->vx = 2;
 	inc	hl
 	ld	a, (hl+)
 	ld	h, (hl)
@@ -1371,7 +1371,7 @@ _SetupArrow::
 	and	a, #0xf0
 	or	a, #0x02
 	ld	(hl),a
-;SpriteArrow.c:222: SetSpriteAnim(THIS, spine, 18u);	
+;SpriteArrow.c:217: SetSpriteAnim(THIS, spine, 18u);	
 	ld	a, #0x12
 	push	af
 	inc	sp
@@ -1384,17 +1384,17 @@ _SetupArrow::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpriteArrow.c:227: }
+;SpriteArrow.c:222: }
 00135$:
-;SpriteArrow.c:228: }
+;SpriteArrow.c:223: }
 	add	sp, #6
 	ret
-;SpriteArrow.c:230: void CheckCollisionArrowTile() {	
+;SpriteArrow.c:225: void CheckCollisionArrowTile() {	
 ;	---------------------------------
 ; Function CheckCollisionArrowTile
 ; ---------------------------------
 _CheckCollisionArrowTile::
-;SpriteArrow.c:231: if (tile_a_collision < 18u & tile_a_collision > 9u){
+;SpriteArrow.c:226: if (tile_a_collision < 18u & tile_a_collision > 9u){
 	ld	hl, #_tile_a_collision
 	ld	a, (hl)
 	sub	a, #0x12
@@ -1407,25 +1407,25 @@ _CheckCollisionArrowTile::
 	rla
 	and	a,c
 	jr	Z,00102$
-;SpriteArrow.c:232: RedirectArrow();
+;SpriteArrow.c:227: RedirectArrow();
 	jp	_RedirectArrow
 00102$:
-;SpriteArrow.c:234: SpriteManagerRemove(THIS_IDX);
+;SpriteArrow.c:229: SpriteManagerRemove(THIS_IDX);
 	ld	hl, #_THIS_IDX
 	ld	c, (hl)
 	ld	b, #0x00
 	push	bc
 	call	_SpriteManagerRemove
 	add	sp, #2
-;SpriteArrow.c:236: }
+;SpriteArrow.c:231: }
 	ret
-;SpriteArrow.c:238: void RedirectArrow(){
+;SpriteArrow.c:233: void RedirectArrow(){
 ;	---------------------------------
 ; Function RedirectArrow
 ; ---------------------------------
 _RedirectArrow::
 	add	sp, #-5
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -1444,7 +1444,7 @@ _RedirectArrow::
 	ldhl	sp,	#0
 	ld	(hl+), a
 	ld	(hl), e
-;SpriteArrow.c:240: switch(tile_a_collision) {
+;SpriteArrow.c:235: switch(tile_a_collision) {
 	ld	hl, #_tile_a_collision
 	ld	a, (hl)
 	sub	a, #0x0a
@@ -1456,7 +1456,7 @@ _RedirectArrow::
 	add	a, #0xf6
 	ldhl	sp,	#2
 	ld	(hl), a
-;SpriteArrow.c:242: data->arrowdir = 4;
+;SpriteArrow.c:237: data->arrowdir = 4;
 	pop	de
 	push	de
 	ld	hl, #0x0003
@@ -1466,12 +1466,12 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:260: SPRITE_SET_VMIRROR(THIS);
+;SpriteArrow.c:255: SPRITE_SET_VMIRROR(THIS);
 	ld	hl, #0x000c
 	add	hl, bc
 	ld	c, l
 	ld	b, h
-;SpriteArrow.c:240: switch(tile_a_collision) {
+;SpriteArrow.c:235: switch(tile_a_collision) {
 	ldhl	sp,	#2
 	ld	e, (hl)
 	ld	d, #0x00
@@ -1489,21 +1489,21 @@ _RedirectArrow::
 	jp	00106$
 	jp	00107$
 	jp	00108$
-;SpriteArrow.c:241: case 10u: //da SX a GIU
+;SpriteArrow.c:236: case 10u: //da SX a GIU
 00101$:
-;SpriteArrow.c:242: data->arrowdir = 4;
+;SpriteArrow.c:237: data->arrowdir = 4;
 	ldhl	sp,	#3
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x04
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
+;SpriteArrow.c:238: THIS->x += 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1531,13 +1531,13 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:244: THIS->y += 4;
+;SpriteArrow.c:239: THIS->y += 4;
 	ld	hl, #0x000a
 	add	hl, bc
 	ld	a, l
@@ -1545,6 +1545,84 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
+	dec	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	a,(de)
+	ld	c, a
+	inc	de
+	ld	a,(de)
+	ld	b, a
+	inc	bc
+	inc	bc
+	inc	bc
+	inc	bc
+	dec	hl
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	ld	(hl), c
+	inc	hl
+	ld	(hl), b
+;SpriteArrow.c:240: break;
+	jp	00109$
+;SpriteArrow.c:241: case 11u: //da DX a GIU
+00102$:
+;SpriteArrow.c:242: data->arrowdir = 4;
+	ldhl	sp,	#3
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	ld	(hl), #0x04
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+	ld	hl, #_THIS + 1
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+;SpriteArrow.c:238: THIS->x += 4;
+	ld	hl, #0x0008
+	add	hl, bc
+	ld	a, l
+	ld	d, h
+	ldhl	sp,	#3
+	ld	(hl+), a
+	ld	(hl), d
+;SpriteArrow.c:243: THIS->x -= 2;
+	dec	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	a,(de)
+	ld	c, a
+	inc	de
+	ld	a,(de)
+	ld	b, a
+	dec	bc
+	dec	bc
+	dec	hl
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	ld	(hl), c
+	inc	hl
+	ld	(hl), b
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+	ld	hl, #_THIS + 1
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+;SpriteArrow.c:239: THIS->y += 4;
+	ld	hl, #0x000a
+	add	hl, bc
+	ld	a, l
+	ld	d, h
+	ldhl	sp,	#3
+	ld	(hl+), a
+	ld	(hl), d
+;SpriteArrow.c:244: THIS->y += 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1567,99 +1645,21 @@ _RedirectArrow::
 	ld	(hl), b
 ;SpriteArrow.c:245: break;
 	jp	00109$
-;SpriteArrow.c:246: case 11u: //da DX a GIU
-00102$:
-;SpriteArrow.c:247: data->arrowdir = 4;
-	ldhl	sp,	#3
-	ld	a, (hl+)
-	ld	h, (hl)
-	ld	l, a
-	ld	(hl), #0x04
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	ld	hl, #_THIS + 1
-	dec	hl
-	ld	c, (hl)
-	inc	hl
-	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
-	ld	hl, #0x0008
-	add	hl, bc
-	ld	a, l
-	ld	d, h
-	ldhl	sp,	#3
-	ld	(hl+), a
-	ld	(hl), d
-;SpriteArrow.c:248: THIS->x -= 2;
-	dec	hl
-	ld	e, (hl)
-	inc	hl
-	ld	d, (hl)
-	ld	a,(de)
-	ld	c, a
-	inc	de
-	ld	a,(de)
-	ld	b, a
-	dec	bc
-	dec	bc
-	dec	hl
-	ld	a, (hl+)
-	ld	h, (hl)
-	ld	l, a
-	ld	(hl), c
-	inc	hl
-	ld	(hl), b
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	ld	hl, #_THIS + 1
-	dec	hl
-	ld	c, (hl)
-	inc	hl
-	ld	b, (hl)
-;SpriteArrow.c:244: THIS->y += 4;
-	ld	hl, #0x000a
-	add	hl, bc
-	ld	a, l
-	ld	d, h
-	ldhl	sp,	#3
-	ld	(hl+), a
-	ld	(hl), d
-;SpriteArrow.c:249: THIS->y += 4;
-	dec	hl
-	ld	e, (hl)
-	inc	hl
-	ld	d, (hl)
-	ld	a,(de)
-	ld	c, a
-	inc	de
-	ld	a,(de)
-	ld	b, a
-	inc	bc
-	inc	bc
-	inc	bc
-	inc	bc
-	dec	hl
-	ld	a, (hl+)
-	ld	h, (hl)
-	ld	l, a
-	ld	(hl), c
-	inc	hl
-	ld	(hl), b
-;SpriteArrow.c:250: break;
-	jp	00109$
-;SpriteArrow.c:251: case 12u: //da SX a SU
+;SpriteArrow.c:246: case 12u: //da SX a SU
 00103$:
-;SpriteArrow.c:252: data->arrowdir = 3;
+;SpriteArrow.c:247: data->arrowdir = 3;
 	ldhl	sp,	#3
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x03
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
+;SpriteArrow.c:238: THIS->x += 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1667,7 +1667,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:253: THIS->x += 4;
+;SpriteArrow.c:248: THIS->x += 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1688,23 +1688,74 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:254: break;
+;SpriteArrow.c:249: break;
 	jp	00109$
-;SpriteArrow.c:255: case 13u: // da DX a SU
+;SpriteArrow.c:250: case 13u: // da DX a SU
 00104$:
-;SpriteArrow.c:256: data->arrowdir = 3;
+;SpriteArrow.c:251: data->arrowdir = 3;
 	ldhl	sp,	#3
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x03
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
+;SpriteArrow.c:238: THIS->x += 4;
+	ld	hl, #0x0008
+	add	hl, bc
+	ld	a, l
+	ld	d, h
+	ldhl	sp,	#3
+	ld	(hl+), a
+	ld	(hl), d
+;SpriteArrow.c:252: THIS->x -= 4;
+	dec	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	a,(de)
+	ld	c, a
+	inc	de
+	ld	a,(de)
+	ld	b, a
+	ld	a, c
+	add	a, #0xfc
+	ld	c, a
+	ld	a, b
+	adc	a, #0xff
+	ld	b, a
+	dec	hl
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	ld	(hl), c
+	inc	hl
+	ld	(hl), b
+;SpriteArrow.c:253: break;
+	jp	00109$
+;SpriteArrow.c:254: case 14u: //da SU a SX
+00105$:
+;SpriteArrow.c:255: SPRITE_SET_VMIRROR(THIS);
+	ld	a, (bc)
+	set	5, a
+	ld	(bc), a
+;SpriteArrow.c:256: data->arrowdir = 1;
+	ldhl	sp,	#3
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	ld	(hl), #0x01
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+	ld	hl, #_THIS + 1
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+;SpriteArrow.c:238: THIS->x += 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1737,11 +1788,11 @@ _RedirectArrow::
 	ld	(hl), b
 ;SpriteArrow.c:258: break;
 	jp	00109$
-;SpriteArrow.c:259: case 14u: //da SU a SX
-00105$:
-;SpriteArrow.c:260: SPRITE_SET_VMIRROR(THIS);
+;SpriteArrow.c:259: case 15u: //da SU a DX
+00106$:
+;SpriteArrow.c:260: SPRITE_UNSET_VMIRROR(THIS);
 	ld	a, (bc)
-	set	5, a
+	res	5, a
 	ld	(bc), a
 ;SpriteArrow.c:261: data->arrowdir = 1;
 	ldhl	sp,	#3
@@ -1749,13 +1800,13 @@ _RedirectArrow::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x01
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
+;SpriteArrow.c:238: THIS->x += 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1763,58 +1814,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:262: THIS->x -= 4;
-	dec	hl
-	ld	e, (hl)
-	inc	hl
-	ld	d, (hl)
-	ld	a,(de)
-	ld	c, a
-	inc	de
-	ld	a,(de)
-	ld	b, a
-	ld	a, c
-	add	a, #0xfc
-	ld	c, a
-	ld	a, b
-	adc	a, #0xff
-	ld	b, a
-	dec	hl
-	ld	a, (hl+)
-	ld	h, (hl)
-	ld	l, a
-	ld	(hl), c
-	inc	hl
-	ld	(hl), b
-;SpriteArrow.c:263: break;
-	jp	00109$
-;SpriteArrow.c:264: case 15u: //da SU a DX
-00106$:
-;SpriteArrow.c:265: SPRITE_UNSET_VMIRROR(THIS);
-	ld	a, (bc)
-	res	5, a
-	ld	(bc), a
-;SpriteArrow.c:266: data->arrowdir = 1;
-	ldhl	sp,	#3
-	ld	a, (hl+)
-	ld	h, (hl)
-	ld	l, a
-	ld	(hl), #0x01
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	ld	hl, #_THIS + 1
-	dec	hl
-	ld	c, (hl)
-	inc	hl
-	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
-	ld	hl, #0x0008
-	add	hl, bc
-	ld	a, l
-	ld	d, h
-	ldhl	sp,	#3
-	ld	(hl+), a
-	ld	(hl), d
-;SpriteArrow.c:267: THIS->x += 4;
+;SpriteArrow.c:262: THIS->x += 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1835,13 +1835,13 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:244: THIS->y += 4;
+;SpriteArrow.c:239: THIS->y += 4;
 	ld	hl, #0x000a
 	add	hl, bc
 	ld	a, l
@@ -1849,7 +1849,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:268: THIS->y += 6;
+;SpriteArrow.c:263: THIS->y += 6;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1872,27 +1872,27 @@ _RedirectArrow::
 	ld	(hl), b
 	inc	hl
 	ld	(hl), c
-;SpriteArrow.c:269: break;
+;SpriteArrow.c:264: break;
 	jp	00109$
-;SpriteArrow.c:270: case 16u://da GIU a DX
+;SpriteArrow.c:265: case 16u://da GIU a DX
 00107$:
-;SpriteArrow.c:271: SPRITE_UNSET_VMIRROR(THIS);
+;SpriteArrow.c:266: SPRITE_UNSET_VMIRROR(THIS);
 	ld	a, (bc)
 	res	5, a
 	ld	(bc), a
-;SpriteArrow.c:272: data->arrowdir = 1;
+;SpriteArrow.c:267: data->arrowdir = 1;
 	ldhl	sp,	#3
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x01
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
+;SpriteArrow.c:238: THIS->x += 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1900,7 +1900,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:273: THIS->x += 4;
+;SpriteArrow.c:268: THIS->x += 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1921,13 +1921,13 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:244: THIS->y += 4;
+;SpriteArrow.c:239: THIS->y += 4;
 	ld	hl, #0x000a
 	add	hl, bc
 	ld	a, l
@@ -1935,7 +1935,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:274: THIS->y -= 4;
+;SpriteArrow.c:269: THIS->y -= 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -1958,27 +1958,27 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:275: break;
+;SpriteArrow.c:270: break;
 	jp	00109$
-;SpriteArrow.c:276: case 17u: //da GIU a SX
+;SpriteArrow.c:271: case 17u: //da GIU a SX
 00108$:
-;SpriteArrow.c:277: SPRITE_SET_VMIRROR(THIS);
+;SpriteArrow.c:272: SPRITE_SET_VMIRROR(THIS);
 	ld	a, (bc)
 	set	5, a
 	ld	(bc), a
-;SpriteArrow.c:278: data->arrowdir = 1;
+;SpriteArrow.c:273: data->arrowdir = 1;
 	ldhl	sp,	#3
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x01
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:243: THIS->x += 4;
+;SpriteArrow.c:238: THIS->x += 4;
 	ld	hl, #0x0008
 	add	hl, bc
 	ld	a, l
@@ -1986,7 +1986,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:279: THIS->x -= 4;
+;SpriteArrow.c:274: THIS->x -= 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -2009,13 +2009,13 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:239: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+;SpriteArrow.c:234: struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpriteArrow.c:244: THIS->y += 4;
+;SpriteArrow.c:239: THIS->y += 4;
 	ld	hl, #0x000a
 	add	hl, bc
 	ld	a, l
@@ -2023,7 +2023,7 @@ _RedirectArrow::
 	ldhl	sp,	#3
 	ld	(hl+), a
 	ld	(hl), d
-;SpriteArrow.c:280: THIS->y -= 4;
+;SpriteArrow.c:275: THIS->y -= 4;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -2046,9 +2046,9 @@ _RedirectArrow::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpriteArrow.c:282: }
+;SpriteArrow.c:277: }
 00109$:
-;SpriteArrow.c:283: data->type = data->original_type;
+;SpriteArrow.c:278: data->type = data->original_type;
 	pop	bc
 	push	bc
 	pop	de
@@ -2064,15 +2064,15 @@ _RedirectArrow::
 	and	a, #0xf0
 	or	a, l
 	ld	(bc), a
-;SpriteArrow.c:284: }
+;SpriteArrow.c:279: }
 	add	sp, #5
 	ret
-;SpriteArrow.c:286: void Destroy_SpriteArrow() {
+;SpriteArrow.c:281: void Destroy_SpriteArrow() {
 ;	---------------------------------
 ; Function Destroy_SpriteArrow
 ; ---------------------------------
 _Destroy_SpriteArrow::
-;SpriteArrow.c:287: }
+;SpriteArrow.c:282: }
 	ret
 	.area _CODE_2
 	.area _CABS (ABS)

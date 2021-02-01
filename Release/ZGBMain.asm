@@ -42,14 +42,14 @@ _next_state::
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;ZGBMain.c:6: UINT8 GetTileReplacement(UINT8* tile_ptr, UINT8* tile) {
+;ZGBMain.c:7: UINT8 GetTileReplacement(UINT8* tile_ptr, UINT8* tile) {
 ;	---------------------------------
 ; Function GetTileReplacement
 ; ---------------------------------
 _GetTileReplacement::
-;ZGBMain.c:17: return 255u;
+;ZGBMain.c:18: return 255u;
 	ld	e, #0xff
-;ZGBMain.c:18: }
+;ZGBMain.c:19: }
 	ret
 	.area _CODE
 	.area _CABS (ABS)

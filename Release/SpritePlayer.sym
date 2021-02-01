@@ -8,18 +8,17 @@ Symbol Table
     .__.CPU.                                                    =  0000 L
     .__.H$L.                                                    =  0000 L
     _CheckCollision                                                **** GX
-  6 _CheckCollisionTile                                            0D21 GR
-  6 _Destroy_SpritePlayer                                          0E3B GR
-  6 _Die                                                           0A99 GR
-  6 _Hit                                                           0DCD GR
-  6 _Jump                                                          0BF3 GR
-  6 _MoveArcher                                                    0C28 GR
-  6 _MoveArcherRelativePlatform                                    0CFB GR
+  6 _CheckCollisionTile                                            0E09 GR
+  6 _Destroy_SpritePlayer                                          0F66 GR
+  6 _Die                                                           0B86 GR
+  6 _Hit                                                           0EF8 GR
+  6 _Jump                                                          0CCC GR
+  6 _MoveArcher                                                    0D01 GR
     _NR50_REG                                                      **** GX
     _PlayFx                                                        **** GX
     _SetSpriteAnim                                                 **** GX
     _SetState                                                      **** GX
-  6 _Shoot                                                         0AB3 GR
+  6 _Shoot                                                         0B8C GR
     _SpriteManagerAdd                                              **** GX
     _SpriteManagerRemoveSprite                                     **** GX
   6 _Start_SpritePlayer                                            0000 GR
@@ -40,30 +39,32 @@ Symbol Table
   6 _anim_walk                                                     0065 GR
   1 _archer_accel_y                                                0008 GR
   1 _archer_data                                                   000D GR
-  1 _archer_state                                                  0007 GR
+    _archer_state                                                  **** GX
   1 _attack_wait                                                   0001 GR
   0 _bank_SpritePlayer                                             0000 GR
   1 _damage_cooldown                                               0000 GR
+  1 _death_cooldown                                                0005 GR
     _delta_time                                                    **** GX
   3 _empty                                                         0000 GR
   1 _hit_cooldown                                                  000C GR
   1 _jump_power                                                    0003 GR
     _keys                                                          **** GX
     _load_next                                                     **** GX
+    _load_next_b                                                   **** GX
     _load_next_s                                                   **** GX
   1 _platform_vx                                                   0004 GR
     _previous_keys                                                 **** GX
-  1 _princess_parent                                               0005 GR
+  1 _princess_parent                                               0006 GR
   1 _shoot_cooldown                                                0002 GR
+    _show_diag                                                     **** GX
     _sprite_manager_sprites                                        **** GX
-    _sprite_manager_updatables                                     **** GX
-  1 _tile_collision                                                000A GR
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [16-Bits]
 
 Symbol Table
 
-
+    _sprite_manager_updatables                                     **** GX
+  1 _tile_collision                                                000A GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 3.
 Hexadecimal [16-Bits]
@@ -74,8 +75,8 @@ Area Table
    1 _DATA                                      size    F   flags    0
    2 _DABS                                      size    0   flags    8
    3 _HOME                                      size    1   flags    0
-   4 _GSINIT                                    size   21   flags    0
+   4 _GSINIT                                    size   26   flags    0
    5 _GSFINAL                                   size    0   flags    0
-   6 _CODE_2                                    size  E3C   flags    0
+   6 _CODE_2                                    size  F67   flags    0
    7 _CABS                                      size    0   flags    8
 

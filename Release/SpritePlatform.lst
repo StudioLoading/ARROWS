@@ -46,10 +46,10 @@
                              46 	.area _GSINIT
                              47 	.area _GSFINAL
                              48 	.area _GSINIT
-                             49 ;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+                             49 ;custom_datas.h:54: UINT8 damage_cooldown = 30u;
    0000 21r00r00             50 	ld	hl, #_damage_cooldown
    0003 36 1E                51 	ld	(hl), #0x1e
-                             52 ;custom_datas.h:45: UINT8 attack_wait = 32u;
+                             52 ;custom_datas.h:55: UINT8 attack_wait = 32u;
    0005 21r01r00             53 	ld	hl, #_attack_wait
    0008 36 20                54 	ld	(hl), #0x20
                              55 ;--------------------------------------------------------

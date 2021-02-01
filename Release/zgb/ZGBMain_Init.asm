@@ -9,6 +9,9 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _InitSprites
+	.globl _Destroy_SpriteWolf
+	.globl _Update_SpriteWolf
+	.globl _Start_SpriteWolf
 	.globl _Destroy_SpritePorcupine
 	.globl _Update_SpritePorcupine
 	.globl _Start_SpritePorcupine
@@ -18,6 +21,12 @@
 	.globl _Destroy_SpriteEnemy
 	.globl _Update_SpriteEnemy
 	.globl _Start_SpriteEnemy
+	.globl _Destroy_SpriteDiagface
+	.globl _Update_SpriteDiagface
+	.globl _Start_SpriteDiagface
+	.globl _Destroy_SpriteKey
+	.globl _Update_SpriteKey
+	.globl _Start_SpriteKey
 	.globl _Destroy_SpriteItem
 	.globl _Update_SpriteItem
 	.globl _Start_SpriteItem
@@ -33,6 +42,8 @@
 	.globl _InitStates
 	.globl _Update_StateGameOver
 	.globl _Start_StateGameOver
+	.globl _Update_StateBoss
+	.globl _Start_StateBoss
 	.globl _Update_StateSecret
 	.globl _Start_StateSecret
 	.globl _Update_StateGame
@@ -55,25 +66,25 @@
 ;--------------------------------------------------------
 	.area _DATA
 _stateBanks::
-	.ds 3
+	.ds 4
 _startFuncs::
-	.ds 6
+	.ds 8
 _updateFuncs::
-	.ds 6
+	.ds 8
 _spriteBanks::
-	.ds 7
+	.ds 10
 _spriteDataBanks::
-	.ds 7
+	.ds 10
 _spriteStartFuncs::
-	.ds 14
+	.ds 20
 _spriteUpdateFuncs::
-	.ds 14
+	.ds 20
 _spriteDestroyFuncs::
-	.ds 14
+	.ds 20
 _spriteDatas::
-	.ds 14
+	.ds 20
 _spriteIdxs::
-	.ds 7
+	.ds 10
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -108,10 +119,10 @@ _InitStates::
 	ld	(hl), #<(_Update_StateGame)
 	inc	hl
 	ld	(hl), #>(_Update_StateGame)
-	ld	bc, #_stateBanks+0
+	ld	de, #_stateBanks
 	ld	hl, #_bank_StateGame
 	ld	a, (hl)
-	ld	(bc), a
+	ld	(de), a
 	ld	hl, #(_startFuncs + 0x0002)
 	ld	(hl), #<(_Start_StateSecret)
 	inc	hl
@@ -125,18 +136,29 @@ _InitStates::
 	ld	a, (hl)
 	ld	(de), a
 	ld	hl, #(_startFuncs + 0x0004)
+	ld	(hl), #<(_Start_StateBoss)
+	inc	hl
+	ld	(hl), #>(_Start_StateBoss)
+	ld	hl, #(_updateFuncs + 0x0004)
+	ld	(hl), #<(_Update_StateBoss)
+	inc	hl
+	ld	(hl), #>(_Update_StateBoss)
+	ld	de, #(_stateBanks + 0x0002)
+	ld	hl, #_bank_StateBoss
+	ld	a, (hl)
+	ld	(de), a
+	ld	hl, #(_startFuncs + 0x0006)
 	ld	(hl), #<(_Start_StateGameOver)
 	inc	hl
 	ld	(hl), #>(_Start_StateGameOver)
-	ld	hl, #(_updateFuncs + 0x0004)
+	ld	hl, #(_updateFuncs + 0x0006)
 	ld	(hl), #<(_Update_StateGameOver)
 	inc	hl
 	ld	(hl), #>(_Update_StateGameOver)
-	inc	bc
-	inc	bc
+	ld	de, #(_stateBanks + 0x0003)
 	ld	hl, #_bank_StateGameOver
 	ld	a, (hl)
-	ld	(bc), a
+	ld	(de), a
 ;C:/GB/ZGB/common/src/ZGBMain_Init.c:24: }
 	ret
 ;C:/GB/ZGB/common/src/ZGBMain_Init.c:65: void InitSprites() {
@@ -254,25 +276,25 @@ _InitSprites::
 	inc	hl
 	ld	(hl), b
 	ld	de, #(_spriteBanks + 0x0004)
-	ld	hl, #_bank_SpriteEnemy
+	ld	hl, #_bank_SpriteKey
 	ld	a, (hl)
 	ld	(de), a
 	ld	bc, #_spriteDataBanks + 4
-	ld	a, (#_enemy + 0)
+	ld	a, (#_key + 0)
 	ld	(bc), a
 	ld	hl, #(_spriteStartFuncs + 0x0008)
-	ld	(hl), #<(_Start_SpriteEnemy)
+	ld	(hl), #<(_Start_SpriteKey)
 	inc	hl
-	ld	(hl), #>(_Start_SpriteEnemy)
+	ld	(hl), #>(_Start_SpriteKey)
 	ld	hl, #(_spriteUpdateFuncs + 0x0008)
-	ld	(hl), #<(_Update_SpriteEnemy)
+	ld	(hl), #<(_Update_SpriteKey)
 	inc	hl
-	ld	(hl), #>(_Update_SpriteEnemy)
+	ld	(hl), #>(_Update_SpriteKey)
 	ld	hl, #(_spriteDestroyFuncs + 0x0008)
-	ld	(hl), #<(_Destroy_SpriteEnemy)
+	ld	(hl), #<(_Destroy_SpriteKey)
 	inc	hl
-	ld	(hl), #>(_Destroy_SpriteEnemy)
-	ld	hl, #(_enemy + 0x0001) + 0
+	ld	(hl), #>(_Destroy_SpriteKey)
+	ld	hl, #(_key + 0x0001) + 0
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
@@ -281,25 +303,25 @@ _InitSprites::
 	inc	hl
 	ld	(hl), b
 	ld	de, #(_spriteBanks + 0x0005)
-	ld	hl, #_bank_SpriteScorpion
+	ld	hl, #_bank_SpriteDiagface
 	ld	a, (hl)
 	ld	(de), a
 	ld	bc, #_spriteDataBanks + 5
-	ld	a, (#_scorpion + 0)
+	ld	a, (#_diagface + 0)
 	ld	(bc), a
 	ld	hl, #(_spriteStartFuncs + 0x000a)
-	ld	(hl), #<(_Start_SpriteScorpion)
+	ld	(hl), #<(_Start_SpriteDiagface)
 	inc	hl
-	ld	(hl), #>(_Start_SpriteScorpion)
+	ld	(hl), #>(_Start_SpriteDiagface)
 	ld	hl, #(_spriteUpdateFuncs + 0x000a)
-	ld	(hl), #<(_Update_SpriteScorpion)
+	ld	(hl), #<(_Update_SpriteDiagface)
 	inc	hl
-	ld	(hl), #>(_Update_SpriteScorpion)
+	ld	(hl), #>(_Update_SpriteDiagface)
 	ld	hl, #(_spriteDestroyFuncs + 0x000a)
-	ld	(hl), #<(_Destroy_SpriteScorpion)
+	ld	(hl), #<(_Destroy_SpriteDiagface)
 	inc	hl
-	ld	(hl), #>(_Destroy_SpriteScorpion)
-	ld	hl, #(_scorpion + 0x0001) + 0
+	ld	(hl), #>(_Destroy_SpriteDiagface)
+	ld	hl, #(_diagface + 0x0001) + 0
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
@@ -308,21 +330,75 @@ _InitSprites::
 	inc	hl
 	ld	(hl), b
 	ld	de, #(_spriteBanks + 0x0006)
-	ld	hl, #_bank_SpritePorcupine
+	ld	hl, #_bank_SpriteEnemy
 	ld	a, (hl)
 	ld	(de), a
 	ld	bc, #_spriteDataBanks + 6
-	ld	a, (#_porcupine + 0)
+	ld	a, (#_enemy + 0)
 	ld	(bc), a
 	ld	hl, #(_spriteStartFuncs + 0x000c)
+	ld	(hl), #<(_Start_SpriteEnemy)
+	inc	hl
+	ld	(hl), #>(_Start_SpriteEnemy)
+	ld	hl, #(_spriteUpdateFuncs + 0x000c)
+	ld	(hl), #<(_Update_SpriteEnemy)
+	inc	hl
+	ld	(hl), #>(_Update_SpriteEnemy)
+	ld	hl, #(_spriteDestroyFuncs + 0x000c)
+	ld	(hl), #<(_Destroy_SpriteEnemy)
+	inc	hl
+	ld	(hl), #>(_Destroy_SpriteEnemy)
+	ld	hl, #(_enemy + 0x0001) + 0
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	ld	hl, #(_spriteDatas + 0x000c)
+	ld	(hl), c
+	inc	hl
+	ld	(hl), b
+	ld	de, #(_spriteBanks + 0x0007)
+	ld	hl, #_bank_SpriteScorpion
+	ld	a, (hl)
+	ld	(de), a
+	ld	bc, #_spriteDataBanks + 7
+	ld	a, (#_scorpion + 0)
+	ld	(bc), a
+	ld	hl, #(_spriteStartFuncs + 0x000e)
+	ld	(hl), #<(_Start_SpriteScorpion)
+	inc	hl
+	ld	(hl), #>(_Start_SpriteScorpion)
+	ld	hl, #(_spriteUpdateFuncs + 0x000e)
+	ld	(hl), #<(_Update_SpriteScorpion)
+	inc	hl
+	ld	(hl), #>(_Update_SpriteScorpion)
+	ld	hl, #(_spriteDestroyFuncs + 0x000e)
+	ld	(hl), #<(_Destroy_SpriteScorpion)
+	inc	hl
+	ld	(hl), #>(_Destroy_SpriteScorpion)
+	ld	hl, #(_scorpion + 0x0001) + 0
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	ld	hl, #(_spriteDatas + 0x000e)
+	ld	(hl), c
+	inc	hl
+	ld	(hl), b
+	ld	de, #(_spriteBanks + 0x0008)
+	ld	hl, #_bank_SpritePorcupine
+	ld	a, (hl)
+	ld	(de), a
+	ld	bc, #_spriteDataBanks + 8
+	ld	a, (#_porcupine + 0)
+	ld	(bc), a
+	ld	hl, #(_spriteStartFuncs + 0x0010)
 	ld	(hl), #<(_Start_SpritePorcupine)
 	inc	hl
 	ld	(hl), #>(_Start_SpritePorcupine)
-	ld	hl, #(_spriteUpdateFuncs + 0x000c)
+	ld	hl, #(_spriteUpdateFuncs + 0x0010)
 	ld	(hl), #<(_Update_SpritePorcupine)
 	inc	hl
 	ld	(hl), #>(_Update_SpritePorcupine)
-	ld	hl, #(_spriteDestroyFuncs + 0x000c)
+	ld	hl, #(_spriteDestroyFuncs + 0x0010)
 	ld	(hl), #<(_Destroy_SpritePorcupine)
 	inc	hl
 	ld	(hl), #>(_Destroy_SpritePorcupine)
@@ -330,7 +406,34 @@ _InitSprites::
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-	ld	hl, #(_spriteDatas + 0x000c)
+	ld	hl, #(_spriteDatas + 0x0010)
+	ld	(hl), c
+	inc	hl
+	ld	(hl), b
+	ld	de, #(_spriteBanks + 0x0009)
+	ld	hl, #_bank_SpriteWolf
+	ld	a, (hl)
+	ld	(de), a
+	ld	bc, #_spriteDataBanks + 9
+	ld	a, (#_wolf + 0)
+	ld	(bc), a
+	ld	hl, #(_spriteStartFuncs + 0x0012)
+	ld	(hl), #<(_Start_SpriteWolf)
+	inc	hl
+	ld	(hl), #>(_Start_SpriteWolf)
+	ld	hl, #(_spriteUpdateFuncs + 0x0012)
+	ld	(hl), #<(_Update_SpriteWolf)
+	inc	hl
+	ld	(hl), #>(_Update_SpriteWolf)
+	ld	hl, #(_spriteDestroyFuncs + 0x0012)
+	ld	(hl), #<(_Destroy_SpriteWolf)
+	inc	hl
+	ld	(hl), #>(_Destroy_SpriteWolf)
+	ld	hl, #(_wolf + 0x0001) + 0
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	ld	hl, #(_spriteDatas + 0x0012)
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b

@@ -8,21 +8,22 @@
 
 #include "custom_datas.h"
 
-//SCORPTION
+//SCORPION
 const UINT8 scorpion_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 scorpion_walk[] = {2, 0, 1}; //The first number indicates the number of frames
+const UINT8 scorpion_walk[] = {4, 0, 6, 1, 6}; //The first number indicates the number of frames
 const UINT8 scorpion_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
 const UINT8 scorpion_dead[] = {1, 5}; //The first number indicates the number of frames
 
-/*UINT8 damage_cooldown = 30u;
-*/
+extern void CheckCollisionETile();
+extern void ETurn();
+
 
 void Start_SpriteScorpion() {
 	
 	THIS->coll_x = 2;
-	THIS->coll_y = 0;
-	THIS->coll_w = 12;
-	THIS->coll_h = 16;
+	THIS->coll_y = 5;
+	THIS->coll_w = 8;
+	THIS->coll_h = 11;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	

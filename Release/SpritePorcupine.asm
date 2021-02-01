@@ -11,6 +11,7 @@
 	.globl _Destroy_SpritePorcupine
 	.globl _Update_SpritePorcupine
 	.globl _Start_SpritePorcupine
+	.globl _CheckCollisionETile
 	.globl _SpriteManagerRemoveSprite
 	.globl _SpriteManagerAdd
 	.globl _CheckCollision
@@ -53,10 +54,10 @@ _bank_SpritePorcupine:
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;custom_datas.h:44: UINT8 damage_cooldown = 30u;
+;custom_datas.h:54: UINT8 damage_cooldown = 30u;
 	ld	hl, #_damage_cooldown
 	ld	(hl), #0x1e
-;custom_datas.h:45: UINT8 attack_wait = 32u;
+;custom_datas.h:55: UINT8 attack_wait = 32u;
 	ld	hl, #_attack_wait
 	ld	(hl), #0x20
 ;--------------------------------------------------------
@@ -74,13 +75,13 @@ _empty::
 ; code
 ;--------------------------------------------------------
 	.area _CODE_2
-;SpritePorcupine.c:18: void Start_SpritePorcupine() {
+;SpritePorcupine.c:20: void Start_SpritePorcupine() {
 ;	---------------------------------
 ; Function Start_SpritePorcupine
 ; ---------------------------------
 _Start_SpritePorcupine::
 	add	sp, #-2
-;SpritePorcupine.c:20: THIS->coll_x = 2;
+;SpritePorcupine.c:22: THIS->coll_x = 2;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -91,7 +92,7 @@ _Start_SpritePorcupine::
 	ld	c,l
 	ld	a,h
 	ld	(hl), #0x02
-;SpritePorcupine.c:21: THIS->coll_y = 0;
+;SpritePorcupine.c:23: THIS->coll_y = 8;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -99,11 +100,10 @@ _Start_SpritePorcupine::
 	ld	b, (hl)
 	ld	hl, #0x000e
 	add	hl, bc
-	ld	c, l
-	ld	b, h
-	xor	a, a
-	ld	(bc), a
-;SpritePorcupine.c:22: THIS->coll_w = 12;
+	ld	c,l
+	ld	a,h
+	ld	(hl), #0x08
+;SpritePorcupine.c:24: THIS->coll_w = 8;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -113,8 +113,8 @@ _Start_SpritePorcupine::
 	add	hl, bc
 	ld	c,l
 	ld	a,h
-	ld	(hl), #0x0c
-;SpritePorcupine.c:23: THIS->coll_h = 16;
+	ld	(hl), #0x08
+;SpritePorcupine.c:25: THIS->coll_h = 8;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -124,8 +124,8 @@ _Start_SpritePorcupine::
 	add	hl, bc
 	ld	c,l
 	ld	a,h
-	ld	(hl), #0x10
-;SpritePorcupine.c:24: THIS->lim_x = 255u;
+	ld	(hl), #0x08
+;SpritePorcupine.c:26: THIS->lim_x = 255u;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -141,7 +141,7 @@ _Start_SpritePorcupine::
 	ld	(hl), #0xff
 	inc	hl
 	ld	(hl), #0x00
-;SpritePorcupine.c:25: THIS->lim_y = 244u;
+;SpritePorcupine.c:27: THIS->lim_y = 244u;
 	ld	hl, #_THIS
 	ld	b, (hl)
 	inc	hl
@@ -157,7 +157,7 @@ _Start_SpritePorcupine::
 	ld	(hl), #0xf4
 	inc	hl
 	ld	(hl), #0x00
-;SpritePorcupine.c:26: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
+;SpritePorcupine.c:28: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -168,7 +168,7 @@ _Start_SpritePorcupine::
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;SpritePorcupine.c:27: SetSpriteAnim(THIS, porcupine_idle, 8u);
+;SpritePorcupine.c:29: SetSpriteAnim(THIS, porcupine_idle, 8u);
 	push	bc
 	ld	a, #0x08
 	push	af
@@ -183,13 +183,13 @@ _Start_SpritePorcupine::
 	call	_SetSpriteAnim
 	add	sp, #5
 	pop	bc
-;SpritePorcupine.c:28: data->enemy_accel_y = 24;
+;SpritePorcupine.c:30: data->enemy_accel_y = 24;
 	ld	l, c
 	ld	h, b
 	ld	(hl), #0x18
 	inc	hl
 	ld	(hl), #0x00
-;SpritePorcupine.c:29: data->vx = 1;
+;SpritePorcupine.c:31: data->vx = 1;
 	ld	hl, #0x0004
 	add	hl, bc
 	inc	sp
@@ -198,7 +198,7 @@ _Start_SpritePorcupine::
 	pop	hl
 	push	hl
 	ld	(hl), #0x01
-;SpritePorcupine.c:30: data->wait = 0u;
+;SpritePorcupine.c:32: data->wait = 0u;
 	ld	hl, #0x0005
 	add	hl, bc
 	inc	sp
@@ -207,7 +207,7 @@ _Start_SpritePorcupine::
 	pop	hl
 	push	hl
 	ld	(hl), #0x00
-;SpritePorcupine.c:31: data->enemydamage = 15u;
+;SpritePorcupine.c:33: data->enemydamage = 15u;
 	ld	hl, #0x0006
 	add	hl, bc
 	inc	sp
@@ -216,7 +216,7 @@ _Start_SpritePorcupine::
 	pop	hl
 	push	hl
 	ld	(hl), #0x0f
-;SpritePorcupine.c:32: data->hp = 30u;
+;SpritePorcupine.c:34: data->hp = 30u;
 	ld	hl, #0x0007
 	add	hl, bc
 	inc	sp
@@ -225,21 +225,23 @@ _Start_SpritePorcupine::
 	pop	hl
 	push	hl
 	ld	(hl), #0x1e
-;SpritePorcupine.c:33: data->enemy_state = ENEMY_STATE_NORMAL;
+;SpritePorcupine.c:35: data->enemy_state = ENEMY_STATE_NORMAL;
 	inc	bc
 	inc	bc
 	xor	a, a
 	ld	(bc), a
-;SpritePorcupine.c:34: }
+;SpritePorcupine.c:36: }
 	add	sp, #2
 	ret
 _porcupine_idle:
 	.db #0x01	; 1
 	.db #0x00	; 0
 _porcupine_walk:
-	.db #0x02	; 2
+	.db #0x04	; 4
 	.db #0x00	; 0
+	.db #0x06	; 6
 	.db #0x01	; 1
+	.db #0x06	; 6
 _porcupine_hit:
 	.db #0x03	; 3
 	.db #0x02	; 2
@@ -254,13 +256,13 @@ _porcupine_attack:
 	.db #0x07	; 7
 	.db #0x07	; 7
 	.db #0x07	; 7
-;SpritePorcupine.c:36: void Update_SpritePorcupine() {
+;SpritePorcupine.c:38: void Update_SpritePorcupine() {
 ;	---------------------------------
 ; Function Update_SpritePorcupine
 ; ---------------------------------
 _Update_SpritePorcupine::
 	add	sp, #-11
-;SpritePorcupine.c:38: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpritePorcupine.c:40: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -278,7 +280,7 @@ _Update_SpritePorcupine::
 	inc	sp
 	inc	sp
 	push	bc
-;SpritePorcupine.c:40: if (data->enemy_state == ENEMY_STATE_DEAD){
+;SpritePorcupine.c:42: if (data->enemy_state == ENEMY_STATE_DEAD){
 	pop	de
 	push	de
 	ld	hl, #0x0002
@@ -295,7 +297,7 @@ _Update_SpritePorcupine::
 	ld	a,(de)
 	ldhl	sp,	#9
 	ld	(hl), a
-;SpritePorcupine.c:41: if (data->wait > 0){
+;SpritePorcupine.c:43: if (data->wait > 0){
 	pop	de
 	push	de
 	ld	hl, #0x0005
@@ -311,12 +313,12 @@ _Update_SpritePorcupine::
 	ld	d, (hl)
 	ld	a,(de)
 	ldhl	sp,	#10
-;SpritePorcupine.c:40: if (data->enemy_state == ENEMY_STATE_DEAD){
+;SpritePorcupine.c:42: if (data->enemy_state == ENEMY_STATE_DEAD){
 	ld	(hl-), a
 	ld	a, (hl)
 	sub	a, #0x03
 	jp	NZ,00105$
-;SpritePorcupine.c:42: THIS->y--;
+;SpritePorcupine.c:44: THIS->y--;
 	ldhl	sp,#(8 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -337,12 +339,12 @@ _Update_SpritePorcupine::
 	inc	de
 	ld	a,(de)
 	ld	b, a
-;SpritePorcupine.c:41: if (data->wait > 0){
+;SpritePorcupine.c:43: if (data->wait > 0){
 	ldhl	sp,	#10
 	ld	a, (hl)
 	or	a, a
 	jr	Z,00102$
-;SpritePorcupine.c:42: THIS->y--;
+;SpritePorcupine.c:44: THIS->y--;
 	dec	bc
 	ldhl	sp,	#2
 	ld	a, (hl+)
@@ -351,7 +353,7 @@ _Update_SpritePorcupine::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpritePorcupine.c:43: data->wait--;
+;SpritePorcupine.c:45: data->wait--;
 	ldhl	sp,#(5 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -366,7 +368,7 @@ _Update_SpritePorcupine::
 	ld	(hl), c
 	jp	00139$
 00102$:
-;SpritePorcupine.c:45: THIS->y++;	
+;SpritePorcupine.c:47: THIS->y++;	
 	inc	bc
 	ldhl	sp,	#2
 	ld	a, (hl+)
@@ -375,7 +377,7 @@ _Update_SpritePorcupine::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpritePorcupine.c:46: THIS->y++;
+;SpritePorcupine.c:48: THIS->y++;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
@@ -405,15 +407,15 @@ _Update_SpritePorcupine::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpritePorcupine.c:48: return;
+;SpritePorcupine.c:50: return;
 	jp	00139$
 00105$:
-;SpritePorcupine.c:51: if (data->enemy_state == ENEMY_STATE_ATTACK){
+;SpritePorcupine.c:53: if (data->enemy_state == ENEMY_STATE_ATTACK){
 	ldhl	sp,	#9
 	ld	a, (hl)
 	sub	a, #0x04
 	jp	NZ,00114$
-;SpritePorcupine.c:52: if (data->wait == attack_wait){SetSpriteAnim(THIS, porcupine_attack, 8u);}
+;SpritePorcupine.c:54: if (data->wait == attack_wait){SetSpriteAnim(THIS, porcupine_attack, 8u);}
 	ld	hl, #_attack_wait
 	ld	a, (hl)
 	ldhl	sp,	#10
@@ -432,7 +434,7 @@ _Update_SpritePorcupine::
 	call	_SetSpriteAnim
 	add	sp, #5
 00107$:
-;SpritePorcupine.c:53: if (data->wait == 1u){
+;SpritePorcupine.c:55: if (data->wait == 1u){
 	ldhl	sp,#(5 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -440,7 +442,7 @@ _Update_SpritePorcupine::
 	ld	a,(de)
 	dec	a
 	jp	NZ,00114$
-;SpritePorcupine.c:54: struct Sprite* arrow_e_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
+;SpritePorcupine.c:56: struct Sprite* arrow_e_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
 	ld	hl, #0x0000
 	push	hl
 	ld	l, #0x00
@@ -454,7 +456,7 @@ _Update_SpritePorcupine::
 	ld	(hl), e
 	inc	hl
 	ld	(hl), d
-;SpritePorcupine.c:55: struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_e_sprite->custom_data;
+;SpritePorcupine.c:57: struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_e_sprite->custom_data;
 	dec	hl
 	ld	e, (hl)
 	inc	hl
@@ -464,7 +466,7 @@ _Update_SpritePorcupine::
 	ld	c, l
 	ld	a, h
 	ld	b, a
-;SpritePorcupine.c:56: arrow_data->arrowdir = 1;
+;SpritePorcupine.c:58: arrow_data->arrowdir = 1;
 	ld	hl, #0x0003
 	add	hl, bc
 	ld	a, l
@@ -477,21 +479,21 @@ _Update_SpritePorcupine::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), #0x01
-;SpritePorcupine.c:57: arrow_data->type = 6;
+;SpritePorcupine.c:59: arrow_data->type = 6;
 	ld	e, c
 	ld	d, b
 	ld	a, (de)
 	and	a, #0xf0
 	or	a, #0x06
 	ld	(de),a
-;SpritePorcupine.c:58: arrow_data->arrowdamage = 10u;
+;SpritePorcupine.c:60: arrow_data->arrowdamage = 10u;
 	inc	bc
 	inc	bc
 	inc	bc
 	inc	bc
 	ld	a, #0x0a
 	ld	(bc), a
-;SpritePorcupine.c:59: arrow_e_sprite->flags = THIS->flags;
+;SpritePorcupine.c:61: arrow_e_sprite->flags = THIS->flags;
 	ldhl	sp,#(7 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -518,13 +520,13 @@ _Update_SpritePorcupine::
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), c
-;SpritePorcupine.c:38: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+;SpritePorcupine.c:40: struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	ld	hl, #_THIS + 1
 	dec	hl
 	ld	c, (hl)
 	inc	hl
 	ld	b, (hl)
-;SpritePorcupine.c:60: if(SPRITE_GET_VMIRROR(THIS)){arrow_e_sprite->x = THIS->x-16;}
+;SpritePorcupine.c:62: if(SPRITE_GET_VMIRROR(THIS)){arrow_e_sprite->x = THIS->x-16;}
 	ld	hl, #0x000c
 	add	hl, bc
 	ld	a, l
@@ -576,7 +578,7 @@ _Update_SpritePorcupine::
 	ld	(hl), c
 	jr	00110$
 00109$:
-;SpritePorcupine.c:61: else{arrow_e_sprite->x = THIS->x+10;}
+;SpritePorcupine.c:63: else{arrow_e_sprite->x = THIS->x+10;}
 	ld	a, b
 	add	a, #0x0a
 	ld	b, a
@@ -591,7 +593,7 @@ _Update_SpritePorcupine::
 	inc	hl
 	ld	(hl), c
 00110$:
-;SpritePorcupine.c:62: arrow_e_sprite->y = THIS->y + 2;
+;SpritePorcupine.c:64: arrow_e_sprite->y = THIS->y + 2;
 	ldhl	sp,#(7 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -628,7 +630,7 @@ _Update_SpritePorcupine::
 	inc	hl
 	ld	(hl), b
 00114$:
-;SpritePorcupine.c:66: if (data->wait > 0u){
+;SpritePorcupine.c:68: if (data->wait > 0u){
 	ldhl	sp,#(5 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -638,19 +640,19 @@ _Update_SpritePorcupine::
 	ld	(hl),a
 	or	a, a
 	jr	Z,00129$
-;SpritePorcupine.c:67: data->wait -= 1u;
+;SpritePorcupine.c:69: data->wait -= 1u;
 	ld	c, (hl)
 	dec	c
 	ldhl	sp,	#4
 	ld	a, (hl+)
 	ld	h, (hl)
 	ld	l, a
-;SpritePorcupine.c:68: if (data->wait == 0u){
+;SpritePorcupine.c:70: if (data->wait == 0u){
 	ld	a,c
 	ld	(hl),a
 	or	a, a
 	jp	NZ, 00130$
-;SpritePorcupine.c:69: SetSpriteAnim(THIS, porcupine_walk, 8u);
+;SpritePorcupine.c:71: SetSpriteAnim(THIS, porcupine_walk, 8u);
 	ld	a, #0x08
 	push	af
 	inc	sp
@@ -663,7 +665,7 @@ _Update_SpritePorcupine::
 	push	hl
 	call	_SetSpriteAnim
 	add	sp, #5
-;SpritePorcupine.c:70: data->enemy_state = ENEMY_STATE_NORMAL;
+;SpritePorcupine.c:72: data->enemy_state = ENEMY_STATE_NORMAL;
 	pop	bc
 	pop	hl
 	push	hl
@@ -671,7 +673,7 @@ _Update_SpritePorcupine::
 	ld	(hl), #0x00
 	jp	00130$
 00129$:
-;SpritePorcupine.c:73: if(data->enemy_accel_y < 24) {
+;SpritePorcupine.c:75: if(data->enemy_accel_y < 24) {
 	pop	de
 	push	de
 	ld	a,(de)
@@ -687,7 +689,7 @@ _Update_SpritePorcupine::
 	rra
 	sbc	a, #0x80
 	jr	NC,00118$
-;SpritePorcupine.c:74: data->enemy_accel_y += 1;
+;SpritePorcupine.c:76: data->enemy_accel_y += 1;
 	inc	bc
 	pop	hl
 	push	hl
@@ -695,7 +697,7 @@ _Update_SpritePorcupine::
 	inc	hl
 	ld	(hl), b
 00118$:
-;SpritePorcupine.c:76: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+;SpritePorcupine.c:78: data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
 	pop	de
 	push	de
 	ld	hl, #0x0003
@@ -771,14 +773,14 @@ _Update_SpritePorcupine::
 	ld	l, a
 	pop	af
 	ld	(hl), a
-;SpritePorcupine.c:78: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+;SpritePorcupine.c:80: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
 	or	a, a
 	jp	NZ, 00120$
 	ld	hl, #_delta_time
 	ld	a, (hl)
 	or	a, a
 	jp	Z, 00120$
-;SpritePorcupine.c:73: if(data->enemy_accel_y < 24) {
+;SpritePorcupine.c:75: if(data->enemy_accel_y < 24) {
 	pop	de
 	push	de
 	ld	a,(de)
@@ -786,7 +788,7 @@ _Update_SpritePorcupine::
 	inc	de
 	ld	a,(de)
 	ld	b, a
-;SpritePorcupine.c:78: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+;SpritePorcupine.c:80: if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
 	ld	a, c
 	sub	a, #0x18
 	ld	a, b
@@ -795,7 +797,7 @@ _Update_SpritePorcupine::
 	rra
 	sbc	a, #0x80
 	jp	NC, 00120$
-;SpritePorcupine.c:79: data->enemy_accel_y += 2;
+;SpritePorcupine.c:81: data->enemy_accel_y += 2;
 	inc	bc
 	inc	bc
 	pop	hl
@@ -803,7 +805,7 @@ _Update_SpritePorcupine::
 	ld	(hl), c
 	inc	hl
 	ld	(hl), b
-;SpritePorcupine.c:80: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
+;SpritePorcupine.c:82: data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
 	sra	b
 	rr	c
 	sra	b
@@ -841,7 +843,7 @@ _Update_SpritePorcupine::
 	ld	l, a
 	ld	(hl), c
 00120$:
-;SpritePorcupine.c:82: if(data->tile_e_collision) {
+;SpritePorcupine.c:84: if(data->tile_e_collision) {
 	ldhl	sp,#(9 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -849,7 +851,7 @@ _Update_SpritePorcupine::
 	ld	a,(de)
 	or	a, a
 	jp	Z, 00130$
-;SpritePorcupine.c:83: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
+;SpritePorcupine.c:85: if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -891,7 +893,7 @@ _Update_SpritePorcupine::
 	ldhl	sp,	#10
 	and	a,(hl)
 	jr	Z,00124$
-;SpritePorcupine.c:84: data->enemy_state = ENEMY_STATE_NORMAL;
+;SpritePorcupine.c:86: data->enemy_state = ENEMY_STATE_NORMAL;
 	pop	bc
 	pop	hl
 	push	hl
@@ -899,17 +901,17 @@ _Update_SpritePorcupine::
 	ld	(hl), #0x00
 	jr	00125$
 00124$:
-;SpritePorcupine.c:86: data->enemy_accel_y = 0;	
+;SpritePorcupine.c:88: data->enemy_accel_y = 0;	
 	pop	hl
 	push	hl
 	xor	a, a
 	ld	(hl+), a
 	ld	(hl), a
 00125$:
-;SpritePorcupine.c:88: CheckCollisionETile();
+;SpritePorcupine.c:90: CheckCollisionETile();
 	call	_CheckCollisionETile
 00130$:
-;SpritePorcupine.c:96: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+;SpritePorcupine.c:98: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 	ld	a, (#(_sprite_manager_updatables + 0x0001) + 0)
 	ld	c, a
 	ld	b, #0x00
@@ -934,7 +936,7 @@ _Update_SpritePorcupine::
 	ld	a, (hl-)
 	sub	a, (hl)
 	jp	Z,00139$
-;SpritePorcupine.c:97: if(iespr->type == SpriteArrow) {
+;SpritePorcupine.c:99: if(iespr->type == SpriteArrow) {
 	ld	hl, #0x0011
 	add	hl, bc
 	ld	a, l
@@ -949,7 +951,7 @@ _Update_SpritePorcupine::
 	ld	a,(de)
 	dec	a
 	jr	NZ,00138$
-;SpritePorcupine.c:98: if(CheckCollision(THIS, iespr)) {
+;SpritePorcupine.c:100: if(CheckCollision(THIS, iespr)) {
 	push	bc
 	push	bc
 	ld	hl, #_THIS
@@ -963,12 +965,12 @@ _Update_SpritePorcupine::
 	pop	bc
 	or	a, a
 	jr	Z,00138$
-;SpritePorcupine.c:99: SpriteManagerRemoveSprite(iespr);
+;SpritePorcupine.c:101: SpriteManagerRemoveSprite(iespr);
 	push	bc
 	call	_SpriteManagerRemoveSprite
 	add	sp, #2
 00138$:
-;SpritePorcupine.c:96: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
+;SpritePorcupine.c:98: SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 	ldhl	sp,	#10
 	inc	(hl)
 	ld	c, (hl)
@@ -991,15 +993,15 @@ _Update_SpritePorcupine::
 	ld	b, (hl)
 	jp	00137$
 00139$:
-;SpritePorcupine.c:104: }
+;SpritePorcupine.c:106: }
 	add	sp, #11
 	ret
-;SpritePorcupine.c:106: void Destroy_SpritePorcupine() {
+;SpritePorcupine.c:108: void Destroy_SpritePorcupine() {
 ;	---------------------------------
 ; Function Destroy_SpritePorcupine
 ; ---------------------------------
 _Destroy_SpritePorcupine::
-;SpritePorcupine.c:107: }
+;SpritePorcupine.c:109: }
 	ret
 	.area _CODE_2
 	.area _CABS (ABS)
