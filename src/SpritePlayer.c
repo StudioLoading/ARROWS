@@ -128,6 +128,13 @@ void Update_SpritePlayer() {
 					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
 					else{SetSpriteAnim(THIS, anim_idle, 33u);}					
 				}
+				/*
+				if(KEY_TICKED(J_UP)){			
+					if(show_diag<0){show_diag=0;}
+					show_diag += 1;
+					archer_state = STATE_DIAG;
+					return;
+				}*/
 				if(KEY_PRESSED(J_UP)){
 					aimc += 1;
 					if(aimc >= 16){
@@ -137,9 +144,6 @@ void Update_SpritePlayer() {
 				if(KEY_RELEASED(J_UP)){
 					aimc = 0;
 					//if (aimc > 0){
-						if(show_diag<0){show_diag=0;}
-						show_diag += 1;
-						archer_state = STATE_DIAG;
 					//}
 					return;
 				}
@@ -420,7 +424,7 @@ void Jump() {
 		NR50_REG = 0x22; //Max volume		
 		//PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 		archer_state = STATE_JUMPING;
-		archer_accel_y = -8;
+		archer_accel_y = -12;
 		princess_parent = 0;
 		SetSpriteAnim(THIS, anim_jump_up, 12u);
 	}

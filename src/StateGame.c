@@ -225,10 +225,10 @@ void ShowDiag(){
 	Printf(ddd[1]);
 	if (showing_diag == 0){	
 		if (face == 0){
-			struct Sprite* face_sprite = SpriteManagerAdd(SpriteDiagface, 8, 144);
+			/*struct Sprite* face_sprite = SpriteManagerAdd(SpriteDiagface, 8, 144);
 			struct FaceInfo* face_data = (struct FaceInfo*)face_sprite->custom_data;
 			face_data->face_type = face;
-			face_data->face_setup = 1;
+			face_data->face_setup = 1;*/
 		}	
 		showing_diag = 1;
 	}
