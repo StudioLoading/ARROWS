@@ -1,6 +1,6 @@
 #pragma bank 0
 
-void empty(void) __nonbanked {}
+void empty(void) __nonbanked;
 __addressmod empty const CODE;
 
 const unsigned char font_tiles[] = {

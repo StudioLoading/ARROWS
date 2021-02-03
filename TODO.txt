@@ -1,3 +1,10 @@
+const unsigned char window_alt_map[] = {74,75,76,77};
+.
+.
+// Where you want to make the change. change START/etc to what you want
+set_win_tiles(START_X, START_Y, WIDTH, HEIGHT, window_alt_map);
+
+
 
 
 WINDOW DI DIALOGO:
@@ -26,41 +33,78 @@ SOSTITUIRLE CON BLANK QUANDO CI VADO SOPRA ?
 DISCORD MARKDOWN:
 
 SpritePlayer.c
-```c
-SetSpriteAnim(THIS, anim_shoot, 16u);
-	struct Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
-	arrow_sprite->flags = THIS->flags;
-	arrow_sprite->x = THIS->x;
-	arrow_sprite->x += 4;
-	arrow_sprite->y = THIS->y;
-	//DECIDE THE TYPE OF ARROW accordinG TO THE AMULET EQUIPED
-	struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_sprite->custom_data;
-	if (archer_data->amulet){arrow_data->type = archer_data->amulet;}
-	else{arrow_data->type = 1;}
-	//ARROWDIR IS AN ATTRIBUTE INSIDE CUSTOM_DATA OF THE ARROW SPRITE
-	//WHICH DETERMINES THE DIRECTION OF THE ARROW
-	//1 HORIZONTAL, 2 DIAGONAL, 3 VERTICAL UP, 4 VERTICAL DOWN
-	if (KEY_PRESSED(J_DOWN)){
-		arrow_data->arrowdir = 4; // verticale in giu
-		arrow_sprite->y += 8;
-	}else{
-		if (KEY_PRESSED(J_UP)){ //diagonale
-			arrow_data->arrowdir = 2;
-		}else{
-			if(aimc < 16){ //orizzontale
-				arrow_data->arrowdir = 1;
-			}	
+```
+void Printf(const char* txt, ...){
+	UINT8 idx = 0;
+	unsigned char c;
+	unsigned char tmp[10];
+	va_list list;
+
+	va_start(list, txt); 
+	while(*txt) {
+		if(*txt == ' ') {
+			c = font_idx;
+		} else if(*txt >= 'A' && *txt <= 'Z'){
+			c = font_idx +  1 + *txt - 'A';
+		} else if(*txt >= 'a' && *txt <= 'z') {
+			c = font_idx +  1 + *txt - 'a';
+		} else if(*txt >= '0' && *txt <= '9') {
+			c = font_idx + 27 + *txt - '0';
+		} else {
+			switch(*txt) {
+				case  '!': c= font_idx + 37; break;
+				case '\'': c= font_idx + 38; break;
+				case  '(': c= font_idx + 39; break;
+				case  ')': c= font_idx + 40; break;
+				case  '-': c= font_idx + 41; break;
+				case  '.': c= font_idx + 42; break;
+				case  ':': c= font_idx + 43; break;
+				case  '?': c= font_idx + 44; break;
+				
+				//INIZIO MIO INTERVENTO
+				case  '$': c= font_idx + 45; break;
+				case  ']': c= font_idx + 46; break;
+				case  '[': c= font_idx + 47; break;
+				case  '#': c= font_idx + 48; break;
+				case  '@': c= font_idx + 49; break;
+				case  '<': c= font_idx + 50; break;
+				case  '>': c= font_idx + 51; break;
+				case  '{': c= font_idx + 52; break;
+				//FINE MIO INTERVENTO
+				
+				case  '%':
+					switch(*(txt + 1)) {
+						case 'd':
+						case 'i':
+							IntToString(va_arg(list, INT16), tmp);
+							Printf(tmp);
+							txt += 2;
+							continue;
+
+						case 'u':
+							UIntToString(va_arg(list, UINT16), tmp);
+							Printf(tmp);
+							txt += 2;
+							continue;
+
+						case 's':
+							Printf(va_arg(list, char*));
+							txt += 2;
+							break;
+					}
+					break;
+			}
 		}
-		if (aimc == 16){ // verticale in su
-			arrow_data->arrowdir = 3;
-			arrow_sprite->y -= 4;
-		}
+		if(print_target == PRINT_BKG)
+			set_bkg_tiles(0x1F & (print_x + scroll_offset_x), 0x1F & (print_y + scroll_offset_y), 1, 1, &c);
+		else
+			set_win_tiles(print_x, print_y, 1, 1, &c);
+
+		print_x ++;
+		txt ++;
 	}
-	shoot_cooldown = 4;// NUMBER OF FRAMES i DON'T WANT AN ARROW TO BE THROWN FROM NOW ON
-	aimc = 0; 
-	//AIMC = 0 MEANS SHOOTING HORIZONTAL
-	//AIMC >0  AND < 16 MEANS DIAGONAL
-	//AIMB = 16 MEANS VERTICAL
+	va_end(list);
+}
 	
 ```
 

@@ -13,6 +13,7 @@ const UINT8 enemy_idle[] = {1, 0}; //The first number indicates the number of fr
 const UINT8 enemy_walk[] = {2, 0, 1}; //The first number indicates the number of frames
 const UINT8 enemy_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
 const UINT8 enemy_dead[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 attack_wait = 32u;
 
 void CheckCollisionETile();
 void ETurn();

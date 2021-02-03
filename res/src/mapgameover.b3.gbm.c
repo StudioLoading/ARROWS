@@ -1,6 +1,6 @@
 #pragma bank 3
 
-void empty(void) __nonbanked {}
+void empty(void) __nonbanked;
 __addressmod empty const CODE;
 
 const unsigned char mapgameover_map[] = {

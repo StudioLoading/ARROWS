@@ -14,6 +14,7 @@ const UINT8 porcupine_walk[] = {4, 0, 6, 1, 6}; //The first number indicates the
 const UINT8 porcupine_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
 const UINT8 porcupine_dead[] = {1, 5}; //The first number indicates the number of frames
 const UINT8 porcupine_attack[] = {4, 6, 7, 7, 7}; //The first number indicates the number of frames
+const UINT8 attack_pwait = 24u;
 
 extern void CheckCollisionETile();
 
@@ -51,7 +52,7 @@ void Update_SpritePorcupine() {
 	}
 	
 	if (data->enemy_state == ENEMY_STATE_ATTACK){
-		if (data->wait == attack_wait){SetSpriteAnim(THIS, porcupine_attack, 8u);}
+		if (data->wait == attack_pwait){SetSpriteAnim(THIS, porcupine_attack, 8u);}
 		if (data->wait == 1u){
 			struct Sprite* arrow_e_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
 			struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_e_sprite->custom_data;

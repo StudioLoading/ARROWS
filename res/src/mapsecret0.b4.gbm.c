@@ -1,6 +1,6 @@
 #pragma bank 4
 
-void empty(void) __nonbanked {}
+void empty(void) __nonbanked;
 __addressmod empty const CODE;
 
 const unsigned char mapsecret0_map[] = {

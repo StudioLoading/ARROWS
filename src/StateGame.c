@@ -27,9 +27,9 @@
 #include "custom_datas.h"
 
 
-UINT16 bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
+const UINT16 bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 
-UINT16 sprites_palette[] = {
+const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 0),
 	PALETTE_INDEX(archer, 1),
 	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
@@ -40,7 +40,7 @@ UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
 
 UINT8 amulet = 1u;
 UINT8 coins = 0u;
@@ -58,6 +58,7 @@ void populate_00();
 void populate_01();
 void ShowWindow();
 void ShowWindowDiag();
+void ShowDiag();
 
 //Levels
 INT8 load_next = 0;
@@ -80,16 +81,8 @@ STATE archer_state;
 
 INT8 show_diag;
 INT8 showing_diag = 0;
-/*
-const char* diags_10 = "DIAG_10";
-const char* diags_11 = "DIAG_\n11";
 
-const char** diags_1[] = {
-	diags_10,
-	diags_11
-};
-const char*** diags[] = {diags_1};
-*/
+
 void Start_StateGame() {
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
@@ -155,7 +148,7 @@ void Start_StateGame() {
 					//wrench
 					if(archer_data->tool == 0){
 						populate_00();
-						struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
+						const struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
 						struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 						datakey->type = 1;
 						datakey->setup = 1u;
@@ -214,9 +207,9 @@ void ShowWindowDiag(){
 void ShowDiag(){
 	PRINT_POS(3,1);
 	//char * d[] = diags[current_level];
-	char * d1 = "DIALOG";
-	char * d2 = "DIALOG";
-	char * ddd [] = {d1,d2};
+	const char * d1 = "DIALOG";
+	const char * d2 = "DIALOG";
+	const char * ddd [] = {d1,d2};
 	INT8 face = 0;
 	Printf(ddd[0]);
 	PRINT_POS(3,2);
@@ -234,9 +227,9 @@ void ShowDiag(){
 
 void populate_01(){
 	//PLATFORMS
-	UINT8 platform_count = 1;
-	UINT8 platform_positions_x[] = {9}; //10
-	UINT8 platform_positions_y[] = {21}; //30
+	const UINT8 platform_count = 1;
+	const UINT8 platform_positions_x[] = {9}; //10
+	const UINT8 platform_positions_y[] = {21}; //30
 	UINT8 plc = 0;
 	for(plc=0; plc < platform_count; plc++){
 		struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, platform_positions_x[plc]*8, platform_positions_y[plc]*8);
@@ -246,8 +239,8 @@ void populate_01(){
 	
 	//ENEMIES
 	UINT8 e_count = 3;
-	UINT8 e_positions_x[] = {32, 15, 17};
-	UINT8 e_positions_y[] = {9, 4, 39};
+	const UINT8 e_positions_x[] = {32, 15, 17};
+	const UINT8 e_positions_y[] = {9, 4, 39};
 	INT8 e_types[] = {0, 1, 2}; //0=snake, 1=scorpion, 2=porcupine
 	for(plc=0; plc < e_count; plc++){
 		switch(e_types[plc]){
@@ -260,10 +253,10 @@ void populate_01(){
 
 void populate_00(){
 
-	INT8 count = 3;
-	INT8 scrigni_positions_x[] = {9, 12, 6, 17};
-	INT8 scrigni_positions_y[] = {14, 23, 4, 36};
-	INT8 st [] = {1, 2, 1, 3};
+	const INT8 count = 3;
+	const INT8 scrigni_positions_x[] = {9, 12, 6, 17};
+	const INT8 scrigni_positions_y[] = {14, 23, 4, 36};
+	const INT8 st [] = {1, 2, 1, 3};
 	INT8 c = 0;
 	//ITEM SCRIGNI
 	for(c=0; c < count; c++){
@@ -275,11 +268,11 @@ void populate_00(){
 	}
 	
 	//HIDDEN ITEMS
-	INT8 invcount = 1;
+	const INT8 invcount = 1;
 	INT8 invc = 0;
-	INT8 invitems_positions_x[] = {31}; //13
-	INT8 invitems_positions_y[] = {27};//11
-	INT8 iit [] = {3, 1};
+	const INT8 invitems_positions_x[] = {31}; //13
+	const INT8 invitems_positions_y[] = {27};//11
+	const INT8 iit [] = {3, 1};
 	for(invc=0; invc < invcount; invc++){
 		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
 		struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
