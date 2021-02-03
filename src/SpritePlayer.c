@@ -180,7 +180,7 @@ void Update_SpritePlayer() {
 				}else{
 					if (archer_accel_y < 4){									
 						if(KEY_PRESSED(J_A)) {
-							if (jump_power < 12u){
+							if (jump_power < 8u){
 								jump_power += 1u;
 								archer_accel_y -= 2;
 							}

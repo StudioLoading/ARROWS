@@ -2,7 +2,6 @@
 
 #include "../res/src/window.h"
 #include "../res/src/diagnew.h"
-#include "../res/src/diagface.h"
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\map.h"
@@ -105,7 +104,6 @@ void Start_StateGame() {
 	SpriteManagerLoad(SpriteEnemy);
 	SpriteManagerLoad(SpriteScorpion);
 	SpriteManagerLoad(SpritePorcupine);
-	SpriteManagerLoad(SpriteDiagface);
 	SHOW_SPRITES;
 
 	//SCROLL
@@ -265,7 +263,7 @@ void populate_00(){
 	INT8 count = 3;
 	INT8 scrigni_positions_x[] = {9, 12, 6, 17};
 	INT8 scrigni_positions_y[] = {14, 23, 4, 36};
-	INT8 st [] = {1, 1, 1, 3};
+	INT8 st [] = {1, 2, 1, 3};
 	INT8 c = 0;
 	//ITEM SCRIGNI
 	for(c=0; c < count; c++){
