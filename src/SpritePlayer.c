@@ -56,8 +56,8 @@ void Hit();
 
 void Start_SpritePlayer() {
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
-	/*archer_data->amulet = 1u;
-	archer_data->tool = 0;*/
+	archer_data->amulet = 1u;
+	archer_data->tool = 0;
 	
 	
 	THIS->coll_x = 5;

@@ -145,6 +145,8 @@ void Start_StateGame() {
 			switch(current_map){
 				case 0:
 					level_tool = 6;
+					PRINT_POS(11, 3);
+					Printf("%d", archer_data->tool);
 					//wrench
 					if(archer_data->tool == 0){
 						populate_00();
@@ -285,8 +287,6 @@ void populate_00(){
 
 void Update_StateGame() {
 	
-	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
-
 	if(load_next) {
 		switch(load_next){
 			case 1: //stage
@@ -332,8 +332,8 @@ void Update_StateGame() {
 			ShowWindow();
 			return;
 		}
-	}
-	if(archer_state != STATE_DIAG){
+	}else{
+		struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 		if (amulet != archer_data->amulet){
 			amulet = archer_data->amulet;
 			WriteAMULET();		
