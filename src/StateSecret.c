@@ -1,4 +1,4 @@
-#include "Banks/SetBank3.h"
+#include "Banks/SetBank2.h"
 
 #include "../res/src/window.h"
 #include "../res/src/font.h"

@@ -424,7 +424,7 @@ void Jump() {
 		NR50_REG = 0x22; //Max volume		
 		//PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 		archer_state = STATE_JUMPING;
-		archer_accel_y = -12;
+		archer_accel_y = -14;
 		princess_parent = 0;
 		SetSpriteAnim(THIS, anim_jump_up, 12u);
 	}
