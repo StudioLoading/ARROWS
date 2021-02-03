@@ -56,7 +56,9 @@ void Hit();
 
 void Start_SpritePlayer() {
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
-	//archer_data->amulet = 1u;
+	/*archer_data->amulet = 1u;
+	archer_data->tool = 0;*/
+	
 	
 	THIS->coll_x = 5;
 	THIS->coll_y = 5;
@@ -180,7 +182,7 @@ void Update_SpritePlayer() {
 				}else{
 					if (archer_accel_y < 4){									
 						if(KEY_PRESSED(J_A)) {
-							if (jump_power < 8u){
+							if (jump_power < 6u){
 								jump_power += 1u;
 								archer_accel_y -= 2;
 							}

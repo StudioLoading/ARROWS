@@ -40,7 +40,7 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
 
 UINT8 amulet = 1u;
 UINT8 coins = 0u;
@@ -148,7 +148,7 @@ void Start_StateGame() {
 					//wrench
 					if(archer_data->tool == 0){
 						populate_00();
-						const struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
+						struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
 						struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 						datakey->type = 1;
 						datakey->setup = 1u;
