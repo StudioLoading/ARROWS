@@ -26,6 +26,7 @@ void Start_SpriteItem() {
 	data->counter = -1;
 	data->item_accel_y = 0;
 	data->type = 0;
+	data->vx = 0;
 	THIS->coll_x = 0;
 	THIS->coll_y = 0;
 	THIS->coll_w = 8;

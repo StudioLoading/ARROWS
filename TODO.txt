@@ -5,7 +5,7 @@ const unsigned char window_alt_map[] = {74,75,76,77};
 set_win_tiles(START_X, START_Y, WIDTH, HEIGHT, window_alt_map);
 
 
-
+GLI ITEM NELLA SECRET NON APPAIONO NELLA POSIZIONE GIUSTA
 
 WINDOW DI DIALOGO:
 - davanti alle tile delle persone in gabbia
@@ -25,92 +25,44 @@ RIUSCIRò MAI A METTERE MONETE COME TILE DI BACKGROUND E
 SOSTITUIRLE CON BLANK QUANDO CI VADO SOPRA ?
 
 
-
-
-
+C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-master\Debug\ARROWS_Debug.noi -g
 
 
 DISCORD MARKDOWN:
 
 SpritePlayer.c
+
 ```
-void Printf(const char* txt, ...){
-	UINT8 idx = 0;
-	unsigned char c;
-	unsigned char tmp[10];
-	va_list list;
+cd src
+%ZGB_PATH%\..\env\make-3.81-bin\bin\make run
+cd ..
+pause
 
-	va_start(list, txt); 
-	while(*txt) {
-		if(*txt == ' ') {
-			c = font_idx;
-		} else if(*txt >= 'A' && *txt <= 'Z'){
-			c = font_idx +  1 + *txt - 'A';
-		} else if(*txt >= 'a' && *txt <= 'z') {
-			c = font_idx +  1 + *txt - 'a';
-		} else if(*txt >= '0' && *txt <= '9') {
-			c = font_idx + 27 + *txt - '0';
-		} else {
-			switch(*txt) {
-				case  '!': c= font_idx + 37; break;
-				case '\'': c= font_idx + 38; break;
-				case  '(': c= font_idx + 39; break;
-				case  ')': c= font_idx + 40; break;
-				case  '-': c= font_idx + 41; break;
-				case  '.': c= font_idx + 42; break;
-				case  ':': c= font_idx + 43; break;
-				case  '?': c= font_idx + 44; break;
-				
-				//INIZIO MIO INTERVENTO
-				case  '$': c= font_idx + 45; break;
-				case  ']': c= font_idx + 46; break;
-				case  '[': c= font_idx + 47; break;
-				case  '#': c= font_idx + 48; break;
-				case  '@': c= font_idx + 49; break;
-				case  '<': c= font_idx + 50; break;
-				case  '>': c= font_idx + 51; break;
-				case  '{': c= font_idx + 52; break;
-				//FINE MIO INTERVENTO
-				
-				case  '%':
-					switch(*(txt + 1)) {
-						case 'd':
-						case 'i':
-							IntToString(va_arg(list, INT16), tmp);
-							Printf(tmp);
-							txt += 2;
-							continue;
-
-						case 'u':
-							UIntToString(va_arg(list, UINT16), tmp);
-							Printf(tmp);
-							txt += 2;
-							continue;
-
-						case 's':
-							Printf(va_arg(list, char*));
-							txt += 2;
-							break;
-					}
-					break;
-			}
-		}
-		if(print_target == PRINT_BKG)
-			set_bkg_tiles(0x1F & (print_x + scroll_offset_x), 0x1F & (print_y + scroll_offset_y), 1, 1, &c);
-		else
-			set_win_tiles(print_x, print_y, 1, 1, &c);
-
-		print_x ++;
-		txt ++;
-	}
-	va_end(list);
-}
-	
 ```
 
 SpritePlayer.c
 ```c
-	set_bkg_tiles(25*8, 12*8, 1, 1, tiles.data->data+3u);
+	extern INT8 load_next_s;
+	UINT8 current_level_s = 0;
+	UINT8 current_map_s = 0;
+	const struct MapInfo* secret_1[] = {
+		&mapsecret0
+	};
+	const struct MapInfo** secrets[] = {secret_1};
+
+	extern INT8 level_tool;
+	extern INT8 drop_player_x ;
+	extern INT8 drop_player_y ;
+	extern STATE archer_state;
+
+
+	const struct MapInfo** level_maps_s = secrets[current_level_s];
+	UINT8 map_w, map_h;
+	GetMapSize(level_maps_s[current_map_s], &map_w, &map_h);
+	ScrollFindTile(level_maps_s[current_map_s], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+	InitScroll(level_maps_s[current_map_s], collision_tiles, 0);
+	SHOW_BKG;
 ```
 
 

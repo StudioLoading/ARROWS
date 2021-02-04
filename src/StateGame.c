@@ -46,6 +46,7 @@ UINT8 amulet = 1u;
 UINT8 coins = 0u;
 INT8 ups = 3;
 INT8 hp = 100;
+INT8 archer_tool = 0;
 INT8 level_tool = -1;
 
 void WriteAMULET();
@@ -64,8 +65,8 @@ void ShowDiag();
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0;
-UINT8 current_map = 0;
+UINT8 current_level = 0u;
+UINT8 current_map = 0u;
 const struct MapInfo* level_1[] = {
 	&map,
 	&map2
@@ -103,7 +104,8 @@ void Start_StateGame() {
 	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
 	
 	const struct MapInfo** lvls = levels[current_level];
-	UINT8 map_w, map_h;
+	UINT8 map_w;
+	UINT8 map_h;
 	GetMapSize(lvls[current_map], &map_w, &map_h);
 	if (load_next_s){ //vengo da secret!
 		load_next_s = 0;
@@ -115,38 +117,46 @@ void Start_StateGame() {
 	InitScroll(lvls[current_map], collision_tiles, 0);
 	SHOW_BKG;
 	
-	//WINDOW
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
 	
-	
-
 	//INIT ARCHER
 	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
-	if (archer_data->ups > 0 & archer_data->ups != ups){
+	
+	if (archer_data->ups & archer_data->ups != ups){
 		ups = archer_data->ups;
+	}
+	if (archer_data->tool & archer_data->tool != archer_tool){
+		archer_tool = archer_data->tool;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 99u;
+		archer_tool = 0;
 	}
-	archer_data->ups =ups;
+	
+	archer_data->ups = ups;
 	archer_data->hp = hp;
 	archer_data->coins = coins;
+	archer_data->tool = archer_tool;
 	
+	
+	
+	//WINDOW
+	INIT_FONT(font, PRINT_WIN);
+	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
 	
-	if(archer_data->tool == level_tool){
-		WriteTOOL();
-	}
+	
+	/*
+	PRINT_POS(8, 3);
+	Printf("%d %d", drop_player_x, drop_player_y);
+	*/
+	
 	
 	switch(current_level){
 		case 0:
 			switch(current_map){
 				case 0:
 					level_tool = 6;
-					PRINT_POS(11, 3);
-					Printf("%d", archer_data->tool);
 					//wrench
 					if(archer_data->tool == 0){
 						populate_00();
@@ -171,6 +181,12 @@ void Start_StateGame() {
 			populate_00();
 		break;
 	}
+	
+	if(archer_tool == level_tool){
+		WriteTOOL();
+	}
+	
+	//SetState(StateBoss);
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -286,7 +302,7 @@ void populate_00(){
 }
 
 void Update_StateGame() {
-	
+
 	if(load_next) {
 		switch(load_next){
 			case 1: //stage
@@ -307,7 +323,7 @@ void Update_StateGame() {
 		switch(load_next_b){
 			case 1: //vado allo StateBoss
 				load_next_b = 0;
-				SetState(StateBoss);
+				SetState(StateBoss);//StateBoss
 			break;
 			case 2: // provengo dal boss TODO
 				load_next_b = 0;
@@ -350,7 +366,8 @@ void Update_StateGame() {
 			ups = archer_data->ups;
 			WriteUPS();
 		}
-		if(archer_data->tool == level_tool){
+		if(archer_tool != archer_data->tool){// & archer_tool == level_tool
+			archer_tool = archer_data->tool;
 			WriteTOOL();
 		}
 	}	

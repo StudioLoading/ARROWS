@@ -18,15 +18,18 @@
 
 
 extern UINT16 bg_palette[];
-
 extern UINT16 sprites_palette[];
-
 extern UINT8 collision_tiles[] ;
-
 extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
+extern INT8 load_next_s;
+extern INT8 level_tool;
+extern INT8 drop_player_x ;
+extern INT8 drop_player_y ;
+extern STATE archer_state;
+
 
 extern void WriteAMULET();
 extern void WriteCOINS();
@@ -37,18 +40,12 @@ extern void WriteTOOL();
 
 
 //Secrets
-extern INT8 load_next_s;
 UINT8 current_level_s = 0;
 UINT8 current_map_s = 0;
 const struct MapInfo* secret_1[] = {
 	&mapsecret0
 };
 const struct MapInfo** secrets[] = {secret_1};
-
-extern INT8 level_tool;
-extern INT8 drop_player_x ;
-extern INT8 drop_player_y ;
-extern STATE archer_state;
 
 
 void populate_secret0();

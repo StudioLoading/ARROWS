@@ -32,15 +32,15 @@ struct Sprite* princess_parent = 0;
 
 extern STATE archer_state;
 
-INT16 archer_accel_y;
+INT16 archer_accel_y = 0;
 
 UINT8 tile_collision;
 extern INT8 load_next;
 extern INT8 load_next_s;
 extern INT8 load_next_b;
 
-UINT8 aimc;
-UINT8 hit_cooldown;
+UINT8 aimc = 0u;
+UINT8 hit_cooldown = 0u;
 
 struct ArcherInfo* archer_data;
 
@@ -58,6 +58,8 @@ void Start_SpritePlayer() {
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
 	archer_data->amulet = 1u;
 	archer_data->tool = 0;
+	archer_data->ups = 0;
+	archer_data->coins = 0u;
 	
 	
 	THIS->coll_x = 5;
@@ -253,8 +255,8 @@ void Update_SpritePlayer() {
 					switch(dataitem->type){
 						case 1u: //coins
 							archer_data->coins++;
-							if (archer_data->coins == 100){
-								archer_data->coins = 0;
+							if (archer_data->coins == 100u){
+								archer_data->coins = 0u;
 								archer_data->ups += 1;	
 							}
 							PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);
@@ -312,7 +314,7 @@ void Update_SpritePlayer() {
 				}
 			}
 		}
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteWolf) { //collision con l' enemy
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteWolf) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
