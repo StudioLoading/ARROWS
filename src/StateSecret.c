@@ -37,8 +37,6 @@ extern void WriteHP();
 extern void WriteUPS();
 extern void WriteMap();
 extern void WriteTOOL();
-
-
 //Secrets
 UINT8 current_level_s = 0;
 UINT8 current_map_s = 0;

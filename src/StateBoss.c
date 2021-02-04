@@ -1,4 +1,4 @@
-#include "Banks/SetBank4.h"
+#include "Banks/SetBank2.h"
 
 #include "../res/src/window.h"
 #include "../res/src/diagnew.h"
@@ -9,27 +9,26 @@
 #include "../res/src/arrow.h"
 #include "../res/src/wolf.h"
 #include "../res/src/key.h"
-
 #include "ZGBMain.h"
 #include "Scroll.h"
 #include "SpriteManager.h"
 #include "Palette.h"
 #include "string.h"
 #include "Print.h"
-
 #include "custom_datas.h"
 
-
 extern UINT16 bg_palette[];
-
 extern UINT16 sprites_palette[];
-
 extern UINT8 collision_tiles[] ;
-
 extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
+extern INT8 load_next_b;
+extern INT8 level_tool;
+extern INT8 drop_player_x ;
+extern INT8 drop_player_y ;
+extern STATE archer_state;
 
 void WriteBAMULET();
 void WriteBCOINS();
@@ -38,31 +37,17 @@ void WriteBUPS();
 void WriteBMap();
 void WriteBTOOL();
 
-extern INT8 level_tool;
-extern INT8 drop_player_x ;
-extern INT8 drop_player_y ;
-extern STATE archer_state;
-
-extern UINT8 amulet;
-extern UINT8 coins;
-extern INT8 ups ;
-extern INT8 hp;
-extern INT8 level_tool;
-extern char * level_names[];
-extern UINT8 current_level;
-
-//Secrets
+//Boss
 UINT8 current_level_b = 0u;
 UINT8 current_map_b = 0u;
-extern INT8 load_next_b;
-
 const struct MapInfo* boss_0[] = {
 	&mapboss0
 };
 const struct MapInfo** bosses[] = {boss_0};
 
-INT8 boss_hp;
+INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
+const char * const level_b_names[] = {"THE CAVE"};
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -97,17 +82,17 @@ void Start_StateBoss() {
 	
 	
 	//INIT ARCHER
-	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
-	if (archer_data->ups > 0 & archer_data->ups != ups){
-		ups = archer_data->ups;
+	struct ArcherInfo* archer_data_b = (struct ArcherInfo*)scroll_target->custom_data;
+	if (archer_data_b->ups > 0 & archer_data_b->ups != ups){
+		ups = archer_data_b->ups;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 99u;
 	}
-	archer_data->ups =ups;
-	archer_data->hp = hp;
-	archer_data->coins = coins;
+	archer_data_b->ups =ups;
+	archer_data_b->hp = hp;
+	archer_data_b->coins = coins;
 	
 	
 	//WINDOW
@@ -149,22 +134,22 @@ void ShowBWindow(){
 
 void Update_StateBoss() {
 
-	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+	struct ArcherInfo* archer_data_b = (struct ArcherInfo*)scroll_target->custom_data;
 
-	if (amulet != archer_data->amulet){
-		amulet = archer_data->amulet;
+	if (amulet != archer_data_b->amulet){
+		amulet = archer_data_b->amulet;
 		WriteBAMULET();		
 	}
-	if (coins != archer_data->coins){
-		coins = archer_data->coins;
+	if (coins != archer_data_b->coins){
+		coins = archer_data_b->coins;
 		WriteBCOINS();
 	}
-	if (hp != archer_data->hp){
-		hp = archer_data->hp;
+	if (hp != archer_data_b->hp){
+		hp = archer_data_b->hp;
 		WriteBHP();
 	}
-	if (ups != archer_data->ups){
-		ups = archer_data->ups;
+	if (ups != archer_data_b->ups){
+		ups = archer_data_b->ups;
 		WriteBUPS();
 	}
 
@@ -173,7 +158,7 @@ void Update_StateBoss() {
 		WriteBBOSSHP();		
 	}
 	
-	if(level_tool == archer_data->tool){
+	if(level_tool == archer_data_b->tool){
 		WriteBTOOL();
 	}
 	
@@ -204,7 +189,7 @@ void WriteBAMULET(){
 
 void WriteBMap(){
 	PRINT_POS(1, 3);
-	Printf(level_names[current_level]);	
+	Printf(level_b_names[current_level_b]);	
 }
 
 void WriteBCOINS(){
