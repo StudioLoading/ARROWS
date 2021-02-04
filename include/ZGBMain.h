@@ -25,5 +25,3 @@ SPRITE_DEF_END
 
 #endif
 
-//_STATE(StateSewer)
-//_STATE(StateBoss)

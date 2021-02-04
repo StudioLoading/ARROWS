@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetBank7.h"
 
 #include "../res/src/window.h"
 #include "../res/src/diagnew.h"
@@ -58,10 +58,21 @@ void Start_StateBoss() {
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
 	SPRITES_8x16;
-	SpriteManagerLoad(SpritePlayer);
-	SpriteManagerLoad(SpriteArrow);
-	SpriteManagerLoad(SpriteWolf);
-	SpriteManagerLoad(SpriteKey);
+	
+	switch(current_level_b){
+		case 0:
+			switch(current_map_b){
+				case 0:
+					level_tool=7;
+					SpriteManagerLoad(SpritePlayer);
+					SpriteManagerLoad(SpriteArrow);
+					SpriteManagerLoad(SpriteWolf);
+					SpriteManagerLoad(SpriteKey);
+				break;
+			}
+		break;
+	}
+	
 	SHOW_SPRITES;
 
 
@@ -100,15 +111,6 @@ void Start_StateBoss() {
 	INIT_CONSOLE(font, 10, 2);
 	ShowBWindow();
 	
-	switch(current_level_b){
-		case 0:
-			switch(current_map_b){
-				case 0:
-						level_tool=7;
-				break;
-			}
-		break;
-	}
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)

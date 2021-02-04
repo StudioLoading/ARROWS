@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetBank7.h"
 
 #include "../res/src/window.h"
 #include "../res/src/diagnew.h"
@@ -6,6 +6,7 @@
 #include "..\res\src\tiles.h"
 #include "..\res\src\map.h"
 #include "..\res\src\map2.h"
+#include "..\res\src\mapsewer.h"
 #include "..\res\src\mapsecret0.h"
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
@@ -71,7 +72,10 @@ const struct MapInfo* level_1[] = {
 	&map,
 	&map2
 };
-const struct MapInfo** levels[] = {level_1};
+const struct MapInfo* level_2[] = {
+	&mapsewer
+};
+const struct MapInfo** levels[] = {level_1, level_2};
 
 const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 
@@ -153,7 +157,7 @@ void Start_StateGame() {
 	
 	
 	switch(current_level){
-		case 0:
+		case 0u:
 			switch(current_map){
 				case 0:
 					level_tool = 6;
@@ -175,6 +179,17 @@ void Start_StateGame() {
 				break;
 			}
 		break;
+		case 1u:
+			switch(current_map){
+				case 0:
+					level_tool = 6;
+					struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 6*8, 8*8);
+					struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+					datakey->type = 1;
+					datakey->setup = 1u;
+				break;
+			}
+		break;
 		default:
 			current_level = 0;
 			current_map = 0;
@@ -185,8 +200,6 @@ void Start_StateGame() {
 	if(archer_tool == level_tool){
 		WriteTOOL();
 	}
-	
-	//SetState(StateBoss);
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -327,8 +340,9 @@ void Update_StateGame() {
 			break;
 			case 2: // provengo dal boss TODO
 				load_next_b = 0;
-				current_level++;
+				current_level += 1u;
 				current_map = 0;
+				SetState(StateGame);
 			break;
 		}
 	}

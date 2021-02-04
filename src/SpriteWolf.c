@@ -35,7 +35,7 @@ void Start_SpriteWolf() {
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
 	wolf_data->enemydamage = 20u;
-	wolf_data->hp = 50;
+	wolf_data->hp = 10;
 	wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -108,14 +108,6 @@ void Update_SpriteWolf() {
 						SetSpriteAnim(THIS, wolf_hit, 18u);
 						if(arrowdata->arrowdamage){
 							wolf_data->hp -= arrowdata->arrowdamage;
-							if (wolf_data->hp <= 10){
-								if (wolf_data->vx == 1){
-									wolf_data->vx = 2;
-								}
-								if (wolf_data->vx == -1){
-									wolf_data->vx = -2;
-								}
-							}
 						}
 					}
 				}
