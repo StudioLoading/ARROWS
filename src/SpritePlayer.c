@@ -9,7 +9,20 @@
 
 #include "custom_datas.h"
 
-
+extern ARCHER_STATE archer_state;
+extern INT8 load_next;
+extern INT8 load_next_s;
+extern INT8 load_next_b;
+extern UINT8 current_level;
+extern UINT8 current_map;
+extern INT8 show_diag;
+extern INT8 max_diag;
+extern char * d1;
+extern char * d2;
+extern char * d3;
+extern unsigned char face_wolf[];
+extern unsigned char face[];
+extern struct EnemyInfo* boss_data_b;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -26,26 +39,13 @@ INT8 shoot_cooldown = 0;
 UINT8 jump_power = 0u;
 INT8 platform_vx = 0;
 UINT8 death_cooldown = 0;
-
-struct Sprite* princess_parent = 0;
-
-
-extern ARCHER_STATE archer_state;
-
-INT16 archer_accel_y = 0;
-
-UINT8 tile_collision;
-extern INT8 load_next;
-extern INT8 load_next_s;
-extern INT8 load_next_b;
-
 UINT8 aimc = 0u;
 UINT8 hit_cooldown = 0u;
-
+INT16 archer_accel_y = 0;
+UINT8 tile_collision = 0u;
 struct ArcherInfo* archer_data;
-
-extern INT8 show_diag;
-extern INT8 max_diag;
+struct Sprite* princess_parent = 0;
+INT8 is_on_boss = 0;
 
 void Die();
 void Shoot();
@@ -53,6 +53,7 @@ void Jump();
 void MoveArcher();
 void CheckCollisionTile();
 void Hit();
+void Build_Next_Dialog();
 
 
 void Start_SpritePlayer() {
@@ -77,10 +78,12 @@ void Start_SpritePlayer() {
 void Update_SpritePlayer() {
 	
 	if(archer_state == STATE_DIAG ){
-		if (show_diag >= max_diag){
+		if (show_diag == -1){
+			show_diag = 0;
 			archer_state = STATE_NORMAL;
+			boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
 		}else{		
-			if(KEY_RELEASED(J_A)){
+			if(show_diag < max_diag & KEY_RELEASED(J_B)){
 				show_diag += 1;	
 			}	
 		}
@@ -155,7 +158,6 @@ void Update_SpritePlayer() {
 			//Jump / Dialog
 			if(KEY_TICKED(J_A)){
 				if (KEY_PRESSED(J_UP)){		
-					//if(show_diag<0){show_diag=0;}
 					archer_state = STATE_DIAG;	
 					return;
 				}else{
@@ -319,6 +321,12 @@ void Update_SpritePlayer() {
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteWolf) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
+				if(ispr->type == SpriteWolf & dataenemy->enemy_state == ENEMY_STATE_WAIT){
+					THIS->x -= 8;
+					is_on_boss = 1;
+					Build_Next_Dialog();
+					return;
+				}
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
 					return;
 				}
@@ -474,12 +482,14 @@ void CheckCollisionTile() {
 		break;
 		case 7u: //fine level - goto boss!
 			if(archer_data->tool){
+				is_on_boss = 1;
 				archer_data->tool = 0; //tool consumato
 				load_next_b = 1;
 			}			
 		break;
 		case 8u: //fine boss!
 			if(archer_data->tool){
+				is_on_boss = 0;
 				archer_data->tool = 0; //tool consumato
 				load_next_b = 2;
 			}			
@@ -518,6 +528,32 @@ void Hit() {
 	}
 }
 
+void Build_Next_Dialog(){
+	if (is_on_boss){
+		show_diag = 1;
+		SetSpriteAnim(THIS, anim_idle, 33u);
+		archer_state = STATE_DIAG;			
+		face[0] = face_wolf[0];
+		face[1] = face_wolf[1];
+		face[2] = face_wolf[2];
+		face[3] = face_wolf[3];
+		max_diag = 2;
+		d1 = "ANIMAL! BACK";
+		d2 = "TO YOUR CAGE!";
+		d3 = "-GRRR!";
+	}else{
+		switch(current_level){
+			case 0:
+				switch(current_map){
+					case 0:
+					break;
+					case 1:
+					break;
+				}
+			break;
+		}
+	}
+}
 
 void Destroy_SpritePlayer() {
 	

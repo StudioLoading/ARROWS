@@ -95,7 +95,7 @@ void Start_StateBoss() {
 	SHOW_BKG;
 	
 	//INIT BOSS
-	struct Sprite* boss = SpriteManagerAdd(SpriteWolf, 34*8, 12*8);
+	struct Sprite* boss = SpriteManagerAdd(SpriteWolf, 24*8, 14*8); //34, 12
 	boss_data_b = (struct EnemyInfo*)boss->custom_data;
 	boss_hp = boss_data_b->hp;
 	
@@ -127,10 +127,8 @@ void Start_StateBoss() {
 
 }
 
-
 void Update_StateBoss() {
 
-	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	if(show_diag >= max_diag){
 		ShowWindow();
 		return;
@@ -160,6 +158,10 @@ void Update_StateBoss() {
 
 		if (boss_hp != boss_data_b->hp){
 			boss_hp = boss_data_b->hp;
+			if (boss_hp <= 0){
+				boss_hp = 0;
+				boss_data_b->hp = 0;
+			}
 			WriteBBOSSHP();		
 		}
 		

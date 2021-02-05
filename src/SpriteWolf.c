@@ -30,16 +30,20 @@ void Start_SpriteWolf() {
 	THIS->coll_h = 11;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
-	SetSpriteAnim(THIS, wolf_idle, 8u);
+	SetSpriteAnim(THIS, wolf_uuu, 8u);
 	wolf_data->enemy_accel_y = 24;
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
 	wolf_data->enemydamage = 20u;
 	wolf_data->hp = 50;
-	wolf_data->enemy_state = ENEMY_STATE_NORMAL;
+	wolf_data->enemy_state = ENEMY_STATE_WAIT;
 }
 
 void Update_SpriteWolf() {
+	
+	if(wolf_data->enemy_state == ENEMY_STATE_WAIT){
+		return;
+	}
 	
 	if (wolf_data->enemy_state == ENEMY_STATE_DEAD){
 		if(wolf_data->tile_e_collision==0){

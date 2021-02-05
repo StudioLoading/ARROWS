@@ -41,7 +41,7 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 92, 0};//numero delle tile con collisioni e ultimo sempre zero
 
 UINT8 amulet = 1u;
 UINT8 coins = 0u;
@@ -49,6 +49,37 @@ INT8 ups = 3;
 INT8 hp = 100;
 INT8 archer_tool = 0;
 INT8 level_tool = -1;
+INT8 load_next = 0;
+INT8 load_next_s = 0;
+INT8 load_next_b = 0;
+UINT8 current_level = 0u;
+UINT8 current_map = 0u;
+UINT16 drop_player_x = 0u;
+UINT16 drop_player_y = 0u;
+ARCHER_STATE archer_state;
+INT8 show_diag = 0;
+INT8 showing_diag = 0;
+INT8 max_diag = 2;
+
+//DIALOGS
+char * d1 = "DIALOG1";
+char * d2 = "DIALOG2";
+char * d3 = "DIALOG3";
+const unsigned char face_wolf[] = {74,75,76,77};
+unsigned char face[] = {74,75,76,77};
+
+const struct MapInfo* level_1[] = {
+	&map,
+	&map2
+};
+const struct MapInfo* level_2[] = {
+	&mapsewer
+};
+const struct MapInfo** levels[] = {level_1, level_2};
+
+const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
+
+extern struct ArcherInfo* archer_data;
 
 void WriteAMULET();
 void WriteCOINS();
@@ -61,33 +92,6 @@ void populate_01();
 void ShowWindow();
 void ShowWindowDiag();
 void ShowDiag();
-
-//Levels
-INT8 load_next = 0;
-INT8 load_next_s = 0;
-INT8 load_next_b = 0;
-UINT8 current_level = 0u;
-UINT8 current_map = 0u;
-const struct MapInfo* level_1[] = {
-	&map,
-	&map2
-};
-const struct MapInfo* level_2[] = {
-	&mapsewer
-};
-const struct MapInfo** levels[] = {level_1, level_2};
-
-const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
-
-UINT16 drop_player_x;
-UINT16 drop_player_y;
-
-ARCHER_STATE archer_state;
-
-INT8 show_diag = 0;
-INT8 showing_diag = 0;
-INT8 max_diag = 2;
-extern struct ArcherInfo* archer_data;
 
 void Start_StateGame() {
 	
@@ -133,7 +137,7 @@ void Start_StateGame() {
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
-		coins = 99u;
+		coins = 0u;
 		archer_tool = 0;
 	}
 	
@@ -148,12 +152,6 @@ void Start_StateGame() {
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
-	
-	
-	/*
-	PRINT_POS(8, 3);
-	Printf("%d %d", drop_player_x, drop_player_y);
-	*/
 	
 	
 	switch(current_level){
@@ -209,7 +207,7 @@ void Start_StateGame() {
 
 void ShowWindow(){
 	showing_diag = 0;
-	show_diag = 0;
+	show_diag = -1;
 	HIDE_WIN;
 	//WINDOW
 	WX_REG = 7;
@@ -238,22 +236,18 @@ void ShowWindowDiag(){
 }
 
 void ShowDiag(){
-	//char * d[] = diags[current_level];
-	const char * d1 = "DIALOG";
-	const char * d2 = "DIALOG";
-	const char * ddd [] = {d1,d2};
-	PRINT_POS(3,1);
-	Printf(ddd[0]);
-	PRINT_POS(3,2);
-	Printf(ddd[1]);
-	if (showing_diag == 0){	
-		const unsigned char window_alt_map[] = {74,75,76,77};
-		// Where you want to make the change. change START/etc to what you want
-		set_win_tiles(1, 1, 2, 2, window_alt_map);
+	PRINT_POS(4,1);
+	Printf(d1);
+	PRINT_POS(4,2);
+	Printf(d2);
+	PRINT_POS(4,3);
+	Printf(d3);
+	if (showing_diag == 0){
+		set_win_tiles(1, 1, 2, 2, face);
 		showing_diag = 1;
 	}
-	PRINT_POS(10,3);
-	Printf("%d %d", show_diag, showing_diag);
+	/*PRINT_POS(10,3);
+	Printf("%d %d", show_diag, showing_diag);*/
 }
 
 void populate_01(){

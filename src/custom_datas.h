@@ -48,10 +48,9 @@ typedef enum  {
 	ENEMY_STATE_HIT,
 	ENEMY_STATE_DEAD,
 	ENEMY_STATE_ATTACK,
-	ENEMY_STATE_HIDDEN
+	ENEMY_STATE_HIDDEN,
+	ENEMY_STATE_WAIT
 }ENEMY_STATE;
-
-//const UINT8 damage_cooldown = 30u;
 
 struct EnemyInfo{
 	INT16 enemy_accel_y;
@@ -61,9 +60,4 @@ struct EnemyInfo{
 	UINT8 wait;
 	UINT8 enemydamage;
 	INT8 hp;
-};
-
-struct FaceInfo{
-	INT8 face_type;
-	INT8 face_setup;
 };
