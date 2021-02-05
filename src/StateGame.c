@@ -82,11 +82,12 @@ const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 UINT16 drop_player_x;
 UINT16 drop_player_y;
 
-STATE archer_state;
+ARCHER_STATE archer_state;
 
-INT8 show_diag;
+INT8 show_diag = 0;
 INT8 showing_diag = 0;
-
+INT8 max_diag = 2;
+extern struct ArcherInfo* archer_data;
 
 void Start_StateGame() {
 	
@@ -123,7 +124,6 @@ void Start_StateGame() {
 	
 	
 	//INIT ARCHER
-	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	
 	if (archer_data->ups & archer_data->ups != ups){
 		ups = archer_data->ups;
@@ -208,6 +208,8 @@ void Start_StateGame() {
 }
 
 void ShowWindow(){
+	showing_diag = 0;
+	show_diag = 0;
 	HIDE_WIN;
 	//WINDOW
 	WX_REG = 7;
@@ -228,7 +230,7 @@ void ShowWindowDiag(){
 		HIDE_WIN;
 		//WINDOW
 		WX_REG = 7;
-		WY_REG = 144 - 32;
+		WY_REG = 144 - 40; //40
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;
 	}
@@ -236,24 +238,22 @@ void ShowWindowDiag(){
 }
 
 void ShowDiag(){
-	PRINT_POS(3,1);
 	//char * d[] = diags[current_level];
 	const char * d1 = "DIALOG";
 	const char * d2 = "DIALOG";
 	const char * ddd [] = {d1,d2};
-	INT8 face = 0;
+	PRINT_POS(3,1);
 	Printf(ddd[0]);
 	PRINT_POS(3,2);
 	Printf(ddd[1]);
 	if (showing_diag == 0){	
-		if (face == 0){
-			/*struct Sprite* face_sprite = SpriteManagerAdd(SpriteDiagface, 8, 144);
-			struct FaceInfo* face_data = (struct FaceInfo*)face_sprite->custom_data;
-			face_data->face_type = face;
-			face_data->face_setup = 1;*/
-		}	
+		const unsigned char window_alt_map[] = {74,75,76,77};
+		// Where you want to make the change. change START/etc to what you want
+		set_win_tiles(1, 1, 2, 2, window_alt_map);
 		showing_diag = 1;
 	}
+	PRINT_POS(10,3);
+	Printf("%d %d", show_diag, showing_diag);
 }
 
 void populate_01(){
@@ -346,24 +346,17 @@ void Update_StateGame() {
 			break;
 		}
 	}
-	
+	if(show_diag >= max_diag){
+		ShowWindow();
+		return;
+	}
 	if(archer_state == STATE_DIAG){
-		if (show_diag == 2){
-			show_diag = -1;
-			showing_diag = 0;
-			ShowWindow();
-			return;
-		}
 		if(show_diag > 0 ){
 			ShowWindowDiag();
 			return;
 		}
-		if(show_diag < 0 ){
-			ShowWindow();
-			return;
-		}
 	}else{
-		struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+		//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 		if (amulet != archer_data->amulet){
 			amulet = archer_data->amulet;
 			WriteAMULET();		

@@ -30,7 +30,7 @@ UINT8 death_cooldown = 0;
 struct Sprite* princess_parent = 0;
 
 
-extern STATE archer_state;
+extern ARCHER_STATE archer_state;
 
 INT16 archer_accel_y = 0;
 
@@ -45,6 +45,7 @@ UINT8 hit_cooldown = 0u;
 struct ArcherInfo* archer_data;
 
 extern INT8 show_diag;
+extern INT8 max_diag;
 
 void Die();
 void Shoot();
@@ -76,11 +77,12 @@ void Start_SpritePlayer() {
 void Update_SpritePlayer() {
 	
 	if(archer_state == STATE_DIAG ){
-		if(KEY_RELEASED(J_A)){
-			show_diag += 1;			
-		}
-		if (show_diag < 0){
+		if (show_diag >= max_diag){
 			archer_state = STATE_NORMAL;
+		}else{		
+			if(KEY_RELEASED(J_A)){
+				show_diag += 1;	
+			}	
 		}
 		return;
 	}
@@ -132,13 +134,6 @@ void Update_SpritePlayer() {
 					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
 					else{SetSpriteAnim(THIS, anim_idle, 33u);}					
 				}
-				/*
-				if(KEY_TICKED(J_UP)){			
-					if(show_diag<0){show_diag=0;}
-					show_diag += 1;
-					archer_state = STATE_DIAG;
-					return;
-				}*/
 				if(KEY_PRESSED(J_UP)){
 					aimc += 1;
 					if(aimc >= 16){
@@ -147,8 +142,6 @@ void Update_SpritePlayer() {
 				}
 				if(KEY_RELEASED(J_UP)){
 					aimc = 0;
-					//if (aimc > 0){
-					//}
 					return;
 				}
 			}
@@ -158,10 +151,19 @@ void Update_SpritePlayer() {
 			}else if (THIS->coll_x != 5){
 				THIS->coll_x = 5;
 			}
-			//Check jumping
-			if(KEY_TICKED(J_A)) {
-				Jump();
+			
+			//Jump / Dialog
+			if(KEY_TICKED(J_A)){
+				if (KEY_PRESSED(J_UP)){		
+					//if(show_diag<0){show_diag=0;}
+					archer_state = STATE_DIAG;	
+					return;
+				}else{
+					//Check jumping
+					Jump();
+				}
 			}
+			
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1u;
 			} else {

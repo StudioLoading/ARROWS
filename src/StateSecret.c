@@ -28,8 +28,8 @@ extern INT8 load_next_s;
 extern INT8 level_tool;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
-extern STATE archer_state;
-
+extern ARCHER_STATE archer_state;
+extern struct ArcherInfo* archer_data;
 
 extern void WriteAMULET();
 extern void WriteCOINS();
@@ -71,17 +71,17 @@ void Start_StateSecret() {
 	SHOW_BKG;
 
 	//INIT ARCHER
-	struct ArcherInfo* archer_data_s = (struct ArcherInfo*)scroll_target->custom_data;
-	if (archer_data_s->ups > 0 & archer_data_s->ups != ups){
-		 ups = archer_data_s->ups;
+	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+	if (archer_data->ups > 0 & archer_data->ups != ups){
+		 ups = archer_data->ups;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 99u;
 	}
-	archer_data_s->ups =ups;
-	archer_data_s->hp = hp;
-	archer_data_s->coins = coins;
+	archer_data->ups =ups;
+	archer_data->hp = hp;
+	archer_data->coins = coins;
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -139,7 +139,7 @@ void populate_secret0(){
 
 void Update_StateSecret() {
 	
-	struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 
 	if (amulet != archer_data->amulet){
 		amulet = archer_data->amulet;

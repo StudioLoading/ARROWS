@@ -7,7 +7,7 @@ typedef enum  {
 	STATE_HIT,
 	STATE_DIAG,
 	STATE_DEAD
-}STATE;
+}ARCHER_STATE;
 
 struct ArcherInfo {
 	UINT8 amulet;

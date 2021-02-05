@@ -28,14 +28,22 @@ extern INT8 load_next_b;
 extern INT8 level_tool;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
-extern STATE archer_state;
+extern ARCHER_STATE archer_state;
+extern struct ArcherInfo* archer_data;
+extern INT8 show_diag;
+extern INT8 showing_diag;
+extern INT8 max_diag;
 
-void WriteBAMULET();
-void WriteBCOINS();
-void WriteBHP();
-void WriteBUPS();
-void WriteBMap();
-void WriteBTOOL();
+extern void ShowWindow();
+extern void ShowWindowDiag();
+extern void WriteAMULET();
+extern void WriteCOINS();
+extern void WriteHP();
+extern void WriteUPS();
+extern void WriteTOOL();
+
+
+
 
 //Boss
 UINT8 current_level_b = 0u;
@@ -51,7 +59,7 @@ const char * const level_b_names[] = {"THE CAVE"};
 
 void WriteBBOSSHP();
 void populate_boss0();
-void ShowBWindow();
+void WriteBMap();
 
 void Start_StateBoss() {
 
@@ -93,23 +101,25 @@ void Start_StateBoss() {
 	
 	
 	//INIT ARCHER
-	struct ArcherInfo* archer_data_b = (struct ArcherInfo*)scroll_target->custom_data;
-	if (archer_data_b->ups > 0 & archer_data_b->ups != ups){
-		ups = archer_data_b->ups;
+	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+	if (archer_data->ups > 0 & archer_data->ups != ups){
+		ups = archer_data->ups;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 99u;
 	}
-	archer_data_b->ups =ups;
-	archer_data_b->hp = hp;
-	archer_data_b->coins = coins;
+	archer_data->ups =ups;
+	archer_data->hp = hp;
+	archer_data->coins = coins;
 	
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowBWindow();
+	ShowWindow();
+	WriteBBOSSHP();
+	WriteBMap();
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -117,54 +127,46 @@ void Start_StateBoss() {
 
 }
 
-void ShowBWindow(){
-	HIDE_WIN;
-	//WINDOW
-	WX_REG = 7;
-	WY_REG = 144 - 32;
-	InitWindow(0, 0, &window);
-	SHOW_WIN;
-	
-	WriteBAMULET();
-	WriteBCOINS();
-	WriteBHP();
-	WriteBUPS();
-	//WriteBMap();
-	WriteBBOSSHP();
-	
-}
 
 void Update_StateBoss() {
 
-	struct ArcherInfo* archer_data_b = (struct ArcherInfo*)scroll_target->custom_data;
+	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+	if(show_diag >= max_diag){
+		ShowWindow();
+		return;
+	}
+	if(archer_state == STATE_DIAG){
+		if(show_diag > 0 ){
+			ShowWindowDiag();
+			return;
+		}
+	}else{
+		if (amulet != archer_data->amulet){
+			amulet = archer_data->amulet;
+			WriteAMULET();
+		}
+		if (coins != archer_data->coins){
+			coins = archer_data->coins;
+			WriteCOINS();
+		}
+		if (hp != archer_data->hp){
+			hp = archer_data->hp;
+			WriteHP();
+		}
+		if (ups != archer_data->ups){
+			ups = archer_data->ups;
+			WriteUPS();
+		}
 
-	if (amulet != archer_data_b->amulet){
-		amulet = archer_data_b->amulet;
-		WriteBAMULET();		
+		if (boss_hp != boss_data_b->hp){
+			boss_hp = boss_data_b->hp;
+			WriteBBOSSHP();		
+		}
+		
+		if(level_tool == archer_data->tool){
+			WriteTOOL();
+		}
 	}
-	if (coins != archer_data_b->coins){
-		coins = archer_data_b->coins;
-		WriteBCOINS();
-	}
-	if (hp != archer_data_b->hp){
-		hp = archer_data_b->hp;
-		WriteBHP();
-	}
-	if (ups != archer_data_b->ups){
-		ups = archer_data_b->ups;
-		WriteBUPS();
-	}
-
-	if (boss_hp != boss_data_b->hp){
-		boss_hp = boss_data_b->hp;
-		WriteBBOSSHP();		
-	}
-	
-	if(level_tool == archer_data_b->tool){
-		WriteBTOOL();
-	}
-	
-	
 	
 	if(load_next_b){
 		switch(load_next_b){
@@ -176,65 +178,10 @@ void Update_StateBoss() {
 	
 }
 
-
-void WriteBAMULET(){
-	PRINT_POS(13,1);
-	switch (amulet){
-		case 1: Printf("$"); break;
-		case 2: Printf("]"); break;
-		case 3: Printf("["); break;
-		case 4: Printf("#"); break;
-		case 5: Printf("@"); break;
-		default: Printf("$"); break;
-	}	
-}
-
 void WriteBMap(){
 	PRINT_POS(1, 3);
 	Printf(level_b_names[current_level_b]);	
 }
-
-void WriteBCOINS(){
-	PRINT_POS(17, 1);
-	if (coins > 9u){
-		Printf("%d", coins);
-	}else{
-		Printf("0%d", coins);
-	}
-}
-
-void WriteBHP(){	
-	PRINT_POS(7, 1);
-	if (hp < 10){
-		Printf("00%d", hp);
-	}
-	if (hp > 9 & hp < 100){
-		Printf("0%d", hp);
-	}
-	if (hp >= 100){
-		Printf("%d", hp);	
-	}
-}
-
-void WriteBTOOL(){
-	switch(level_tool){
-		case 6:
-			PRINT_POS(11, 1);
-			Printf("{");
-		break;
-		case 7:
-			PRINT_POS(11, 1);
-			Printf("<");
-		break;
-	}
-}
-
-void WriteBUPS(){
-	PRINT_POS(2, 1); //up
-	if (ups > 9){Printf("%d", ups);}
-	else{Printf("0%d", ups);}
-}
-
 
 void WriteBBOSSHP(){	
 	PRINT_POS(12, 3);

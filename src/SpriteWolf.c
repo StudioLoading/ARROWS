@@ -35,7 +35,7 @@ void Start_SpriteWolf() {
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
 	wolf_data->enemydamage = 20u;
-	wolf_data->hp = 10;
+	wolf_data->hp = 50;
 	wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -45,6 +45,7 @@ void Update_SpriteWolf() {
 		if(wolf_data->tile_e_collision==0){
 			wolf_data->tile_e_collision = TranslateSprite(THIS, 0, 1);	
 		}
+		wolf_data->hp = 0;
 		return;
 	}
 	if (wolf_data->enemy_state == ENEMY_STATE_JUMPING){
