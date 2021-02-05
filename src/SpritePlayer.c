@@ -20,6 +20,7 @@ extern INT8 max_diag;
 extern char * d1;
 extern char * d2;
 extern char * d3;
+extern char * d4;
 extern unsigned char face_wolf[];
 extern unsigned char face[];
 extern struct EnemyInfo* boss_data_b;
@@ -78,10 +79,12 @@ void Start_SpritePlayer() {
 void Update_SpritePlayer() {
 	
 	if(archer_state == STATE_DIAG ){
-		if (show_diag == -1){
+		if (show_diag == -1){ //NON TOCCARE
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
-			boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
+			if(is_on_boss){
+				boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
+			}
 		}else{		
 			if(show_diag < max_diag & KEY_RELEASED(J_B)){
 				show_diag += 1;	
@@ -321,11 +324,19 @@ void Update_SpritePlayer() {
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteWolf) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
-				if(ispr->type == SpriteWolf & dataenemy->enemy_state == ENEMY_STATE_WAIT){
-					THIS->x -= 8;
-					is_on_boss = 1;
-					Build_Next_Dialog();
-					return;
+				if(ispr->type == SpriteWolf){
+					if (dataenemy->enemy_state == ENEMY_STATE_WAIT){
+						THIS->x -= 8;
+						is_on_boss = 1;
+						Build_Next_Dialog();
+						return;
+					}
+					if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
+						THIS->x -= 8;
+						is_on_boss = 2;
+						Build_Next_Dialog();
+						return;
+					}
 				}
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
 					return;
@@ -529,30 +540,39 @@ void Hit() {
 }
 
 void Build_Next_Dialog(){
-	if (is_on_boss){
-		show_diag = 1;
-		SetSpriteAnim(THIS, anim_idle, 33u);
-		archer_state = STATE_DIAG;			
-		face[0] = face_wolf[0];
-		face[1] = face_wolf[1];
-		face[2] = face_wolf[2];
-		face[3] = face_wolf[3];
-		max_diag = 2;
-		d1 = "ANIMAL! BACK";
-		d2 = "TO YOUR CAGE!";
-		d3 = "-GRRR!";
-	}else{
-		switch(current_level){
-			case 0:
-				switch(current_map){
-					case 0:
-					break;
-					case 1:
-					break;
-				}
-			break;
-		}
+	show_diag = 1;
+	switch (is_on_boss){
+		case 1:  //is_on_boss == 1 significa che sono appena entrato
+		//TODO Devo tipizzare con una struct, e poi valorizzarla a seconda del
+		//tipo {face[]; char * dd [];} che però questo è un elemento di una cosa che sarà array
+		//perchè devo mostrare uno di questi elementi ogni J_A fino a max_diag			
+			SetSpriteAnim(THIS, anim_idle, 33u);
+			archer_state = STATE_DIAG;			
+			face[0] = face_wolf[0];
+			face[1] = face_wolf[1];
+			face[2] = face_wolf[2];
+			face[3] = face_wolf[3];
+			max_diag = 2;
+			d1 = "BEAST! BACK";
+			d2 = "TO YOUR CAGE!";
+			d3 = "-GRRR!";
+			return;
+		break;
+		case 2://is_on_boss == 2 significa che l'ho sconfitto
+		
+		break;
 	}
+	switch(current_level){
+		case 0:
+			switch(current_map){
+				case 0:
+				break;
+				case 1:
+				break;
+			}
+		break;
+	}
+
 }
 
 void Destroy_SpritePlayer() {

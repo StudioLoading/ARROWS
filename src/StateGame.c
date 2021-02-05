@@ -65,6 +65,7 @@ INT8 max_diag = 2;
 char * d1 = "DIALOG1";
 char * d2 = "DIALOG2";
 char * d3 = "DIALOG3";
+char * d4 = "DIALOG4";
 const unsigned char face_wolf[] = {74,75,76,77};
 unsigned char face[] = {74,75,76,77};
 
@@ -228,7 +229,7 @@ void ShowWindowDiag(){
 		HIDE_WIN;
 		//WINDOW
 		WX_REG = 7;
-		WY_REG = 144 - 40; //40
+		WY_REG = 144 - 48; //40
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;
 	}
@@ -242,8 +243,10 @@ void ShowDiag(){
 	Printf(d2);
 	PRINT_POS(4,3);
 	Printf(d3);
+	PRINT_POS(4,4);
+	Printf(d4);
 	if (showing_diag == 0){
-		set_win_tiles(1, 1, 2, 2, face);
+		set_win_tiles(1, 2, 2, 2, face);
 		showing_diag = 1;
 	}
 	/*PRINT_POS(10,3);

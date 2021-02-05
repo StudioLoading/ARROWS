@@ -130,7 +130,9 @@ void Start_StateBoss() {
 void Update_StateBoss() {
 
 	if(show_diag >= max_diag){
-		ShowWindow();
+		ShowWindow();		
+		WriteBBOSSHP();
+		WriteBMap();
 		return;
 	}
 	if(archer_state == STATE_DIAG){

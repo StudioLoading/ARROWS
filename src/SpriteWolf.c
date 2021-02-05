@@ -70,6 +70,12 @@ void Update_SpriteWolf() {
 		if(wolf_data->enemy_accel_y < 24) {
 			wolf_data->enemy_accel_y += 1;
 		}
+		if (wolf_data->vx > 0 & !SPRITE_GET_VMIRROR(THIS)){
+			SPRITE_SET_VMIRROR(THIS);
+		}
+		if(wolf_data->vx < 0 & SPRITE_GET_VMIRROR(THIS)){
+			SPRITE_UNSET_VMIRROR(THIS);
+		}
 		wolf_data->tile_e_collision = TranslateSprite(THIS, wolf_data->vx << delta_time, (wolf_data->enemy_accel_y >> 4)<< delta_time);
 		if(!wolf_data->tile_e_collision && delta_time != 0 && wolf_data->enemy_accel_y < 24) { //Do another iteration if there is no collision
 			wolf_data->enemy_accel_y += 2;
