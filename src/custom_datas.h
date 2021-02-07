@@ -61,3 +61,8 @@ struct EnemyInfo{
 	UINT8 enemydamage;
 	INT8 hp;
 };
+
+struct Dialog{
+	char * d[4];
+	unsigned char face[];
+};

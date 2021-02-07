@@ -15,6 +15,7 @@ extern INT8 load_next_s;
 extern INT8 load_next_b;
 extern UINT8 current_level;
 extern UINT8 current_map;
+extern UINT8 current_level_b;
 extern INT8 show_diag;
 extern INT8 max_diag;
 extern char * d1;
@@ -22,6 +23,7 @@ extern char * d2;
 extern char * d3;
 extern char * d4;
 extern unsigned char face_wolf[];
+extern unsigned char face_archer[];
 extern unsigned char face[];
 extern struct EnemyInfo* boss_data_b;
 
@@ -82,7 +84,7 @@ void Update_SpritePlayer() {
 		if (show_diag == -1){ //NON TOCCARE
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
-			if(is_on_boss){
+			if(is_on_boss & boss_data_b->enemy_state == ENEMY_STATE_WAIT ){
 				boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
 			}
 		}else{		
@@ -545,21 +547,41 @@ void Build_Next_Dialog(){
 		case 1:  //is_on_boss == 1 significa che sono appena entrato
 		//TODO Devo tipizzare con una struct, e poi valorizzarla a seconda del
 		//tipo {face[]; char * dd [];} che però questo è un elemento di una cosa che sarà array
-		//perchè devo mostrare uno di questi elementi ogni J_A fino a max_diag			
-			SetSpriteAnim(THIS, anim_idle, 33u);
-			archer_state = STATE_DIAG;			
-			face[0] = face_wolf[0];
-			face[1] = face_wolf[1];
-			face[2] = face_wolf[2];
-			face[3] = face_wolf[3];
-			max_diag = 2;
-			d1 = "BEAST! BACK";
-			d2 = "TO YOUR CAGE!";
-			d3 = "-GRRR!";
-			return;
+		//perchè devo mostrare uno di questi elementi ogni J_A fino a max_diag		
+			switch(current_level_b){
+				case 0u:
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					archer_state = STATE_DIAG;			
+					face[0] = face_wolf[0];
+					face[1] = face_wolf[1];
+					face[2] = face_wolf[2];
+					face[3] = face_wolf[3];
+					max_diag = 2;
+					d1 = "BEAST! BACK";
+					d2 = "TO YOUR CAGE!";
+					d3 = "-GRRR!";
+					d4 = "";
+					return;
+				break;
+			}	
 		break;
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
-		
+			switch(current_level_b){
+				case 0u:
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					archer_state = STATE_DIAG;			
+					face[0] = face_archer[0];
+					face[1] = face_archer[1];
+					face[2] = face_archer[2];
+					face[3] = face_archer[3];
+					max_diag = 2;
+					d1 = "I...";
+					d2 = "JUST NEEDED THE";
+					d3 = "WRENCH TO GO";
+					d4 = "ON. SORRY WOLF!";
+					return;
+				break;
+			}	
 		break;
 	}
 	switch(current_level){

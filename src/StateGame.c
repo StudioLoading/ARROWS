@@ -67,7 +67,8 @@ char * d2 = "DIALOG2";
 char * d3 = "DIALOG3";
 char * d4 = "DIALOG4";
 const unsigned char face_wolf[] = {74,75,76,77};
-unsigned char face[] = {74,75,76,77};
+const unsigned char face_archer[] = {88,90,89,91};
+unsigned char face[] = {0,0,0,0};
 
 const struct MapInfo* level_1[] = {
 	&map,
@@ -81,6 +82,8 @@ const struct MapInfo** levels[] = {level_1, level_2};
 const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 
 extern struct ArcherInfo* archer_data;
+
+struct Dialog* diagarray[] = {0,0,0,0};
 
 void WriteAMULET();
 void WriteCOINS();
