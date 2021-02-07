@@ -33,6 +33,7 @@ extern struct ArcherInfo* archer_data;
 extern INT8 show_diag;
 extern INT8 showing_diag;
 extern INT8 max_diag;
+extern INT8 is_on_boss;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
@@ -41,6 +42,7 @@ extern void WriteCOINS();
 extern void WriteHP();
 extern void WriteUPS();
 extern void WriteTOOL();
+extern void Build_Next_Dialog();
 
 
 
@@ -125,6 +127,9 @@ void Start_StateBoss() {
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 
+	is_on_boss = 0;
+	Build_Next_Dialog();
+	
 }
 
 void Update_StateBoss() {

@@ -252,8 +252,6 @@ void ShowDiag(){
 		set_win_tiles(1, 2, 2, 2, face);
 		showing_diag = 1;
 	}
-	/*PRINT_POS(10,3);
-	Printf("%d %d", show_diag, showing_diag);*/
 }
 
 void populate_01(){

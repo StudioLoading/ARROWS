@@ -38,17 +38,17 @@ const UINT8 anim_hit[] = {2, 8, 9};
 const UINT8 anim_shoot[] = {2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13 ,14 , 13};
 
-INT8 shoot_cooldown = 0;
 UINT8 jump_power = 0u;
-INT8 platform_vx = 0;
 UINT8 death_cooldown = 0;
 UINT8 aimc = 0u;
 UINT8 hit_cooldown = 0u;
-INT16 archer_accel_y = 0;
 UINT8 tile_collision = 0u;
+INT16 archer_accel_y = 0;
+INT8 shoot_cooldown = 0;
+INT8 platform_vx = 0;
+INT8 is_on_boss = -1;
 struct ArcherInfo* archer_data;
 struct Sprite* princess_parent = 0;
-INT8 is_on_boss = 0;
 
 void Die();
 void Shoot();
@@ -255,7 +255,6 @@ void Update_SpritePlayer() {
 	
 	UINT8 scroll_tile;
 	struct Sprite* ispr;
-	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
 		if(ispr->type == SpriteItem) {
 			if(CheckCollision(THIS, ispr)) {
@@ -299,13 +298,16 @@ void Update_SpritePlayer() {
 			if(CheckCollision(THIS, ispr)) {
 				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
 				switch(datakey->type){
-					case 1: //wrench
+					case 1: //key
 						archer_data->tool = 6;
 						SpriteManagerRemoveSprite(ispr);	
+						Build_Next_Dialog();
 					break;
-					case 2: //key
+					case 2: //wrench
 						archer_data->tool = 7;
-						SpriteManagerRemoveSprite(ispr);	
+						SpriteManagerRemoveSprite(ispr);
+						Build_Next_Dialog();
+						return;
 					break;
 				}
 			}
@@ -494,6 +496,7 @@ void CheckCollisionTile() {
 			}
 		break;
 		case 7u: //fine level - goto boss!
+			Build_Next_Dialog();
 			if(archer_data->tool){
 				is_on_boss = 1;
 				archer_data->tool = 0; //tool consumato
@@ -544,10 +547,28 @@ void Hit() {
 void Build_Next_Dialog(){
 	show_diag = 1;
 	switch (is_on_boss){
-		case 1:  //is_on_boss == 1 significa che sono appena entrato
+		case 0:  //is_on_boss == 0 significa che sono appena entrato
 		//TODO Devo tipizzare con una struct, e poi valorizzarla a seconda del
 		//tipo {face[]; char * dd [];} che però questo è un elemento di una cosa che sarà array
 		//perchè devo mostrare uno di questi elementi ogni J_A fino a max_diag		
+			switch(current_level_b){
+				case 0u:
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					archer_state = STATE_DIAG;			
+					face[0] = face_archer[0];
+					face[1] = face_archer[1];
+					face[2] = face_archer[2];
+					face[3] = face_archer[3];
+					max_diag = 2;
+					d1 = "THE BLACK WOLF";
+					d2 = "OWNS THE WRENCH";
+					d3 = "I NEED TO EXIT.";
+					d4 = "LET'S TALK!";
+					return;
+				break;
+			}	
+		break;
+		case 1:  //is_on_boss == 1 significa che ho toccato il wolf
 			switch(current_level_b){
 				case 0u:
 					SetSpriteAnim(THIS, anim_idle, 33u);
@@ -584,12 +605,53 @@ void Build_Next_Dialog(){
 			}	
 		break;
 	}
+	
 	switch(current_level){
 		case 0:
 			switch(current_map){
-				case 0:
-				break;
 				case 1:
+					if (tile_collision == 7u){
+						if (archer_data->tool){
+							archer_state = STATE_DIAG;			
+							face[0] = face_archer[0];
+							face[1] = face_archer[1];
+							face[2] = face_archer[2];
+							face[3] = face_archer[3];
+							max_diag = 2;
+							d1 = "-------------";
+							d2 = "|CAVE OF THE|";
+							d3 = "|BLACK WOLF |";
+							d4 = "-------------";
+							return;						 
+						}else{
+							archer_state = STATE_DIAG;			
+							face[0] = face_archer[0];
+							face[1] = face_archer[1];
+							face[2] = face_archer[2];
+							face[3] = face_archer[3];
+							max_diag = 2;
+							d1 = "CAVE OF THE";
+							d2 = "BLACK WOLF. I";
+							d3 = "NEED A KEY TO";
+							d4 = "OPEN THIS DOOR.";
+							return;
+						}
+					}
+					if (archer_data->tool == 6){//ho trovato la chiave
+						archer_state = STATE_DIAG;			
+						face[0] = face_archer[0];
+						face[1] = face_archer[1];
+						face[2] = face_archer[2];
+						face[3] = face_archer[3];
+						max_diag = 2;
+						d1 = "THIS KEY OPENS";
+						d2 = "THE BLACK WOLF";
+						d3 = "CAVE. LET'S GO.";
+						d4 = "";
+						return;
+					}
+				break;
+				case 2:
 				break;
 			}
 		break;
