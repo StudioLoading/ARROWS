@@ -166,10 +166,10 @@ void Start_StateGame() {
 					//wrench
 					if(archer_data->tool == 0){
 						populate_00();
-						struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
+						/*struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
 						struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 						datakey->type = 1;
-						datakey->setup = 1u;
+						datakey->setup = 1u; */
 					}
 				break;
 				case 1:
@@ -314,6 +314,14 @@ void populate_00(){
 
 void Update_StateGame() {
 
+	/*UINT8 pp = GetScrollTile((scroll_target->x >> 3) +1, (scroll_target->y >> 3));
+	PRINT_POS(15, 3);
+	if (pp < 10u){
+		Printf("0%u", pp);	
+	}else{
+		Printf("%u", pp);		
+	}*/
+	
 	if(load_next) {
 		switch(load_next){
 			case 1: //stage
@@ -333,8 +341,10 @@ void Update_StateGame() {
 	if(load_next_b){
 		switch(load_next_b){
 			case 1: //vado allo StateBoss
-				load_next_b = 0;
-				SetState(StateBoss);//StateBoss
+				if(archer_state != STATE_DIAG){
+					load_next_b = 0;
+					SetState(StateBoss);//StateBoss
+				}
 			break;
 			case 2: // provengo dal boss TODO
 				load_next_b = 0;

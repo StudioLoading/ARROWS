@@ -64,7 +64,7 @@ void Start_SpritePlayer() {
 	archer_data->amulet = 1u;
 	archer_data->tool = 0;
 	archer_data->ups = 0;
-	archer_data->coins = 0u;
+	archer_data->coins = 30u;
 	
 	
 	THIS->coll_x = 5;
@@ -75,7 +75,8 @@ void Start_SpritePlayer() {
 	archer_state = STATE_JUMPING;
 	
 	hit_cooldown = 36u;
-
+	
+	NR50_REG = 0x55; //Max volume	
 }
 
 void Update_SpritePlayer() {
@@ -163,7 +164,7 @@ void Update_SpritePlayer() {
 			//Jump / Dialog
 			if(KEY_TICKED(J_A)){
 				if (KEY_PRESSED(J_UP)){		
-					archer_state = STATE_DIAG;	
+					Build_Next_Dialog();
 					return;
 				}else{
 					//Check jumping
@@ -272,6 +273,7 @@ void Update_SpritePlayer() {
 						break;
 						case 2u: //hp
 							archer_data->hp = 100u;
+							PlayFx(CHANNEL_1, 3, 0x54, 0x80, 0x74, 0x83, 0x86);
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 3u: //up
@@ -330,13 +332,21 @@ void Update_SpritePlayer() {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(ispr->type == SpriteWolf){
 					if (dataenemy->enemy_state == ENEMY_STATE_WAIT){
-						THIS->x -= 8;
+						if (ispr->x > THIS->x){
+							THIS->x -= 1;
+						}else{
+							THIS->x += 1;
+						}
 						is_on_boss = 1;
 						Build_Next_Dialog();
 						return;
 					}
 					if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
-						THIS->x -= 8;
+						if (ispr->x > THIS->x){
+							THIS->x -= 1;
+						}else{
+							THIS->x += 1;
+						}
 						is_on_boss = 2;
 						Build_Next_Dialog();
 						return;
@@ -364,13 +374,14 @@ void Update_SpritePlayer() {
 					if (archer_data->hp <= 0){
 						archer_data->hp = 0;
 						Die();
-					}
-					Hit();
-					if (ispr->x < THIS->x){
-						platform_vx = 1;
 					}else{
-						platform_vx = -1;
-					}	
+						Hit();
+						if (ispr->x < THIS->x){
+							platform_vx = 1;
+						}else{
+							platform_vx = -1;
+						}		
+					}
 				}
 			}
 		}
@@ -413,6 +424,7 @@ void Update_SpritePlayer() {
 }
 
 void Die(){
+	PlayFx(CHANNEL_1, 3, 0x7c, 0x80, 0x74, 0x83, 0x86);
 	archer_state = STATE_DEAD;
 }
 
@@ -539,13 +551,11 @@ void Hit() {
 		platform_vx = 1;
 		THIS->y -= 6;
 		SetSpriteAnim(THIS, anim_hit, 32u);
-		NR50_REG = 0x55; //Max volume
 		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
 	}
 }
 
 void Build_Next_Dialog(){
-	show_diag = 1;
 	switch (is_on_boss){
 		case 0:  //is_on_boss == 0 significa che sono appena entrato
 		//TODO Devo tipizzare con una struct, e poi valorizzarla a seconda del
@@ -553,6 +563,7 @@ void Build_Next_Dialog(){
 		//perchè devo mostrare uno di questi elementi ogni J_A fino a max_diag		
 			switch(current_level_b){
 				case 0u:
+					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;			
 					face[0] = face_archer[0];
@@ -571,6 +582,7 @@ void Build_Next_Dialog(){
 		case 1:  //is_on_boss == 1 significa che ho toccato il wolf
 			switch(current_level_b){
 				case 0u:
+					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;			
 					face[0] = face_wolf[0];
@@ -589,6 +601,7 @@ void Build_Next_Dialog(){
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
 			switch(current_level_b){
 				case 0u:
+					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;			
 					face[0] = face_archer[0];
@@ -609,21 +622,75 @@ void Build_Next_Dialog(){
 	switch(current_level){
 		case 0:
 			switch(current_map){
+				case 0:
+					if (archer_data->tool == 6){//ho trovato la chiave
+						show_diag = 1;
+						archer_state = STATE_DIAG;			
+						face[0] = face_archer[0];
+						face[1] = face_archer[1];
+						face[2] = face_archer[2];
+						face[3] = face_archer[3];
+						max_diag = 2;
+						d1 = "THIS KEY OPENS";
+						d2 = "THE BLACK WOLF";
+						d3 = "CAVE. LET'S GO.";
+						d4 = "";
+						return;
+					}
+					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 4u){
+						if (THIS->x > 200){//sto cercando di parlare col prig che ha la chiave
+							if (archer_data->coins < 30u){
+								show_diag = 1;
+								archer_state = STATE_DIAG;			
+								face[0] = face_archer[0];
+								face[1] = face_archer[1];
+								face[2] = face_archer[2];
+								face[3] = face_archer[3];
+								max_diag = 2;
+								d1 = "30 COINS AND I";
+								d2 = "GIVE YOU THE";
+								d3 = "KEY.";
+								d4 = "";
+							}else{
+								archer_data->coins -= 30u;
+								show_diag = 1;
+								archer_state = STATE_DIAG;			
+								face[0] = face_archer[0];
+								face[1] = face_archer[1];
+								face[2] = face_archer[2];
+								face[3] = face_archer[3];
+								max_diag = 2;
+								d1 = "TAKE THE MONEY";
+								d2 = "";
+								d3 = "";
+								d4 = "";
+								
+								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
+								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+								datakey->type = 1;
+								datakey->setup = 1u;
+								
+							}				
+						}
+					}
+				break;
 				case 1:
 					if (tile_collision == 7u){
 						if (archer_data->tool){
+							show_diag = 1;
 							archer_state = STATE_DIAG;			
 							face[0] = face_archer[0];
 							face[1] = face_archer[1];
 							face[2] = face_archer[2];
 							face[3] = face_archer[3];
 							max_diag = 2;
-							d1 = "-------------";
-							d2 = "|CAVE OF THE|";
-							d3 = "|BLACK WOLF |";
-							d4 = "-------------";
+							d1 = "------------";
+							d2 = " CAVE OF THE";
+							d3 = " BLACK WOLF ";
+							d4 = "------------";
 							return;						 
 						}else{
+							show_diag = 1;
 							archer_state = STATE_DIAG;			
 							face[0] = face_archer[0];
 							face[1] = face_archer[1];
@@ -636,19 +703,6 @@ void Build_Next_Dialog(){
 							d4 = "OPEN THIS DOOR.";
 							return;
 						}
-					}
-					if (archer_data->tool == 6){//ho trovato la chiave
-						archer_state = STATE_DIAG;			
-						face[0] = face_archer[0];
-						face[1] = face_archer[1];
-						face[2] = face_archer[2];
-						face[3] = face_archer[3];
-						max_diag = 2;
-						d1 = "THIS KEY OPENS";
-						d2 = "THE BLACK WOLF";
-						d3 = "CAVE. LET'S GO.";
-						d4 = "";
-						return;
 					}
 				break;
 				case 2:

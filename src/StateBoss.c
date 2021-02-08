@@ -180,6 +180,7 @@ void Update_StateBoss() {
 	if(load_next_b){
 		switch(load_next_b){
 			case 2: //esco dal boss col tool
+				is_on_boss = 0;
 				SetState(StateGame);
 			break;
 		}
