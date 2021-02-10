@@ -264,11 +264,7 @@ void Update_SpritePlayer() {
 					switch(dataitem->type){
 						case 1u: //coins
 							archer_data->coins++;
-							if (archer_data->coins == 100u){
-								archer_data->coins = 0u;
-								archer_data->ups += 1;	
-							}
-							PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);
+							PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 2u: //hp
@@ -285,8 +281,9 @@ void Update_SpritePlayer() {
 							if (archer_data->coins >= 100){
 								archer_data->coins = archer_data->coins - 100;
 								archer_data->ups += 1;	
+							}else{
+								PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							}
-							PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 10u: //scrigno
@@ -308,7 +305,6 @@ void Update_SpritePlayer() {
 					case 2: //wrench
 						archer_data->tool = 7;
 						SpriteManagerRemoveSprite(ispr);
-						Build_Next_Dialog();
 						return;
 					break;
 				}
@@ -517,9 +513,12 @@ void CheckCollisionTile() {
 		break;
 		case 8u: //fine boss!
 			if(archer_data->tool){
-				is_on_boss = 0;
+				is_on_boss = -1;
 				archer_data->tool = 0; //tool consumato
-				load_next_b = 2;
+				load_next_b = 0;
+				current_level += 1u;
+				current_map = 0;
+				SetState(StateGame);
 			}			
 		break;
 		case 19u: //exit secret room
@@ -701,6 +700,7 @@ void Build_Next_Dialog(){
 							d2 = "BLACK WOLF. I";
 							d3 = "NEED A KEY TO";
 							d4 = "OPEN THIS DOOR.";
+							PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 							return;
 						}
 					}

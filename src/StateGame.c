@@ -24,6 +24,8 @@
 #include "Palette.h"
 #include "string.h"
 #include "Print.h"
+#include "Sound.h"
+#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -82,6 +84,7 @@ const struct MapInfo** levels[] = {level_1, level_2};
 const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 
 extern struct ArcherInfo* archer_data;
+extern INT8 is_on_boss;
 
 struct Dialog* diagarray[] = {0,0,0,0};
 
@@ -132,7 +135,7 @@ void Start_StateGame() {
 	
 	
 	//INIT ARCHER
-	
+	is_on_boss = -1;
 	if (archer_data->ups & archer_data->ups != ups){
 		ups = archer_data->ups;
 	}
@@ -156,7 +159,6 @@ void Start_StateGame() {
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
-	
 	
 	switch(current_level){
 		case 0u:
@@ -314,14 +316,6 @@ void populate_00(){
 
 void Update_StateGame() {
 
-	/*UINT8 pp = GetScrollTile((scroll_target->x >> 3) +1, (scroll_target->y >> 3));
-	PRINT_POS(15, 3);
-	if (pp < 10u){
-		Printf("0%u", pp);	
-	}else{
-		Printf("%u", pp);		
-	}*/
-	
 	if(load_next) {
 		switch(load_next){
 			case 1: //stage
@@ -346,12 +340,12 @@ void Update_StateGame() {
 					SetState(StateBoss);//StateBoss
 				}
 			break;
-			case 2: // provengo dal boss TODO
+			/*case 2: // provengo dal boss, vado al next level
 				load_next_b = 0;
 				current_level += 1u;
 				current_map = 0;
 				SetState(StateGame);
-			break;
+			break;*/
 		}
 	}
 	if(show_diag >= max_diag){
@@ -406,7 +400,12 @@ void WriteMap(){
 	Printf(level_names[current_level]);	
 }
 
-void WriteCOINS(){
+void WriteCOINS(){	
+	if (archer_data->coins == 100u){
+		archer_data->coins = 0u;
+		coins = 0u;
+		archer_data->ups += 1;	
+	}
 	PRINT_POS(17, 1);
 	if (coins > 9u){
 		Printf("%d", coins);

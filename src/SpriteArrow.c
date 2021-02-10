@@ -87,6 +87,7 @@ void Update_SpriteArrow() {
 			}
 		}
 	}
+	
 }
 
 void SetupArrow(){
