@@ -24,6 +24,7 @@ extern char * d3;
 extern char * d4;
 extern unsigned char face_wolf[];
 extern unsigned char face_archer[];
+extern unsigned char face_slave[];
 extern unsigned char face[];
 extern struct EnemyInfo* boss_data_b;
 
@@ -64,7 +65,7 @@ void Start_SpritePlayer() {
 	archer_data->amulet = 1u;
 	archer_data->tool = 0;
 	archer_data->ups = 0;
-	archer_data->coins = 30u;
+	archer_data->coins = 0u;
 	
 	
 	THIS->coll_x = 5;
@@ -263,7 +264,7 @@ void Update_SpritePlayer() {
 				if (dataitem->setup == 0u){ //se e' trasparente non faccio niente
 					switch(dataitem->type){
 						case 1u: //coins
-							archer_data->coins++;
+							archer_data->coins += 1u;
 							PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							SpriteManagerRemoveSprite(ispr);
 						break;
@@ -277,9 +278,9 @@ void Update_SpritePlayer() {
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 7u: //dcoin
-							archer_data->coins+=10;
-							if (archer_data->coins >= 100){
-								archer_data->coins = archer_data->coins - 100;
+							archer_data->coins += 10u;
+							if (archer_data->coins >= 100u){
+								archer_data->coins = archer_data->coins - 100u;
 								archer_data->ups += 1;	
 							}else{
 								PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
@@ -638,31 +639,31 @@ void Build_Next_Dialog(){
 					}
 					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 4u){
 						if (THIS->x > 200){//sto cercando di parlare col prig che ha la chiave
-							if (archer_data->coins < 30u){
+							if (archer_data->coins < 20u){
 								show_diag = 1;
 								archer_state = STATE_DIAG;			
-								face[0] = face_archer[0];
-								face[1] = face_archer[1];
-								face[2] = face_archer[2];
-								face[3] = face_archer[3];
+								face[0] = face_slave[0];
+								face[1] = face_slave[1];
+								face[2] = face_slave[2];
+								face[3] = face_slave[3];
 								max_diag = 2;
-								d1 = "30 COINS AND I";
+								d1 = "20 COINS AND I";
 								d2 = "GIVE YOU THE";
 								d3 = "KEY.";
 								d4 = "";
 							}else{
-								archer_data->coins -= 30u;
+								archer_data->coins -= 20u;
 								show_diag = 1;
 								archer_state = STATE_DIAG;			
-								face[0] = face_archer[0];
-								face[1] = face_archer[1];
-								face[2] = face_archer[2];
-								face[3] = face_archer[3];
+								face[0] = face_slave[0];
+								face[1] = face_slave[1];
+								face[2] = face_slave[2];
+								face[3] = face_slave[3];
 								max_diag = 2;
-								d1 = "TAKE THE MONEY";
-								d2 = "";
-								d3 = "";
-								d4 = "";
+								d1 = "THANK YOU.";
+								d2 = "HERE IS THE";
+								d3 = "KEY.";
+								d4 = ".. EH EH !";
 								
 								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
 								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
@@ -670,6 +671,19 @@ void Build_Next_Dialog(){
 								datakey->setup = 1u;
 								
 							}				
+						}else{//qualsiasi altro slave
+							archer_data->coins -= 20u;
+							show_diag = 1;
+							archer_state = STATE_DIAG;			
+							face[0] = face_slave[0];
+							face[1] = face_slave[1];
+							face[2] = face_slave[2];
+							face[3] = face_slave[3];
+							max_diag = 2;
+							d1 = "WHAT HAVE WE";
+							d2 = "DONE !?";
+							d3 = "--SIGH!";
+							d4 = "";
 						}
 					}
 				break;

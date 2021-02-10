@@ -43,7 +43,7 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 92, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 92, 100, 101, 0};//numero delle tile con collisioni e ultimo sempre zero
 
 UINT8 amulet = 1u;
 UINT8 coins = 0u;
@@ -54,7 +54,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0u;
+UINT8 current_level = 1u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -70,7 +70,10 @@ char * d3 = "DIALOG3";
 char * d4 = "DIALOG4";
 const unsigned char face_wolf[] = {74,75,76,77};
 const unsigned char face_archer[] = {88,90,89,91};
+const unsigned char face_slave[] = {92,94,93,95};
 unsigned char face[] = {0,0,0,0};
+
+UINT8 updatecounter = 0u;
 
 const struct MapInfo* level_1[] = {
 	&map,
@@ -146,6 +149,7 @@ void Start_StateGame() {
 		ups = 3;
 		coins = 0u;
 		archer_tool = 0;
+		hp = 50;
 	}
 	
 	archer_data->ups = ups;
@@ -348,6 +352,50 @@ void Update_StateGame() {
 			break;*/
 		}
 	}
+	
+	if (current_level == 1 & current_map == 0){
+		updatecounter++;
+		if (updatecounter < 31) {
+			const unsigned char wf0[1] = {123};
+			const unsigned char wf1[1] = {124};
+			const unsigned char wf2[1] = {125};
+			const unsigned char wf3[1] = {126};
+			const unsigned char wt0[1] = {127};
+			const unsigned char wt1[1] = {128};
+			const unsigned char wt2[1] = {129};
+			const unsigned char wt3[1] = {130};
+			switch(updatecounter){
+				case 1:		set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf0);
+							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf0);
+							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf0);
+							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf0);
+							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt3);
+							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt0);break;
+				case 10:	set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf1); 
+							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf1);
+							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf1);
+							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf1);
+							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt2);
+							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt1);break;
+				case 20:	set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf2);
+							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf2);
+							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf2);
+							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf2);
+							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt1);
+							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt2); break;
+				case 30:	set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf3);
+							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf3);
+							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf3);
+							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf3); 
+							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt0);
+							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt3);break;
+			}			
+		}else{
+			updatecounter = 0;
+		}
+	}
+	
+	
 	if(show_diag >= max_diag){
 		ShowWindow();
 		return;
@@ -407,7 +455,7 @@ void WriteCOINS(){
 		archer_data->ups += 1;	
 	}
 	PRINT_POS(17, 1);
-	if (coins > 9u){
+	if (coins > 9){
 		Printf("%d", coins);
 	}else{
 		Printf("0%d", coins);
