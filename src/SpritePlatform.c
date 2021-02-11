@@ -21,6 +21,7 @@ void Start_SpritePlatform() {
 	data_platform->type = 0;
 	data_platform->distance = 200;
 	data_platform->step = 0;
+	data_platform->initx = THIS->x;
 }
 
 void Update_SpritePlatform() {

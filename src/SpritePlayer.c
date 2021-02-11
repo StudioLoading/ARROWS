@@ -18,10 +18,10 @@ extern UINT8 current_map;
 extern UINT8 current_level_b;
 extern INT8 show_diag;
 extern INT8 max_diag;
-extern char * d1;
-extern char * d2;
-extern char * d3;
-extern char * d4;
+extern const unsigned char * d1;
+extern const unsigned char * d2;
+extern const unsigned char * d3;
+extern const unsigned char * d4;
 extern unsigned char face_wolf[];
 extern unsigned char face_archer[];
 extern unsigned char face_slave[];
@@ -41,7 +41,6 @@ const UINT8 anim_flying[] = {4, 12, 13 ,14 , 13};
 
 UINT8 jump_power = 0u;
 UINT8 death_cooldown = 0;
-UINT8 aimc = 0u;
 UINT8 hit_cooldown = 0u;
 UINT8 tile_collision = 0u;
 INT16 archer_accel_y = 0;
@@ -143,16 +142,6 @@ void Update_SpritePlayer() {
 				}else{
 					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
 					else{SetSpriteAnim(THIS, anim_idle, 33u);}					
-				}
-				if(KEY_PRESSED(J_UP)){
-					aimc += 1;
-					if(aimc >= 16){
-						aimc=16;
-					}
-				}
-				if(KEY_RELEASED(J_UP)){
-					aimc = 0;
-					return;
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
@@ -418,6 +407,10 @@ void Update_SpritePlayer() {
 		}
 	}
 
+	if (archer_state == STATE_NORMAL & GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)+4) == 37u){
+		archer_accel_y = 2;
+		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
+	}
 }
 
 void Die(){
@@ -441,20 +434,14 @@ void Shoot() {
 		arrow_data->arrowdir = 4; // verticale in giu
 		arrow_sprite->y += 8;
 	}else{
-		if (KEY_PRESSED(J_UP)){ //diagonale
-			arrow_data->arrowdir = 2;
-		}else{
-			if(aimc < 16){ //orizzontale
-				arrow_data->arrowdir = 1;
-			}	
-		}
-		if (aimc == 16){ // verticale in su
+		if (KEY_PRESSED(J_UP)){ //verticale in su
 			arrow_data->arrowdir = 3;
 			arrow_sprite->y -= 4;
+		}else{
+			arrow_data->arrowdir = 1;
 		}
 	}
 	shoot_cooldown = 4;//8
-	aimc = 0;
 }
 
 void Jump() {
@@ -565,11 +552,7 @@ void Build_Next_Dialog(){
 				case 0u:
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;			
-					face[0] = face_archer[0];
-					face[1] = face_archer[1];
-					face[2] = face_archer[2];
-					face[3] = face_archer[3];
+					archer_state = STATE_DIAG;
 					max_diag = 2;
 					d1 = "THE BLACK WOLF";
 					d2 = "OWNS THE WRENCH";
@@ -584,11 +567,7 @@ void Build_Next_Dialog(){
 				case 0u:
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;			
-					face[0] = face_wolf[0];
-					face[1] = face_wolf[1];
-					face[2] = face_wolf[2];
-					face[3] = face_wolf[3];
+					archer_state = STATE_DIAG;
 					max_diag = 2;
 					d1 = "BEAST! BACK";
 					d2 = "TO YOUR CAGE!";
@@ -603,11 +582,7 @@ void Build_Next_Dialog(){
 				case 0u:
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;			
-					face[0] = face_archer[0];
-					face[1] = face_archer[1];
-					face[2] = face_archer[2];
-					face[3] = face_archer[3];
+					archer_state = STATE_DIAG;
 					max_diag = 2;
 					d1 = "I...";
 					d2 = "JUST NEEDED THE";
@@ -625,11 +600,7 @@ void Build_Next_Dialog(){
 				case 0:
 					if (archer_data->tool == 6){//ho trovato la chiave
 						show_diag = 1;
-						archer_state = STATE_DIAG;			
-						face[0] = face_archer[0];
-						face[1] = face_archer[1];
-						face[2] = face_archer[2];
-						face[3] = face_archer[3];
+						archer_state = STATE_DIAG;
 						max_diag = 2;
 						d1 = "THIS KEY OPENS";
 						d2 = "THE BLACK WOLF";
@@ -638,64 +609,54 @@ void Build_Next_Dialog(){
 						return;
 					}
 					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 4u){
-						if (THIS->x > 200){//sto cercando di parlare col prig che ha la chiave
+						if (THIS->x > (UINT16) 43u << 3 & archer_data->tool == 0){//sto cercando di parlare col prig che ha la chiave
 							if (archer_data->coins < 20u){
 								show_diag = 1;
-								archer_state = STATE_DIAG;			
-								face[0] = face_slave[0];
-								face[1] = face_slave[1];
-								face[2] = face_slave[2];
-								face[3] = face_slave[3];
+								archer_state = STATE_DIAG;
 								max_diag = 2;
-								d1 = "20 COINS AND I";
-								d2 = "GIVE YOU THE";
-								d3 = "KEY.";
+								d1 = "SLAVE: 20 COINS";
+								d2 = "FOR THE KEY";
+								d3 = "";
 								d4 = "";
 							}else{
 								archer_data->coins -= 20u;
 								show_diag = 1;
-								archer_state = STATE_DIAG;			
-								face[0] = face_slave[0];
-								face[1] = face_slave[1];
-								face[2] = face_slave[2];
-								face[3] = face_slave[3];
+								archer_state = STATE_DIAG;
 								max_diag = 2;
-								d1 = "THANK YOU.";
+								d1 = "SLAVE: THANK YOU";
 								d2 = "HERE IS THE";
 								d3 = "KEY.";
-								d4 = ".. EH EH !";
-								
+								d4 = ".. EH EH !";								
 								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
 								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 								datakey->type = 1;
-								datakey->setup = 1u;
-								
+								datakey->setup = 1u;								
 							}				
 						}else{//qualsiasi altro slave
-							archer_data->coins -= 20u;
 							show_diag = 1;
-							archer_state = STATE_DIAG;			
-							face[0] = face_slave[0];
-							face[1] = face_slave[1];
-							face[2] = face_slave[2];
-							face[3] = face_slave[3];
+							archer_state = STATE_DIAG;
 							max_diag = 2;
-							d1 = "WHAT HAVE WE";
-							d2 = "DONE !?";
+							d1 = "SLAVE: WHAT'VE";
+							d2 = "WE DONE !?";
 							d3 = "--SIGH!";
 							d4 = "";
 						}
+					}
+					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 30u){
+						show_diag = 1;
+						archer_state = STATE_DIAG;
+						max_diag = 2;
+						d1 = "SLAVE: NOW I FEEL";
+						d2 = "WHAT THEY FELT.";
+						d3 = "";
+						d4 = "";
 					}
 				break;
 				case 1:
 					if (tile_collision == 7u){
 						if (archer_data->tool){
 							show_diag = 1;
-							archer_state = STATE_DIAG;			
-							face[0] = face_archer[0];
-							face[1] = face_archer[1];
-							face[2] = face_archer[2];
-							face[3] = face_archer[3];
+							archer_state = STATE_DIAG;
 							max_diag = 2;
 							d1 = "------------";
 							d2 = " CAVE OF THE";
@@ -704,11 +665,7 @@ void Build_Next_Dialog(){
 							return;						 
 						}else{
 							show_diag = 1;
-							archer_state = STATE_DIAG;			
-							face[0] = face_archer[0];
-							face[1] = face_archer[1];
-							face[2] = face_archer[2];
-							face[3] = face_archer[3];
+							archer_state = STATE_DIAG;
 							max_diag = 2;
 							d1 = "CAVE OF THE";
 							d2 = "BLACK WOLF. I";

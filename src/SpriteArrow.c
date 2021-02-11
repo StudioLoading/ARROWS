@@ -11,22 +11,17 @@ const UINT8 arrow_water[] = {1, 1};
 const UINT8 arrow_stone[] = {1, 2};
 const UINT8 arrow_blast[] = {1, 3};
 const UINT8 arrow_fire[] = {1, 4};
-const UINT8 arrow_normal_d[] = {1, 5};
-const UINT8 arrow_water_d[] = {1, 6};
-const UINT8 arrow_stone_d[] = {1, 7};
-const UINT8 arrow_blast_d[] = {1, 8}; 
-const UINT8 arrow_fire_d[] = {1, 9}; 
-const UINT8 arrow_normal_v[] = {1, 10};
-const UINT8 arrow_water_v[] = {1, 11};
-const UINT8 arrow_stone_v[] = {1, 12};
-const UINT8 arrow_blast_v[] = {1, 13};
-const UINT8 arrow_fire_v[] = {1, 14};
-const UINT8 arrow_normal_g[] = {1, 15};
-const UINT8 arrow_water_g[] = {1, 16};
-const UINT8 arrow_stone_g[] = {1, 17};
-const UINT8 arrow_blast_g[] = {1, 18};
-const UINT8 arrow_fire_g[] = {1, 19};
-const UINT8 spine[] = {1, 20};
+const UINT8 arrow_normal_v[] = {1, 5};
+const UINT8 arrow_water_v[] = {1, 6};
+const UINT8 arrow_stone_v[] = {1, 7};
+const UINT8 arrow_blast_v[] = {1, 8}; 
+const UINT8 arrow_fire_v[] = {1, 9}; 
+const UINT8 arrow_normal_g[] = {1, 10};
+const UINT8 arrow_water_g[] = {1, 11};
+const UINT8 arrow_stone_g[] = {1, 12};
+const UINT8 arrow_blast_g[] = {1, 13};
+const UINT8 arrow_fire_g[] = {1, 14};
+const UINT8 spine[] = {1, 15};
 
 UINT8 tile_a_collision;
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
@@ -101,11 +96,6 @@ void SetupArrow(){
 					data->vx = 2;
 					SetSpriteAnim(THIS, arrow_normal, 18u);	
 				break;
-				case 2: //diagonale
-					data->vy = -1;
-					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_normal_d, 18u);	
-				break;
 				case 3: //verticale in su
 					data->vy = -2;
 					data->vx = 0;
@@ -126,11 +116,6 @@ void SetupArrow(){
 					data->vy = 0;
 					data->vx = 2;
 					SetSpriteAnim(THIS, arrow_water, 18u);	
-				break;
-				case 2:
-					data->vy = -1;
-					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_water_d, 18u);	
 				break;
 				case 3:
 					data->vy = -2;
@@ -153,11 +138,6 @@ void SetupArrow(){
 					data->vx = 1;
 					SetSpriteAnim(THIS, arrow_stone, 18u);	
 				break;
-				case 2:
-					data->vy = -1;
-					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_stone_d, 18u);	
-				break;
 				case 3:
 					data->vy = -1;
 					data->vx = 0;
@@ -179,11 +159,6 @@ void SetupArrow(){
 					data->vx = 3;
 					SetSpriteAnim(THIS, arrow_blast, 18u);	
 				break;
-				case 2:
-					data->vy = -2;
-					data->vx = 3;
-					SetSpriteAnim(THIS, arrow_blast_d, 18u);	
-				break;
 				case 3:
 					data->vy = -3;
 					data->vx = 0;
@@ -204,11 +179,6 @@ void SetupArrow(){
 					data->vy = 0;
 					data->vx = 2;
 					SetSpriteAnim(THIS, arrow_fire, 18u);	
-				break;
-				case 2:
-					data->vy = -1;
-					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_fire_d, 18u);	
 				break;
 				case 3:
 					data->vy = -2;

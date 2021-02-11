@@ -29,7 +29,7 @@ struct PlatformInfo {
 	UINT8 type:3;
 	UINT8 distance;
 	UINT8 step;
-	UINT8 initx;
+	UINT16 initx;
 	INT8 vx;
 };
 struct ItemInfo{

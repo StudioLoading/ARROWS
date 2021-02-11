@@ -1,71 +1,71 @@
-const unsigned char window_alt_map[] = {74,75,76,77};
-.
-.
-// Where you want to make the change. change START/etc to what you want
-set_win_tiles(START_X, START_Y, WIDTH, HEIGHT, window_alt_map);
+
+Generazione dei nemici allo spostamento del player. se no non è sostenibile...
+
+Cheat in titleScreen KonamiCode
+	99 lives
+	tutti gli amuleti
 
 
-GLI ITEM NELLA SECRET NON APPAIONO NELLA POSIZIONE GIUSTA
-
-WINDOW DI DIALOGO:
-- davanti alle tile delle persone in gabbia
-- all' uscita dello stage2
-- all' ingresso dello stageBoss
-- a boss sconfitto
+FUNZIONALITA' DA IMPLEMENTARE: 
+	- CHECKPOINT DI SALVATAGGIO
+	
 
 SOUND EFFECT DI 1UP
 SOUND EFFECT DI SHIELD
 SOUND EFFECT DI EXIT SENZA TOOL
 
 
-DA IMPLEMENTARE
-CHECKPOINT DI SALVATAGGIO
+SOSTITUZIONE TILES DI MAPPA:
+GetScrollTile mi becca	se ci sono sopra o no, set_bkg_tiles(...) dovrebbe fare la sostituzione
+	MONETE   	-> TILE DI BACKGROUND
+	CESPUGLIO 	-> RAMO
+sul player ho verificato che funziona:
+	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 32u){
+		const unsigned char empty_tile[1] ={0};
+		set_bkg_tiles((THIS->x >> 3)+1, (THIS->y >> 3), 1, 1, empty_tile);
+		archer_data->coins += 1;
+	}
+la sostituzione la fa, però se esco e rientro con la videata di scroll la tile vecchia viene ripristinata
+in più se è tipo un coin, questo mantiere le sue funzionalità di pickup, cioè
+la condizione dell' if è sempre vera anche se a video non vedo più il coin.
 
-RIUSCIRò MAI A METTERE MONETE COME TILE DI BACKGROUND E 
-SOSTITUIRLE CON BLANK QUANDO CI VADO SOPRA ?
+
+
+RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
+SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
+
+TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
+
+EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI
+IN CAMBIO METTERE  tile sulla window:
+unsigned char face[] = {TILE0, TILE2, TILE1, TILE3};
+set_win_tiles(1, 2, 2, 2, face); // solito: (posx, posy, width, height, array di tiles in numeri interi)
 
 
 C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-master\Debug\ARROWS_Debug.noi -g
 
 
-DISCORD MARKDOWN:
+DISCORD MARKDOWN: ```c ```
 
 SpritePlayer.c
 
-```
-cd src
-%ZGB_PATH%\..\env\make-3.81-bin\bin\make run
-cd ..
-pause
-
+```c
+char * d1 = "DIALOG1";
+char * d2 = "DIALOG2";
+char * d3 = "DIALOG3";
+char * d4 = "DIALOG4";
 ```
 
 SpritePlayer.c
 ```c
-	extern INT8 load_next_s;
-	UINT8 current_level_s = 0;
-	UINT8 current_map_s = 0;
-	const struct MapInfo* secret_1[] = {
-		&mapsecret0
-	};
-	const struct MapInfo** secrets[] = {secret_1};
-
-	extern INT8 level_tool;
-	extern INT8 drop_player_x ;
-	extern INT8 drop_player_y ;
-	extern STATE archer_state;
-
-
-	const struct MapInfo** level_maps_s = secrets[current_level_s];
-	UINT8 map_w, map_h;
-	GetMapSize(level_maps_s[current_map_s], &map_w, &map_h);
-	ScrollFindTile(level_maps_s[current_map_s], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
-	InitScroll(level_maps_s[current_map_s], collision_tiles, 0);
-	SHOW_BKG;
+if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 32u){
+		const unsigned char empty_tile[1] ={0};
+		set_bkg_tiles((THIS->x >> 3)+1, (THIS->y >> 3), 1, 1, empty_tile);
+		archer_data->coins += 1;
+	}
 ```
 
-
+PER LE MONETE! 
 #include "..\res\src\tiles.h"
 ...
 set_bkg_tiles(THIS->x, THIS->y, 1, 1, tiles.data->data+3u);

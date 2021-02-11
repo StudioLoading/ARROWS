@@ -16,6 +16,7 @@
 #include "../res/src/enemy.h"
 #include "../res/src/scorpion.h"
 #include "../res/src/porcupine.h"
+#include "../res/src/rat.h"
 
 
 #include "ZGBMain.h"
@@ -54,7 +55,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 1u;
+UINT8 current_level = 0u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -64,14 +65,10 @@ INT8 showing_diag = 0;
 INT8 max_diag = 2;
 
 //DIALOGS
-char * d1 = "DIALOG1";
-char * d2 = "DIALOG2";
-char * d3 = "DIALOG3";
-char * d4 = "DIALOG4";
-const unsigned char face_wolf[] = {74,75,76,77};
-const unsigned char face_archer[] = {88,90,89,91};
-const unsigned char face_slave[] = {92,94,93,95};
-unsigned char face[] = {0,0,0,0};
+const unsigned char * d1 = "DIALOG1";
+const unsigned char * d2 = "DIALOG2";
+const unsigned char * d3 = "DIALOG3";
+const unsigned char * d4 = "DIALOG4";
 
 UINT8 updatecounter = 0u;
 
@@ -99,6 +96,7 @@ void WriteMap();
 void WriteTOOL();
 void populate_00();
 void populate_01();
+void populate_10();
 void ShowWindow();
 void ShowWindowDiag();
 void ShowDiag();
@@ -117,6 +115,7 @@ void Start_StateGame() {
 	SpriteManagerLoad(SpriteEnemy);
 	SpriteManagerLoad(SpriteScorpion);
 	SpriteManagerLoad(SpritePorcupine);
+	SpriteManagerLoad(SpriteRat);
 	SHOW_SPRITES;
 
 	//SCROLL
@@ -172,10 +171,6 @@ void Start_StateGame() {
 					//wrench
 					if(archer_data->tool == 0){
 						populate_00();
-						/*struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
-						struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
-						datakey->type = 1;
-						datakey->setup = 1u; */
 					}
 				break;
 				case 1:
@@ -190,11 +185,11 @@ void Start_StateGame() {
 		case 1u:
 			switch(current_map){
 				case 0:
-					level_tool = 6;
-					struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 6*8, 8*8);
-					struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
-					datakey->type = 1;
-					datakey->setup = 1u;
+					switch(current_map){
+						case 0:
+							populate_10();
+						break;
+					}
 				break;
 			}
 		break;
@@ -246,42 +241,57 @@ void ShowWindowDiag(){
 }
 
 void ShowDiag(){
-	PRINT_POS(4,1);
+	PRINT_POS(1,1);
 	Printf(d1);
-	PRINT_POS(4,2);
+	PRINT_POS(1,2);
 	Printf(d2);
-	PRINT_POS(4,3);
+	PRINT_POS(1,3);
 	Printf(d3);
-	PRINT_POS(4,4);
+	PRINT_POS(1,4);
 	Printf(d4);
 	if (showing_diag == 0){
-		set_win_tiles(1, 2, 2, 2, face);
+		//set_win_tiles(1, 2, 2, 2, face);
 		showing_diag = 1;
+	}
+}
+
+void populate_10(){
+	//PLATFORMS
+	struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
+	struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
+	
+	//ENEMIES
+	INT8 e_count = 2;
+	const UINT16 e_positions_x[] = {18u, 24u, 17u};
+	const UINT16 e_positions_y[] = {4u, 4u, 39u};
+	INT8 plc = 0;
+	INT8 e_types[] = {3, 3, 3}; //3=rat
+	for(plc=0; plc < e_count; plc++){
+		switch(e_types[plc]){
+			case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
+			case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
+			case 3: SpriteManagerAdd(SpriteRat, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
+			default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc] << 3, e_positions_y[plc] << 3);
+		}
 	}
 }
 
 void populate_01(){
 	//PLATFORMS
-	const UINT8 platform_count = 1;
-	const UINT8 platform_positions_x[] = {9}; //10
-	const UINT8 platform_positions_y[] = {21}; //30
-	UINT8 plc = 0;
-	for(plc=0; plc < platform_count; plc++){
-		struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, platform_positions_x[plc]*8, platform_positions_y[plc]*8);
-		struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
-		dataplatform->initx = platform_positions_x[plc]*8;	
-	}
+	struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 9u << 3, (UINT16) 21u << 3);
+	struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
 	
 	//ENEMIES
-	UINT8 e_count = 3;
-	const UINT8 e_positions_x[] = {32, 15, 17};
-	const UINT8 e_positions_y[] = {9, 4, 39};
-	INT8 e_types[] = {0, 1, 2}; //0=snake, 1=scorpion, 2=porcupine
+	INT8 plc = 0;
+	UINT8 e_count = 4;
+	const UINT16 e_positions_x[] = {6u ,32u, 15u, 17u};
+	const UINT16 e_positions_y[] = {12u, 9u, 4u, 39u};
+	INT8 e_types[] = {0, 0, 1, 2}; //0=snake, 1=scorpion, 2=porcupine
 	for(plc=0; plc < e_count; plc++){
 		switch(e_types[plc]){
-			case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
-			case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc]*8, e_positions_y[plc]*8); break;
-			default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc]*8, e_positions_y[plc]*8);
+			case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc] << 3, e_positions_y[plc]  << 3); break;
+			case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
+			default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc] << 3, e_positions_y[plc] << 3);
 		}
 	}
 }
@@ -289,13 +299,13 @@ void populate_01(){
 void populate_00(){
 
 	const INT8 count = 3;
-	const INT8 scrigni_positions_x[] = {9, 12, 6, 17};
-	const INT8 scrigni_positions_y[] = {14, 23, 4, 36};
+	const INT16 scrigni_positions_x[] = {9u, 12u, 6u, 17u};
+	const INT16 scrigni_positions_y[] = {14u, 23u, 4u, 36u};
 	const INT8 st [] = {1, 2, 1, 3};
 	INT8 c = 0;
 	//ITEM SCRIGNI
 	for(c=0; c < count; c++){
-		struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, scrigni_positions_x[c]*8, scrigni_positions_y[c]*8);
+		struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, scrigni_positions_x[c] << 3, scrigni_positions_y[c]  << 3);
 		struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
 		datascrigno->type = 10;
 		datascrigno->setup = 1u;
@@ -305,11 +315,11 @@ void populate_00(){
 	//HIDDEN ITEMS
 	const INT8 invcount = 1;
 	INT8 invc = 0;
-	const INT8 invitems_positions_x[] = {31}; //13
-	const INT8 invitems_positions_y[] = {27};//11
+	const INT16 invitems_positions_x[] = {31u}; //13
+	const INT16 invitems_positions_y[] = {27u};//11
 	const INT8 iit [] = {3, 1};
 	for(invc=0; invc < invcount; invc++){
-		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
+		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc] << 3, invitems_positions_y[invc] << 3);
 		struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
 		dataitem->type = iit[invc];
 		dataitem->setup = 1u;
@@ -345,50 +355,65 @@ void Update_StateGame() {
 				}
 			break;
 			/*case 2: // provengo dal boss, vado al next level
-				load_next_b = 0;
-				current_level += 1u;
-				current_map = 0;
-				SetState(StateGame);
 			break;*/
 		}
 	}
 	
 	if (current_level == 1 & current_map == 0){
 		updatecounter++;
-		if (updatecounter < 31) {
+		if (updatecounter < 21) {
 			const unsigned char wf0[1] = {123};
 			const unsigned char wf1[1] = {124};
-			const unsigned char wf2[1] = {125};
-			const unsigned char wf3[1] = {126};
-			const unsigned char wt0[1] = {127};
-			const unsigned char wt1[1] = {128};
-			const unsigned char wt2[1] = {129};
-			const unsigned char wt3[1] = {130};
+			const unsigned char wt0[1] = {125};
+			const unsigned char wt1[1] = {126};
+			const unsigned char wv0[1] = {120};
+			const unsigned char wv1[1] = {127};
 			switch(updatecounter){
-				case 1:		set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf0);
-							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf0);
+					case 1:	set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf0);
 							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf0);
 							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf0);
-							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt3);
+							set_bkg_tiles(((1*8) >> 3), ((6*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((6*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((7*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((7*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((8*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((8*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((9*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((9*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((10*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((10*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((11*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((11*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((12*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((12*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((13*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((13*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((1*8) >> 3), ((14*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((2*8) >> 3), ((14*8) >> 3), 1, 1, wv0);
+							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt0);
 							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt0);break;
-				case 10:	set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf1); 
-							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf1);
+				case 10:	set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf1);
 							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf1);
 							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf1);
-							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt2);
+							set_bkg_tiles(((1*8) >> 3), ((6*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((6*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((7*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((7*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((8*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((8*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((9*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((9*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((10*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((10*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((11*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((11*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((12*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((12*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((13*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((13*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((1*8) >> 3), ((14*8) >> 3), 1, 1, wv1);
+							set_bkg_tiles(((2*8) >> 3), ((14*8) >> 3), 1, 1, wv1);
 							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt1);break;
-				case 20:	set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf2);
-							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf2);
-							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf2);
-							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf2);
-							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt1);
-							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt2); break;
-				case 30:	set_bkg_tiles(((32*8) >> 3), ((0*8) >> 3), 1, 1, wf3);
-							set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf3);
-							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf3);
-							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf3); 
-							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt0);
-							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt3);break;
 			}			
 		}else{
 			updatecounter = 0;

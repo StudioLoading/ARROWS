@@ -18,6 +18,7 @@ _SPRITE_DMG(SpriteEnemy, enemy)\
 _SPRITE_DMG(SpriteScorpion, scorpion)\
 _SPRITE_DMG(SpritePorcupine, porcupine)\
 _SPRITE_DMG(SpriteWolf, wolf)\
+_SPRITE_DMG(SpriteRat, rat)\
 SPRITE_DEF_END
 
 
