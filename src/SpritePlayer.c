@@ -313,7 +313,7 @@ void Update_SpritePlayer() {
 				}
 			}
 		}
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteWolf) {
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteRat || ispr->type == SpriteWolf) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(ispr->type == SpriteWolf){
@@ -356,7 +356,23 @@ void Update_SpritePlayer() {
 					}					
 				}
 				if (being_hit & archer_state != STATE_DEAD){
-					archer_data->hp -=  dataenemy->enemydamage;
+					INT8 enemydamage = 0;
+					switch(ispr->type){
+						case SpriteEnemy:
+							enemydamage = 5;
+						case SpriteRat:
+							enemydamage = 10;
+						break;
+						case SpriteScorpion:
+						case SpriteSpider:
+						case SpritePorcupine:
+							enemydamage = 15;
+						break;
+						case SpriteWolf:
+							enemydamage = 20;
+						break;
+					}
+					archer_data->hp -= enemydamage;
 					if (archer_data->hp <= 0){
 						archer_data->hp = 0;
 						Die();
@@ -407,10 +423,6 @@ void Update_SpritePlayer() {
 		}
 	}
 
-	if (archer_state == STATE_NORMAL & GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)+4) == 37u){
-		archer_accel_y = 2;
-		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
-	}
 }
 
 void Die(){

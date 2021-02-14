@@ -10,7 +10,7 @@
 
 //SCORPION
 const UINT8 scorpion_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 scorpion_walk[] = {4, 0, 6, 1, 6}; //The first number indicates the number of frames
+const UINT8 scorpion_walk[] = {4, 0, 5, 1, 5}; //The first number indicates the number of frames
 const UINT8 scorpion_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
 const UINT8 scorpion_dead[] = {1, 5}; //The first number indicates the number of frames
 
@@ -31,8 +31,7 @@ void Start_SpriteScorpion() {
 	data->enemy_accel_y = 24;
 	data->vx = 1;
 	data->wait = 0u;
-	data->enemydamage = 15u;
-	data->hp = 60u;
+	data->hp = 60;
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -45,11 +44,13 @@ void Update_SpriteScorpion() {
 			THIS->y--;
 			data->wait--;
 		}else{
+			SpriteManagerRemoveSprite(THIS);
 			THIS->y++;	
 			THIS->y++;
 		}		
 		return;
 	}
+	
 	if (data->wait > 0u){
 		data->wait -= 1u;
 		if (data->wait == 0u){
@@ -121,4 +122,6 @@ void Update_SpriteScorpion() {
 
 
 void Destroy_SpriteScorpion() {
+	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+	data->enemy_state = ENEMY_STATE_DEAD;
 }

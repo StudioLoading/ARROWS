@@ -10,7 +10,7 @@
 
 //RAT
 const UINT8 rat_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 rat_walk[] = {4, 0, 6, 1, 6}; //The first number indicates the number of frames
+const UINT8 rat_walk[] = {4, 0, 5, 1, 5}; //The first number indicates the number of frames
 const UINT8 rat_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
 const UINT8 rat_dead[] = {1, 5}; //The first number indicates the number of frames
 
@@ -31,7 +31,6 @@ void Start_SpriteRat() {
 	data->enemy_accel_y = 24;
 	data->vx = 1;
 	data->wait = 0u;
-	data->enemydamage = 15u;
 	data->hp = 60u;
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
@@ -41,15 +40,17 @@ void Update_SpriteRat() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
 	if (data->enemy_state == ENEMY_STATE_DEAD){
-		if (data->wait > 0){
+		if (data->wait > 0u){
 			THIS->y--;
 			data->wait--;
 		}else{
 			THIS->y++;	
 			THIS->y++;
+			SpriteManagerRemoveSprite(THIS);
 		}		
 		return;
 	}
+	
 	if (data->wait > 0u){
 		data->wait -= 1u;
 		if (data->wait == 0u){
@@ -121,4 +122,6 @@ void Update_SpriteRat() {
 
 
 void Destroy_SpriteRat() {
+	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+	data->enemy_state = ENEMY_STATE_DEAD;
 }

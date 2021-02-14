@@ -55,7 +55,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0u;
+UINT8 current_level = 1u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -63,6 +63,13 @@ ARCHER_STATE archer_state;
 INT8 show_diag = 0;
 INT8 showing_diag = 0;
 INT8 max_diag = 2;
+UINT8 updatecounter = 0u;
+struct Sprite* platform_sprite = 0;
+struct Sprite* snake1 = 0;
+struct Sprite* snake2 = 0 ;
+struct Sprite* snake3 = 0 ;
+struct Sprite* porcupine1 = 0;
+
 
 //DIALOGS
 const unsigned char * d1 = "DIALOG1";
@@ -70,7 +77,6 @@ const unsigned char * d2 = "DIALOG2";
 const unsigned char * d3 = "DIALOG3";
 const unsigned char * d4 = "DIALOG4";
 
-UINT8 updatecounter = 0u;
 
 const struct MapInfo* level_1[] = {
 	&map,
@@ -95,11 +101,10 @@ void WriteUPS();
 void WriteMap();
 void WriteTOOL();
 void populate_00();
-void populate_01();
-void populate_10();
 void ShowWindow();
 void ShowWindowDiag();
 void ShowDiag();
+struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy);
 
 void Start_StateGame() {
 	
@@ -112,10 +117,15 @@ void Start_StateGame() {
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpriteKey);
-	SpriteManagerLoad(SpriteEnemy);
-	SpriteManagerLoad(SpriteScorpion);
-	SpriteManagerLoad(SpritePorcupine);
-	SpriteManagerLoad(SpriteRat);
+	if (current_level == 0u & current_map == 1u){
+		SpriteManagerLoad(SpriteEnemy);
+		SpriteManagerLoad(SpriteScorpion);
+		SpriteManagerLoad(SpritePorcupine);
+	}
+	if (current_level == 1u & current_map == 0u){
+		SpriteManagerLoad(SpriteRat);
+		SpriteManagerLoad(SpriteSpider);
+	}
 	SHOW_SPRITES;
 
 	//SCROLL
@@ -131,7 +141,7 @@ void Start_StateGame() {
 	}else{ //vengo da altra map
 		ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	}
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 	InitScroll(lvls[current_map], collision_tiles, 0);
 	SHOW_BKG;
 	
@@ -173,30 +183,14 @@ void Start_StateGame() {
 						populate_00();
 					}
 				break;
-				case 1:
-					populate_01();
-				break;
-				default:
-					current_map = 0;
-					populate_00();
-				break;
 			}
 		break;
 		case 1u:
 			switch(current_map){
 				case 0:
-					switch(current_map){
-						case 0:
-							populate_10();
-						break;
-					}
+					platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
 				break;
 			}
-		break;
-		default:
-			current_level = 0;
-			current_map = 0;
-			populate_00();
 		break;
 	}
 	
@@ -255,47 +249,6 @@ void ShowDiag(){
 	}
 }
 
-void populate_10(){
-	//PLATFORMS
-	struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
-	struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
-	
-	//ENEMIES
-	INT8 e_count = 2;
-	const UINT16 e_positions_x[] = {18u, 24u, 17u};
-	const UINT16 e_positions_y[] = {4u, 4u, 39u};
-	INT8 plc = 0;
-	INT8 e_types[] = {3, 3, 3}; //3=rat
-	for(plc=0; plc < e_count; plc++){
-		switch(e_types[plc]){
-			case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
-			case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
-			case 3: SpriteManagerAdd(SpriteRat, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
-			default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc] << 3, e_positions_y[plc] << 3);
-		}
-	}
-}
-
-void populate_01(){
-	//PLATFORMS
-	struct Sprite* platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 9u << 3, (UINT16) 21u << 3);
-	struct PlatformInfo* dataplatform = (struct PlatformInfo*)platform_sprite->custom_data;
-	
-	//ENEMIES
-	INT8 plc = 0;
-	UINT8 e_count = 4;
-	const UINT16 e_positions_x[] = {6u ,32u, 15u, 17u};
-	const UINT16 e_positions_y[] = {12u, 9u, 4u, 39u};
-	INT8 e_types[] = {0, 0, 1, 2}; //0=snake, 1=scorpion, 2=porcupine
-	for(plc=0; plc < e_count; plc++){
-		switch(e_types[plc]){
-			case 1: SpriteManagerAdd(SpriteScorpion, e_positions_x[plc] << 3, e_positions_y[plc]  << 3); break;
-			case 2: SpriteManagerAdd(SpritePorcupine, e_positions_x[plc] << 3, e_positions_y[plc] << 3); break;
-			default: SpriteManagerAdd(SpriteEnemy, e_positions_x[plc] << 3, e_positions_y[plc] << 3);
-		}
-	}
-}
-
 void populate_00(){
 
 	const INT8 count = 3;
@@ -328,6 +281,12 @@ void populate_00(){
 	
 }
 
+struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
+	SpriteManagerRemoveSprite(enem);
+	enem = SpriteManagerAdd(spriteType, posx, posy);
+	return enem;
+}
+
 void Update_StateGame() {
 
 	if(load_next) {
@@ -358,6 +317,65 @@ void Update_StateGame() {
 			break;*/
 		}
 	}
+	
+	
+	//SPAWNING	
+	switch(current_level){
+		case 0:
+			switch(current_map){
+				case 0:
+				break;
+				case 1:				
+					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y + 3u) << 3){
+						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 7u << 3, (UINT16) 12u << 3);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, (UINT16) 9u << 3, (UINT16) 12u << 3);
+						platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 9u << 3, (UINT16) 21u << 3);
+					}
+					if (scroll_target->x == (UINT16) 7u << 3 & scroll_target->y == (UINT16) 39u  << 3){
+						porcupine1 = spawn_enemy(porcupine1, SpritePorcupine, (UINT16) 15u << 3, (UINT16) 39u << 3);
+						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 17u << 3, (UINT16) 39u << 3);
+					}
+					if (scroll_target->x == (UINT16) 24u << 3 & scroll_target->y == (UINT16) 21u  << 3){
+						struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 28u << 3, (UINT16) 18u << 3);
+						struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
+						datascrigno->type = 10;
+						datascrigno->setup = 1u;
+						datascrigno->content_type = 3;
+					}
+					if (scroll_target->x == (UINT16) 31u << 3 & scroll_target->y == (UINT16) 39u  << 3){
+						snake1 = spawn_enemy(snake1, SpriteScorpion, (UINT16) 38u << 3, (UINT16) 39u << 3);
+					}
+					if (scroll_target->x == (UINT16) 35u << 3 & scroll_target->y == (UINT16) 18u << 3){
+						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 25u << 3, (UINT16) 9u << 3);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, (UINT16) 34u << 3, (UINT16) 4u << 3);
+						snake3 = spawn_enemy(snake3, SpriteScorpion, (UINT16) 20u << 3, (UINT16) 4u << 3);
+					}
+				break;
+			}
+		break;
+		case 1:
+			switch(current_map){
+				case 0:
+					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y +1u) << 3){
+						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 18u << 3, (UINT16) 4u << 3);
+						snake2 = spawn_enemy(snake2, SpriteRat, (UINT16) 14u << 3, (UINT16) 4u << 3);
+					}
+					if (scroll_target->x == (UINT16) 29u << 3 & scroll_target->y == (INT16) 3u  << 3){
+						snake3 = spawn_enemy(snake3, SpriteRat, (UINT16) 33u << 3, (UINT16) 4u << 3);
+					}
+					if (scroll_target->x == (UINT16) 19u << 3 & scroll_target->y == (INT16) 14u  << 3){
+						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 31u << 3, (UINT16) 12u << 3);
+					}
+					if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
+						platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
+						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 43u << 3, (UINT16) 14u << 3);
+					}
+				break;
+			}
+		break;
+	}
+	
+	//MOVING BACKGROUND TILES
 	
 	if (current_level == 1 & current_map == 0){
 		updatecounter++;

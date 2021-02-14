@@ -34,7 +34,6 @@ void Start_SpriteWolf() {
 	wolf_data->enemy_accel_y = 24;
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
-	wolf_data->enemydamage = 20u;
 	wolf_data->hp = 50;
 	wolf_data->enemy_state = ENEMY_STATE_WAIT;
 }

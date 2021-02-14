@@ -58,7 +58,6 @@ struct EnemyInfo{
 	UINT8 tile_e_collision;
 	INT8 vx;
 	UINT8 wait;
-	UINT8 enemydamage;
 	INT8 hp;
 };
 

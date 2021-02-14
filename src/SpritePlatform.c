@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetBank6.h"
 #include "main.h"
 
 #include "ZGBMain.h"
@@ -14,8 +14,8 @@ void Start_SpritePlatform() {
 	THIS->coll_y = 12;
 	THIS->coll_w = 12;
 	THIS->coll_h = 4;
-	THIS->lim_x = 255;
-	THIS->lim_y = 255;
+	THIS->lim_x = 100u;
+	THIS->lim_y = 100u;
 	SetSpriteAnim(THIS, platform_normal, 8u);
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	data_platform->type = 0;
@@ -34,7 +34,7 @@ void Update_SpritePlatform() {
 		r=0x7;//8;
 	}
 	if ((data_platform->step & r) == 0){
-		if (data_platform->step < (data_platform->distance/2)){
+		if (data_platform->step < (data_platform->distance >> 1)){
 			data_platform->vx = 1;
 		}else{		
 			data_platform->vx = -1;

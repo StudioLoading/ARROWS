@@ -8,72 +8,57 @@
 
 #include "custom_datas.h"
 
-//PORCUPINE
-const UINT8 porcupine_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 porcupine_walk[] = {4, 0, 6, 1, 6}; //The first number indicates the number of frames
-const UINT8 porcupine_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
-const UINT8 porcupine_dead[] = {1, 5}; //The first number indicates the number of frames
-const UINT8 porcupine_attack[] = {4, 6, 5, 5, 5}; //The first number indicates the number of frames
-const UINT8 attack_pwait = 24u;
+//RAT
+const UINT8 spider_idle[] = {7, 0,0,0,0,0, 1, 5}; //The first number indicates the number of frames
+const UINT8 spider_walk[] = {7, 0,0,0,0,0, 1, 5}; //The first number indicates the number of frames
+const UINT8 spider_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
+const UINT8 spider_dead[] = {1, 5}; //The first number indicates the number of frames
 
 extern void CheckCollisionETile();
+extern void ETurn();
 
-void Start_SpritePorcupine() {
+
+void Start_SpriteSpider() {
 	
 	THIS->coll_x = 2;
-	THIS->coll_y = 8;
+	THIS->coll_y = 5;
 	THIS->coll_w = 8;
-	THIS->coll_h = 8;
-	THIS->lim_x = 80u;
-	THIS->lim_y = 80u;
+	THIS->coll_h = 11;
+	THIS->lim_x = 255u;
+	THIS->lim_y = 244u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
-	SetSpriteAnim(THIS, porcupine_idle, 8u);
+	SetSpriteAnim(THIS, spider_idle, 8u);
 	data->enemy_accel_y = 24;
-	data->vx = 1;
+	data->vx = 0;
 	data->wait = 0u;
-	data->hp = 30;
+	data->hp = 40;
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpritePorcupine() {
+void Update_SpriteSpider() {
 	
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
 	if (data->enemy_state == ENEMY_STATE_DEAD){
-		if (data->wait > 0){
+		if (data->wait > 0u){
 			THIS->y--;
 			data->wait--;
 		}else{
 			THIS->y++;	
 			THIS->y++;
+			SpriteManagerRemoveSprite(THIS);
 		}		
 		return;
-	}
-	
-	if (data->enemy_state == ENEMY_STATE_ATTACK){
-		if (data->wait == attack_pwait){SetSpriteAnim(THIS, porcupine_attack, 8u);}
-		if (data->wait == 1u){
-			struct Sprite* arrow_e_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
-			struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_e_sprite->custom_data;
-			arrow_data->arrowdir = 1;
-			arrow_data->type = 6;
-			arrow_data->arrowdamage = 10u;
-			arrow_e_sprite->flags = THIS->flags;
-			if(SPRITE_GET_VMIRROR(THIS)){arrow_e_sprite->x = THIS->x-16;}
-			else{arrow_e_sprite->x = THIS->x+10;}
-			arrow_e_sprite->y = THIS->y + 2;
-		}
 	}
 	
 	if (data->wait > 0u){
 		data->wait -= 1u;
 		if (data->wait == 0u){
-			SetSpriteAnim(THIS, porcupine_walk, 8u);
-			data->enemy_state = ENEMY_STATE_NORMAL;
+			SetSpriteAnim(THIS, spider_walk, 8u);
 		}
 	}else{
 		if(data->enemy_accel_y < 24) {
-				data->enemy_accel_y += 1;
+			data->enemy_accel_y += 1;
 		}
 		data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
 		//CheckCollisionETile();
@@ -96,16 +81,36 @@ void Update_SpritePorcupine() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
-		if(iespr->type == SpriteArrow) {
+		if(iespr->type == SpritePlayer) {
 			if(CheckCollision(THIS, iespr)) {
-				SpriteManagerRemoveSprite(iespr);
+				data->wait = 24u;
 			}
 		}
-	}
-	
+		if(iespr->type == SpriteArrow) {
+			if(CheckCollision(THIS, iespr)) {
+				data->wait = 24u;
+				SetSpriteAnim(THIS, spider_hit, 24u); 
+				struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
+				data->hp -= arrowdata->arrowdamage;
+				data->tile_e_collision = TranslateSprite(THIS, 0, -4);
+				SpriteManagerRemoveSprite(iespr);
+				if (data->hp <= 0){
+					data->enemy_state = ENEMY_STATE_DEAD;
+					SetSpriteAnim(THIS, spider_dead, 16u);
+					NR50_REG = 0x55; //Max volume		
+					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+					data->wait = 8u;
+					THIS->lim_x = 8u;
+					THIS->lim_y = 16u;
+				}
+			}
+		}
+	}	
 }
 
-void Destroy_SpritePorcupine() {
+
+
+void Destroy_SpriteSpider() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	data->enemy_state = ENEMY_STATE_DEAD;
 }

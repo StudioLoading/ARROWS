@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetBank6.h"
 
 #include "..\res\src\tiles.h"
 #include "..\res\src\mapgameover.h"
