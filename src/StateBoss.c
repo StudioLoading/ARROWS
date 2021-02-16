@@ -5,6 +5,7 @@
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\mapboss0.h"
+#include "..\res\src\mapboss1.h"
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
 #include "../res/src/wolf.h"
@@ -53,11 +54,14 @@ UINT8 current_map_b = 0u;
 const struct MapInfo* boss_0[] = {
 	&mapboss0
 };
-const struct MapInfo** bosses[] = {boss_0};
+const struct MapInfo* boss_1[] = {
+	&mapboss1
+};
+const struct MapInfo** bosses[] = {boss_0, boss_1};
 
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
-const char * const level_b_names[] = {"THE CAVE"};
+const char * const level_b_names[] = {"THE CAVE", "THE SWAMP"};
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -69,17 +73,16 @@ void Start_StateBoss() {
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
 	SPRITES_8x16;
 	
+	SpriteManagerLoad(SpritePlayer);
+	SpriteManagerLoad(SpriteArrow);
+	SpriteManagerLoad(SpriteKey);
 	switch(current_level_b){
 		case 0:
-			switch(current_map_b){
-				case 0:
-					level_tool=7;
-					SpriteManagerLoad(SpritePlayer);
-					SpriteManagerLoad(SpriteArrow);
-					SpriteManagerLoad(SpriteWolf);
-					SpriteManagerLoad(SpriteKey);
-				break;
-			}
+			level_tool=7;
+			SpriteManagerLoad(SpriteWolf);
+		break;
+		case 1:
+			//SpriteManagerLoad(SpriteWolf);
 		break;
 	}
 	

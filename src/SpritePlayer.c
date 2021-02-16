@@ -519,11 +519,26 @@ void CheckCollisionTile() {
 		break;
 		case 7u: //fine level - goto boss!
 			Build_Next_Dialog();
-			if(archer_data->tool){
+			switch(current_level){
+				case 0:
+					if(archer_data->tool){
+						is_on_boss = 1;
+						archer_data->tool = 0; //tool consumato
+						load_next_b = 1;
+					}
+				break;
+				case 1:
+					current_level_b = 1;
+					is_on_boss = 1;
+					archer_data->tool = 0; //tool consumato
+					load_next_b = 1;
+				break;					
+			}
+			if (current_level == 1 | (archer_data->tool & current_level == 0)){
 				is_on_boss = 1;
 				archer_data->tool = 0; //tool consumato
 				load_next_b = 1;
-			}			
+			}
 		break;
 		case 8u: //fine boss!
 			if(archer_data->tool){
