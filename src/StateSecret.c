@@ -26,6 +26,8 @@ extern INT8 ups ;
 extern INT8 hp;
 extern INT8 load_next_s;
 extern INT8 level_tool;
+extern UINT8 current_level;
+extern UINT8 current_map;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
 extern ARCHER_STATE archer_state;
@@ -125,9 +127,14 @@ void ShowSWindow(){
 void populate_secret0(){
 	INT8 invcount = 3;
 	INT8 invc = 0;
-	INT8 invitems_positions_x[] = {6,7,8};
-	INT8 invitems_positions_y[] = {14,14,14};
-	INT8 iit [] = {7, 7, 7};
+	INT8 invitems_positions_x[3] = {6,7,8};
+	INT8 invitems_positions_y[3] = {14,14,14};
+	INT8 iit[3] = {7, 7, 7};
+	if (current_level == 1u & current_map == 0u){
+		iit[0] = 1;
+		iit[1] = 1;
+		iit[2] = 3;
+	}
 	for(invc=0; invc < invcount; invc++){
 		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
 		struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;

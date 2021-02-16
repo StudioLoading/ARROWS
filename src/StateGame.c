@@ -44,7 +44,9 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 40, 41, 42, 46, 92, 100, 101, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 40, 41, 42, 46, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 ground_tiles[] = {1, 2, 3, 22, 18, 100, 101, 104};
+const INT8 ground_tiles_tot = 8; // ground_tiles array size
 
 UINT8 amulet = 1u;
 UINT8 coins = 0u;
@@ -91,6 +93,8 @@ const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 
 extern struct ArcherInfo* archer_data;
 extern INT8 is_on_boss;
+extern UINT8 tile_collision;
+extern UINT8 platform_vx;
 
 struct Dialog* diagarray[] = {0,0,0,0};
 
@@ -145,7 +149,6 @@ void Start_StateGame() {
 	InitScroll(lvls[current_map], collision_tiles, 0);
 	SHOW_BKG;
 	
-	
 	//INIT ARCHER
 	is_on_boss = -1;
 	if (archer_data->ups & archer_data->ups != ups){
@@ -176,7 +179,7 @@ void Start_StateGame() {
 	switch(current_level){
 		case 0u:
 			switch(current_map){
-				case 0:
+				case 0u:
 					level_tool = 6;
 					//wrench
 					if(archer_data->tool == 0){
@@ -187,13 +190,18 @@ void Start_StateGame() {
 		break;
 		case 1u:
 			switch(current_map){
-				case 0:
-					platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
+				case 0u:
+					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
+						populate_10();
+					}
 				break;
 			}
 		break;
 	}
 	
+	if (load_next_s){ //vengo da secret!
+		load_next_s = 0;
+	}
 	if(archer_tool == level_tool){
 		WriteTOOL();
 	}
@@ -247,6 +255,14 @@ void ShowDiag(){
 		//set_win_tiles(1, 2, 2, 2, face);
 		showing_diag = 1;
 	}
+}
+
+void populate_10(){
+	struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 42u << 3, (UINT16) 21u << 3) ;
+	struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
+	datascrigno->type = 10;
+	datascrigno->setup = 1u;
+	datascrigno->content_type = 2;
 }
 
 void populate_00(){
@@ -364,19 +380,29 @@ void Update_StateGame() {
 						snake3 = spawn_enemy(snake3, SpriteRat, (UINT16) 33u << 3, (UINT16) 4u << 3);
 					}
 					if (scroll_target->x == (UINT16) 19u << 3 & scroll_target->y == (INT16) 14u  << 3){
-						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 31u << 3, (UINT16) 12u << 3);
+						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 31u << 3, (UINT16) 11u << 3);
 					}
 					if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
-						platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
+						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
 						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 43u << 3, (UINT16) 14u << 3);
+					}
+					if (scroll_target->x == (UINT16) 42u << 3 & scroll_target->y == (INT16) 28u  << 3){
+						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 48u << 3, (UINT16) 26u << 3);
+					}
+					if (scroll_target->x == (UINT16) 56u << 3 & scroll_target->y == (INT16) 28u  << 3){
+						snake3 = spawn_enemy(snake2, SpriteSpider, (UINT16) 64u << 3, (UINT16) 21u << 3);
+						struct Sprite* scrigno_sprite2 = SpriteManagerAdd(SpriteItem, (UINT16) 67u << 3, (UINT16) 23u << 3);
+						struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite2->custom_data;
+						datascrigno2->type = 10;
+						datascrigno2->setup = 1u;
+						datascrigno2->content_type = 7;
 					}
 				break;
 			}
 		break;
 	}
 	
-	//MOVING BACKGROUND TILES
-	
+	//MOVING BACKGROUND TILES	
 	if (current_level == 1 & current_map == 0){
 		updatecounter++;
 		if (updatecounter < 21) {
@@ -387,51 +413,26 @@ void Update_StateGame() {
 			const unsigned char wv0[1] = {120};
 			const unsigned char wv1[1] = {127};
 			switch(updatecounter){
-					case 1:	set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf0);
-							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf0);
-							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf0);
-							set_bkg_tiles(((1*8) >> 3), ((6*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((6*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((7*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((7*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((8*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((8*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((9*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((9*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((10*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((10*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((11*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((11*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((12*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((12*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((13*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((13*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((1*8) >> 3), ((14*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((2*8) >> 3), ((14*8) >> 3), 1, 1, wv0);
-							set_bkg_tiles(((31*8) >> 3), ((5*8) >> 3), 1, 1, wt0);
-							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt0);break;
-				case 10:	set_bkg_tiles(((32*8) >> 3), ((1*8) >> 3), 1, 1, wf1);
-							set_bkg_tiles(((32*8) >> 3), ((2*8) >> 3), 1, 1, wf1);
-							set_bkg_tiles(((32*8) >> 3), ((3*8) >> 3), 1, 1, wf1);
-							set_bkg_tiles(((1*8) >> 3), ((6*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((6*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((7*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((7*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((8*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((8*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((9*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((9*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((10*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((10*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((11*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((11*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((12*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((12*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((13*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((13*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((1*8) >> 3), ((14*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((2*8) >> 3), ((14*8) >> 3), 1, 1, wv1);
-							set_bkg_tiles(((32*8) >> 3), ((4*8) >> 3), 1, 1, wt1);break;
+				case 1:	
+					set_bkg_tiles(32, 1, 1, 1, wf0); set_bkg_tiles(32, 2, 1, 1, wf0); set_bkg_tiles(32, 3, 1, 1, wf0);
+					set_bkg_tiles(61, 24, 1, 1, wf0); set_bkg_tiles(61, 25, 1, 1, wf0); set_bkg_tiles(61, 26, 1, 1, wf0); set_bkg_tiles(61, 27, 1, 1, wf0);
+					set_bkg_tiles(1, 6, 1, 1, wv0); set_bkg_tiles(2, 6, 1, 1, wv0); set_bkg_tiles(1, 7, 1, 1, wv0);
+					set_bkg_tiles(2, 7, 1, 1, wv0); set_bkg_tiles(1, 8, 1, 1, wv0); set_bkg_tiles(2, 8, 1, 1, wv0);
+					set_bkg_tiles(1, 9, 1, 1, wv0); set_bkg_tiles(2, 9, 1, 1, wv0); set_bkg_tiles(1,10, 1, 1, wv0);
+					set_bkg_tiles(2, 10, 1, 1, wv0); set_bkg_tiles(1, 11, 1, 1, wv0); set_bkg_tiles(2, 11, 1, 1, wv0);
+					set_bkg_tiles(1, 12, 1, 1, wv0); set_bkg_tiles(2, 12, 1, 1, wv0); set_bkg_tiles(1, 13, 1, 1, wv0);
+					set_bkg_tiles(2, 13, 1, 1, wv0); set_bkg_tiles(1, 14, 1, 1, wv0); set_bkg_tiles(2, 14, 1, 1, wv0);
+					set_bkg_tiles(31, 5, 1, 1, wt0); set_bkg_tiles(32, 4, 1, 1, wt0);
+				break;
+				case 10:	
+					set_bkg_tiles(32, 1, 1, 1, wf1); set_bkg_tiles(32, 2, 1, 1, wf1); set_bkg_tiles(32, 3, 1, 1, wf1);
+					set_bkg_tiles(61, 24, 1, 1, wf1); set_bkg_tiles(61, 25, 1, 1, wf1); set_bkg_tiles(61, 26, 1, 1, wf1); set_bkg_tiles(61, 27, 1, 1, wf1);
+					set_bkg_tiles(1, 6, 1, 1, wv1); set_bkg_tiles(2, 6, 1, 1, wv1); set_bkg_tiles(1, 7, 1, 1, wv1); set_bkg_tiles(2, 7, 1, 1, wv1);
+					set_bkg_tiles(1, 8, 1, 1, wv1); set_bkg_tiles(2, 8, 1, 1, wv1); set_bkg_tiles(1, 9, 1, 1, wv1); set_bkg_tiles(2, 9, 1, 1, wv1);
+					set_bkg_tiles(1, 10, 1, 1, wv1); set_bkg_tiles(2, 10, 1, 1, wv1); set_bkg_tiles(1, 11, 1, 1, wv1); set_bkg_tiles(2, 11, 1, 1, wv1);
+					set_bkg_tiles(1, 12, 1, 1, wv1);  set_bkg_tiles(2, 12, 1, 1, wv1); set_bkg_tiles(1, 13, 1, 1, wv1); set_bkg_tiles(2, 13, 1, 1, wv1);
+					set_bkg_tiles(1, 14, 1, 1, wv1); set_bkg_tiles(2, 14, 1, 1, wv1); set_bkg_tiles(32, 4, 1, 1, wt1);
+				break;
 			}			
 		}else{
 			updatecounter = 0;
@@ -470,7 +471,10 @@ void Update_StateGame() {
 			archer_tool = archer_data->tool;
 			WriteTOOL();
 		}
-	}	
+	}
+	
+	PRINT_POS(13,2);
+	Printf("%u", platform_vx);
 	
 }
 

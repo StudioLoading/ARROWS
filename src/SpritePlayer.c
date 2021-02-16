@@ -27,6 +27,8 @@ extern unsigned char face_archer[];
 extern unsigned char face_slave[];
 extern unsigned char face[];
 extern struct EnemyInfo* boss_data_b;
+extern const UINT8 ground_tiles[];
+extern const INT8 ground_tiles_tot;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -304,16 +306,16 @@ void Update_SpritePlayer() {
 			if(CheckCollision(THIS, ispr)) {
 				if (archer_accel_y > 0){//se sono in salita non collido !
 					archer_accel_y = 0;
-					struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
-					platform_vx = datap->vx;
 					if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
 						archer_state = STATE_NORMAL_PLATFORM;
 						THIS->y = ispr->y - ispr->coll_h;
 					}
 				}
+				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
+				platform_vx = datap->vx;
 			}
 		}
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteRat || ispr->type == SpriteWolf) {
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(ispr->type == SpriteWolf){
@@ -468,7 +470,9 @@ void Jump() {
 }
 
 void MoveArcher() {
-	
+	if(platform_vx){
+		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);	
+	}	
 	if(KEY_PRESSED(J_LEFT)) {
 		if(KEY_PRESSED(J_DOWN)){
 			
@@ -485,15 +489,25 @@ void MoveArcher() {
 		}
 		SPRITE_UNSET_VMIRROR(THIS);
 	}
-	tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);
 }
 
 void CheckCollisionTile() {
-	if(tile_collision){
-		platform_vx = 0;
+	INT8 i = 0;
+	for( i = 0; i < ground_tiles_tot; i++){
+		if(tile_collision == ground_tiles[i] ){
+			if (platform_vx > 0){
+				platform_vx--;
+			}
+			if (platform_vx < 0){
+				platform_vx++;
+			}
+		}
 	}
 	switch(tile_collision) {
 		case 2u:
+		case 20u:
+		case 23u:
+		case 29u:
 			if (archer_state != STATE_HIT){
 				archer_data->hp -=  5;
 				if (archer_data->hp <= 0){
@@ -536,6 +550,12 @@ void CheckCollisionTile() {
 		break;
 		case 46u: //secret room
 			load_next_s = 1;
+		break;
+		case 111u:
+			platform_vx = 2;
+		break;
+		case 119u:
+			platform_vx = -2;
 		break;
 		/*case 28u:
 			SET_BIT(stage_completion, current_stage);

@@ -10,9 +10,9 @@ const UINT8 platform_normal[] = {1, 0}; //The first number indicates the number 
 
 void Start_SpritePlatform() {
 	
-	THIS->coll_x = 2;
+	THIS->coll_x = 0;
 	THIS->coll_y = 12;
-	THIS->coll_w = 12;
+	THIS->coll_w = 16;
 	THIS->coll_h = 4;
 	THIS->lim_x = 100u;
 	THIS->lim_y = 100u;
@@ -39,10 +39,10 @@ void Update_SpritePlatform() {
 		}else{		
 			data_platform->vx = -1;
 		}
-		TranslateSprite(THIS, data_platform->vx, 0);	
 	}else{
 		data_platform->vx = 0;
 	}
+	TranslateSprite(THIS, data_platform->vx, 0);
 	data_platform->step += 1;
 	if (data_platform->step >= data_platform->distance){
 		data_platform->step = 0;
