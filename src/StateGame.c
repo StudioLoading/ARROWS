@@ -390,12 +390,24 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 48u << 3, (UINT16) 26u << 3);
 					}
 					if (scroll_target->x == (UINT16) 56u << 3 & scroll_target->y == (INT16) 28u  << 3){
-						snake3 = spawn_enemy(snake2, SpriteSpider, (UINT16) 64u << 3, (UINT16) 21u << 3);
+						snake3 = spawn_enemy(snake3, SpriteSpider, (UINT16) 64u << 3, (UINT16) 21u << 3);
 						struct Sprite* scrigno_sprite2 = SpriteManagerAdd(SpriteItem, (UINT16) 67u << 3, (UINT16) 23u << 3);
 						struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite2->custom_data;
 						datascrigno2->type = 10;
 						datascrigno2->setup = 1u;
 						datascrigno2->content_type = 7;
+					}
+					if ((scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 10u  << 3) | 
+						(scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 11u  << 3) | 
+						(scroll_target->x == (UINT16) 67u << 3 & scroll_target->y == (INT16) 11u  << 3)
+						){
+						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 64u << 3, (UINT16) 15u << 3);
+						snake2 = spawn_enemy(snake2, SpriteRat, (UINT16) 60u << 3, (UINT16) 15u << 3);
+						struct Sprite* scrigno_sprite3 = SpriteManagerAdd(SpriteItem, (UINT16) 62u << 3, (UINT16) 15u << 3);
+						struct ItemInfo* datascrigno3 = (struct ItemInfo*)scrigno_sprite3->custom_data;
+						datascrigno3->type = 10;
+						datascrigno3->setup = 1u;
+						datascrigno3->content_type = 3;
 					}
 				break;
 			}
