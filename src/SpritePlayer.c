@@ -315,7 +315,9 @@ void Update_SpritePlayer() {
 				platform_vx = datap->vx;
 			}
 		}
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine || ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider) {
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
+			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
+			|| ispr->type == SpriteAlligator) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(ispr->type == SpriteWolf){
@@ -371,6 +373,7 @@ void Update_SpritePlayer() {
 							enemydamage = 15;
 						break;
 						case SpriteWolf:
+						case SpriteAlligator:
 							enemydamage = 20;
 						break;
 					}

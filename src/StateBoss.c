@@ -9,6 +9,7 @@
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
 #include "../res/src/wolf.h"
+#include "../res/src/alligator.h"
 #include "../res/src/key.h"
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -82,7 +83,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteWolf);
 		break;
 		case 1:
-			SpriteManagerLoad(SpriteSpider);
+			SpriteManagerLoad(SpriteAlligator);
 		break;
 	}
 	
@@ -108,14 +109,13 @@ void Start_StateBoss() {
 			boss_hp = boss_data_b->hp;
 		break;
 		case 1:
-			boss = SpriteManagerAdd(SpriteSpider, 21 << 3, 16 << 3); //34, 12
+			boss = SpriteManagerAdd(SpriteAlligator, 21 << 3, 14 << 3); //34, 12
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 		break;
 	}
 	
 	//INIT ARCHER
-	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	if (archer_data->ups > 0 & archer_data->ups != ups){
 		ups = archer_data->ups;
 	}
@@ -198,6 +198,12 @@ void Update_StateBoss() {
 		}
 	}
 	
+	//UPDATE ARCHER POSX IN BOSS CUSTOM_DATA
+	boss_data_b->archer_posx = scroll_target->x;
+	
+	PRINT_POS(13,2);
+	Printf("%u", boss_data_b->archer_posx);
+	
 	//MOVING BACKGROUND TILES	
 	if (current_level_b == 1 & current_map_b == 0){
 		UINT8 idxswamp = 0u;
@@ -239,5 +245,5 @@ void WriteBMap(){
 
 void WriteBBOSSHP(){	
 	PRINT_POS(12, 3);
-	Printf("WOLF>%d", boss_hp);
+	Printf("BOSS>%d", boss_hp);
 }

@@ -485,9 +485,6 @@ void Update_StateGame() {
 		}
 	}
 	
-	PRINT_POS(13,2);
-	Printf("%u", platform_vx);
-	
 }
 
 void WriteAMULET(){

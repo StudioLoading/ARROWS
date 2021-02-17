@@ -20,6 +20,7 @@ _SPRITE_DMG(SpritePorcupine, porcupine)\
 _SPRITE_DMG(SpriteWolf, wolf)\
 _SPRITE_DMG(SpriteRat, rat)\
 _SPRITE_DMG(SpriteSpider, spider)\
+_SPRITE_DMG(SpriteAlligator, alligator)\
 SPRITE_DEF_END
 
 

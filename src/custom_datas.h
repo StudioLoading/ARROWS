@@ -49,6 +49,7 @@ typedef enum  {
 	ENEMY_STATE_DEAD,
 	ENEMY_STATE_ATTACK,
 	ENEMY_STATE_HIDDEN,
+	ENEMY_STATE_INVISIBLE,
 	ENEMY_STATE_WAIT
 }ENEMY_STATE;
 
@@ -59,6 +60,7 @@ struct EnemyInfo{
 	INT8 vx;
 	UINT8 wait;
 	INT8 hp;
+	UINT8 archer_posx;
 };
 
 struct Dialog{
