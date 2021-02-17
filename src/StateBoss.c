@@ -35,6 +35,7 @@ extern INT8 show_diag;
 extern INT8 showing_diag;
 extern INT8 max_diag;
 extern INT8 is_on_boss;
+extern UINT8 updatecounter;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
@@ -46,11 +47,10 @@ extern void WriteTOOL();
 extern void Build_Next_Dialog();
 
 
-
-
 //Boss
 UINT8 current_level_b = 0u;
 UINT8 current_map_b = 0u;
+
 const struct MapInfo* boss_0[] = {
 	&mapboss0
 };
@@ -82,7 +82,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteWolf);
 		break;
 		case 1:
-			//SpriteManagerLoad(SpriteWolf);
+			SpriteManagerLoad(SpriteSpider);
 		break;
 	}
 	
@@ -99,11 +99,20 @@ void Start_StateBoss() {
 	InitScroll(level_maps_b[current_map_b], collision_tiles, 0);
 	SHOW_BKG;
 	
+	struct Sprite* boss = 0;
 	//INIT BOSS
-	struct Sprite* boss = SpriteManagerAdd(SpriteWolf, 24*8, 14*8); //34, 12
-	boss_data_b = (struct EnemyInfo*)boss->custom_data;
-	boss_hp = boss_data_b->hp;
-	
+	switch(current_level_b){
+		case 0:
+			boss = SpriteManagerAdd(SpriteWolf, 24 << 3, 14 << 3); //34, 12
+			boss_data_b = (struct EnemyInfo*)boss->custom_data;
+			boss_hp = boss_data_b->hp;
+		break;
+		case 1:
+			boss = SpriteManagerAdd(SpriteSpider, 21 << 3, 16 << 3); //34, 12
+			boss_data_b = (struct EnemyInfo*)boss->custom_data;
+			boss_hp = boss_data_b->hp;
+		break;
+	}
 	
 	//INIT ARCHER
 	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
@@ -186,6 +195,38 @@ void Update_StateBoss() {
 				is_on_boss = 0;
 				SetState(StateGame);
 			break;
+		}
+	}
+	
+	//MOVING BACKGROUND TILES	
+	if (current_level_b == 1 & current_map_b == 0){
+		UINT8 idxswamp = 0u;
+		updatecounter++;
+		if (updatecounter < 21) {
+			const unsigned char wf0[1] = {123};
+			const unsigned char wf1[1] = {124};
+			const unsigned char wt0[1] = {112};
+			const unsigned char wt1[1] = {113};
+			switch(updatecounter){
+				case 1:	
+					set_bkg_tiles(15u, 12u, 1, 1, wf0); set_bkg_tiles(15u, 13u, 1, 1, wf0); set_bkg_tiles(15u, 14u, 1, 1, wf0);
+					set_bkg_tiles(26u, 12u, 1, 1, wf0); set_bkg_tiles(26u, 13u, 1, 1, wf0); set_bkg_tiles(26u, 14u, 1, 1, wf0);
+					set_bkg_tiles(37u, 12u, 1, 1, wf0); set_bkg_tiles(37u, 13u, 1, 1, wf0); set_bkg_tiles(37u, 14u, 1, 1, wf0);
+					for (idxswamp = 6u; idxswamp < 42u; idxswamp += 1u){
+						set_bkg_tiles(idxswamp, 15u, 1, 1, wt0); 
+					}
+				break;
+				case 10:	
+					set_bkg_tiles(15u, 12u, 1, 1, wf1); set_bkg_tiles(15u, 13u, 1, 1, wf1); set_bkg_tiles(15u, 14u, 1, 1, wf1);
+					set_bkg_tiles(26u, 12u, 1, 1, wf1); set_bkg_tiles(26u, 13u, 1, 1, wf1); set_bkg_tiles(26u, 14u, 1, 1, wf1);
+					set_bkg_tiles(37u, 12u, 1, 1, wf1); set_bkg_tiles(37u, 13u, 1, 1, wf1); set_bkg_tiles(37u, 14u, 1, 1, wf1);
+					for (idxswamp = 6u; idxswamp < 42u; idxswamp += 1u){
+						set_bkg_tiles(idxswamp, 15u, 1, 1, wt1); 
+					}
+				break;
+			}			
+		}else{
+			updatecounter = 0;
 		}
 	}
 	
