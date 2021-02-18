@@ -95,6 +95,8 @@ extern struct ArcherInfo* archer_data;
 extern INT8 is_on_boss;
 extern UINT8 tile_collision;
 extern UINT8 platform_vx;
+extern UINT8 current_level_b;
+extern UINT8 current_map_b;
 
 struct Dialog* diagarray[] = {0,0,0,0};
 
@@ -226,7 +228,9 @@ void ShowWindow(){
 	WriteCOINS();
 	WriteHP();
 	WriteUPS();
-	WriteMap();
+	if(current_level_b != current_level){
+		WriteMap();	
+	}
 	
 }
 

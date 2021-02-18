@@ -11,6 +11,9 @@
 #include "../res/src/wolf.h"
 #include "../res/src/alligator.h"
 #include "../res/src/key.h"
+#include "../res/src/amulets.h"
+#include "../res/src/gate.h"
+
 #include "ZGBMain.h"
 #include "Scroll.h"
 #include "SpriteManager.h"
@@ -28,8 +31,8 @@ extern INT8 ups ;
 extern INT8 hp;
 extern INT8 load_next_b;
 extern INT8 level_tool;
-extern INT8 drop_player_x ;
-extern INT8 drop_player_y ;
+extern UINT16 drop_player_x ;
+extern UINT16 drop_player_y ;
 extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
 extern INT8 show_diag;
@@ -62,7 +65,8 @@ const struct MapInfo** bosses[] = {boss_0, boss_1};
 
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
-const char * const level_b_names[] = {"THE CAVE", "THE SWAMP"};
+const char * const level_b_names[] = {"THE CAVE", "GATOR'S"};
+struct Sprite* gate_sprite = 0;
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -84,6 +88,8 @@ void Start_StateBoss() {
 		break;
 		case 1:
 			SpriteManagerLoad(SpriteAlligator);
+			SpriteManagerLoad(SpriteAmulet);
+			SpriteManagerLoad(SpriteGate);
 		break;
 	}
 	
@@ -112,6 +118,7 @@ void Start_StateBoss() {
 			boss = SpriteManagerAdd(SpriteAlligator, 21 << 3, 14 << 3); //34, 12
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
+			gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3, 13 << 3);
 		break;
 	}
 	
@@ -180,6 +187,7 @@ void Update_StateBoss() {
 			if (boss_hp <= 0){
 				boss_hp = 0;
 				boss_data_b->hp = 0;
+				SpriteManagerRemoveSprite(gate_sprite);
 			}
 			WriteBBOSSHP();		
 		}
@@ -201,8 +209,8 @@ void Update_StateBoss() {
 	//UPDATE ARCHER POSX IN BOSS CUSTOM_DATA
 	boss_data_b->archer_posx = scroll_target->x;
 	
-	PRINT_POS(13,2);
-	Printf("%u", boss_data_b->archer_posx);
+	/*PRINT_POS(13,2);
+	Printf("%u", boss_data_b->archer_posx);*/
 	
 	//MOVING BACKGROUND TILES	
 	if (current_level_b == 1 & current_map_b == 0){

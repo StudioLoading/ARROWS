@@ -249,6 +249,21 @@ void Update_SpritePlayer() {
 	UINT8 scroll_tile;
 	struct Sprite* ispr;
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
+		if(ispr->type == SpriteAmulet) {
+			if(CheckCollision(THIS, ispr)) {
+				struct ItemInfo* dataamulet = (struct ItemInfo*)ispr->custom_data;
+				if(dataamulet->counter == -1){
+					dataamulet->counter = 60;
+					dataamulet->setup = 0;
+					archer_data->hp = 100u;
+				}
+			}
+		}
+		if(ispr->type == SpriteGate) {
+			if(CheckCollision(THIS, ispr)) {
+				THIS->x--;
+			}
+		}
 		if(ispr->type == SpriteItem) {
 			if(CheckCollision(THIS, ispr)) {
 				struct ItemInfo* dataitem = (struct ItemInfo*)ispr->custom_data;

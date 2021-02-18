@@ -8,7 +8,9 @@ Cheat in titleScreen KonamiCode
 
 FUNZIONALITA' DA IMPLEMENTARE: 
 	- CHECKPOINT DI SALVATAGGIO
-	
+
+OTTIMIZZAZIONI:
+	- SI PUO SPOSTARE L' ENEMYDAMAGE DAI CUSTOM_DATA DELL' EnemyInfo A DELLE COSTANTI
 
 SOUND EFFECT DI 1UP
 SOUND EFFECT DI SHIELD
@@ -50,10 +52,28 @@ DISCORD MARKDOWN: ```c ```
 SpritePlayer.c
 
 ```c
-char * d1 = "DIALOG1";
-char * d2 = "DIALOG2";
-char * d3 = "DIALOG3";
-char * d4 = "DIALOG4";
+
+struct Sprite* snake1 = 0;
+...
+
+void spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
+	if(enem == 0){ 
+		enem = SpriteManagerAdd(spriteType, (UINT16) 17u << 3, (UINT16) 39u << 3); 
+	}else{ 
+		struct EnemyInfo* datae = (struct EnemyInfo*)enem->custom_data; 
+		if(datae->hp <= 0){
+			enem = SpriteManagerAdd(spriteType, posx, posy);
+		}
+	}						
+}
+
+void Update_StateGame(){
+...
+if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
+	spawn_enemy(snake1, SpriteRat, (UINT16) 43u << 3, (UINT16) 14u << 3);
+}
+...
+}
 ```
 
 SpritePlayer.c
