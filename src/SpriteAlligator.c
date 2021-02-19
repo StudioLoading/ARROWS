@@ -111,11 +111,11 @@ void Update_SpriteAlligator() {
 				if(alligator_data->enemy_state != ENEMY_STATE_INVISIBLE & alligator_data->enemy_state != ENEMY_STATE_HIDDEN){ 
 					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iaspr->custom_data;
 					if (arrowdata->arrowdir != 1){ //hit solo se freccia non orizzontale
-						alligator_data->wait = 28u;
+						//alligator_data->wait = 28u;
 						SetSpriteAnim(THIS, alligator_hit, 18u);
 						if(arrowdata->arrowdamage){
-							alligator_data->hp -= arrowdata->arrowdamage;
-							if (alligator_data->hp <= 0){
+							INT8 new_boss_hp = alligator_data->hp - arrowdata->arrowdamage;
+							if (new_boss_hp <= 0){
 								alligator_data->hp = 0;
 								SetSpriteAnim(THIS, alligator_dead, 16u);
 								struct Sprite* amulet_w = SpriteManagerAdd(SpriteAmulet, (THIS->x)-8, (THIS->y)-8);
@@ -124,6 +124,7 @@ void Update_SpriteAlligator() {
 								datak->setup = 1;
 								alligator_data->enemy_state = ENEMY_STATE_DEAD;
 							}
+							alligator_data->hp = new_boss_hp;
 							alligator_data->wait = 121u;
 						}
 					}

@@ -6,6 +6,7 @@
 #include "..\res\src\tiles.h"
 #include "..\res\src\map.h"
 #include "..\res\src\map2.h"
+#include "..\res\src\map3.h"
 #include "..\res\src\mapsewer.h"
 #include "..\res\src\mapsecret0.h"
 #include "../res/src/archer.h"
@@ -44,7 +45,7 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 40, 41, 42, 46, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 40, 41, 42, 46, 52, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
 const UINT8 ground_tiles[] = {1, 2, 3, 22, 18, 100, 101, 104};
 const INT8 ground_tiles_tot = 8; // ground_tiles array size
 
@@ -57,7 +58,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 1u;
+UINT8 current_level = 2u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -87,7 +88,10 @@ const struct MapInfo* level_1[] = {
 const struct MapInfo* level_2[] = {
 	&mapsewer
 };
-const struct MapInfo** levels[] = {level_1, level_2};
+const struct MapInfo* level_3[] = {
+	&map3
+};
+const struct MapInfo** levels[] = {level_1, level_2, level_3};
 
 const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
 
@@ -135,8 +139,12 @@ void Start_StateGame() {
 	SHOW_SPRITES;
 
 	//SCROLL
-	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
-	
+	if (current_level == 2u & current_map == 0u){
+		scroll_bottom_movement_limit = 90;//customizzo altezza archer sul display
+	}else{
+		scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
+	}
+
 	const struct MapInfo** lvls = levels[current_level];
 	UINT8 map_w;
 	UINT8 map_h;

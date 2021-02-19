@@ -41,9 +41,9 @@ const UINT8 anim_hit[] = {2, 8, 9};
 const UINT8 anim_shoot[] = {2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13 ,14 , 13};
 
-UINT8 jump_power = 0u;
-UINT8 death_cooldown = 0;
-UINT8 hit_cooldown = 0u;
+INT8 jump_power = 0;
+INT8 death_cooldown = 0;
+INT8 hit_cooldown = 0;
 UINT8 tile_collision = 0u;
 INT16 archer_accel_y = 0;
 INT8 shoot_cooldown = 0;
@@ -76,7 +76,7 @@ void Start_SpritePlayer() {
 	
 	archer_state = STATE_JUMPING;
 	
-	hit_cooldown = 36u;
+	hit_cooldown = 36;
 	
 	NR50_REG = 0x55; //Max volume	
 }
@@ -120,7 +120,7 @@ void Update_SpritePlayer() {
 			if (death_cooldown < 12){
 				TranslateSprite(THIS, 0, -2 );
 			}else{
-				if (death_cooldown < 160){
+				if (death_cooldown < 120){
 					TranslateSprite(THIS, 0, 1);
 				}else{
 					death_cooldown = 0;
@@ -186,17 +186,17 @@ void Update_SpritePlayer() {
 				}else{
 					if (archer_accel_y < 4){									
 						if(KEY_PRESSED(J_A)) {
-							if (jump_power < 6u){
-								jump_power += 1u;
+							if (jump_power < 6){
+								jump_power += 1;
 								archer_accel_y -= 2;
 							}
 						}else if (KEY_RELEASED(J_A)){
-							jump_power += 1u;
+							jump_power += 1;
 							archer_accel_y = 0;
 						}
 						SetSpriteAnim(THIS, anim_jump_up, 33u);
 					}else{
-						jump_power = 0u;
+						jump_power = 0;
 						archer_accel_y += 1;
 						SetSpriteAnim(THIS, anim_jump, 32u);
 					}
@@ -210,7 +210,7 @@ void Update_SpritePlayer() {
 			MoveArcher();
 			if (hit_cooldown == 0){
 				platform_vx = 0;
-				hit_cooldown = 24u;
+				hit_cooldown = 24;
 				if(KEY_PRESSED(J_A)) {
 					Jump();
 				}
@@ -492,7 +492,7 @@ void MoveArcher() {
 		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);	
 	}	
 	if(KEY_PRESSED(J_LEFT)) {
-		if(KEY_PRESSED(J_DOWN)){
+		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
 			
 		}else{
 			if (SPRITE_GET_VMIRROR(THIS)){
@@ -502,8 +502,12 @@ void MoveArcher() {
 		SPRITE_SET_VMIRROR(THIS);
 	}
 	else if(KEY_PRESSED(J_RIGHT)) {
-		if(!SPRITE_GET_VMIRROR(THIS) & !KEY_PRESSED(J_DOWN)){
-			tile_collision = TranslateSprite(THIS, 1 << delta_time, 0);
+		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
+			
+		}else{
+			if(!SPRITE_GET_VMIRROR(THIS)){
+				tile_collision = TranslateSprite(THIS, 1 << delta_time, 0);
+			}
 		}
 		SPRITE_UNSET_VMIRROR(THIS);
 	}
