@@ -33,7 +33,7 @@ void Start_SpriteAlligator() {
 	alligator_data->enemy_accel_y = 24;
 	alligator_data->vx = 0;
 	alligator_data->wait = 250u;
-	alligator_data->hp = 5;//75
+	alligator_data->hp = 75;
 	alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
 }
 
@@ -57,8 +57,8 @@ void Update_SpriteAlligator() {
 	
 		if (alligator_data->wait == 100u){
 			poss++;
-			if (poss == 3 | (poss == 1 && alligator_data->hp < 20)) {
-				poss = -1;
+			if (poss == 3u | (poss == 1u && alligator_data->hp < 20)) {
+				poss = 0u;
 				if (alligator_data->archer_posx > 60u & alligator_data->archer_posx < 224u)
 				THIS->x = alligator_data->archer_posx;
 			}else{
@@ -77,7 +77,7 @@ void Update_SpriteAlligator() {
 			}
 
 		}
-		if (alligator_data->wait == 220u){
+		if (alligator_data->wait == 230u){
 			alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
 			THIS->coll_w = 0;
 			THIS->coll_h = 0;

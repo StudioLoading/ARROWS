@@ -1,5 +1,8 @@
 
-Generazione dei nemici allo spostamento del player. se no non è sostenibile...
+
+ARCHER
+	PERCHè NON POSSO SPOSTARMI LATERALMENTE MENTRE SPARO FRECCIE IN BASSO IN SALTO ?
+
 
 Cheat in titleScreen KonamiCode
 	99 lives

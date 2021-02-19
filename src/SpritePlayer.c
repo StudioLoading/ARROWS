@@ -559,7 +559,7 @@ void CheckCollisionTile() {
 			}
 		break;
 		case 8u: //fine boss!
-			if(archer_data->tool){
+			if(archer_data->tool | current_level_b == 1){
 				is_on_boss = -1;
 				archer_data->tool = 0; //tool consumato
 				load_next_b = 0;
@@ -623,6 +623,17 @@ void Build_Next_Dialog(){
 					d2 = "OWNS THE WRENCH";
 					d3 = "I NEED TO EXIT.";
 					d4 = "LET'S TALK!";
+					return;
+				break;
+				case 1u:
+					show_diag = 1;
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					archer_state = STATE_DIAG;
+					max_diag = 2;
+					d1 = "HOW CAN I";
+					d2 = "OPEN A FLAMING";
+					d3 = "GATE ?";
+					d4 = "...";
 					return;
 				break;
 			}	

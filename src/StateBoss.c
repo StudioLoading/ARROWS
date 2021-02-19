@@ -66,7 +66,6 @@ const struct MapInfo** bosses[] = {boss_0, boss_1};
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
 const char * const level_b_names[] = {"THE CAVE", "GATOR'S"};
-struct Sprite* gate_sprite = 0;
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -87,9 +86,11 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteWolf);
 		break;
 		case 1:
+			level_tool=0;
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
+			SpriteManagerLoad(SpriteItem);
 		break;
 	}
 	
@@ -115,10 +116,15 @@ void Start_StateBoss() {
 			boss_hp = boss_data_b->hp;
 		break;
 		case 1:
-			boss = SpriteManagerAdd(SpriteAlligator, 21 << 3, 14 << 3); //34, 12
+			boss = SpriteManagerAdd(SpriteAlligator, 21 << 3, 14 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
-			gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3, 13 << 3);
+			SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
+			SpriteManagerAdd(SpriteGate, 43 << 3,  13 << 3);
+			struct Sprite* scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
+			struct ItemInfo* datascrigno3 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
+			datascrigno3->type = 2;
+			datascrigno3->setup = 1u;
 		break;
 	}
 	
@@ -187,7 +193,6 @@ void Update_StateBoss() {
 			if (boss_hp <= 0){
 				boss_hp = 0;
 				boss_data_b->hp = 0;
-				SpriteManagerRemoveSprite(gate_sprite);
 			}
 			WriteBBOSSHP();		
 		}
@@ -210,7 +215,7 @@ void Update_StateBoss() {
 	boss_data_b->archer_posx = scroll_target->x;
 	
 	/*PRINT_POS(13,2);
-	Printf("%u", boss_data_b->archer_posx);*/
+	Printf("%u", gate_sprite->x);*/
 	
 	//MOVING BACKGROUND TILES	
 	if (current_level_b == 1 & current_map_b == 0){
@@ -243,6 +248,7 @@ void Update_StateBoss() {
 			updatecounter = 0;
 		}
 	}
+	
 	
 }
 

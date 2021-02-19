@@ -81,6 +81,11 @@ void Update_SpriteArrow() {
 				}
 			}
 		}
+		if(iaspr->type == SpriteGate) {
+			if(CheckCollision(THIS, iaspr)) {
+				SpriteManagerRemove(THIS_IDX);
+			}
+		}
 	}
 	
 }
