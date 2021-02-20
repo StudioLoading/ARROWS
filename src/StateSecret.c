@@ -135,6 +135,11 @@ void populate_secret0(){
 		iit[1] = 1;
 		iit[2] = 3;
 	}
+	if (current_level == 2u & current_map == 0u){
+		iit[0] = 7;
+		iit[1] = 2;
+		iit[2] = 1;
+	}
 	for(invc=0; invc < invcount; invc++){
 		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
 		struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;

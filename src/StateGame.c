@@ -58,7 +58,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 2u;
+UINT8 current_level = 1u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -93,7 +93,7 @@ const struct MapInfo* level_3[] = {
 };
 const struct MapInfo** levels[] = {level_1, level_2, level_3};
 
-const char * const level_names[] = {"THE ZOO", "THE SEWERS"};
+const char * const level_names[] = {"THE ZOO", "THE SEWERS", "THE WOODS"};
 
 extern struct ArcherInfo* archer_data;
 extern INT8 is_on_boss;
@@ -135,6 +135,10 @@ void Start_StateGame() {
 	if (current_level == 1u & current_map == 0u){
 		SpriteManagerLoad(SpriteRat);
 		SpriteManagerLoad(SpriteSpider);
+	}
+	if (current_level == 2u & current_map == 0u){
+		SpriteManagerLoad(SpriteSpider);
+		SpriteManagerLoad(SpriteEnemy);
 	}
 	SHOW_SPRITES;
 
@@ -202,7 +206,24 @@ void Start_StateGame() {
 			switch(current_map){
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						populate_10();
+						struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 42u << 3, (UINT16) 21u << 3) ;
+						struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
+						datascrigno->type = 10;
+						datascrigno->setup = 1u;
+						datascrigno->content_type = 2;
+					}
+				break;
+			}
+		break;
+		case 2u:
+			switch(current_map){
+				case 0u:
+					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
+						struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 46u << 3, (UINT16) 0u << 3);
+						struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
+						datascrigno->type = 10;
+						datascrigno->setup = 1u;
+						datascrigno->content_type = 3; 
 					}
 				break;
 			}
@@ -267,14 +288,6 @@ void ShowDiag(){
 		//set_win_tiles(1, 2, 2, 2, face);
 		showing_diag = 1;
 	}
-}
-
-void populate_10(){
-	struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 42u << 3, (UINT16) 21u << 3) ;
-	struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
-	datascrigno->type = 10;
-	datascrigno->setup = 1u;
-	datascrigno->content_type = 2;
 }
 
 void populate_00(){
@@ -409,10 +422,7 @@ void Update_StateGame() {
 						datascrigno2->setup = 1u;
 						datascrigno2->content_type = 7;
 					}
-					if ((scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 10u  << 3) | 
-						(scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 11u  << 3) | 
-						(scroll_target->x == (UINT16) 67u << 3 & scroll_target->y == (INT16) 11u  << 3)
-						){
+					if (scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 10u  << 3){
 						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 64u << 3, (UINT16) 15u << 3);
 						snake2 = spawn_enemy(snake2, SpriteRat, (UINT16) 60u << 3, (UINT16) 15u << 3);
 						struct Sprite* scrigno_sprite3 = SpriteManagerAdd(SpriteItem, (UINT16) 62u << 3, (UINT16) 15u << 3);
@@ -420,6 +430,25 @@ void Update_StateGame() {
 						datascrigno3->type = 10;
 						datascrigno3->setup = 1u;
 						datascrigno3->content_type = 3;
+					}
+				break;
+			}
+		break;
+		case 2:
+			switch(current_map){
+				case 0:
+					if (scroll_target->x == (UINT16) 5u << 3){
+						snake1 = spawn_enemy(snake1, SpriteSpider, (UINT16) 13u << 3, (UINT16) 9u << 3);
+						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 19u << 3, (UINT16) 9u << 3);
+					}
+					if (scroll_target->x == (UINT16) 48u << 3){
+						snake1 = spawn_enemy(snake1, SpriteSpider, (UINT16) 51u << 3, (UINT16) 9u << 3);
+						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 53u << 3, (UINT16) 9u << 3);
+						snake3 = spawn_enemy(snake3, SpriteEnemy, (UINT16) 60u << 3, (UINT16) 9u << 3);
+					}
+					if (scroll_target->x == (UINT16) 104u << 3){
+						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 115u << 3, (UINT16) 10u << 3);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, (UINT16) 112u << 3, (UINT16) 10u << 3);
 					}
 				break;
 			}

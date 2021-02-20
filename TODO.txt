@@ -1,8 +1,12 @@
 
+Gator mi deve dare l' amuleto dell' acqua
+	devo fare uno state o una window apposta per mostrare l' amuleto per bene in grande ?
 
-ARCHER
-	PERCHè NON POSSO SPOSTARMI LATERALMENTE MENTRE SPARO FRECCIE IN BASSO IN SALTO ?
-
+liv3 
+	map0 all' aperto
+	map1 in salita magari su un albero ? nemici ragni e uccelli
+	map2 sono sulla cima dell' albero e boss aquila
+	
 
 Cheat in titleScreen KonamiCode
 	99 lives
