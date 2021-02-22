@@ -96,12 +96,12 @@ void Update_SpriteRat() {
 					if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();
 					}
-					data->tile_e_collision = TranslateSprite(THIS, -4 << delta_time, (data->enemy_accel_y >> 4));
+					data->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (data->enemy_accel_y >> 4));
 				}else{ //se la freccia arriva da sinistra dell' enemy
 					if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
 						ETurn();
 					}
-					data->tile_e_collision = TranslateSprite(THIS, 4 << delta_time, (data->enemy_accel_y >> 4));
+					data->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (data->enemy_accel_y >> 4));
 				}
 				SpriteManagerRemoveSprite(iespr);
 				if (data->hp <= 0){

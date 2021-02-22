@@ -32,6 +32,10 @@ extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
 extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
+extern struct Sprite* scrigno_coin;
+extern struct Sprite* scrigno_dcoin;
+extern struct Sprite* scrigno_shield;
+extern struct Sprite* scrigno_up;
 
 extern void WriteAMULET();
 extern void WriteCOINS();
@@ -39,6 +43,8 @@ extern void WriteHP();
 extern void WriteUPS();
 extern void WriteMap();
 extern void WriteTOOL();
+extern struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
+
 //Secrets
 UINT8 current_level_s = 0;
 UINT8 current_map_s = 0;
@@ -47,8 +53,6 @@ const struct MapInfo* secret_1[] = {
 };
 const struct MapInfo** secrets[] = {secret_1};
 
-
-void populate_secret0();
 void ShowSWindow();
 
 
@@ -73,13 +77,8 @@ void Start_StateSecret() {
 	SHOW_BKG;
 
 	//INIT ARCHER
-	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
 	if (archer_data->ups > 0 & archer_data->ups != ups){
 		 ups = archer_data->ups;
-	}
-	if (ups == -1){ //cioè vengo dal gameOver
-		ups = 3;
-		coins = 99u;
 	}
 	archer_data->ups =ups;
 	archer_data->hp = hp;
@@ -91,14 +90,21 @@ void Start_StateSecret() {
 	ShowSWindow();
 	
 	//ITEMS
-	switch(current_level_s){
-		case 0:
-			switch(current_map_s){
-				case 0:
-					populate_secret0();
-				break;
-			}
-		break;
+	if (current_level == 0u & current_map == 0u){
+		scrigno_up = spawn_item(scrigno_up, 6u, 14u, 3, 1);
+		scrigno_dcoin = spawn_item(scrigno_dcoin, 8u, 14u, 7, 1);
+	}
+	if (current_level == 0u & current_map == 1u){
+		scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 14u, 7, 1);
+		scrigno_shield = spawn_item(scrigno_shield, 8u, 14u, 2, 1);
+	}
+	if (current_level == 1u & current_map == 0u){
+		scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 14u, 7, 1);
+		scrigno_up = spawn_item(scrigno_up, 8u, 14u, 3, 1);
+	}
+	if (current_level == 2u & current_map == 0u){
+		scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 14u, 7, 1);
+		scrigno_shield = spawn_item(scrigno_shield, 8u, 14u, 2, 1);
 	}
 	
 	//SOUND
@@ -124,35 +130,8 @@ void ShowSWindow(){
 	
 }
 
-void populate_secret0(){
-	INT8 invcount = 3;
-	INT8 invc = 0;
-	INT8 invitems_positions_x[3] = {6,7,8};
-	INT8 invitems_positions_y[3] = {14,14,14};
-	INT8 iit[3] = {7, 7, 7};
-	if (current_level == 1u & current_map == 0u){
-		iit[0] = 1;
-		iit[1] = 1;
-		iit[2] = 3;
-	}
-	if (current_level == 2u & current_map == 0u){
-		iit[0] = 7;
-		iit[1] = 2;
-		iit[2] = 1;
-	}
-	for(invc=0; invc < invcount; invc++){
-		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc]*8, invitems_positions_y[invc]*8);
-		struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
-		dataitem->type = iit[invc];
-		dataitem->collided = 1u;
-		dataitem->setup = 1u;
-	}
-}
-
 void Update_StateSecret() {
 	
-	//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
-
 	if (amulet != archer_data->amulet){
 		amulet = archer_data->amulet;
 		WriteAMULET();		

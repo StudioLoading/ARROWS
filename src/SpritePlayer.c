@@ -293,9 +293,9 @@ void Update_SpritePlayer() {
 							}
 							SpriteManagerRemoveSprite(ispr);
 						break;
-						case 10u: //scrigno
-							dataitem->collided = 1;
-						break;
+						//case 10u: //scrigno
+							//dataitem->collided = 1;
+						//break;
 					}
 				}
 			}			
@@ -331,7 +331,7 @@ void Update_SpritePlayer() {
 			}
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
-			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
+			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
 			|| ispr->type == SpriteAlligator) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
@@ -380,6 +380,7 @@ void Update_SpritePlayer() {
 						case SpriteEnemy:
 							enemydamage = 5;
 						case SpriteRat:
+						case SpriteBird:
 							enemydamage = 10;
 						break;
 						case SpriteScorpion:

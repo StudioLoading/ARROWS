@@ -18,6 +18,7 @@
 #include "../res/src/scorpion.h"
 #include "../res/src/porcupine.h"
 #include "../res/src/rat.h"
+#include "../res/src/bird.h"
 
 
 #include "ZGBMain.h"
@@ -58,7 +59,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0u;
+UINT8 current_level = 2u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -144,6 +145,7 @@ void Start_StateGame() {
 	if (current_level == 2u & current_map == 0u){
 		SpriteManagerLoad(SpriteSpider);
 		SpriteManagerLoad(SpriteEnemy);
+		SpriteManagerLoad(SpriteBird);
 	}
 	SHOW_SPRITES;
 
@@ -355,7 +357,7 @@ void Update_StateGame() {
 					}
 				break;
 				case 1:				
-					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y + 3u) << 3){
+					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y + 2u) << 3){
 						snake1 = spawn_enemy(snake1, SpriteEnemy, 7u, 12u);
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 9u, 21u);
 					}
@@ -392,12 +394,12 @@ void Update_StateGame() {
 					}
 					if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 34u, 14u);
-						snake1 = spawn_enemy(snake1, SpriteRat, 43u, 14u);
+						snake3 = spawn_enemy(snake3, SpriteRat, 43u, 14u);
 					}
 					if (scroll_target->x == (UINT16) 42u << 3 & scroll_target->y == (INT16) 28u  << 3){
 						snake2 = spawn_enemy(snake2, SpriteSpider, 48u, 26u);
 					}
-					if (scroll_target->x == (UINT16) 56u << 3 & scroll_target->y == (INT16) 28u  << 3){
+					if (scroll_target->x == (UINT16) 53u << 3 & scroll_target->y == (INT16) 28u  << 3){
 						snake3 = spawn_enemy(snake3, SpriteSpider, 64u, 21u);
 						scrigno_dcoin = spawn_item(scrigno_dcoin, 67u, 23u, 7, 1);
 					}
@@ -415,6 +417,7 @@ void Update_StateGame() {
 					if (scroll_target->x == (UINT16) 5u << 3){
 						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
+						snake3 = spawn_enemy(snake3, SpriteBird, 18u, 3u);
 					}
 					if (scroll_target->x == (UINT16) 48u << 3){
 						snake1 = spawn_enemy(snake1, SpriteSpider, 51u, 9u);
@@ -423,7 +426,14 @@ void Update_StateGame() {
 					}
 					if (scroll_target->x == (UINT16) 104u << 3){
 						snake1 = spawn_enemy(snake1, SpriteEnemy, 115u, 10u);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, 112u, 10u);
+					}
+					if (scroll_target->x == (UINT16) 117u << 3){
+						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 131u, 10u);
+					}
+					if (scroll_target->x == (UINT16) 151u << 3){
+						snake3 = spawn_enemy(snake3, SpriteEnemy, 160u, 9u);
+						snake1 = spawn_enemy(snake1, SpriteSpider, 162u, 9u);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 166u, 9u);
 					}
 				break;
 			}

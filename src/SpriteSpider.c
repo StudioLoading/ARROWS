@@ -91,7 +91,7 @@ void Update_SpriteSpider() {
 				SetSpriteAnim(THIS, spider_hit, 24u); 
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
 				data->hp -= arrowdata->arrowdamage;
-				data->tile_e_collision = TranslateSprite(THIS, 0, -4);
+				data->tile_e_collision = TranslateSprite(THIS, 0, -2);
 				SpriteManagerRemoveSprite(iespr);
 				if (data->hp <= 0){
 					data->enemy_state = ENEMY_STATE_DEAD;

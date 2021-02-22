@@ -33,7 +33,7 @@ void Start_SpriteAlligator() {
 	alligator_data->enemy_accel_y = 24;
 	alligator_data->vx = 0;
 	alligator_data->wait = 250u;
-	alligator_data->hp = 75;
+	alligator_data->hp = 50;
 	alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
 }
 
