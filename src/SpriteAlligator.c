@@ -16,7 +16,7 @@ const UINT8 alligator_hit[] = {6, 3, 6, 3, 6, 3, 6}; //The first number indicate
 const UINT8 alligator_dead[] = {1, 7}; //The first number indicates the number of frames
 const UINT8 alligator_normal[] = {1, 5}; //The first number indicates the number of frames
 
-const UINT16 boss_posx[] = {16u, 24u, 9u};
+const UINT16 boss_posx[] = {9u, 24u, 16u};
 UINT8 poss = 0;
 struct EnemyInfo* alligator_data ;
 

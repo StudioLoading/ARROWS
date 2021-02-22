@@ -7,6 +7,7 @@
 #include "..\res\src\map.h"
 #include "..\res\src\map2.h"
 #include "..\res\src\map3.h"
+#include "..\res\src\map3tree.h"
 #include "..\res\src\mapsewer.h"
 #include "..\res\src\mapsecret0.h"
 #include "../res/src/archer.h"
@@ -46,9 +47,9 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 40, 41, 42, 46, 52, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
-const UINT8 ground_tiles[] = {1, 2, 3, 22, 18, 100, 101, 104};
-const INT8 ground_tiles_tot = 8; // ground_tiles array size
+const UINT8 collision_tiles[] = {1, 2, 3, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 40, 41, 42, 46, 52, 81, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 ground_tiles[] = {1, 2, 3, 10, 18, 22, 81, 100, 101, 104};
+const INT8 ground_tiles_tot = 9; // ground_tiles array size
 
 UINT8 amulet = 1u;
 UINT8 coins = 0u;
@@ -60,7 +61,7 @@ INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
 UINT8 current_level = 2u;
-UINT8 current_map = 0u;
+UINT8 current_map = 1u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 ARCHER_STATE archer_state;
@@ -72,6 +73,7 @@ struct Sprite* platform_sprite = 0;
 struct Sprite* snake1 = 0;
 struct Sprite* snake2 = 0 ;
 struct Sprite* snake3 = 0 ;
+struct Sprite* snake4 = 0 ;
 struct Sprite* porcupine1 = 0;
 struct Sprite* scrigno_coin = 0;
 struct Sprite* scrigno_dcoin = 0;
@@ -94,7 +96,8 @@ const struct MapInfo* level_2[] = {
 	&mapsewer
 };
 const struct MapInfo* level_3[] = {
-	&map3
+	&map3,
+	&map3tree
 };
 const struct MapInfo** levels[] = {level_1, level_2, level_3};
 
@@ -430,10 +433,11 @@ void Update_StateGame() {
 					if (scroll_target->x == (UINT16) 117u << 3){
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 131u, 10u);
 					}
-					if (scroll_target->x == (UINT16) 151u << 3){
-						snake3 = spawn_enemy(snake3, SpriteEnemy, 160u, 9u);
+					if (scroll_target->x == (UINT16) 150u << 3){
 						snake1 = spawn_enemy(snake1, SpriteSpider, 162u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 166u, 9u);
+						snake3 = spawn_enemy(snake3, SpriteEnemy, 160u, 9u);
+						snake4 = spawn_enemy(snake4, SpriteEnemy, 168u, 9u);
 					}
 				break;
 			}
