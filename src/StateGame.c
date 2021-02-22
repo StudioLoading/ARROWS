@@ -58,7 +58,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 1u;
+UINT8 current_level = 0u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -72,6 +72,10 @@ struct Sprite* snake1 = 0;
 struct Sprite* snake2 = 0 ;
 struct Sprite* snake3 = 0 ;
 struct Sprite* porcupine1 = 0;
+struct Sprite* scrigno_coin = 0;
+struct Sprite* scrigno_dcoin = 0;
+struct Sprite* scrigno_shield = 0;
+struct Sprite* scrigno_up = 0;
 
 
 //DIALOGS
@@ -115,6 +119,7 @@ void ShowWindow();
 void ShowWindowDiag();
 void ShowDiag();
 struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy);
+struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
 void Start_StateGame() {
 	
@@ -127,7 +132,7 @@ void Start_StateGame() {
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpriteKey);
-	if (current_level == 0u & current_map == 1u){
+	if (current_level == 0u){
 		SpriteManagerLoad(SpriteEnemy);
 		SpriteManagerLoad(SpriteScorpion);
 		SpriteManagerLoad(SpritePorcupine);
@@ -197,7 +202,10 @@ void Start_StateGame() {
 					level_tool = 6;
 					//wrench
 					if(archer_data->tool == 0){
-						populate_00();
+						scrigno_coin = spawn_item(scrigno_coin, 9u, 14u, 1, 1);
+						scrigno_shield = spawn_item(scrigno_shield, 9u, 22u, 2, 1);
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 4u, 7, 1);
+						scrigno_up = spawn_item(scrigno_up, 31u, 27u, 3, 0);
 					}
 				break;
 			}
@@ -206,11 +214,7 @@ void Start_StateGame() {
 			switch(current_map){
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 42u << 3, (UINT16) 21u << 3) ;
-						struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
-						datascrigno->type = 10;
-						datascrigno->setup = 1u;
-						datascrigno->content_type = 2;
+						scrigno_shield = spawn_item(scrigno_shield, 42u, 21u, 2, 1);
 					}
 				break;
 			}
@@ -219,11 +223,7 @@ void Start_StateGame() {
 			switch(current_map){
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 46u << 3, (UINT16) 0u << 3);
-						struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
-						datascrigno->type = 10;
-						datascrigno->setup = 1u;
-						datascrigno->content_type = 3; 
+						scrigno_up = spawn_item(scrigno_up, 46u, 0u, 3, 1);
 					}
 				break;
 			}
@@ -236,6 +236,8 @@ void Start_StateGame() {
 	if(archer_tool == level_tool){
 		WriteTOOL();
 	}
+	
+	WriteMap();
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -290,42 +292,24 @@ void ShowDiag(){
 	}
 }
 
-void populate_00(){
-
-	const INT8 count = 3;
-	const INT16 scrigni_positions_x[] = {9u, 12u, 6u, 17u};
-	const INT16 scrigni_positions_y[] = {14u, 23u, 4u, 36u};
-	const INT8 st [] = {1, 2, 1, 3};
-	INT8 c = 0;
-	//ITEM SCRIGNI
-	for(c=0; c < count; c++){
-		struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, scrigni_positions_x[c] << 3, scrigni_positions_y[c]  << 3);
-		struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
-		datascrigno->type = 10;
-		datascrigno->setup = 1u;
-		datascrigno->content_type = st[c]; 
-	}
-	
-	//HIDDEN ITEMS
-	const INT8 invcount = 1;
-	INT8 invc = 0;
-	const INT16 invitems_positions_x[] = {31u}; //13
-	const INT16 invitems_positions_y[] = {27u};//11
-	const INT8 iit [] = {3, 1};
-	for(invc=0; invc < invcount; invc++){
-		struct Sprite* item_sprite = SpriteManagerAdd(SpriteItem, invitems_positions_x[invc] << 3, invitems_positions_y[invc] << 3);
-		struct ItemInfo* dataitem = (struct ItemInfo*)item_sprite->custom_data;
-		dataitem->type = iit[invc];
-		dataitem->setup = 1u;
-	}
-	
-	
-}
-
 struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
 	SpriteManagerRemoveSprite(enem);
-	enem = SpriteManagerAdd(spriteType, posx, posy);
+	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 	return enem;
+}
+
+struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
+	SpriteManagerRemoveSprite(itemin);
+	itemin = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
+	struct ItemInfo* datascrigno = (struct ItemInfo*)itemin->custom_data;
+	datascrigno->setup = 1u;
+	if(scrigno){
+		datascrigno->content_type = content_type;
+		datascrigno->type = 10;
+	}else{
+		datascrigno->type = content_type;
+	}
+	return itemin;
 }
 
 void Update_StateGame() {
@@ -365,31 +349,30 @@ void Update_StateGame() {
 		case 0:
 			switch(current_map){
 				case 0:
+					if (scroll_target->x == (UINT16) 9u << 3 & scroll_target->y > (UINT16) 36u  << 3){
+						snake1 = spawn_enemy(snake1, SpriteEnemy, 18u, 39u);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, 22u, 39u);
+					}
 				break;
 				case 1:				
 					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y + 3u) << 3){
-						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 7u << 3, (UINT16) 12u << 3);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, (UINT16) 9u << 3, (UINT16) 12u << 3);
-						platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 9u << 3, (UINT16) 21u << 3);
+						snake1 = spawn_enemy(snake1, SpriteEnemy, 7u, 12u);
+						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 9u, 21u);
 					}
 					if (scroll_target->x == (UINT16) 7u << 3 & scroll_target->y == (UINT16) 39u  << 3){
-						porcupine1 = spawn_enemy(porcupine1, SpritePorcupine, (UINT16) 15u << 3, (UINT16) 39u << 3);
-						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 17u << 3, (UINT16) 39u << 3);
+						porcupine1 = spawn_enemy(porcupine1, SpritePorcupine, 15u, 39u);
+						snake1 = spawn_enemy(snake1, SpriteEnemy, 17u, 39u);
 					}
 					if (scroll_target->x == (UINT16) 24u << 3 & scroll_target->y == (UINT16) 21u  << 3){
-						struct Sprite* scrigno_sprite = SpriteManagerAdd(SpriteItem, (UINT16) 28u << 3, (UINT16) 18u << 3);
-						struct ItemInfo* datascrigno = (struct ItemInfo*)scrigno_sprite->custom_data;
-						datascrigno->type = 10;
-						datascrigno->setup = 1u;
-						datascrigno->content_type = 3;
+						scrigno_up = spawn_item(scrigno_up, 28u, 18u, 3, 1);
 					}
 					if (scroll_target->x == (UINT16) 31u << 3 & scroll_target->y == (UINT16) 39u  << 3){
-						snake1 = spawn_enemy(snake1, SpriteScorpion, (UINT16) 38u << 3, (UINT16) 39u << 3);
+						snake1 = spawn_enemy(snake1, SpriteScorpion, 38u, 39u);
 					}
-					if (scroll_target->x == (UINT16) 35u << 3 & scroll_target->y == (UINT16) 18u << 3){
-						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 25u << 3, (UINT16) 9u << 3);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, (UINT16) 34u << 3, (UINT16) 4u << 3);
-						snake3 = spawn_enemy(snake3, SpriteScorpion, (UINT16) 20u << 3, (UINT16) 4u << 3);
+					if (scroll_target->x == (UINT16) 36u << 3 & scroll_target->y <= (UINT16) 10u << 3){
+						snake1 = spawn_enemy(snake1, SpriteEnemy, 25u, 9u);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, 34u, 4u);
+						snake3 = spawn_enemy(snake3, SpriteScorpion, 20u, 4u);
 					}
 				break;
 			}
@@ -398,38 +381,30 @@ void Update_StateGame() {
 			switch(current_map){
 				case 0:
 					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y +1u) << 3){
-						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 18u << 3, (UINT16) 4u << 3);
-						snake2 = spawn_enemy(snake2, SpriteRat, (UINT16) 14u << 3, (UINT16) 4u << 3);
+						snake1 = spawn_enemy(snake1, SpriteRat, 18u, 4u);
+						snake2 = spawn_enemy(snake2, SpriteRat, 14u, 4u);
 					}
 					if (scroll_target->x == (UINT16) 29u << 3 & scroll_target->y == (INT16) 3u  << 3){
-						snake3 = spawn_enemy(snake3, SpriteRat, (UINT16) 33u << 3, (UINT16) 4u << 3);
+						scrigno_coin = spawn_item(scrigno_coin, 45u, 3u, 1, 1);
 					}
 					if (scroll_target->x == (UINT16) 19u << 3 & scroll_target->y == (INT16) 14u  << 3){
-						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 31u << 3, (UINT16) 11u << 3);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 31u, 11u);
 					}
 					if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
-						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, (UINT16) 34u << 3, (UINT16) 14u << 3);
-						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 43u << 3, (UINT16) 14u << 3);
+						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 34u, 14u);
+						snake1 = spawn_enemy(snake1, SpriteRat, 43u, 14u);
 					}
 					if (scroll_target->x == (UINT16) 42u << 3 & scroll_target->y == (INT16) 28u  << 3){
-						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 48u << 3, (UINT16) 26u << 3);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 48u, 26u);
 					}
 					if (scroll_target->x == (UINT16) 56u << 3 & scroll_target->y == (INT16) 28u  << 3){
-						snake3 = spawn_enemy(snake3, SpriteSpider, (UINT16) 64u << 3, (UINT16) 21u << 3);
-						struct Sprite* scrigno_sprite2 = SpriteManagerAdd(SpriteItem, (UINT16) 67u << 3, (UINT16) 23u << 3);
-						struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite2->custom_data;
-						datascrigno2->type = 10;
-						datascrigno2->setup = 1u;
-						datascrigno2->content_type = 7;
+						snake3 = spawn_enemy(snake3, SpriteSpider, 64u, 21u);
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 67u, 23u, 7, 1);
 					}
 					if (scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 10u  << 3){
-						snake1 = spawn_enemy(snake1, SpriteRat, (UINT16) 64u << 3, (UINT16) 15u << 3);
-						snake2 = spawn_enemy(snake2, SpriteRat, (UINT16) 60u << 3, (UINT16) 15u << 3);
-						struct Sprite* scrigno_sprite3 = SpriteManagerAdd(SpriteItem, (UINT16) 62u << 3, (UINT16) 15u << 3);
-						struct ItemInfo* datascrigno3 = (struct ItemInfo*)scrigno_sprite3->custom_data;
-						datascrigno3->type = 10;
-						datascrigno3->setup = 1u;
-						datascrigno3->content_type = 3;
+						snake1 = spawn_enemy(snake1, SpriteRat, 64u, 15u);
+						snake2 = spawn_enemy(snake2, SpriteRat, 60u, 15u);
+						scrigno_up = spawn_item(scrigno_up, 62u, 15u, 3, 1);
 					}
 				break;
 			}
@@ -438,17 +413,17 @@ void Update_StateGame() {
 			switch(current_map){
 				case 0:
 					if (scroll_target->x == (UINT16) 5u << 3){
-						snake1 = spawn_enemy(snake1, SpriteSpider, (UINT16) 13u << 3, (UINT16) 9u << 3);
-						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 19u << 3, (UINT16) 9u << 3);
+						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
 					}
 					if (scroll_target->x == (UINT16) 48u << 3){
-						snake1 = spawn_enemy(snake1, SpriteSpider, (UINT16) 51u << 3, (UINT16) 9u << 3);
-						snake2 = spawn_enemy(snake2, SpriteSpider, (UINT16) 53u << 3, (UINT16) 9u << 3);
-						snake3 = spawn_enemy(snake3, SpriteEnemy, (UINT16) 60u << 3, (UINT16) 9u << 3);
+						snake1 = spawn_enemy(snake1, SpriteSpider, 51u, 9u);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 53u, 9u);
+						snake3 = spawn_enemy(snake3, SpriteEnemy, 60u, 9u);
 					}
 					if (scroll_target->x == (UINT16) 104u << 3){
-						snake1 = spawn_enemy(snake1, SpriteEnemy, (UINT16) 115u << 3, (UINT16) 10u << 3);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, (UINT16) 112u << 3, (UINT16) 10u << 3);
+						snake1 = spawn_enemy(snake1, SpriteEnemy, 115u, 10u);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, 112u, 10u);
 					}
 				break;
 			}
