@@ -61,7 +61,7 @@ INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
 UINT8 current_level = 2u;
-UINT8 current_map = 1u;
+UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 ARCHER_STATE archer_state;
@@ -145,7 +145,7 @@ void Start_StateGame() {
 		SpriteManagerLoad(SpriteRat);
 		SpriteManagerLoad(SpriteSpider);
 	}
-	if (current_level == 2u & current_map == 0u){
+	if (current_level == 2u){
 		SpriteManagerLoad(SpriteSpider);
 		SpriteManagerLoad(SpriteEnemy);
 		SpriteManagerLoad(SpriteBird);
@@ -207,10 +207,12 @@ void Start_StateGame() {
 					level_tool = 6;
 					//wrench
 					if(archer_data->tool == 0){
-						scrigno_coin = spawn_item(scrigno_coin, 9u, 14u, 1, 1);
-						scrigno_shield = spawn_item(scrigno_shield, 9u, 22u, 2, 1);
-						scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 4u, 7, 1);
-						scrigno_up = spawn_item(scrigno_up, 31u, 27u, 3, 0);
+						if (!load_next_s){ 
+							scrigno_coin = spawn_item(scrigno_coin, 9u, 14u, 1, 1);
+							scrigno_shield = spawn_item(scrigno_shield, 9u, 22u, 2, 1);
+							scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 4u, 7, 1);
+							scrigno_up = spawn_item(scrigno_up, 31u, 27u, 3, 0);
+						}
 					}
 				break;
 			}
@@ -229,6 +231,7 @@ void Start_StateGame() {
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
 						scrigno_up = spawn_item(scrigno_up, 46u, 0u, 3, 1);
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 2u, 1u, 7, 1);
 					}
 				break;
 			}
@@ -420,7 +423,6 @@ void Update_StateGame() {
 					if (scroll_target->x == (UINT16) 5u << 3){
 						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
-						snake3 = spawn_enemy(snake3, SpriteBird, 18u, 3u);
 					}
 					if (scroll_target->x == (UINT16) 48u << 3){
 						snake1 = spawn_enemy(snake1, SpriteSpider, 51u, 9u);
@@ -438,6 +440,26 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteSpider, 166u, 9u);
 						snake3 = spawn_enemy(snake3, SpriteEnemy, 160u, 9u);
 						snake4 = spawn_enemy(snake4, SpriteEnemy, 168u, 9u);
+					}
+				break;
+				case 1:
+					if (scroll_target->x == (UINT16) 123u << 3){
+						snake2 = spawn_enemy(snake2, SpriteBird, 133u, 5u);
+					}
+					if (scroll_target->x == (UINT16) 128u << 3){
+						snake1 = spawn_enemy(snake1, SpriteBird, 118u, 5u);
+					}
+					if (scroll_target->x == (UINT16) 141u << 3){
+						snake3 = spawn_enemy(snake3, SpriteBird, 131u, 5u);
+					}
+					if (scroll_target->x == (UINT16) 152u << 3){
+						snake2 = spawn_enemy(snake2, SpriteBird, 142u, 5u);
+					}
+					if (scroll_target->x == (UINT16) 163u << 3){
+						snake1 = spawn_enemy(snake1, SpriteBird, 173u, 5u);
+					}
+					if (scroll_target->x == (UINT16) 170u << 3){
+						snake3 = spawn_enemy(snake3, SpriteBird, 179u, 5u);
 					}
 				break;
 			}

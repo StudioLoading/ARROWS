@@ -29,7 +29,7 @@ void Start_SpriteBird() {
 	THIS->coll_y = 7;
 	THIS->coll_w = 8;
 	THIS->coll_h = 8;
-	THIS->lim_x = 200u;
+	THIS->lim_x = 255u;
 	THIS->lim_y = 128u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, bird_idle, 8u);
@@ -97,7 +97,7 @@ void Update_SpriteBird() {
 		THIS->x += data->vx;
 		THIS->y += data->enemy_accel_y;	
 	}else{		
-		if(data->wait << 1){
+		if(data->wait << 2){
 			THIS->x += data->vx;
 			THIS->y += data->enemy_accel_y;	
 		}

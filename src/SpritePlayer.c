@@ -112,6 +112,10 @@ void Update_SpritePlayer() {
 	}
 	
 	switch(archer_state) {
+		case STATE_ASCENDING:			
+			MoveArcher();
+			THIS->y--;
+		break;
 		case STATE_DEAD:
 			death_cooldown ++;
 			if(death_cooldown == 6){
@@ -246,6 +250,14 @@ void Update_SpritePlayer() {
 		archer_state = STATE_NORMAL;
 	}
 	
+	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 99u){
+		archer_accel_y = -2;
+		archer_state = STATE_ASCENDING;
+	}else if (archer_state == STATE_ASCENDING){
+		archer_accel_y = -12;
+		archer_state = STATE_NORMAL;
+	}
+
 	UINT8 scroll_tile;
 	struct Sprite* ispr;
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
