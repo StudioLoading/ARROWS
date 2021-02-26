@@ -9,6 +9,7 @@
 
 #include "custom_datas.h"
 
+extern UINT8 amulet;
 extern ARCHER_STATE archer_state;
 extern INT8 load_next;
 extern INT8 load_next_s;
@@ -63,7 +64,9 @@ void Build_Next_Dialog();
 
 void Start_SpritePlayer() {
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
-	archer_data->amulet = 1u;
+	if(archer_data->amulet != amulet){
+		archer_data->amulet = 1u;
+	}
 	archer_data->tool = 0;
 	archer_data->ups = 0;
 	archer_data->coins = 0u;
