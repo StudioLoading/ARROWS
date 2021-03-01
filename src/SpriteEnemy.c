@@ -128,7 +128,6 @@ void CheckCollisionETile() {
 	switch(data->tile_e_collision) {
 		case 4u:
 		case 5u:
-		case 6u:
 		case 7u:
 		case 11u:
 		case 13u:

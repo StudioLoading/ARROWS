@@ -320,6 +320,7 @@ void Update_SpritePlayer() {
 				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
 				switch(datakey->type){
 					case 1: //key
+						SetSpriteAnim(THIS, anim_idle, 12u);
 						archer_data->tool = 6;
 						SpriteManagerRemoveSprite(ispr);	
 						Build_Next_Dialog();
@@ -734,7 +735,7 @@ void Build_Next_Dialog(){
 								d2 = "HERE IS THE";
 								d3 = "KEY.";
 								d4 = ".. EH EH !";								
-								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, 46*8, 2*8);
+								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 								datakey->type = 1;
 								datakey->setup = 1u;								

@@ -144,7 +144,6 @@ void CheckCollisionBTile() {
 		break;
 		case 4u:
 		case 5u:
-		case 6u:
 		case 7u:
 		case 18u:
 		case 19u:

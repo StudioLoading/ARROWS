@@ -47,9 +47,9 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 40, 41, 42, 46, 52, 81, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
-const UINT8 ground_tiles[] = {1, 2, 3, 6, 11, 12, 14, 18, 21, 22, 81, 100, 101, 104};
-const INT8 ground_tiles_tot = 14; // ground_tiles array size
+const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 81, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
+const UINT8 ground_tiles[] = {1, 2, 3, 6, 11, 12, 14, 18, 21, 22, 35, 81, 100, 101, 104};
+const INT8 ground_tiles_tot = 15; // ground_tiles array size
 
 UINT8 amulet = 0u;
 UINT8 coins = 0u;
@@ -60,7 +60,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 2u;
+UINT8 current_level = 0u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -154,9 +154,9 @@ void Start_StateGame() {
 
 	//SCROLL
 	if (current_level == 2u & current_map == 0u){
-		scroll_bottom_movement_limit = 90;//customizzo altezza archer sul display
+		scroll_bottom_movement_limit = 82;//customizzo altezza archer sul display
 	}else{
-		scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
+		scroll_bottom_movement_limit = 62;//customizzo altezza archer sul display
 	}
 
 	const struct MapInfo** lvls = levels[current_level];
@@ -392,6 +392,10 @@ void Update_StateGame() {
 						snake1 = spawn_enemy(snake1, SpriteRat, 18u, 4u);
 						snake2 = spawn_enemy(snake2, SpriteRat, 14u, 4u);
 					}
+					if (scroll_target->x == (UINT16) 4u << 3 & scroll_target->y == (INT16) 14u  << 3){
+						snake3 = spawn_enemy(snake3, SpriteRat, 14u, 14u);
+						snake4 = spawn_enemy(snake4, SpriteSpider, 13u, 13u);
+					}
 					if (scroll_target->x == (UINT16) 29u << 3 & scroll_target->y == (INT16) 3u  << 3){
 						scrigno_coin = spawn_item(scrigno_coin, 45u, 3u, 1, 1);
 					}
@@ -439,11 +443,22 @@ void Update_StateGame() {
 					if (scroll_target->x == (UINT16) 117u << 3){
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 131u, 10u);
 					}
+					if (scroll_target->x == (UINT16) 127u << 3){
+						snake1 = spawn_enemy(snake1, SpriteBird, 137u, 3u);
+						snake2 = spawn_enemy(snake2, SpriteBird, 117u, 3u);
+					}
+					if (scroll_target->x == (UINT16) 143u << 3){
+						snake3 = spawn_enemy(snake3, SpriteBird, 149u, 3u);
+					}
 					if (scroll_target->x == (UINT16) 150u << 3 | scroll_target->x == (UINT16) 151u << 3){
 						snake1 = spawn_enemy(snake1, SpriteSpider, 162u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 166u, 9u);
 						snake3 = spawn_enemy(snake3, SpriteEnemy, 160u, 9u);
-						snake4 = spawn_enemy(snake4, SpriteBird, 140u, 9u);
+						snake4 = spawn_enemy(snake4, SpriteBird, 140u, 3u);
+					}
+					if (scroll_target->x == (UINT16) 167u << 3){
+						snake1 = spawn_enemy(snake1, SpriteBird, 172u, 3u);
+						snake2 = spawn_enemy(snake2, SpriteBird, 166u, 3u);
 					}
 				break;
 				case 1:
