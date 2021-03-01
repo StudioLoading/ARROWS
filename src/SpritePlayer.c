@@ -347,7 +347,7 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
-			|| ispr->type == SpriteAlligator) {
+			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(ispr->type == SpriteWolf){
@@ -401,6 +401,7 @@ void Update_SpritePlayer() {
 						case SpriteScorpion:
 						case SpriteSpider:
 						case SpritePorcupine:
+						case SpriteEagle:
 							enemydamage = 15;
 						break;
 						case SpriteWolf:
@@ -464,6 +465,10 @@ void Update_SpritePlayer() {
 void Die(){
 	PlayFx(CHANNEL_1, 3, 0x7c, 0x80, 0x74, 0x83, 0x86);
 	archer_state = STATE_DEAD;
+	THIS->coll_x = 1;
+	THIS->coll_y = 5;
+	THIS->coll_w = 14;
+	THIS->coll_h = 7;
 }
 
 void Shoot() {
@@ -570,7 +575,13 @@ void CheckCollisionTile() {
 					is_on_boss = 1;
 					archer_data->tool = 0; //tool consumato
 					load_next_b = 1;
-				break;					
+				break;
+				case 2:
+					current_level_b = 2;
+					is_on_boss = 1;
+					archer_data->tool = 0; //tool consumato
+					load_next_b = 1;
+				break;
 			}
 			if (current_level == 1 | (archer_data->tool & current_level == 0)){
 				is_on_boss = 1;

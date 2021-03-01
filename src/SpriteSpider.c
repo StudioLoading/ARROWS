@@ -28,7 +28,7 @@ void Start_SpriteSpider() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, spider_idle, 8u);
 	data->enemy_accel_y = 24;
-	data->vx = 1;
+	data->vx = 0;
 	data->wait = 0u;
 	data->hp = 40;
 	data->enemy_state = ENEMY_STATE_NORMAL;
@@ -71,7 +71,7 @@ void Update_SpriteSpider() {
 	
 	CheckCollisionETile();
 	
-	if(data->tile_e_collision == 22u | data->tile_e_collision == 52u | data->tile_e_collision == 100u | data->tile_e_collision == 101u){
+	if(data->tile_e_collision == 18u | data->tile_e_collision == 22u | data->tile_e_collision == 52u | data->tile_e_collision == 100u | data->tile_e_collision == 101u){
 		data->vx = -data->vx;
 	}
 	

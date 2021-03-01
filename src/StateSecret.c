@@ -1,6 +1,6 @@
 #include "Banks/SetBank7.h"
 
-#include "../res/src/window.h"
+
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\mapsecret0.h"
@@ -37,6 +37,7 @@ extern struct Sprite* scrigno_dcoin;
 extern struct Sprite* scrigno_shield;
 extern struct Sprite* scrigno_up;
 
+extern void ShowWindow();
 extern void WriteAMULET();
 extern void WriteCOINS();
 extern void WriteHP();
@@ -53,7 +54,7 @@ const struct MapInfo* secret_1[] = {
 };
 const struct MapInfo** secrets[] = {secret_1};
 
-void ShowSWindow();
+//void ShowSWindow();
 
 
 void Start_StateSecret() {
@@ -87,7 +88,7 @@ void Start_StateSecret() {
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowSWindow();
+	ShowWindow();
 	
 	//ITEMS
 	if (current_level == 0u & current_map == 0u){
@@ -113,12 +114,12 @@ void Start_StateSecret() {
 
 }
 
-
+/*
 void ShowSWindow(){
 	HIDE_WIN;
 	//WINDOW
 	WX_REG = 7;
-	WY_REG = 144 - 32;
+	WY_REG = 144 - 8;
 	InitWindow(0, 0, &window);
 	SHOW_WIN;
 	
@@ -129,6 +130,7 @@ void ShowSWindow(){
 	WriteMap();
 	
 }
+*/
 
 void Update_StateSecret() {
 	

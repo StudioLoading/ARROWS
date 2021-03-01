@@ -1,11 +1,11 @@
 #include "Banks/SetBank7.h"
 
-#include "../res/src/window.h"
 #include "../res/src/diagnew.h"
 #include "../res/src/font.h"
 #include "..\res\src\tiles.h"
 #include "..\res\src\mapboss0.h"
 #include "..\res\src\mapboss1.h"
+#include "..\res\src\mapboss2.h"
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
 #include "../res/src/wolf.h"
@@ -61,11 +61,14 @@ const struct MapInfo* boss_0[] = {
 const struct MapInfo* boss_1[] = {
 	&mapboss1
 };
-const struct MapInfo** bosses[] = {boss_0, boss_1};
+const struct MapInfo* boss_2[] = {
+	&mapboss2
+};
+const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2};
 
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
-const char * const level_b_names[] = {"THE CAVE", "GATOR'S"};
+const char * const level_b_names[] = {"THE CAVE", "GATOR'S", "THE NEST"};
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -79,10 +82,10 @@ void Start_StateBoss() {
 	
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
-	SpriteManagerLoad(SpriteKey);
 	switch(current_level_b){
 		case 0:
 			level_tool=7;
+			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteWolf);
 		break;
 		case 1:
@@ -90,7 +93,14 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
+			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteItem);
+		break;
+		case 2:
+			level_tool=0;
+			SpriteManagerLoad(SpriteEagle);
+			SpriteManagerLoad(SpriteAmulet);
+			//SpriteManagerLoad(SpriteItem);
 		break;
 	}
 	
@@ -108,6 +118,7 @@ void Start_StateBoss() {
 	SHOW_BKG;
 	
 	struct Sprite* boss = 0;
+	struct Sprite* scrigno_sprite_boss = 0;
 	//INIT BOSS
 	switch(current_level_b){
 		case 0:
@@ -121,10 +132,19 @@ void Start_StateBoss() {
 			boss_hp = boss_data_b->hp;
 			SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
 			SpriteManagerAdd(SpriteGate, 43 << 3,  13 << 3);
-			struct Sprite* scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
+			scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
+			struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
+			datascrigno2->type = 2;
+			datascrigno2->setup = 1u;
+		break;
+		case 2:
+			boss = SpriteManagerAdd(SpriteEagle, 9 << 3, 14 << 3);
+			boss_data_b = (struct EnemyInfo*)boss->custom_data;
+			boss_hp = boss_data_b->hp;
+			/*scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 6u << 3, (UINT16) 34u << 3);
 			struct ItemInfo* datascrigno3 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
 			datascrigno3->type = 2;
-			datascrigno3->setup = 1u;
+			datascrigno3->setup = 1u;*/
 		break;
 	}
 	
@@ -253,11 +273,16 @@ void Update_StateBoss() {
 }
 
 void WriteBMap(){
-	PRINT_POS(1, 3);
-	Printf(level_b_names[current_level_b]);	
+	//PRINT_POS(1, 0);
+	//Printf(level_b_names[current_level_b]);	
 }
 
-void WriteBBOSSHP(){	
-	PRINT_POS(12, 3);
-	Printf("BOSS>%d", boss_hp);
+void WriteBBOSSHP(){
+	PRINT_POS(10, 0);	
+	if(boss_hp > 0){
+		Printf("BOSS>%d", boss_hp);
+	}else{
+		Printf("       ");
+		WriteCOINS();
+	}
 }

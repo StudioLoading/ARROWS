@@ -28,7 +28,7 @@ UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
 void SetupArrow();
 void CheckCollisionArrowTile();
-void RedirectArrow();
+
 
 void Start_SpriteArrow() {
 	
@@ -214,44 +214,16 @@ void SetupArrow(){
 }
 
 void CheckCollisionArrowTile() {	
-	if (tile_a_collision < 18u & tile_a_collision > 9u){
-		RedirectArrow();
-	}else{
-		SpriteManagerRemove(THIS_IDX);
-	}
-}
-
-void RedirectArrow(){
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	switch(tile_a_collision) {
-		case 10u: //da SX a GIU
-			data->arrowdir = 4;
-			THIS->x += 4;
-			THIS->y += 4;
-		break;
 		case 11u: //da DX a GIU
 			data->arrowdir = 4;
 			THIS->x -= 2;
 			THIS->y += 4;
 		break;
-		case 12u: //da SX a SU
-			data->arrowdir = 3;
-			THIS->x += 4;
-		break;
 		case 13u: // da DX a SU
 			data->arrowdir = 3;
 			THIS->x -= 4;
-		break;
-		case 14u: //da SU a SX
-			SPRITE_SET_VMIRROR(THIS);
-			data->arrowdir = 1;
-			THIS->x -= 4;
-		break;
-		case 15u: //da SU a DX
-			SPRITE_UNSET_VMIRROR(THIS);
-			data->arrowdir = 1;
-			THIS->x += 4;
-			THIS->y += 6;
 		break;
 		case 16u://da GIU a DX
 			SPRITE_UNSET_VMIRROR(THIS);
@@ -265,9 +237,14 @@ void RedirectArrow(){
 			THIS->x -= 4;
 			THIS->y -= 4;
 		break;
+		default:
+			SpriteManagerRemove(THIS_IDX);
+			return;
+		break;
 	}
 	data->type = data->original_type;
-	}
+}
+
 
 void Destroy_SpriteArrow() {
 }

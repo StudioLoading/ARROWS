@@ -24,6 +24,7 @@ _SPRITE_DMG(SpriteSpider, spider)\
 _SPRITE_DMG(SpriteAlligator, alligator)\
 _SPRITE_DMG(SpriteBird, bird)\
 _SPRITE_DMG(SpriteGate, gate)\
+_SPRITE_DMG(SpriteEagle, eagle)\
 SPRITE_DEF_END
 
 
