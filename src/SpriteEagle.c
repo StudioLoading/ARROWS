@@ -13,7 +13,7 @@ const UINT8 eagle_idle[] = {4, 0, 1, 2, 1}; //The first number indicates the num
 const UINT8 eagle_walk[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 const UINT8 eagle_hit[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 const UINT8 eagle_dead[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
-const UINT8 eagle_attack[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
+const UINT8 eagle_attack[] = {1, 3}; //The first number indicates the number of frames
 const UINT8 eagle_up[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 
 const UINT8 eagle_time_attack = 76u;
@@ -81,7 +81,7 @@ void Update_SpriteEagle() {
 			data->enemy_accel_y = 0;
 			SetSpriteAnim(THIS, eagle_walk, 14u);
 		}else if(data->wait == 25u){
-			SetSpriteAnim(THIS, eagle_up, 14u);
+			SetSpriteAnim(THIS, eagle_up, 24u);
 			data->enemy_accel_y = -2;
 		}
 		if (data->wait == 0u){
@@ -146,12 +146,11 @@ void Update_SpriteEagle() {
 		}
 		if(ibispr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ibispr)) {
-				SpriteManagerRemoveSprite(ibispr);
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
-				if(arrowbidata->type >= 2u & data->enemy_state != ENEMY_STATE_HIT){
+				if(data->enemy_state != ENEMY_STATE_HIT){
 					data->enemy_state = ENEMY_STATE_HIT;
-					data->wait = 20u;
-					SetSpriteAnim(THIS, eagle_hit, 24u); 
+					data->wait = 60u;
+					SetSpriteAnim(THIS, eagle_hit, 32u); 
 					data->hp -= arrowbidata->arrowdamage;
 					if (data->hp <= 0){
 						data->enemy_state = ENEMY_STATE_DEAD;
@@ -162,6 +161,7 @@ void Update_SpriteEagle() {
 						THIS->lim_x = 8u;
 						THIS->lim_y = 16u;
 					}
+					SpriteManagerRemoveSprite(ibispr);
 				}
 			}
 		}

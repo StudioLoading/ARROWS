@@ -60,8 +60,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0u;
-UINT8 current_map = 0u;
+UINT8 current_level = 2u;
+UINT8 current_map = 1u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 ARCHER_STATE archer_state;
@@ -470,19 +470,22 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteBird, 133u, 5u);
 					}
 					if (scroll_target->x == (UINT16) 128u << 3){
-						snake1 = spawn_enemy(snake1, SpriteBird, 118u, 5u);
+						snake4 = spawn_enemy(snake4, SpriteBird, 118u, 5u);
+						snake1 = spawn_enemy(snake1, SpriteSpider, 135u, 10u);
+						snake3 = spawn_enemy(snake3, SpriteSpider, 136u, 9u);
 					}
 					if (scroll_target->x == (UINT16) 141u << 3){
 						snake3 = spawn_enemy(snake3, SpriteBird, 131u, 5u);
 					}
 					if (scroll_target->x == (UINT16) 152u << 3){
-						snake2 = spawn_enemy(snake2, SpriteBird, 142u, 5u);
+						snake2 = spawn_enemy(snake2, SpriteBird, 162u, 5u);
 					}
 					if (scroll_target->x == (UINT16) 163u << 3){
 						snake1 = spawn_enemy(snake1, SpriteBird, 173u, 5u);
 					}
 					if (scroll_target->x == (UINT16) 170u << 3){
 						snake3 = spawn_enemy(snake3, SpriteBird, 179u, 5u);
+						snake4 = spawn_enemy(snake4, SpriteSpider, 173u, 8u);
 					}
 				break;
 			}

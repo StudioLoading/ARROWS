@@ -71,7 +71,7 @@ void Update_SpriteSpider() {
 	
 	CheckCollisionETile();
 	
-	if(data->tile_e_collision == 18u | data->tile_e_collision == 22u | data->tile_e_collision == 52u | data->tile_e_collision == 100u | data->tile_e_collision == 101u){
+	if(data->tile_e_collision == 18u | data->tile_e_collision == 22u | data->tile_e_collision == 23u | data->tile_e_collision == 81u | data->tile_e_collision == 104u){
 		data->vx = -data->vx;
 	}
 	

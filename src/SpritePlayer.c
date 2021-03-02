@@ -373,11 +373,14 @@ void Update_SpritePlayer() {
 						return;
 					}
 				}
+				if(ispr->type == SpriteEagle & dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+					return;
+				}
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
 					return;
 				}
 				UINT8 being_hit = 1;
-				if (KEY_PRESSED(J_DOWN) & ispr->type != SpriteWolf){ //se mi sto riparando e lo sono girato dove serve
+				if (KEY_PRESSED(J_DOWN) & ispr->type != SpriteWolf & ispr->type != SpriteAlligator){ //se mi sto riparando e lo sono girato dove serve
 					if (ispr->x < THIS->x){
 						if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
 							ispr->x -= 16;
