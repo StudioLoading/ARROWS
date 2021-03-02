@@ -63,8 +63,3 @@ struct EnemyInfo{
 	INT8 hp;
 	UINT8 archer_posx;
 };
-
-struct Dialog{
-	char * d[4];
-	unsigned char face[];
-};

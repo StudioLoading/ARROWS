@@ -1,7 +1,7 @@
 #include "Banks/SetBank6.h"
 
-#include "..\res\src\tiles.h"
-#include "..\res\src\mapgameover.h"
+#include "../res/src/tiles.h"
+#include "../res/src/mapgameover.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"

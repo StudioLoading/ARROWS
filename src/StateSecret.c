@@ -2,8 +2,8 @@
 
 
 #include "../res/src/font.h"
-#include "..\res\src\tiles.h"
-#include "..\res\src\mapsecret0.h"
+#include "../res/src/tiles.h"
+#include "../res/src/mapsecret0.h"
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
 
@@ -38,17 +38,10 @@ extern struct Sprite* scrigno_shield;
 extern struct Sprite* scrigno_up;
 
 extern void ShowWindow();
-extern void WriteAMULET();
-extern void WriteCOINS();
-extern void WriteHP();
-extern void WriteUPS();
-extern void WriteMap();
-extern void WriteTOOL();
+extern void UpdateHUD();
 extern struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
 //Secrets
-UINT8 current_level_s = 0;
-UINT8 current_map_s = 0;
 const struct MapInfo* secret_1[] = {
 	&mapsecret0
 };
@@ -69,12 +62,12 @@ void Start_StateSecret() {
 	SHOW_SPRITES;
 	//SCROLL
 	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
-	const struct MapInfo** level_maps_s = secrets[current_level_s];
+	const struct MapInfo** level_maps_s = secrets[0];
 	UINT8 map_w, map_h;
-	GetMapSize(level_maps_s[current_map_s], &map_w, &map_h);
-	ScrollFindTile(level_maps_s[current_map_s], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	GetMapSize(level_maps_s[0], &map_w, &map_h);
+	ScrollFindTile(level_maps_s[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
-	InitScroll(level_maps_s[current_map_s], collision_tiles, 0);
+	InitScroll(level_maps_s[0], collision_tiles, 0);
 	SHOW_BKG;
 
 	//INIT ARCHER
@@ -114,51 +107,31 @@ void Start_StateSecret() {
 
 }
 
-/*
-void ShowSWindow(){
-	HIDE_WIN;
-	//WINDOW
-	WX_REG = 7;
-	WY_REG = 144 - 8;
-	InitWindow(0, 0, &window);
-	SHOW_WIN;
-	
-	WriteAMULET();
-	WriteCOINS();
-	WriteHP();
-	WriteUPS();
-	WriteMap();
-	
-}
-*/
-
 void Update_StateSecret() {
 	
 	if (amulet != archer_data->amulet){
 		amulet = archer_data->amulet;
-		WriteAMULET();		
+		UpdateHUD();
 	}
 	if (coins != archer_data->coins){
 		coins = archer_data->coins;
-		WriteCOINS();
+		UpdateHUD();
 	}
 	if (hp != archer_data->hp){
 		hp = archer_data->hp;
-		WriteHP();
+		UpdateHUD();
 	}
 	if (ups != archer_data->ups){
 		ups = archer_data->ups;
-		WriteUPS();
+		UpdateHUD();
 	}	
 	if(archer_data->tool == level_tool){
-		WriteTOOL();
+		UpdateHUD();
 	}
 	
 	if(load_next_s){
 		switch(load_next_s){
 			case 1: //entro in secret
-				current_map_s += load_next_s;
-				WriteMap();
 				load_next_s = 0;
 				SetState(StateSecret);
 			break;

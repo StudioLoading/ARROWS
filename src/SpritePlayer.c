@@ -18,7 +18,6 @@ extern UINT8 current_level;
 extern UINT8 current_map;
 extern UINT8 current_level_b;
 extern INT8 show_diag;
-extern INT8 max_diag;
 extern const unsigned char * d1;
 extern const unsigned char * d2;
 extern const unsigned char * d3;
@@ -34,7 +33,6 @@ extern const INT8 ground_tiles_tot;
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
 const UINT8 anim_jump_up[] = {1, 11};
-const UINT8 anim_up[] = {1, 0};
 const UINT8 anim_dead[] = {1, 15};
 const UINT8 anim_walk[] = {4, 7, 6, 5, 4};
 const UINT8 anim_shield[] = {1, 3};
@@ -94,7 +92,7 @@ void Update_SpritePlayer() {
 				boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
 			}
 		}else{		
-			if(show_diag < max_diag & KEY_RELEASED(J_B)){
+			if(show_diag < 2 & KEY_RELEASED(J_B)){ //show_diag < max_diag
 				show_diag += 1;	
 			}	
 		}
@@ -653,7 +651,7 @@ void Build_Next_Dialog(){
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;
-					max_diag = 2;
+					//max_diag = 2;
 					d1 = "THE BLACK WOLF";
 					d2 = "OWNS THE WRENCH";
 					d3 = "I NEED TO EXIT.";
@@ -664,7 +662,7 @@ void Build_Next_Dialog(){
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;
-					max_diag = 2;
+					//max_diag = 2;
 					d1 = "HOW CAN I";
 					d2 = "OPEN A FLAMING";
 					d3 = "GATE ?";
@@ -679,7 +677,7 @@ void Build_Next_Dialog(){
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;
-					max_diag = 2;
+					//max_diag = 2;
 					d1 = "BEAST! BACK";
 					d2 = "TO YOUR CAGE!";
 					d3 = "-GRRR!";
@@ -694,7 +692,7 @@ void Build_Next_Dialog(){
 					show_diag = 1;
 					SetSpriteAnim(THIS, anim_idle, 33u);
 					archer_state = STATE_DIAG;
-					max_diag = 2;
+					//max_diag = 2;
 					d1 = "I...";
 					d2 = "JUST NEEDED THE";
 					d3 = "WRENCH TO GO";
@@ -712,7 +710,7 @@ void Build_Next_Dialog(){
 					if (archer_data->tool == 6){//ho trovato la chiave
 						show_diag = 1;
 						archer_state = STATE_DIAG;
-						max_diag = 2;
+						//max_diag = 2;
 						d1 = "THIS KEY OPENS";
 						d2 = "THE BLACK WOLF";
 						d3 = "CAVE. LET'S GO.";
@@ -724,7 +722,7 @@ void Build_Next_Dialog(){
 							if (archer_data->coins < 20u){
 								show_diag = 1;
 								archer_state = STATE_DIAG;
-								max_diag = 2;
+								//max_diag = 2;
 								d1 = "SLAVE: 20 COINS";
 								d2 = "FOR THE KEY";
 								d3 = "";
@@ -733,7 +731,7 @@ void Build_Next_Dialog(){
 								archer_data->coins -= 20u;
 								show_diag = 1;
 								archer_state = STATE_DIAG;
-								max_diag = 2;
+								//max_diag = 2;
 								d1 = "SLAVE: THANK YOU";
 								d2 = "HERE IS THE";
 								d3 = "KEY.";
@@ -746,7 +744,7 @@ void Build_Next_Dialog(){
 						}else{//qualsiasi altro slave
 							show_diag = 1;
 							archer_state = STATE_DIAG;
-							max_diag = 2;
+							//max_diag = 2;
 							d1 = "SLAVE: WHAT'VE";
 							d2 = "WE DONE !?";
 							d3 = "--SIGH!";
@@ -756,7 +754,7 @@ void Build_Next_Dialog(){
 					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 30u){
 						show_diag = 1;
 						archer_state = STATE_DIAG;
-						max_diag = 2;
+						//max_diag = 2;
 						d1 = "SLAVE: NOW I FEEL";
 						d2 = "WHAT THEY FELT.";
 						d3 = "";
@@ -768,7 +766,7 @@ void Build_Next_Dialog(){
 						if (archer_data->tool){
 							show_diag = 1;
 							archer_state = STATE_DIAG;
-							max_diag = 2;
+							//max_diag = 2;
 							d1 = "------------";
 							d2 = " CAVE OF THE";
 							d3 = " BLACK WOLF ";
@@ -777,7 +775,7 @@ void Build_Next_Dialog(){
 						}else{
 							show_diag = 1;
 							archer_state = STATE_DIAG;
-							max_diag = 2;
+							//max_diag = 2;
 							d1 = "CAVE OF THE";
 							d2 = "BLACK WOLF. I";
 							d3 = "NEED A KEY TO";

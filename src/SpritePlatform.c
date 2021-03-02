@@ -14,8 +14,8 @@ void Start_SpritePlatform() {
 	THIS->coll_y = 12;
 	THIS->coll_w = 16;
 	THIS->coll_h = 4;
-	THIS->lim_x = 100u;
-	THIS->lim_y = 100u;
+	THIS->lim_x = 160u;
+	THIS->lim_y = 160u;
 	SetSpriteAnim(THIS, platform_normal, 8u);
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	data_platform->type = 0;

@@ -2,17 +2,19 @@
 
 #include "../res/src/diagnew.h"
 #include "../res/src/font.h"
-#include "..\res\src\tiles.h"
-#include "..\res\src\mapboss0.h"
-#include "..\res\src\mapboss1.h"
-#include "..\res\src\mapboss2.h"
+#include "../res/src/tiles.h"
+#include "../res/src/mapboss0.h"
+#include "../res/src/mapboss1.h"
+#include "../res/src/mapboss2.h"
+#include "../res/src/gate.h"
+/*
 #include "../res/src/archer.h"
 #include "../res/src/arrow.h"
 #include "../res/src/wolf.h"
 #include "../res/src/alligator.h"
 #include "../res/src/key.h"
 #include "../res/src/amulets.h"
-#include "../res/src/gate.h"
+*/
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -37,17 +39,12 @@ extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
 extern INT8 show_diag;
 extern INT8 showing_diag;
-extern INT8 max_diag;
 extern INT8 is_on_boss;
 extern UINT8 updatecounter;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
-extern void WriteAMULET();
-extern void WriteCOINS();
-extern void WriteHP();
-extern void WriteUPS();
-extern void WriteTOOL();
+extern void UpdateHUD();
 extern void Build_Next_Dialog();
 
 
@@ -68,11 +65,9 @@ const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2};
 
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
-const char * const level_b_names[] = {"THE CAVE", "GATOR'S", "THE NEST"};
 
 void WriteBBOSSHP();
 void populate_boss0();
-void WriteBMap();
 
 void Start_StateBoss() {
 
@@ -166,7 +161,6 @@ void Start_StateBoss() {
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
 	WriteBBOSSHP();
-	WriteBMap();
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -179,10 +173,9 @@ void Start_StateBoss() {
 
 void Update_StateBoss() {
 
-	if(show_diag >= max_diag){
+	if(show_diag >= 2){ // >=max_diag
 		ShowWindow();		
 		WriteBBOSSHP();
-		WriteBMap();
 		return;
 	}
 	if(archer_state == STATE_DIAG){
@@ -193,19 +186,19 @@ void Update_StateBoss() {
 	}else{
 		if (amulet != archer_data->amulet){
 			amulet = archer_data->amulet;
-			WriteAMULET();
+			UpdateHUD();
 		}
 		if (coins != archer_data->coins){
 			coins = archer_data->coins;
-			WriteCOINS();
+			UpdateHUD();
 		}
 		if (hp != archer_data->hp){
 			hp = archer_data->hp;
-			WriteHP();
+			UpdateHUD();
 		}
 		if (ups != archer_data->ups){
 			ups = archer_data->ups;
-			WriteUPS();
+			UpdateHUD();
 		}
 
 		if (boss_hp != boss_data_b->hp){
@@ -218,7 +211,7 @@ void Update_StateBoss() {
 		}
 		
 		if(level_tool == archer_data->tool){
-			WriteTOOL();
+			UpdateHUD();
 		}
 	}
 	
@@ -272,17 +265,12 @@ void Update_StateBoss() {
 	
 }
 
-void WriteBMap(){
-	//PRINT_POS(1, 0);
-	//Printf(level_b_names[current_level_b]);	
-}
-
 void WriteBBOSSHP(){
 	PRINT_POS(10, 0);	
 	if(boss_hp > 0){
 		Printf("BOSS>%d", boss_hp);
 	}else{
 		Printf("       ");
-		WriteCOINS();
+		UpdateHUD();
 	}
 }
