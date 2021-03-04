@@ -9,6 +9,8 @@
 
 #include "custom_datas.h"
 
+
+extern INT8 ups;
 extern UINT8 amulet;
 extern ARCHER_STATE archer_state;
 extern INT8 load_next;
@@ -29,6 +31,7 @@ extern unsigned char face[];
 extern struct EnemyInfo* boss_data_b;
 extern const UINT8 ground_tiles[];
 extern const INT8 ground_tiles_tot;
+extern void UpdateHUD();
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -110,6 +113,7 @@ void Update_SpritePlayer() {
 		if(archer_data->amulet == 0u){
 			archer_data->amulet = 1u;
 		}
+		UpdateHUD();
 	}
 	
 	switch(archer_state) {
@@ -120,7 +124,10 @@ void Update_SpritePlayer() {
 		case STATE_DEAD:
 			death_cooldown ++;
 			if(death_cooldown == 6){
-				SetSpriteAnim(THIS, anim_dead, 12u);	
+				SetSpriteAnim(THIS, anim_dead, 12u);
+				archer_data->ups -= 1;
+				ups = archer_data->ups;
+				UpdateHUD();	
 			}
 			if (death_cooldown < 12){
 				TranslateSprite(THIS, 0, -2 );
@@ -129,8 +136,7 @@ void Update_SpritePlayer() {
 					TranslateSprite(THIS, 0, 1);
 				}else{
 					death_cooldown = 0;
-					archer_data->ups -= 1;
-					archer_data->hp = 100;	
+					archer_data->hp = 100;
 					if (archer_data->ups == -1){SetState(StateGameOver);}
 					else{SetState(StateGame);}	
 				}
@@ -272,11 +278,6 @@ void Update_SpritePlayer() {
 				}
 			}
 		}
-		if(ispr->type == SpriteGate) {
-			if(CheckCollision(THIS, ispr)) {
-				THIS->x--;
-			}
-		}
 		if(ispr->type == SpriteItem) {
 			if(CheckCollision(THIS, ispr)) {
 				struct ItemInfo* dataitem = (struct ItemInfo*)ispr->custom_data;
@@ -306,10 +307,8 @@ void Update_SpritePlayer() {
 							}
 							SpriteManagerRemoveSprite(ispr);
 						break;
-						//case 10u: //scrigno
-							//dataitem->collided = 1;
-						//break;
 					}
+					UpdateHUD();
 				}
 			}			
 		}
@@ -329,6 +328,7 @@ void Update_SpritePlayer() {
 						return;
 					break;
 				}
+				UpdateHUD();
 			}
 		}
 		if(ispr->type == SpritePlatform) {
@@ -632,10 +632,11 @@ void CheckCollisionTile() {
 
 void Hit() {
 	if (archer_state != STATE_DEAD){
-		archer_state = STATE_HIT;	
+		archer_state = STATE_HIT;
 		platform_vx = 1;
 		THIS->y -= 6;
 		SetSpriteAnim(THIS, anim_hit, 32u);
+		UpdateHUD();
 		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
 	}
 }

@@ -7,14 +7,6 @@
 #include "../res/src/mapboss1.h"
 #include "../res/src/mapboss2.h"
 #include "../res/src/gate.h"
-/*
-#include "../res/src/archer.h"
-#include "../res/src/arrow.h"
-#include "../res/src/wolf.h"
-#include "../res/src/alligator.h"
-#include "../res/src/key.h"
-#include "../res/src/amulets.h"
-*/
 
 #include "ZGBMain.h"
 #include "Scroll.h"

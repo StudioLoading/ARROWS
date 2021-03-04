@@ -9,7 +9,6 @@
 #include "../res/src/map3.h"
 #include "../res/src/map3tree.h"
 #include "../res/src/mapsewer.h"
-#include "../res/src/mapsecret0.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -50,7 +49,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 2u;
+UINT8 current_level = 0u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -171,8 +170,6 @@ void Start_StateGame() {
 	archer_data->hp = hp;
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
-	
-	
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -508,8 +505,8 @@ void Update_StateGame() {
 			ShowWindowDiag();
 			return;
 		}
-	}else{
-		//struct ArcherInfo* archer_data = (struct ArcherInfo*)scroll_target->custom_data;
+	}
+	else{
 		if (amulet != archer_data->amulet | amulet == 0u){
 			amulet = archer_data->amulet;
 			UpdateHUD();
@@ -537,7 +534,7 @@ void Update_StateGame() {
 void UpdateHUD(){
 	//write amulet
 	PRINT_POS(18,0);
-	switch (amulet){
+	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
 		case 2: Printf("]"); break;
 		case 3: Printf("["); break;
@@ -552,21 +549,21 @@ void UpdateHUD(){
 		archer_data->ups += 1;	
 	}
 	PRINT_POS(12, 0);
-	if (coins > 9){
-		Printf("%d", coins);
+	if (archer_data->coins > 9){
+		Printf("%d", archer_data->coins);
 	}else{
-		Printf("0%d", coins);
+		Printf("0%d", archer_data->coins);
 	}
 	//write hp
 	PRINT_POS(7, 0);
-	if (hp < 10){
-		Printf("00%d", hp);
+	if (archer_data->hp < 10){
+		Printf("00%d", archer_data->hp);
 	}
-	if (hp > 9 & hp < 100){
-		Printf("0%d", hp);
+	if (archer_data->hp > 9 & archer_data->hp < 100){
+		Printf("0%d", archer_data->hp);
 	}
-	if (hp >= 100){
-		Printf("%d", hp);	
+	if (archer_data->hp >= 100){
+		Printf("%d", archer_data->hp);	
 	}
 	//write tool
 	switch(level_tool){
@@ -581,6 +578,6 @@ void UpdateHUD(){
 	}
 	//write ups
 	PRINT_POS(2, 0); //up
-	if (ups > 9){Printf("%d", ups);}
-	else{Printf("0%d", ups);}
+	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
+	else{Printf("0%d", archer_data->ups);}
 }
