@@ -135,6 +135,7 @@ void CheckCollisionETile() {
 		case 17u:
 		case 18u:
 		case 20u:
+		case 22u:
 		case 23u:
 		case 29u:
 			ETurn();

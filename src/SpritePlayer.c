@@ -20,8 +20,8 @@ extern UINT8 current_map;
 extern UINT8 current_level_b;
 extern INT8 show_diag;
 //extern struct EnemyInfo* boss_data_b;
-extern const UINT8 ground_tiles[];
-extern const INT8 ground_tiles_tot;
+//extern const UINT8 ground_tiles[];
+//extern const INT8 ground_tiles_tot;
 
 extern unsigned char d1[];
 extern unsigned char d2[];
@@ -57,8 +57,6 @@ void MoveArcher();
 void CheckCollisionTile();
 void Hit();
 void Build_Next_Dialog();
-
-
 
 
 void Start_SpritePlayer() {
@@ -207,7 +205,11 @@ void Update_SpritePlayer() {
 					}
 				}
 			}
-			platform_vx = 0;
+			if(platform_vx > 0){
+				platform_vx--;
+			}else if (platform_vx < 0){
+				platform_vx++;
+			}
 			MoveArcher();
 		break;
 		case STATE_HIT:
@@ -225,14 +227,16 @@ void Update_SpritePlayer() {
 	}//end switch archer_state
 	
 	
-	if(princess_parent == 0 && archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD) {
+	if(princess_parent == 0 & archer_state != STATE_LADDER & archer_state != STATE_HIT & archer_state != STATE_DEAD) {
 		//Simple gravity physics 
 		if(archer_accel_y < 24) {
 			archer_accel_y += 1;
 		}
+		//tile_collision = TranslateSprite(THIS, platform_vx, archer_accel_y  >> 4 );
 		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
-		if(!tile_collision && delta_time != 0 && archer_accel_y < 24) { //Do another iteration if there is no collision
+		if(tile_collision == 0 & delta_time != 0 & archer_accel_y < 24) { //Do another iteration if there is no collision
 			archer_accel_y += 2;
+			//tile_collision = TranslateSprite(THIS, platform_vx, archer_accel_y >> 4);
 			tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
 		}
 		if(tile_collision) {
@@ -327,7 +331,7 @@ void Update_SpritePlayer() {
 			if(CheckCollision(THIS, ispr)) {
 				if (archer_accel_y > 0){//se sono in salita non collido !
 					archer_accel_y = 0;
-					if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
+					if(archer_state != STATE_NORMAL_PLATFORM){
 						archer_state = STATE_NORMAL_PLATFORM;
 						THIS->y = ispr->y - ispr->coll_h;
 					}
@@ -504,8 +508,12 @@ void Jump() {
 
 void MoveArcher() {
 	if(platform_vx){
-		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);	
-	}	
+		if(archer_state == STATE_NORMAL_PLATFORM){
+			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);	
+		}else{
+			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 1);	
+		}		
+	}
 	if(KEY_PRESSED(J_LEFT)) {
 		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
 			
@@ -529,17 +537,14 @@ void MoveArcher() {
 }
 
 void CheckCollisionTile() {
-	INT8 i = 0;
-	for( i = 0; i < ground_tiles_tot; i++){
-		if(tile_collision == ground_tiles[i] ){
-			if (platform_vx > 0){
-				platform_vx--;
-			}
-			if (platform_vx < 0){
-				platform_vx++;
-			}
+	/*if (tile_collision != 111u & tile_collision != 119u){
+		if (platform_vx > 0){
+			platform_vx--;
 		}
-	}
+		if (platform_vx < 0){
+			platform_vx++;
+		}
+	}*/
 	switch(tile_collision) {
 		case 2u:
 		case 20u:
@@ -610,13 +615,13 @@ void CheckCollisionTile() {
 			load_next_s = 1;
 		break;
 		case 111u:
-			if(platform_vx != 6){
-				platform_vx = 6;
+			if(platform_vx != 1){
+				platform_vx = 1;
 			}
 		break;
 		case 119u:
-			if(platform_vx != -6){
-				platform_vx = -6;
+			if(platform_vx != -1){
+				platform_vx = -1;
 			}
 		break;
 		/*case 28u:
@@ -627,7 +632,7 @@ void CheckCollisionTile() {
 }
 
 void Hit() {
-	if (archer_state != STATE_DEAD){
+	if (archer_state != STATE_DEAD & archer_state != STATE_HIT){
 		archer_state = STATE_HIT;
 		platform_vx = 1;
 		THIS->y -= 6;

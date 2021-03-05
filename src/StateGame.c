@@ -37,8 +37,8 @@ const UINT16 sprites_palette[] = {
 };
 
 const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 81, 100, 101, 104, 111, 119, 0};//numero delle tile con collisioni e ultimo sempre zero
-const UINT8 ground_tiles[] = {1, 2, 3, 6, 11, 12, 14, 18, 21, 22, 35, 81, 100, 101, 104};
-const INT8 ground_tiles_tot = 15; // ground_tiles array size
+//const UINT8 ground_tiles[] = {1, 2, 3, 6, 11, 12, 14, 18, 21, 22, 35, 81, 100, 101, 104};
+//const INT8 ground_tiles_tot = 15; // ground_tiles array size
 
 UINT8 amulet = 0u;
 UINT8 coins = 0u;
@@ -49,13 +49,12 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 2u;
-UINT8 current_map = 1u;
+UINT8 current_level = 0u;
+UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
 INT8 showing_diag = 0;
-//INT8 max_diag = 1;
 UINT8 updatecounter = 0u;
 struct Sprite* platform_sprite = 0;
 struct Sprite* snake1 = 0;
@@ -88,8 +87,6 @@ const struct MapInfo** levels[] = {level_1, level_2, level_3};
 extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
 extern INT8 is_on_boss;
-extern UINT8 tile_collision;
-extern UINT8 platform_vx;
 extern UINT8 current_level_b;
 extern UINT8 current_map_b;
 
