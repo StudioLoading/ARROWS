@@ -106,6 +106,7 @@ void Start_StateBoss() {
 	
 	struct Sprite* boss = 0;
 	struct Sprite* scrigno_sprite_boss = 0;
+	is_on_boss = 0;
 	//INIT BOSS
 	switch(current_level_b){
 		case 0:
@@ -128,10 +129,6 @@ void Start_StateBoss() {
 			boss = SpriteManagerAdd(SpriteEagle, 9 << 3, 14 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
-			/*scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 6u << 3, (UINT16) 34u << 3);
-			struct ItemInfo* datascrigno3 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
-			datascrigno3->type = 2;
-			datascrigno3->setup = 1u;*/
 		break;
 	}
 	
@@ -158,9 +155,6 @@ void Start_StateBoss() {
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 
-	is_on_boss = 0;
-	Build_Next_Dialog();
-	
 }
 
 void Update_StateBoss() {
@@ -210,7 +204,7 @@ void Update_StateBoss() {
 	if(load_next_b){
 		switch(load_next_b){
 			case 2: //esco dal boss col tool
-				is_on_boss = 0;
+				is_on_boss = -1;
 				SetState(StateGame);
 			break;
 		}

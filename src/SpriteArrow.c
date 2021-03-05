@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetBank6.h"
 #include "main.h"
 
 #include "ZGBMain.h"

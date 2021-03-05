@@ -49,11 +49,10 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0u;
-UINT8 current_map = 0u;
+UINT8 current_level = 2u;
+UINT8 current_map = 1u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
-ARCHER_STATE archer_state;
 INT8 show_diag = 0;
 INT8 showing_diag = 0;
 //INT8 max_diag = 1;
@@ -67,14 +66,11 @@ struct Sprite* scrigno_coin = 0;
 struct Sprite* scrigno_dcoin = 0;
 struct Sprite* scrigno_shield = 0;
 struct Sprite* scrigno_up = 0;
-
-
-//DIALOGS
-const unsigned char * d1 = "DIALOG1";
-const unsigned char * d2 = "DIALOG2";
-const unsigned char * d3 = "DIALOG3";
-const unsigned char * d4 = "DIALOG4";
-
+struct Dialog* dialog = 0;
+unsigned char d1[18];
+unsigned char d2[18];
+unsigned char d3[18];
+unsigned char d4[18];
 
 const struct MapInfo* level_1[] = {
 	&map,
@@ -90,6 +86,7 @@ const struct MapInfo* level_3[] = {
 const struct MapInfo** levels[] = {level_1, level_2, level_3};
 
 extern struct ArcherInfo* archer_data;
+extern ARCHER_STATE archer_state;
 extern INT8 is_on_boss;
 extern UINT8 tile_collision;
 extern UINT8 platform_vx;
@@ -99,7 +96,6 @@ extern UINT8 current_map_b;
 void UpdateHUD();
 void ShowWindow();
 void ShowWindowDiag();
-void ShowDiag();
 struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy);
 struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
@@ -176,6 +172,11 @@ void Start_StateGame() {
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
 	
+	memcpy(d1, "DIALOG1", 18);
+	memcpy(d2, "DIALOG2", 18);
+	memcpy(d3, "DIALOG3", 18);
+	memcpy(d4, "DIALOG4", 18);
+	
 	switch(current_level){
 		case 0u:
 			switch(current_map){
@@ -250,10 +251,6 @@ void ShowWindowDiag(){
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;
 	}
-	ShowDiag();
-}
-
-void ShowDiag(){
 	PRINT_POS(1,1);
 	Printf(d1);
 	PRINT_POS(1,2);
@@ -262,8 +259,8 @@ void ShowDiag(){
 	Printf(d3);
 	PRINT_POS(1,4);
 	Printf(d4);
+	
 	if (showing_diag == 0){
-		//set_win_tiles(1, 2, 2, 2, face);
 		showing_diag = 1;
 	}
 }
@@ -361,6 +358,8 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteRat, 14u, 4u);
 					}
 					if (scroll_target->x == (UINT16) 4u << 3 & scroll_target->y == (INT16) 14u  << 3){
+						SpriteManagerRemoveSprite(snake1);
+						SpriteManagerRemoveSprite(snake2);
 						snake3 = spawn_enemy(snake3, SpriteRat, 14u, 14u);
 						snake4 = spawn_enemy(snake4, SpriteSpider, 13u, 13u);
 					}
@@ -384,6 +383,8 @@ void Update_StateGame() {
 					if (scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 10u  << 3){
 						snake1 = spawn_enemy(snake1, SpriteRat, 64u, 15u);
 						snake2 = spawn_enemy(snake2, SpriteRat, 60u, 15u);
+						SpriteManagerRemoveSprite(snake3);
+						SpriteManagerRemoveSprite(snake4);
 						scrigno_up = spawn_item(scrigno_up, 62u, 15u, 3, 1);
 					}
 				break;
@@ -405,6 +406,8 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteBird, 90u, 3u);
 					}
 					if (scroll_target->x == (UINT16) 104u << 3){
+						SpriteManagerRemoveSprite(snake1);
+						SpriteManagerRemoveSprite(snake2);
 						snake3 = spawn_enemy(snake3, SpriteEnemy, 115u, 10u);
 						snake4 = spawn_enemy(snake4, SpriteBird, 92u, 3u);
 					}
@@ -414,6 +417,8 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteBird, 117u, 3u);
 					}
 					if (scroll_target->x == (UINT16) 143u << 3){
+						SpriteManagerRemoveSprite(snake1);
+						SpriteManagerRemoveSprite(snake4);
 						snake3 = spawn_enemy(snake3, SpriteBird, 149u, 3u);
 					}
 					if (scroll_target->x == (UINT16) 150u << 3 | scroll_target->x == (UINT16) 151u << 3){
@@ -433,6 +438,8 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteSpider, 17u, 9u);
 					}
 					if (scroll_target->x == (UINT16) 123u << 3){
+						SpriteManagerRemoveSprite(snake1);
+						SpriteManagerRemoveSprite(snake2);
 						snake3 = spawn_enemy(snake3, SpriteBird, 133u, 5u);
 					}
 					if (scroll_target->x == (UINT16) 128u << 3){
@@ -448,6 +455,8 @@ void Update_StateGame() {
 					}
 					if (scroll_target->x == (UINT16) 163u << 3){
 						snake1 = spawn_enemy(snake1, SpriteBird, 173u, 5u);
+						SpriteManagerRemoveSprite(snake2);
+						SpriteManagerRemoveSprite(snake3);
 					}
 					if (scroll_target->x == (UINT16) 170u << 3){
 						snake2 = spawn_enemy(snake2, SpriteBird, 179u, 5u);
@@ -566,15 +575,17 @@ void UpdateHUD(){
 		Printf("%d", archer_data->hp);	
 	}
 	//write tool
-	switch(level_tool){
-		case 6:
-			PRINT_POS(16, 0);
-			Printf("{");
-		break;
-		case 7:
-			PRINT_POS(16, 0);
-			Printf("<");
-		break;
+	if (archer_data->tool == level_tool){
+		switch(level_tool){
+			case 6:
+				PRINT_POS(16, 0);
+				Printf("{");
+			break;
+			case 7:
+				PRINT_POS(16, 0);
+				Printf("<");
+			break;
+		}
 	}
 	//write ups
 	PRINT_POS(2, 0); //up

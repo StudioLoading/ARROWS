@@ -62,6 +62,7 @@ void Update_SpriteEagle() {
 	
 	if (data->enemy_state == ENEMY_STATE_HIT){
 		data->wait--;
+		THIS->y--;
 		if(data->wait){
 			return;
 		}else{
@@ -149,7 +150,7 @@ void Update_SpriteEagle() {
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
 				if(data->enemy_state != ENEMY_STATE_HIT){
 					data->enemy_state = ENEMY_STATE_HIT;
-					data->wait = 60u;
+					data->wait = 30u;
 					SetSpriteAnim(THIS, eagle_hit, 32u); 
 					data->hp -= arrowbidata->arrowdamage;
 					if (data->hp <= 0){

@@ -1,8 +1,9 @@
-#include "Banks/SetBank7.h"
+#include "Banks/SetBank6.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
 #include "SpriteManager.h"
+#include "string.h"
 #include "Sound.h"
 #include "Scroll.h"
 #include "gbt_player.h"
@@ -10,9 +11,7 @@
 #include "custom_datas.h"
 
 
-extern INT8 ups;
 extern UINT8 amulet;
-extern ARCHER_STATE archer_state;
 extern INT8 load_next;
 extern INT8 load_next_s;
 extern INT8 load_next_b;
@@ -20,18 +19,14 @@ extern UINT8 current_level;
 extern UINT8 current_map;
 extern UINT8 current_level_b;
 extern INT8 show_diag;
-extern const unsigned char * d1;
-extern const unsigned char * d2;
-extern const unsigned char * d3;
-extern const unsigned char * d4;
-extern unsigned char face_wolf[];
-extern unsigned char face_archer[];
-extern unsigned char face_slave[];
-extern unsigned char face[];
-extern struct EnemyInfo* boss_data_b;
+//extern struct EnemyInfo* boss_data_b;
 extern const UINT8 ground_tiles[];
 extern const INT8 ground_tiles_tot;
-extern void UpdateHUD();
+
+extern unsigned char d1[];
+extern unsigned char d2[];
+extern unsigned char d3[];
+extern unsigned char d4[];
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -52,6 +47,7 @@ INT8 shoot_cooldown = 0;
 INT8 platform_vx = 0;
 INT8 is_on_boss = -1;
 struct ArcherInfo* archer_data;
+ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
 
 void Die();
@@ -61,6 +57,8 @@ void MoveArcher();
 void CheckCollisionTile();
 void Hit();
 void Build_Next_Dialog();
+
+
 
 
 void Start_SpritePlayer() {
@@ -82,18 +80,16 @@ void Start_SpritePlayer() {
 	
 	hit_cooldown = 36;
 	
-	NR50_REG = 0x55; //Max volume	
+	NR50_REG = 0x55; //Max volume
+
 }
 
 void Update_SpritePlayer() {
-	
+
 	if(archer_state == STATE_DIAG ){
 		if (show_diag == -1){ //NON TOCCARE
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
-			if(is_on_boss & boss_data_b->enemy_state == ENEMY_STATE_WAIT ){
-				boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
-			}
 		}else{		
 			if(show_diag < 2 & KEY_RELEASED(J_B)){ //show_diag < max_diag
 				show_diag += 1;	
@@ -113,7 +109,6 @@ void Update_SpritePlayer() {
 		if(archer_data->amulet == 0u){
 			archer_data->amulet = 1u;
 		}
-		UpdateHUD();
 	}
 	
 	switch(archer_state) {
@@ -126,8 +121,7 @@ void Update_SpritePlayer() {
 			if(death_cooldown == 6){
 				SetSpriteAnim(THIS, anim_dead, 12u);
 				archer_data->ups -= 1;
-				ups = archer_data->ups;
-				UpdateHUD();	
+				//ups = archer_data->ups;
 			}
 			if (death_cooldown < 12){
 				TranslateSprite(THIS, 0, -2 );
@@ -308,7 +302,6 @@ void Update_SpritePlayer() {
 							SpriteManagerRemoveSprite(ispr);
 						break;
 					}
-					UpdateHUD();
 				}
 			}			
 		}
@@ -328,7 +321,6 @@ void Update_SpritePlayer() {
 						return;
 					break;
 				}
-				UpdateHUD();
 			}
 		}
 		if(ispr->type == SpritePlatform) {
@@ -618,10 +610,14 @@ void CheckCollisionTile() {
 			load_next_s = 1;
 		break;
 		case 111u:
-			platform_vx = 2;
+			if(platform_vx != 6){
+				platform_vx = 6;
+			}
 		break;
 		case 119u:
-			platform_vx = -2;
+			if(platform_vx != -6){
+				platform_vx = -6;
+			}
 		break;
 		/*case 28u:
 			SET_BIT(stage_completion, current_stage);
@@ -636,162 +632,147 @@ void Hit() {
 		platform_vx = 1;
 		THIS->y -= 6;
 		SetSpriteAnim(THIS, anim_hit, 32u);
-		UpdateHUD();
 		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
 	}
 }
 
 void Build_Next_Dialog(){
+	INT8 diag_found = 1;
 	switch (is_on_boss){
-		case 0:  //is_on_boss == 0 significa che sono appena entrato
-		//TODO Devo tipizzare con una struct, e poi valorizzarla a seconda del
-		//tipo {face[]; char * dd [];} che però questo è un elemento di una cosa che sarà array
-		//perchè devo mostrare uno di questi elementi ogni J_A fino a max_diag		
+		case 0:
 			switch(current_level_b){
 				case 0u:
-					show_diag = 1;
-					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;
-					//max_diag = 2;
-					d1 = "THE BLACK WOLF";
-					d2 = "OWNS THE WRENCH";
-					d3 = "I NEED TO EXIT.";
-					d4 = "LET'S TALK!";
-					return;
+					memcpy(d1, "THE BLACK WOLF", 18);
+					memcpy(d2, "OWNS THE WRENCH", 18);
+					memcpy(d3, "I NEED TO EXIT.", 18);
+					memcpy(d4, "LET'S TALK!", 18);
+					diag_found = 0;
 				break;
 				case 1u:
-					show_diag = 1;
-					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;
-					//max_diag = 2;
-					d1 = "HOW CAN I";
-					d2 = "OPEN A FLAMING";
-					d3 = "GATE ?";
-					d4 = "...";
-					return;
+					memcpy(d1, "HOW CAN I", 18);
+					memcpy(d2, "OPEN A FLAMING", 18);
+					memcpy(d3, "GATE ?", 18);
+					memcpy(d4, "...", 18);
+					diag_found = 0;
 				break;
 			}	
 		break;
 		case 1:  //is_on_boss == 1 significa che ho toccato il wolf
 			switch(current_level_b){
 				case 0u:
-					show_diag = 1;
-					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;
-					//max_diag = 2;
-					d1 = "BEAST! BACK";
-					d2 = "TO YOUR CAGE!";
-					d3 = "-GRRR!";
-					d4 = "";
-					return;
+					memcpy(d1, "BEAST! BACK", 18);
+					memcpy(d2, "TO YOUR CAGE!", 18);
+					memcpy(d3, "-GRRR!", 18);
+					memcpy(d4, "", 18);
+					diag_found = 0;
 				break;
 			}	
 		break;
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
 			switch(current_level_b){
 				case 0u:
-					show_diag = 1;
-					SetSpriteAnim(THIS, anim_idle, 33u);
-					archer_state = STATE_DIAG;
-					//max_diag = 2;
-					d1 = "I...";
-					d2 = "JUST NEEDED THE";
-					d3 = "WRENCH TO GO";
-					d4 = "ON. SORRY WOLF!";
-					return;
+					memcpy(d1, "I...", 18);
+					memcpy(d2, "JUST NEEDED THE", 18);
+					memcpy(d3, "WRENCH TO GO", 18);
+					memcpy(d4, "ON. SORRY WOLF!", 18);
+					diag_found = 0;
 				break;
 			}	
 		break;
 	}
-	
-	switch(current_level){
-		case 0:
-			switch(current_map){
-				case 0:
-					if (archer_data->tool == 6){//ho trovato la chiave
-						show_diag = 1;
-						archer_state = STATE_DIAG;
-						//max_diag = 2;
-						d1 = "THIS KEY OPENS";
-						d2 = "THE BLACK WOLF";
-						d3 = "CAVE. LET'S GO.";
-						d4 = "";
-						return;
-					}
-					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 4u){
-						if (THIS->x > (UINT16) 43u << 3 & archer_data->tool == 0){//sto cercando di parlare col prig che ha la chiave
-							if (archer_data->coins < 20u){
-								show_diag = 1;
-								archer_state = STATE_DIAG;
-								//max_diag = 2;
-								d1 = "SLAVE: 20 COINS";
-								d2 = "FOR THE KEY";
-								d3 = "";
-								d4 = "";
+	if (diag_found){
+		switch(current_level){
+			case 0:
+				switch(current_map){
+					case 0:
+						if (archer_data->tool == 6){//ho trovato la chiave
+							memcpy(d1, "THIS KEY OPENS", 18);
+							memcpy(d2, "THE BLACK WOLF", 18);
+							memcpy(d3, "CAVE. LET'S GO.", 18);
+							memcpy(d4, "", 18);
+							diag_found = 0;
+						}
+						if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 4u){
+							if (THIS->x > (UINT16) 43u << 3 & archer_data->tool == 0){//sto cercando di parlare col prig che ha la chiave
+								if (archer_data->coins < 20u){
+									memcpy(d1, "SLAVE: 20 COINS", 18);
+									memcpy(d2, "FOR THE KEY", 18);
+									memcpy(d3, "", 18);
+									memcpy(d4, "", 18);
+									diag_found = 0;
+								}else{
+									archer_data->coins -= 20u;
+									memcpy(d1, "SLAVE: THANK YOU", 18);
+									memcpy(d2, "HERE IS THE", 18);
+									memcpy(d3, "KEY.", 18);
+									memcpy(d4, ".. EH EH !", 18);								
+									struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+									struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+									datakey->type = 1;
+									datakey->setup = 1u;
+									diag_found = 0;		
+								}				
+							}else{//qualsiasi altro slave							
+								memcpy(d1, "SLAVE WHAT'VE", 18);
+								memcpy(d2, "WE DONE !?", 18);
+								memcpy(d3, "SIGH!", 18);
+								memcpy(d4, "", 18);
+								diag_found = 0;
+							}
+						}
+						if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 30u){
+							memcpy(d1, "SLAVE: NOW I FEEL", 18);
+							memcpy(d2, "WHAT THEY'VE FELT.", 18);
+							memcpy(d3, "", 18);
+							memcpy(d4, "", 18);
+							diag_found = 0;
+						}
+						if(diag_found){//ho premuto la combo dei diag senza motivo
+							memcpy(d1, "I GOT TO FIND", 18);
+							memcpy(d2, "THE KEY TO ENTER", 18);
+							memcpy(d3, "THE BLACK WOLF", 18);
+							memcpy(d4, "CAVE.", 18);
+							diag_found = 0;
+						}
+					break;
+					case 1:
+						if (tile_collision == 7u){
+							if (archer_data->tool){
+								memcpy(d1, "------------------", 18);
+								memcpy(d2, "    CAVE OF THE", 18);
+								memcpy(d3, "    BLACK WOLF ", 18);
+								memcpy(d4, "------------------", 18);
+								diag_found = 0;
 							}else{
-								archer_data->coins -= 20u;
-								show_diag = 1;
-								archer_state = STATE_DIAG;
-								//max_diag = 2;
-								d1 = "SLAVE: THANK YOU";
-								d2 = "HERE IS THE";
-								d3 = "KEY.";
-								d4 = ".. EH EH !";								
-								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
-								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
-								datakey->type = 1;
-								datakey->setup = 1u;								
-							}				
-						}else{//qualsiasi altro slave
-							show_diag = 1;
-							archer_state = STATE_DIAG;
-							//max_diag = 2;
-							d1 = "SLAVE: WHAT'VE";
-							d2 = "WE DONE !?";
-							d3 = "--SIGH!";
-							d4 = "";
+								memcpy(d1, "CAVE OF THE", 18);
+								memcpy(d2, "BLACK WOLF. I", 18);
+								memcpy(d3, "NEED A KEY TO", 18);
+								memcpy(d4, "OPEN THIS DOOR.", 18);
+								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
+								diag_found = 0;
+							}
 						}
-					}
-					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 30u){
-						show_diag = 1;
-						archer_state = STATE_DIAG;
-						//max_diag = 2;
-						d1 = "SLAVE: NOW I FEEL";
-						d2 = "WHAT THEY FELT.";
-						d3 = "";
-						d4 = "";
-					}
-				break;
-				case 1:
-					if (tile_collision == 7u){
-						if (archer_data->tool){
-							show_diag = 1;
-							archer_state = STATE_DIAG;
-							//max_diag = 2;
-							d1 = "------------";
-							d2 = " CAVE OF THE";
-							d3 = " BLACK WOLF ";
-							d4 = "------------";
-							return;						 
-						}else{
-							show_diag = 1;
-							archer_state = STATE_DIAG;
-							//max_diag = 2;
-							d1 = "CAVE OF THE";
-							d2 = "BLACK WOLF. I";
-							d3 = "NEED A KEY TO";
-							d4 = "OPEN THIS DOOR.";
-							PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
-							return;
-						}
-					}
-				break;
-				case 2:
-				break;
-			}
-		break;
+					break;
+				}
+			break;
+			case 1:
+				switch(current_map){
+					case 0:
+						memcpy(d1, "LET'S GET OUT", 18);
+						memcpy(d2, "OF THIS FILTHY", 18);
+						memcpy(d3, "SEWER.", 18);
+						memcpy(d4, "-- SNIFF!", 18);
+						diag_found = 0;
+					break;
+				}
+			break;
+		}
 	}
-
+	if(diag_found == 0){	
+		SetSpriteAnim(THIS, anim_idle, 33u);
+		archer_state = STATE_DIAG;
+		show_diag = 1;	
+	}
 }
 
 void Destroy_SpritePlayer() {
