@@ -151,9 +151,15 @@ void Update_SpritePlayer() {
 			}
 			if (KEY_PRESSED(J_DOWN)){
 				SetSpriteAnim(THIS, anim_shield, 8u);
-				THIS->coll_x = 8;
+				THIS->coll_x = 3;
+				THIS->coll_y = 9;
+				THIS->coll_w = 10;
+				THIS->coll_h = 11;
 			}else if (THIS->coll_x != 5){
 				THIS->coll_x = 5;
+				THIS->coll_y = 5;
+				THIS->coll_w = 6;
+				THIS->coll_h = 11;
 			}
 			
 			//Jump / Dialog

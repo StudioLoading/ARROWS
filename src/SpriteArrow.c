@@ -229,7 +229,7 @@ void CheckCollisionArrowTile() {
 			SPRITE_UNSET_VMIRROR(THIS);
 			data->arrowdir = 1;
 			THIS->x += 4;
-			THIS->y -= 4;
+			THIS->y -= 1;
 		break;
 		case 17u: //da GIU a SX
 			SPRITE_SET_VMIRROR(THIS);

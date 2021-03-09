@@ -6,9 +6,10 @@
 #include "../res/src/tiles.h"
 #include "../res/src/map.h"
 #include "../res/src/map2.h"
+#include "../res/src/mapsewer.h"
+#include "../res/src/mapsewer2.h"
 #include "../res/src/map3.h"
 #include "../res/src/map3tree.h"
-#include "../res/src/mapsewer.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -49,7 +50,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 0u;
+UINT8 current_level = 1u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -76,6 +77,7 @@ const struct MapInfo* level_1[] = {
 	&map2
 };
 const struct MapInfo* level_2[] = {
+	&mapsewer2,
 	&mapsewer
 };
 const struct MapInfo* level_3[] = {
@@ -193,7 +195,7 @@ void Start_StateGame() {
 		break;
 		case 1u:
 			switch(current_map){
-				case 0u:
+				case 1u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
 						scrigno_shield = spawn_item(scrigno_shield, 42u, 21u, 2, 1);
 					}
@@ -339,7 +341,7 @@ void Update_StateGame() {
 					if (scroll_target->x == (UINT16) 31u << 3 & scroll_target->y == (UINT16) 39u  << 3){
 						snake4 = spawn_enemy(snake4, SpriteScorpion, 38u, 39u);
 					}
-					if (scroll_target->x == (UINT16) 36u << 3 & scroll_target->y <= (UINT16) 10u << 3){
+					if (scroll_target->x == (UINT16) 36u << 3 & scroll_target->y <= (UINT16) 10u << 3 & scroll_target->y >= (UINT16) 6u << 3){
 						snake1 = spawn_enemy(snake1, SpriteEnemy, 25u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteEnemy, 34u, 4u);
 						snake3 = spawn_enemy(snake3, SpriteScorpion, 20u, 4u);
@@ -350,6 +352,17 @@ void Update_StateGame() {
 		case 1:
 			switch(current_map){
 				case 0:
+					if (scroll_target->x == drop_player_x << 4){
+						snake1 = spawn_enemy(snake1, SpriteSpider, 12u, 5u);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 14u, 6u);
+						snake3 = spawn_enemy(snake3, SpriteSpider, 21u, 4u);
+					}
+					if (scroll_target->x == (UINT16) 18u << 3){
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 26u, 5u, 3, 1);
+						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 35u, 6u);
+					}
+				break;
+				case 1:
 					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y +1u) << 3){
 						snake1 = spawn_enemy(snake1, SpriteRat, 18u, 4u);
 						snake2 = spawn_enemy(snake2, SpriteRat, 14u, 4u);
@@ -465,7 +478,7 @@ void Update_StateGame() {
 	}
 	
 	//MOVING BACKGROUND TILES	
-	if (current_level == 1 & current_map == 0){
+	if (current_level == 1 & current_map == 1){
 		updatecounter++;
 		if (updatecounter < 21) {
 			const unsigned char wf0[1] = {123};

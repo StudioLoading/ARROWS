@@ -55,6 +55,7 @@ const struct MapInfo* boss_2[] = {
 };
 const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2};
 
+struct Sprite* boss = 0;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
 
@@ -80,7 +81,6 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
-			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteItem);
 		break;
 		case 2:
@@ -104,7 +104,6 @@ void Start_StateBoss() {
 	InitScroll(level_maps_b[current_map_b], collision_tiles, 0);
 	SHOW_BKG;
 	
-	struct Sprite* boss = 0;
 	struct Sprite* scrigno_sprite_boss = 0;
 	is_on_boss = 0;
 	//INIT BOSS
@@ -119,7 +118,6 @@ void Start_StateBoss() {
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 			SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
-			SpriteManagerAdd(SpriteGate, 43 << 3,  13 << 3);
 			scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
 			struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
 			datascrigno2->type = 2;
@@ -160,7 +158,7 @@ void Start_StateBoss() {
 void Update_StateBoss() {
 
 	if(show_diag >= 2){ // >=max_diag
-		ShowWindow();		
+		ShowWindow();
 		WriteBBOSSHP();
 		return;
 	}
@@ -196,7 +194,7 @@ void Update_StateBoss() {
 			WriteBBOSSHP();		
 		}
 		
-		if(level_tool == archer_data->tool){
+		if(level_tool & level_tool == archer_data->tool){
 			UpdateHUD();
 		}
 	}
