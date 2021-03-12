@@ -1,11 +1,11 @@
-#include "Banks/SetBank7.h"
+#include "Banks/SetBank8.h"
 
-
+#include "../res/src/window.h"
+#include "../res/src/diagnew.h"
 #include "../res/src/font.h"
 #include "../res/src/tiles.h"
-#include "../res/src/mapsecret0.h"
+#include "../res/src/map4.h"
 #include "../res/src/archer.h"
-#include "../res/src/arrow.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -13,6 +13,8 @@
 #include "Palette.h"
 #include "string.h"
 #include "Print.h"
+#include "Sound.h"
+#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -24,10 +26,14 @@ extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
+extern INT8 load_next;
+extern INT8 load_next_b;
 extern INT8 load_next_s;
 extern INT8 level_tool;
 extern UINT8 current_level;
 extern UINT8 current_map;
+extern INT8 show_diag;
+
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
 extern ARCHER_STATE archer_state;
@@ -38,19 +44,18 @@ extern struct Sprite* scrigno_shield;
 extern struct Sprite* scrigno_up;
 
 extern void ShowWindow();
+extern void ShowWindowDiag();
 extern void UpdateHUD();
 extern struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
-//Secrets
-const struct MapInfo* secret_1[] = {
-	&mapsecret0
+//Maps
+const struct MapInfo* map_4[] = {
+	&map4
 };
-const struct MapInfo** secrets[] = {secret_1};
+//Levels
+const struct MapInfo** maps4[] = {map_4};
 
-//void ShowSWindow();
-
-
-void Start_StateSecret() {
+void Start_StateGame4() {
 
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
@@ -62,7 +67,7 @@ void Start_StateSecret() {
 	SHOW_SPRITES;
 	//SCROLL
 	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
-	const struct MapInfo** level_maps_s = secrets[0];
+	const struct MapInfo** level_maps_s = maps4[0];
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps_s[0], &map_w, &map_h);
 	ScrollFindTile(level_maps_s[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
@@ -83,15 +88,6 @@ void Start_StateSecret() {
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
 	
-	//ITEMS
-	if ((current_level == 0u & current_map == 0u) | (current_level == 1u & current_map == 1u)){
-		scrigno_up = spawn_item(scrigno_up, 6u, 14u, 3, 1);
-		scrigno_dcoin = spawn_item(scrigno_dcoin, 8u, 14u, 7, 1);
-	}
-	if ((current_level == 0u & current_map == 1u) | (current_level == 1u & current_map == 0u) | (current_level == 2u & current_map == 0u)){
-		scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 14u, 7, 1);
-		scrigno_shield = spawn_item(scrigno_shield, 8u, 14u, 2, 1);
-	}
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -99,39 +95,67 @@ void Start_StateSecret() {
 
 }
 
-void Update_StateSecret() {
+
+void Update_StateGame4() {
 	
-	if (amulet != archer_data->amulet){
-		amulet = archer_data->amulet;
-		UpdateHUD();
-	}
-	if (coins != archer_data->coins){
-		coins = archer_data->coins;
-		UpdateHUD();
-	}
-	if (hp != archer_data->hp){
-		hp = archer_data->hp;
-		UpdateHUD();
-	}
-	if (ups != archer_data->ups){
-		ups = archer_data->ups;
-		UpdateHUD();
-	}	
-	if(archer_data->tool == level_tool){
-		UpdateHUD();
+	if(load_next) {
+		switch(load_next){
+			case 1: //stage
+			case -1:
+				current_map += load_next;
+			break;
+		}
+		load_next = 0;
+		SetState(StateGame4);
 	}
 	
 	if(load_next_s){
-		switch(load_next_s){
-			case 1: //entro in secret
-				load_next_s = 0;
-				SetState(StateSecret);
+		load_next_s = 0;
+		SetState(StateSecret);
+	}
+	
+	if(load_next_b){
+		switch(load_next_b){
+			case 1: //vado allo StateBoss
+				if(archer_state != STATE_DIAG){
+					load_next_b = 0;
+					SetState(StateBoss);//StateBoss
+				}
 			break;
-			case -1: //torno dalla secret a game
-				//load_next_s = 0;
-				SetState(StateGame);
-			break;
+			/*case 2: // provengo dal boss, vado al next level
+			break;*/
 		}
 	}
-
+	
+	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+		ShowWindow();
+		return;
+	}
+	if(archer_state == STATE_DIAG){
+		if(show_diag > 0 ){
+			ShowWindowDiag();
+			return;
+		}
+	}
+	else{	
+		if (amulet != archer_data->amulet){
+			amulet = archer_data->amulet;
+			UpdateHUD();
+		}
+		if (coins != archer_data->coins){
+			coins = archer_data->coins;
+			UpdateHUD();
+		}
+		if (hp != archer_data->hp){
+			hp = archer_data->hp;
+			UpdateHUD();
+		}
+		if (ups != archer_data->ups){
+			ups = archer_data->ups;
+			UpdateHUD();
+		}	
+		if(archer_data->tool == level_tool){
+			UpdateHUD();
+		}
+	}
 }

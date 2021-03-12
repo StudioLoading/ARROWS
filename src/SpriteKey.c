@@ -48,18 +48,7 @@ void Update_SpriteKey() {
 		keydata->item_accel_y += 2;
 		keydata->tile_i_collision = TranslateSprite(THIS, keydata->vx, keydata->item_accel_y >> 4);
 	}
-
-	/*UINT8 scroll_i_tile;
-	struct Sprite* iispr;
-	SPRITEMANAGER_ITERATE(scroll_i_tile, iispr) {
-		if(iispr->type == SpritePlatform) {
-			if(CheckCollision(THIS, iispr)) {
-				struct PlatformInfo* datapl = (struct PlatformInfo*)iispr->custom_data;
-				keydata->item_accel_y = 0;
-				keydata->vx = datapl->vx;
-			}
-		}
-	}*/
+	
 }
 
 void Destroy_SpriteKey() {

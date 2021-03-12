@@ -19,10 +19,6 @@ extern UINT8 current_level;
 extern UINT8 current_map;
 extern UINT8 current_level_b;
 extern INT8 show_diag;
-//extern struct EnemyInfo* boss_data_b;
-//extern const UINT8 ground_tiles[];
-//extern const INT8 ground_tiles_tot;
-
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -70,9 +66,9 @@ void Start_SpritePlayer() {
 	
 	
 	THIS->coll_x = 5;
-	THIS->coll_y = 5;
+	THIS->coll_y = 3;
 	THIS->coll_w = 6;
-	THIS->coll_h = 11;
+	THIS->coll_h = 13;
 	
 	archer_state = STATE_JUMPING;
 	
@@ -151,15 +147,19 @@ void Update_SpritePlayer() {
 			}
 			if (KEY_PRESSED(J_DOWN)){
 				SetSpriteAnim(THIS, anim_shield, 8u);
-				THIS->coll_x = 3;
-				THIS->coll_y = 9;
-				THIS->coll_w = 10;
-				THIS->coll_h = 11;
+				if (archer_state == STATE_NORMAL_PLATFORM){
+					THIS->coll_x = 3;
+					THIS->coll_y = 9;
+					THIS->coll_w = 10;
+					THIS->coll_h = 6;	
+				}
 			}else if (THIS->coll_x != 5){
 				THIS->coll_x = 5;
-				THIS->coll_y = 5;
-				THIS->coll_w = 6;
-				THIS->coll_h = 11;
+				if (archer_state == STATE_NORMAL_PLATFORM){
+					THIS->coll_h = 12;
+					THIS->coll_y = 3;
+					THIS->coll_w = 6;
+				}
 			}
 			
 			//Jump / Dialog
@@ -621,13 +621,13 @@ void CheckCollisionTile() {
 			load_next_s = 1;
 		break;
 		case 111u:
-			if(platform_vx != 1){
-				platform_vx = 1;
+			if(platform_vx != 2){
+				platform_vx = 2;
 			}
 		break;
 		case 119u:
-			if(platform_vx != -1){
-				platform_vx = -1;
+			if(platform_vx != -2){
+				platform_vx = -2;
 			}
 		break;
 		/*case 28u:
@@ -774,6 +774,37 @@ void Build_Next_Dialog(){
 						memcpy(d3, "SEWER.", 18);
 						memcpy(d4, "-- SNIFF!", 18);
 						diag_found = 0;
+					break;
+					case 1:
+					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 58u){
+							if (archer_data->tool == 0){//sto cercando di parlare col prig che WRENCH
+								memcpy(d1, "SLAVE: I'LL NEVER", 18);
+								memcpy(d2, "GET OUT. PLEASE", 18);
+								memcpy(d3, "TAKE MY WRENCH.", 18);
+								memcpy(d4, "FREE US ALL!", 18);								
+								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+								datakey->type = 2;
+								datakey->setup = 1u;
+								diag_found = 0;		
+							}
+						}
+						if (tile_collision == 7u){
+							if (archer_data->tool){
+								memcpy(d1, "--------------------", 18);
+								memcpy(d2, "    SWAMP OF THE", 18);
+								memcpy(d3, "      ALLIGATOR ", 18);
+								memcpy(d4, "--------------------", 18);
+								diag_found = 0;
+							}else{
+								memcpy(d1, "SWAMP. I NEED", 18);
+								memcpy(d2, "THE WRENCH TO", 18);
+								memcpy(d3, "OPEN THIS DOOR.", 18);
+								memcpy(d4, "", 18);
+								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
+								diag_found = 0;
+							}
+						}
 					break;
 				}
 			break;

@@ -26,24 +26,24 @@ void Start_SpriteEnemy() {
 	THIS->coll_h = 12;
 	THIS->lim_x = 64u;
 	THIS->lim_y = 64u;
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, enemy_idle, 8u);
-	data->enemy_state = ENEMY_STATE_NORMAL;
-	data->hp = 45;
-	data->enemy_accel_y = 24;
-	data->vx = 1;
-	data->wait = 0u;
-	data->hp = 45;
+	edata->enemy_state = ENEMY_STATE_NORMAL;
+	edata->hp = 45;
+	edata->enemy_accel_y = 24;
+	edata->vx = 1;
+	edata->wait = 0u;
+	edata->hp = 45;
 }
 
 void Update_SpriteEnemy() {
 	
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	
-	if (data->enemy_state == ENEMY_STATE_DEAD){
-		if (data->wait > 0){
+	if (edata->enemy_state == ENEMY_STATE_DEAD){
+		if (edata->wait > 0){
 			THIS->y--;
-			data->wait--;
+			edata->wait--;
 		}else{
 			SpriteManagerRemoveSprite(THIS);
 			THIS->y++;	
@@ -52,26 +52,26 @@ void Update_SpriteEnemy() {
 		return;
 	}
 	
-	if (data->wait > 0u){
-		data->wait -= 1u;
-		if (data->wait == 0u){
+	if (edata->wait > 0u){
+		edata->wait -= 1u;
+		if (edata->wait == 0u){
 			SetSpriteAnim(THIS, enemy_walk, 8u);
 		}
 	}else{
-		if(data->enemy_accel_y < 24) {
-				data->enemy_accel_y += 1;
+		if(edata->enemy_accel_y < 24) {
+				edata->enemy_accel_y += 1;
 		}
-		data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+		edata->tile_e_collision = TranslateSprite(THIS, edata->vx << delta_time, (edata->enemy_accel_y >> 4)<< delta_time);
 		//CheckCollisionETile();
-		if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
-			data->enemy_accel_y += 2;
-			data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
+		if(!edata->tile_e_collision && delta_time != 0 && edata->enemy_accel_y < 24) { //Do another iteration if there is no collision
+			edata->enemy_accel_y += 2;
+			edata->tile_e_collision = TranslateSprite(THIS, 0, (edata->enemy_accel_y >> 4) << delta_time);
 		}
-		if(data->tile_e_collision) {
-			if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
-				data->enemy_state = ENEMY_STATE_NORMAL;
+		if(edata->tile_e_collision) {
+			if(edata->enemy_state == ENEMY_STATE_JUMPING & edata->enemy_accel_y > 0) {
+				edata->enemy_state = ENEMY_STATE_NORMAL;
 			}else{
-				data->enemy_accel_y = 0;	
+				edata->enemy_accel_y = 0;	
 			}
 			CheckCollisionETile();
 		}
@@ -84,7 +84,7 @@ void Update_SpriteEnemy() {
 	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 		if(iespr->type == SpritePlayer) {
 			if(CheckCollision(THIS, iespr)) {
-				data->wait = 24u;
+				edata->wait = 24u;
 			}
 		}
 		if(iespr->type == SpriteArrow) {
@@ -93,27 +93,27 @@ void Update_SpriteEnemy() {
 				if (arrowdata->type == 6u){ //spine from porcupine
 					return;
 				}
-				data->wait = 24u;
+				edata->wait = 24u;
 				SetSpriteAnim(THIS, enemy_hit, 24u); 
-				data->hp -= arrowdata->arrowdamage;
+				edata->hp -= arrowdata->arrowdamage;
 				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
 					if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();
 					}
-					data->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (data->enemy_accel_y >> 4));
+					edata->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (edata->enemy_accel_y >> 4));
 				}else{ //se la freccia arriva da sinistra dell' enemy
 					if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
 						ETurn();
 					}
-					data->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (data->enemy_accel_y >> 4));
+					edata->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (edata->enemy_accel_y >> 4));
 				}
 				SpriteManagerRemoveSprite(iespr);
-				if (data->hp <= 0){
+				if (edata->hp <= 0){
 					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-					data->enemy_state = ENEMY_STATE_DEAD;
+					edata->enemy_state = ENEMY_STATE_DEAD;
 					SetSpriteAnim(THIS, enemy_dead, 16u);
-					data->wait = 8u;
+					edata->wait = 8u;
 					THIS->lim_x = 8u;
 					THIS->lim_y = 16u;
 				}
@@ -124,8 +124,9 @@ void Update_SpriteEnemy() {
 }
 
 void CheckCollisionETile() {
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
-	switch(data->tile_e_collision) {
+	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
+	switch(edata->tile_e_collision) {
+		case 3u:
 		case 4u:
 		case 5u:
 		case 7u:
@@ -138,32 +139,30 @@ void CheckCollisionETile() {
 		case 22u:
 		case 23u:
 		case 29u:
+		case 81u:
 			ETurn();
 		break;
 	}
 }
 
 void ETurn(){
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
-	if (data->vx == 1){
+	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
+	if (edata->vx == 1){
 		SPRITE_SET_VMIRROR(THIS);
 		THIS->x -= 4;
-		data->wait = 48u;
+		edata->wait = 48u;
 	}
-	if (data->vx == -1){
+	if (edata->vx == -1){
 		SPRITE_UNSET_VMIRROR(THIS);
 		THIS->x += 4;
-		data->wait = 48u;			
+		edata->wait = 48u;			
 	}
-	data->vx = -data->vx;
+	edata->vx = -edata->vx;
 	if(THIS->type == SpritePorcupine){
-		data->enemy_state = ENEMY_STATE_ATTACK;
-		data->wait = attack_wait;
+		edata->enemy_state = ENEMY_STATE_ATTACK;
+		edata->wait = attack_wait;
 	}
 	
 }
 
-void Destroy_SpriteEnemy() {
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
-	data->enemy_state = ENEMY_STATE_DEAD;
-}
+void Destroy_SpriteEnemy(){}

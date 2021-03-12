@@ -4,6 +4,7 @@
 #define STATES \
 _STATE(StateCredit)\
 _STATE(StateGame)\
+_STATE(StateGame4)\
 _STATE(StateSecret)\
 _STATE(StateBoss)\
 _STATE(StateGameOver)\

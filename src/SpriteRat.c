@@ -26,23 +26,23 @@ void Start_SpriteRat() {
 	THIS->coll_h = 11;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
+	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, rat_idle, 8u);
-	data->enemy_accel_y = 24;
-	data->vx = 1;
-	data->wait = 0u;
-	data->hp = 60u;
-	data->enemy_state = ENEMY_STATE_NORMAL;
+	rdata->enemy_accel_y = 24;
+	rdata->vx = 1;
+	rdata->wait = 0u;
+	rdata->hp = 24u;
+	rdata->enemy_state = ENEMY_STATE_NORMAL;
 }
 
 void Update_SpriteRat() {
 	
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
+	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;
 	
-	if (data->enemy_state == ENEMY_STATE_DEAD){
-		if (data->wait > 0u){
+	if (rdata->enemy_state == ENEMY_STATE_DEAD){
+		if (rdata->wait > 0u){
 			THIS->y--;
-			data->wait--;
+			rdata->wait--;
 		}else{
 			THIS->y++;	
 			THIS->y++;
@@ -51,26 +51,26 @@ void Update_SpriteRat() {
 		return;
 	}
 	
-	if (data->wait > 0u){
-		data->wait -= 1u;
-		if (data->wait == 0u){
+	if (rdata->wait > 0u){
+		rdata->wait -= 1u;
+		if (rdata->wait == 0u){
 			SetSpriteAnim(THIS, rat_walk, 8u);
 		}
 	}else{
-		if(data->enemy_accel_y < 24) {
-				data->enemy_accel_y += 1;
+		if(rdata->enemy_accel_y < 24) {
+				rdata->enemy_accel_y += 1;
 		}
-		data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, (data->enemy_accel_y >> 4)<< delta_time);
+		rdata->tile_e_collision = TranslateSprite(THIS, rdata->vx << delta_time, (rdata->enemy_accel_y >> 4)<< delta_time);
 		//CheckCollisionETile();
-		if(!data->tile_e_collision && delta_time != 0 && data->enemy_accel_y < 24) { //Do another iteration if there is no collision
-			data->enemy_accel_y += 2;
-			data->tile_e_collision = TranslateSprite(THIS, 0, (data->enemy_accel_y >> 4) << delta_time);
+		if(!rdata->tile_e_collision && delta_time != 0 && rdata->enemy_accel_y < 24) { //Do another iteration if there is no collision
+			rdata->enemy_accel_y += 2;
+			rdata->tile_e_collision = TranslateSprite(THIS, 0, (rdata->enemy_accel_y >> 4) << delta_time);
 		}
-		if(data->tile_e_collision) {
-			if(data->enemy_state == ENEMY_STATE_JUMPING & data->enemy_accel_y > 0) {
-				data->enemy_state = ENEMY_STATE_NORMAL;
+		if(rdata->tile_e_collision) {
+			if(rdata->enemy_state == ENEMY_STATE_JUMPING & rdata->enemy_accel_y > 0) {
+				rdata->enemy_state = ENEMY_STATE_NORMAL;
 			}else{
-				data->enemy_accel_y = 0;	
+				rdata->enemy_accel_y = 0;	
 			}
 			CheckCollisionETile();
 		}
@@ -83,33 +83,33 @@ void Update_SpriteRat() {
 	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 		if(iespr->type == SpritePlayer) {
 			if(CheckCollision(THIS, iespr)) {
-				data->wait = 24u;
+				rdata->wait = 24u;
 			}
 		}
 		if(iespr->type == SpriteArrow) {
 			if(CheckCollision(THIS, iespr)) {
-				data->wait = 24u;
+				rdata->wait = 24u;
 				SetSpriteAnim(THIS, rat_hit, 24u); 
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
-				data->hp -= arrowdata->arrowdamage;
+				rdata->hp -= arrowdata->arrowdamage;
 				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
 					if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();
 					}
-					data->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (data->enemy_accel_y >> 4));
+					rdata->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (rdata->enemy_accel_y >> 4));
 				}else{ //se la freccia arriva da sinistra dell' enemy
 					if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
 						ETurn();
 					}
-					data->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (data->enemy_accel_y >> 4));
+					rdata->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (rdata->enemy_accel_y >> 4));
 				}
 				SpriteManagerRemoveSprite(iespr);
-				if (data->hp <= 0){
-					data->enemy_state = ENEMY_STATE_DEAD;
+				if (rdata->hp <= 0){
+					rdata->enemy_state = ENEMY_STATE_DEAD;
 					SetSpriteAnim(THIS, rat_dead, 16u);
 					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-					data->wait = 8u;
+					rdata->wait = 8u;
 					THIS->lim_x = 8u;
 					THIS->lim_y = 16u;
 				}
@@ -119,9 +119,4 @@ void Update_SpriteRat() {
 	
 }
 
-
-
-void Destroy_SpriteRat() {
-	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
-	data->enemy_state = ENEMY_STATE_DEAD;
-}
+void Destroy_SpriteRat(){}
