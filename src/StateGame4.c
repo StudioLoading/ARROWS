@@ -1,9 +1,9 @@
 #include "Banks/SetBank8.h"
 
-#include "../res/src/window.h"
-#include "../res/src/diagnew.h"
+#include "../res/src/window4.h"
+#include "../res/src/diagnew4.h"
 #include "../res/src/font.h"
-#include "../res/src/tiles.h"
+#include "../res/src/tiles4.h"
 #include "../res/src/map4.h"
 #include "../res/src/archer.h"
 
