@@ -47,7 +47,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0;
-UINT8 current_level = 4u;
+UINT8 current_level = 3u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -95,6 +95,10 @@ struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, U
 struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
 void Start_StateGame() {
+	
+	if (current_level > 2u){
+		SetState(StateGame4);
+	}
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
@@ -175,6 +179,7 @@ void Start_StateGame() {
 	memcpy(d3, "DIALOG3", 18);
 	memcpy(d4, "DIALOG4", 18);
 	
+	//INIT SPAWNING
 	switch(current_level){
 		case 0u:
 			switch(current_map){
@@ -294,7 +299,7 @@ void Update_StateGame() {
 			break;
 		}
 		load_next = 0;
-		switch(current_map){
+		switch(current_level){
 			case 0:
 			case 1:
 			case 2:

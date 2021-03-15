@@ -20,6 +20,7 @@ _SPRITE_DMG(SpriteAmulet, amulets)\
 _SPRITE_DMG(SpriteEnemy, enemy)\
 _SPRITE_DMG(SpriteScorpion, scorpion)\
 _SPRITE_DMG(SpritePorcupine, porcupine)\
+_SPRITE_DMG(SpriteThunder, thunder)\
 _SPRITE_DMG(SpriteWolf, wolf)\
 _SPRITE_DMG(SpriteRat, rat)\
 _SPRITE_DMG(SpriteSpider, spider)\
