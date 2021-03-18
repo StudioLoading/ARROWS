@@ -22,6 +22,7 @@ const UINT8 eagle_time_normal = 81u;
 extern void CheckCollisionETile();
 extern void ETurn();
 
+extern INT8 load_next_b;
 
 void Start_SpriteEagle() {
 	
@@ -161,6 +162,7 @@ void Update_SpriteEagle() {
 						data->wait = 8u;
 						THIS->lim_x = 8u;
 						THIS->lim_y = 16u;
+						load_next_b++;
 					}
 					SpriteManagerRemoveSprite(ibispr);
 				}

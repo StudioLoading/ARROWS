@@ -28,7 +28,7 @@ void Start_SpriteThunder() {
 	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, thunder_idle, 8u);
 	tdata->enemy_accel_y = 40;
-	tdata->wait = 20u;
+	tdata->wait = 16u;
 	tdata->hp = 24u;
 	tdata->enemy_state = ENEMY_STATE_WAIT;
 	tdata->vx = (THIS->x & 1);
@@ -54,7 +54,7 @@ void Update_SpriteThunder() {
 			tdata->enemy_accel_y += 2;
 			tdata->tile_e_collision = TranslateSprite(THIS, 0, (tdata->enemy_accel_y >> 4) << delta_time);
 		}
-		if (tdata->tile_e_collision == 21u){
+		if (tdata->tile_e_collision == 21u | tdata->tile_e_collision == 22u){
 			tdata->wait = 16u;
 			SetSpriteAnim(THIS, thunder_dead, 10u);
 			tdata->enemy_state = ENEMY_STATE_DEAD;
@@ -70,50 +70,25 @@ void Update_SpriteThunder() {
 		}
 	}
 	
-	/*
-	
-	UINT8 scroll_e_tile;
-	struct Sprite* iespr;
-	
-	//Check sprite collision platform/enemy
-	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
-		if(iespr->type == SpritePlayer) {
-			if(CheckCollision(THIS, iespr)) {
-				tdata->wait = 24u;
-			}
-		}
-		if(iespr->type == SpriteArrow) {
-			if(CheckCollision(THIS, iespr)) {
-				tdata->wait = 24u;
-				SetSpriteAnim(THIS, thunder_hit, 24u); 
-				struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;
-				tdata->hp -= arrowdata->arrowdamage;
-				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
-					if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
-						ETurn();
-					}
-					tdata->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (tdata->enemy_accel_y >> 4));
-				}else{ //se la freccia arriva da sinistra dell' enemy
-					if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
-						ETurn();
-					}
-					tdata->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (tdata->enemy_accel_y >> 4));
-				}
-				SpriteManagerRemoveSprite(iespr);
-				if (tdata->hp <= 0){
+	UINT8 thu_tile;
+	struct Sprite* thuspr;
+	SPRITEMANAGER_ITERATE(thu_tile, thuspr) {
+		if(thuspr->type == SpriteArrow) {
+			if(CheckCollision(THIS, thuspr)) {
+				struct ArrowInfo* arritem = (struct ArrowInfo*)thuspr->custom_data;
+				if (arritem->original_type == 3u){
+					tdata->wait = 2u;
+					SetSpriteAnim(THIS, thunder_dead, 10u);
 					tdata->enemy_state = ENEMY_STATE_DEAD;
-					SetSpriteAnim(THIS, thunder_dead, 16u);
-					NR50_REG = 0x55; //Max volume		
-					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-					tdata->wait = 8u;
-					THIS->lim_x = 8u;
-					THIS->lim_y = 16u;
 				}
 			}
 		}
 	}
-	*/
+	
 	
 }
 
-void Destroy_SpriteThunder(){}
+void Destroy_SpriteThunder(){
+	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;
+	tdata->enemy_state = ENEMY_STATE_DEAD;
+}

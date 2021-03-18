@@ -4,6 +4,7 @@
 #include "../res/src/diagnew4.h"
 #include "../res/src/font.h"
 #include "../res/src/tiles4.h"
+#include "../res/src/map41.h"
 #include "../res/src/map4.h"
 #include "../res/src/archer.h"
 
@@ -53,6 +54,7 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
+extern UINT8 updatecounter;
 
 void UpdateHUD4();
 void ShowWindow4();
@@ -62,6 +64,7 @@ struct Sprite* spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8
 
 //Maps
 const struct MapInfo* map_4[] = {
+	&map41,
 	&map4
 };
 //Levels
@@ -139,6 +142,19 @@ void Start_StateGame4() {
 	switch (current_level){
 		case 3u:
 			SpriteManagerLoad(SpriteThunder);
+			SpriteManagerLoad(SpriteHurricane);
+			if(current_map == 0){
+				snake1 = spawn_enemy4(snake1, SpriteHurricane, 1u, 0u);	
+				snake2 = spawn_enemy4(snake2, SpriteHurricane, 2u, 0u);	
+				snake3 = spawn_enemy4(snake3, SpriteHurricane, 3u, 0u);	
+				snake4 = spawn_enemy4(snake4, SpriteHurricane, 10u, 0u);
+			}
+			if(current_map == 1){
+				snake1 = spawn_enemy4(snake1, SpriteThunder, 1u, 0u);	
+				snake2 = spawn_enemy4(snake2, SpriteThunder, 2u, 0u);	
+				snake3 = spawn_enemy4(snake3, SpriteThunder, 3u, 0u);	
+				snake4 = spawn_enemy4(snake4, SpriteThunder, 10u, 0u);						
+			}
 		case 4u:
 		break;
 		case 5u:
@@ -240,36 +256,114 @@ void Update_StateGame4() {
 	}
 	
 	// SPAWNING
-	switch(current_level){
-		case 3u:
-			switch(current_map){
-				case 0u:
-					if (scroll_target->x == (UINT16) 5u << 3 & scrigno_up == 0){
-						scrigno_up = spawn_item4(scrigno_up, 5u, 4u, 3, 1);
-					}
-					if (scroll_target->x == (UINT16) 16u << 3 & scrigno_dcoin == 0){
-						scrigno_dcoin = spawn_item4(scrigno_dcoin, 23u, 4u, 3, 1);
-					}
-					if (scroll_target->x > (UINT16) 20u << 3 & scroll_target->x < (UINT16) 65u << 3){
-						if (scroll_target->x == (UINT16) 20u << 3 | scroll_target->x == (UINT16) 23u << 3 | scroll_target->x == (UINT16) 29u << 3 | 
-						scroll_target->x == (UINT16) 31u << 3 | scroll_target->x == (UINT16) 34u << 3 | scroll_target->x == (UINT16) 40u << 3 | 
-						scroll_target->x == (UINT16) 45u << 3 | scroll_target->x == (UINT16) 50u << 3 | 
-						scroll_target->x == (UINT16) 53u << 3 | scroll_target->x == (UINT16) 56u << 3 | 
-						scroll_target->x == (UINT16) 62u << 3){
-							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 0u);
-							snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 4u, 0u);
-							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) - 4u, 0u);
+	if (scroll_target->x > (UINT16) 18u << 3){
+		switch(current_level){
+			case 3u:
+				switch(current_map){
+					case 0u:					
+						if (scroll_target->x >> 2 & 1){
+							struct EnemyInfo* datasnake1 = (struct EnemyInfo*)snake1->custom_data;
+							if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
+								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 10u, 6u);	
+							}
+							struct EnemyInfo* datasnake2 = (struct EnemyInfo*)snake2->custom_data;
+							if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
+								snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) + 6u, 4u);
+							}
+							struct EnemyInfo* datasnake3 = (struct EnemyInfo*)snake2->custom_data;
+							if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
+								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 8u, 4u);
+							}
 						}
-						*thunder_delay--;
-						if (*thunder_delay == 0u){						
-							snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
-							*thunder_delay = 24u;
+						if (scroll_target->x > (UINT16) 100u << 3 ){
+							*thunder_delay--;
+							if (*thunder_delay == 0u){		
+								struct EnemyInfo* datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){
+									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 4u, 5u);
+									*thunder_delay = 16u;
+								}
+							}
 						}
+					break;
+					case 1u:
+						if (scroll_target->x == (UINT16) 5u << 3 & scrigno_up == 0){
+							scrigno_up = spawn_item4(scrigno_up, 5u, 4u, 3, 1);
+						}
+						if (scroll_target->x == (UINT16) 33u << 3 & scrigno_dcoin == 0){
+							scrigno_dcoin = spawn_item4(scrigno_dcoin, 39u, 4u, 3, 1);
+						}						
+						if (scroll_target->x > (UINT16) 12u << 3){
+							if (scroll_target->x >> 2 & 1){
+								struct EnemyInfo* datasnake1 = (struct EnemyInfo*)snake1->custom_data;
+								if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
+									snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 2u);	
+								}
+								struct EnemyInfo* datasnake2 = (struct EnemyInfo*)snake2->custom_data;
+								if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
+									snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 4u, 2u);
+								}
+								struct EnemyInfo* datasnake3 = (struct EnemyInfo*)snake2->custom_data;
+								if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
+									snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) - 1u, 2u);
+								}
+							}
+							*thunder_delay--;
+							if (*thunder_delay == 0u){		
+								struct EnemyInfo* datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
+									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 2u);
+									*thunder_delay = 20u;
+								}
+							}
+						}
+					break;
+				}
+			break;			
+		}
+	}
+	
+	
+	//MOVING BACKGROUND TILES
+	UINT16 idx_flash = 0u;
+	UINT16 min_flash_x = 0u;
+	UINT16 max_flash_x = 32u;
+	const unsigned char sx_b[1] = {93};
+	const unsigned char sx_c[1] = {100};
+	const unsigned char dx_b[1] = {94};
+	const unsigned char dx_c[1] = {101};
+	if (current_level == 3){
+		updatecounter++;
+		if (updatecounter < 120) {
+			switch(updatecounter){
+				case 1:
+				case 16:
+				case 48:
+					for (idx_flash = min_flash_x; idx_flash < max_flash_x; idx_flash++){
+						set_bkg_tiles(idx_flash	, 3u, 1, 1, sx_b);
+						set_bkg_tiles(idx_flash, 4u, 1, 1, dx_c);
+						idx_flash++;
+						set_bkg_tiles(idx_flash, 3u, 1, 1, dx_b);
+						set_bkg_tiles(idx_flash	, 4u, 1, 1, sx_c);
+					}
+				break;
+				case 4:
+				case 24:
+				case 42:
+					for (idx_flash = min_flash_x; idx_flash < max_flash_x; idx_flash++){
+						set_bkg_tiles(idx_flash	, 3u, 1, 1, sx_c);
+						set_bkg_tiles(idx_flash, 4u, 1, 1, dx_b);
+						idx_flash++;
+						set_bkg_tiles(idx_flash, 3u, 1, 1, dx_c);
+						set_bkg_tiles(idx_flash	, 4u, 1, 1, sx_b);
 					}
 				break;
 			}
-		break;			
+		}else{
+			updatecounter = 0;
+		}
 	}
+	
 	
 	if(archer_state == STATE_DIAG){
 		if(show_diag > 0 ){
@@ -303,7 +397,7 @@ void Update_StateGame4() {
 
 void UpdateHUD4(){
 	//write amulet
-	PRINT_POS(18,0);
+	PRINT_POS(19,0);
 	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
 		case 2: Printf("]"); break;

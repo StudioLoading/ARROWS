@@ -37,23 +37,23 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 81, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 UINT8 amulet = 0u;
-UINT8 coins = 0u;
+UINT8 coins = 30u;
 INT8 ups = 3;
 INT8 hp = 100;
 INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0;
-UINT8 current_level = 3u;
+INT8 load_next_b = 1;
+UINT8 current_level = 0u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
 INT8 showing_diag = 0;
-UINT8 updatecounter = 0u;
+extern UINT8 updatecounter; //da StateCredit
 struct Sprite* platform_sprite = 0;
 struct Sprite* snake1 = 0;
 struct Sprite* snake2 = 0 ;
@@ -345,13 +345,13 @@ void Update_StateGame() {
 					}
 				break;
 				case 1:				
-					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y + 2u) << 3){
+					if (scroll_target->x == (UINT16) 2u << 3 & scroll_target->y < (UINT16) 8u << 3){
 						snake1 = spawn_enemy(snake1, SpriteEnemy, 7u, 12u);
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 9u, 21u);
 					}
-					if (scroll_target->x == (UINT16) 7u << 3 & scroll_target->y == (UINT16) 39u  << 3){
-						snake3 = spawn_enemy(snake3, SpritePorcupine, 15u, 39u);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, 17u, 39u);
+					if (scroll_target->x == (UINT16) 7u << 3 & scroll_target->y > (UINT16) 34u  << 3){
+						snake3 = spawn_enemy(snake3, SpritePorcupine, 25u, 39u);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, 25u, 39u);
 					}
 					if (scroll_target->x == (UINT16) 24u << 3 & scroll_target->y == (UINT16) 21u  << 3){
 						scrigno_up = spawn_item(scrigno_up, 28u, 18u, 3, 1);
@@ -626,7 +626,7 @@ void Update_StateGame() {
 
 void UpdateHUD(){
 	//write amulet
-	PRINT_POS(18,0);
+	PRINT_POS(19,0);
 	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
 		case 2: Printf("]"); break;

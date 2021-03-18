@@ -65,9 +65,9 @@ void Start_SpritePlayer() {
 	archer_data->coins = 0u;
 	
 	
-	THIS->coll_x = 5;
+	THIS->coll_x = 4;
 	THIS->coll_y = 3;
-	THIS->coll_w = 6;
+	THIS->coll_w = 8;
 	THIS->coll_h = 13;
 	
 	archer_state = STATE_JUMPING;
@@ -126,7 +126,18 @@ void Update_SpritePlayer() {
 					death_cooldown = 0;
 					archer_data->hp = 100;
 					if (archer_data->ups == -1){SetState(StateGameOver);}
-					else{SetState(StateGame);}	
+					else{
+						if (is_on_boss != -1){
+							SetState(StateBoss);							
+						}else{						
+							current_map = 0;
+							if(current_level < 3){
+								SetState(StateGame);
+							}else if (current_level < 6){
+								SetState(StateGame4);
+							}
+						}
+					}
 				}
 			}
 			return;
@@ -146,12 +157,14 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				SetSpriteAnim(THIS, anim_shield, 8u);
-				if (archer_state == STATE_NORMAL_PLATFORM){
-					THIS->coll_x = 3;
-					THIS->coll_y = 9;
-					THIS->coll_w = 10;
-					THIS->coll_h = 6;	
+				if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
+					SetSpriteAnim(THIS, anim_shield, 8u);
+					if (archer_state == STATE_NORMAL_PLATFORM){
+						THIS->coll_x = 3;
+						THIS->coll_y = 9;
+						THIS->coll_w = 10;
+						THIS->coll_h = 6;	
+					}
 				}
 			}else if (THIS->coll_x != 5){
 				THIS->coll_x = 5;
@@ -326,8 +339,10 @@ void Update_SpritePlayer() {
 						Build_Next_Dialog();
 					break;
 					case 2: //wrench
+						SetSpriteAnim(THIS, anim_idle, 12u);
 						archer_data->tool = 7;
 						SpriteManagerRemoveSprite(ispr);
+						Build_Next_Dialog();
 						return;
 					break;
 				}
@@ -358,8 +373,12 @@ void Update_SpritePlayer() {
 						}else{
 							THIS->x += 1;
 						}
-						is_on_boss = 1;
-						Build_Next_Dialog();
+						is_on_boss = 1;						
+						if(KEY_TICKED(J_A)){
+							if (KEY_PRESSED(J_UP)){		
+								Build_Next_Dialog();	
+							}
+						}						
 						return;
 					}
 					if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
@@ -368,8 +387,12 @@ void Update_SpritePlayer() {
 						}else{
 							THIS->x += 1;
 						}
-						is_on_boss = 2;
-						Build_Next_Dialog();
+						is_on_boss = 2;				
+						if(KEY_TICKED(J_A)){
+							if (KEY_PRESSED(J_UP)){		
+								Build_Next_Dialog();	
+							}
+						}						
 						return;
 					}
 				}
@@ -379,21 +402,23 @@ void Update_SpritePlayer() {
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
 					return;
 				}
-				UINT8 being_hit = 1;
-				if (KEY_PRESSED(J_DOWN) & ispr->type != SpriteWolf & ispr->type != SpriteAlligator){ //se mi sto riparando e lo sono girato dove serve
-					if (ispr->x < THIS->x){
-						if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
-							ispr->x -= 16;
-							being_hit = 0;
-						}
-					}else{
-						if (!SPRITE_GET_VMIRROR(THIS)){
-							ispr->x += 16;
-							being_hit = 0;
-						}
-					}					
+				UINT8 being_hit = 1u;
+				if(ispr->type != SpriteWolf & ispr->type != SpriteAlligator){
+					if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
+						if (ispr->x < THIS->x){
+							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
+								ispr->x -= 10;
+								being_hit = 0u;
+							}
+						}else{
+							if (!SPRITE_GET_VMIRROR(THIS)){
+								ispr->x += 10;
+								being_hit = 0u;
+							}
+						}					
+					}
 				}
-				if (being_hit & archer_state != STATE_DEAD){
+				if (being_hit == 1u & archer_state != STATE_DEAD){
 					INT8 enemydamage = 0;
 					switch(ispr->type){
 						case SpriteEnemy:
@@ -426,6 +451,15 @@ void Update_SpritePlayer() {
 							platform_vx = -1;
 						}		
 					}
+				}
+			}
+		}
+		if(ispr->type == SpriteHurricane) {
+			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {	
+				if (archer_state == STATE_JUMPING | archer_state == STATE_ASCENDING){
+					TranslateSprite(THIS, -2u << delta_time, -2u << delta_time);
+				}else{
+					TranslateSprite(THIS, -2u << delta_time, -1u << delta_time);
 				}
 			}
 		}
@@ -516,7 +550,7 @@ void Jump() {
 void MoveArcher() {
 	if(platform_vx){
 		if(archer_state == STATE_NORMAL_PLATFORM){
-			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);	
+			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);
 		}else{
 			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 1);	
 		}		
@@ -725,7 +759,7 @@ void Build_Next_Dialog(){
 									diag_found = 0;		
 								}				
 							}else{//qualsiasi altro slave							
-								memcpy(d1, "SLAVE WHAT'VE", 18);
+								memcpy(d1, "SLAVE: WHAT'VE", 18);
 								memcpy(d2, "WE DONE !?", 18);
 								memcpy(d3, "SIGH!", 18);
 								memcpy(d4, "", 18);
@@ -750,10 +784,10 @@ void Build_Next_Dialog(){
 					case 1:
 						if (tile_collision == 7u){
 							if (archer_data->tool){
-								memcpy(d1, "------------------", 18);
-								memcpy(d2, "    CAVE OF THE", 18);
-								memcpy(d3, "    BLACK WOLF ", 18);
-								memcpy(d4, "------------------", 18);
+								memcpy(d1, "-----------------", 18);
+								memcpy(d2, "   CAVE OF THE", 18);
+								memcpy(d3, "   BLACK WOLF ", 18);
+								memcpy(d4, "-----------------", 18);
 								diag_found = 0;
 							}else{
 								memcpy(d1, "CAVE OF THE", 18);
@@ -792,10 +826,10 @@ void Build_Next_Dialog(){
 						}
 						if (tile_collision == 7u){
 							if (archer_data->tool){
-								memcpy(d1, "--------------------", 18);
-								memcpy(d2, "    SWAMP OF THE", 18);
-								memcpy(d3, "      ALLIGATOR ", 18);
-								memcpy(d4, "--------------------", 18);
+								memcpy(d1, "----------------", 18);
+								memcpy(d2, "  SWAMP OF THE", 18);
+								memcpy(d3, "     ALLIGATOR ", 18);
+								memcpy(d4, "----------------", 18);
 								diag_found = 0;
 							}else{
 								memcpy(d1, "SWAMP. I NEED", 18);
