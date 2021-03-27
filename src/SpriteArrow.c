@@ -43,6 +43,7 @@ void Start_SpriteArrow() {
 	data->type = 0;
 	data->original_type = 0;
 	data->arrowdir = -1;
+	data->counter = 0;
 }
 
 void Update_SpriteArrow() {
@@ -54,12 +55,19 @@ void Update_SpriteArrow() {
 		SetupArrow();
 		data->original_type = internal_t;
 	}
-	if(SPRITE_GET_VMIRROR(THIS)) {
-		THIS->coll_x = 0;
-		tile_a_collision = TranslateSprite(THIS, -data->vx << delta_time, data->vy << delta_time);
-	} else {
-		THIS->coll_x = 5;
-		tile_a_collision = TranslateSprite(THIS, data->vx << delta_time, data->vy << delta_time);
+	if(data->counter){
+		data->counter--;
+	}else{
+		if(data->original_type == 1 | data->original_type == 4 | data->original_type == 5 ){
+			data->counter = 1;
+		}
+		if(SPRITE_GET_VMIRROR(THIS)) {
+			THIS->coll_x = 0;
+			tile_a_collision = TranslateSprite(THIS, -data->vx << delta_time, data->vy << delta_time);
+		} else {
+			THIS->coll_x = 5;
+			tile_a_collision = TranslateSprite(THIS, data->vx << delta_time, data->vy << delta_time);
+		}	
 	}
 	if(tile_a_collision){
 		CheckCollisionArrowTile();
@@ -101,7 +109,7 @@ void SetupArrow(){
 				case 1: //orizzontale
 					data->vy = 0;
 					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_normal, 18u);	
+					SetSpriteAnim(THIS, arrow_normal, 18u);
 				break;
 				case 3: //verticale in su
 					data->vy = -2;
@@ -116,28 +124,7 @@ void SetupArrow(){
 			}
 			data->type = 0;
 		break;
-		case 2: // WATER
-			data->arrowdamage = 10u;
-			switch(data->arrowdir){
-				case 1:
-					data->vy = 0;
-					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_water, 18u);	
-				break;
-				case 3:
-					data->vy = -2;
-					data->vx = 0;
-					SetSpriteAnim(THIS, arrow_water_v, 18u);	
-				break;
-				case 4:
-					data->vy = 2;
-					data->vx = 0;
-					SetSpriteAnim(THIS, arrow_water_g, 18u);	
-				break;
-			}						
-			data->type = 0;
-		break;
-		case 3: //STONE
+		case 2: //STONE
 			data->arrowdamage = 15u;
 			switch(data->arrowdir){
 				case 1:
@@ -158,8 +145,29 @@ void SetupArrow(){
 			}						
 			data->type = 0;
 		break;
+		case 3: // WATER
+			data->arrowdamage = 10u;
+			switch(data->arrowdir){
+				case 1:
+					data->vy = 0;
+					data->vx = 2;
+					SetSpriteAnim(THIS, arrow_water, 18u);	
+				break;
+				case 3:
+					data->vy = -2;
+					data->vx = 0;
+					SetSpriteAnim(THIS, arrow_water_v, 18u);	
+				break;
+				case 4:
+					data->vy = 2;
+					data->vx = 0;
+					SetSpriteAnim(THIS, arrow_water_g, 18u);	
+				break;
+			}						
+			data->type = 0;
+		break;
 		case 4:// BLAST
-			data->arrowdamage = 0u;
+			data->arrowdamage =20u;
 			switch(data->arrowdir){
 				case 1:
 					data->vy = 0;

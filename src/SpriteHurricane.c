@@ -18,20 +18,19 @@ extern void ETurn();
 
 
 void Start_SpriteHurricane() {
-	
-	THIS->coll_x = 2;
-	THIS->coll_y = 5;
-	THIS->coll_w = 4;
+	THIS->coll_x = 1;
+	THIS->coll_y = 2;
+	THIS->coll_w = 7;
 	THIS->coll_h = 12;
-	THIS->lim_x = 88u;
-	THIS->lim_y = 152u;
-	struct EnemyInfo* hdata = (struct EnemyInfo*)THIS->custom_data;	
+	THIS->lim_x = 80u;
+	THIS->lim_y = 64u;
 	SetSpriteAnim(THIS, hurricane_idle, 8u);
-	hdata->enemy_accel_y = 28;
-	hdata->wait = 4u;
-	hdata->hp = 24u;
-	hdata->enemy_state = ENEMY_STATE_WAIT;
-	hdata->vx = -1;
+	struct EnemyInfo* hhdata = (struct EnemyInfo*)THIS->custom_data;	
+	hhdata->enemy_accel_y = 28;
+	hhdata->vx = -2;
+	hhdata->wait = 4u;
+	hhdata->hp = 24u;
+	hhdata->enemy_state = ENEMY_STATE_WAIT;
 }
 
 void Update_SpriteHurricane() {
@@ -54,24 +53,37 @@ void Update_SpriteHurricane() {
 		if(!hdata->tile_e_collision && delta_time != 0 && hdata->enemy_accel_y < 28) { //Do another itethunderion if there is no collision
 			hdata->enemy_accel_y += 2;
 			hdata->tile_e_collision = TranslateSprite(THIS, hdata->vx << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
+		}		
+		switch(hdata->tile_e_collision){
+			case 2u:
+			case 18u:
+			case 20u:
+			case 21u:
+			case 22u:
+			case 23u:
+			case 29u:
+			case 40u:
+				hdata->wait -= 1u;
+				TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
+				if ( hdata->wait == 0u){
+					SetSpriteAnim(THIS, hurricane_dead, 10u);
+					hdata->enemy_state = ENEMY_STATE_DEAD;
+				}
+			break;
+			
+			case 100u:
+			case 101u:
+				THIS->y++;
+			break;
 		}
-		if (hdata->tile_e_collision == 21u | hdata->tile_e_collision == 22u){
-			hdata->wait -= 1u;
-			TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
-			if ( hdata->wait == 0u){
-				SetSpriteAnim(THIS, hurricane_dead, 10u);
-				hdata->enemy_state = ENEMY_STATE_DEAD;				
-			}
-		}else if (hdata->tile_e_collision == 100u | hdata->tile_e_collision == 101u){
-			THIS->y++;
-		}
-		else if (hdata->tile_e_collision){
+		/*else if (hdata->tile_e_collision){
 			THIS->x+=hdata->vx;
-		}
+		}*/
 	}
 	
 	if(hdata->enemy_state == ENEMY_STATE_DEAD){
-		TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
+		//TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
+		SpriteManagerRemoveSprite(THIS);
 	}
 	
 	/* REVERSE DELLE FRECCE / DESTROY SE FRECCE DI TERRA */
@@ -81,7 +93,7 @@ void Update_SpriteHurricane() {
 		if(hspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, hspr)) {
 				struct ArrowInfo* arritem = (struct ArrowInfo*)hspr->custom_data;
-				if (arritem->original_type == 3u){
+				if (arritem->original_type == 2u){
 					hdata->wait = 2u;
 					SetSpriteAnim(THIS, hurricane_dead, 10u);
 					hdata->enemy_state = ENEMY_STATE_DEAD;

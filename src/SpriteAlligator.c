@@ -120,7 +120,7 @@ void Update_SpriteAlligator() {
 								SetSpriteAnim(THIS, alligator_dead, 16u);
 								struct Sprite* amulet_w = SpriteManagerAdd(SpriteAmulet, (THIS->x)-8, (THIS->y)-8);
 								struct ItemInfo* datak = (struct ItemInfo*)amulet_w->custom_data;
-								datak->type = 1;
+								datak->type = 2;
 								datak->setup = 1;
 								alligator_data->enemy_state = ENEMY_STATE_DEAD;
 							}

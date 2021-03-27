@@ -45,22 +45,19 @@ void Update_SpriteEagle() {
 	
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
+	if (data->enemy_state == ENEMY_STATE_DEAD){
+		return;
+	}
+	
 	if (THIS->x == 0 & data->vx == -1){
 		data->vx = 1;
 	}
 	
-	if (data->enemy_state == ENEMY_STATE_DEAD){
-		if (data->wait > 0){
-			THIS->y--;
-			data->wait--;
-		}else{
-			SpriteManagerRemoveSprite(THIS);
-			THIS->y++;	
-			THIS->y++;
-		}		
+	if(THIS->y < 8 << 3){
+		//data->enemy_accel_y = -32u;
+		THIS->y++;
 		return;
 	}
-	
 	if (data->enemy_state == ENEMY_STATE_HIT){
 		data->wait--;
 		THIS->y--;
@@ -117,10 +114,6 @@ void Update_SpriteEagle() {
 		}
 	}
 	
-	if(THIS->y > ((UINT16) 25u << 3)){
-		data->enemy_accel_y = -32u;
-	}
-	
 	UINT8 scroll_bi_tile;
 	struct Sprite* ibispr;
 	
@@ -151,18 +144,27 @@ void Update_SpriteEagle() {
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
 				if(data->enemy_state != ENEMY_STATE_HIT){
 					data->enemy_state = ENEMY_STATE_HIT;
-					data->wait = 30u;
+					data->wait = 16u;
 					SetSpriteAnim(THIS, eagle_hit, 32u); 
 					data->hp -= arrowbidata->arrowdamage;
 					if (data->hp <= 0){
 						data->enemy_state = ENEMY_STATE_DEAD;
+						data->hp = 0;
 						SetSpriteAnim(THIS, eagle_dead, 14u);
-						NR50_REG = 0x55; //Max volume		
-						PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-						data->wait = 8u;
+						THIS->coll_x=0;
+						THIS->coll_y=0;
 						THIS->lim_x = 8u;
 						THIS->lim_y = 16u;
-						load_next_b++;
+						THIS->x = 10<<3;
+						THIS->y = 12<<3;
+						data->vx=0;
+						data->enemy_accel_y = 0;
+						NR50_REG = 0x55; //Max volume		
+						PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+						struct Sprite* key_s = SpriteManagerAdd(SpriteKey, 9 << 3, 14 << 3);
+						struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
+						datak->type = 1;
+						datak->setup = 1;
 					}
 					SpriteManagerRemoveSprite(ibispr);
 				}

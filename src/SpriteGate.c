@@ -7,6 +7,8 @@
 #include "custom_datas.h"
 
 
+extern UINT8 current_level;
+
 const UINT8 anim_gate[] = {2, 0, 1}; //The first number indicates the number of frames
 
 void Start_SpriteGate() {
@@ -20,6 +22,7 @@ void Start_SpriteGate() {
 	SetSpriteAnim(THIS, anim_gate, 16u);
 	struct EnemyInfo* gatedata = (struct EnemyInfo*)THIS->custom_data;
 	gatedata->hp = 50;
+	
 }
 
 void Update_SpriteGate() {
@@ -30,8 +33,8 @@ void Update_SpriteGate() {
 	SPRITEMANAGER_ITERATE(scroll_g_tile, gspr) {
 		if(gspr->type == SpriteArrow){
 			struct ArrowInfo* arrowdata = (struct ArrowInfo*)gspr->custom_data;
-			if (arrowdata->type == 2u){
-				struct EnemyInfo* gatedata = (struct EnemyInfo*)THIS->custom_data;
+			struct EnemyInfo* gatedata = (struct EnemyInfo*)THIS->custom_data;
+			if (arrowdata->type == gatedata->vx){ // uso il campo vx dell' EnemyInfo per capire con che freccia è rompibile.
 				gatedata->hp -= arrowdata->arrowdamage;
 				if(gatedata->hp<=0){
 					SpriteManagerRemoveSprite(THIS);

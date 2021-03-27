@@ -46,8 +46,8 @@ INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1;
-UINT8 current_level = 0u;
+INT8 load_next_b = 0;
+UINT8 current_level = 3u;
 UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -629,23 +629,25 @@ void UpdateHUD(){
 	PRINT_POS(19,0);
 	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
-		case 2: Printf("]"); break;
-		case 3: Printf("["); break;
+		case 2: Printf("["); break;
+		case 3: Printf("]"); break;
 		case 4: Printf("#"); break;
 		case 5: Printf("@"); break;
 		default: Printf("$"); break;
 	}
 	//write coins
-	if (archer_data->coins == 100u){
-		archer_data->coins = 0u;
-		coins = 0u;
-		archer_data->ups += 1;	
-	}
-	PRINT_POS(12, 0);
-	if (archer_data->coins > 9){
-		Printf("%d", archer_data->coins);
-	}else{
-		Printf("0%d", archer_data->coins);
+	if (is_on_boss >= 0){	
+		if (archer_data->coins == 100u){
+			archer_data->coins = 0u;
+			coins = 0u;
+			archer_data->ups += 1;	
+		}
+		PRINT_POS(12, 0);
+		if (archer_data->coins > 9){
+			Printf("%d", archer_data->coins);
+		}else{
+			Printf("0%d", archer_data->coins);
+		}	
 	}
 	//write hp
 	PRINT_POS(7, 0);

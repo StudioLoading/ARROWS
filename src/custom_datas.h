@@ -25,6 +25,7 @@ struct ArrowInfo {
 	INT8 vy;
 	INT8 arrowdir;
 	INT8 arrowdamage;
+	INT8 counter;
 };
 struct PlatformInfo {
 	UINT8 type:3;
@@ -58,7 +59,7 @@ struct EnemyInfo{
 	INT16 enemy_accel_y;
 	ENEMY_STATE enemy_state;
 	UINT8 tile_e_collision;
-	INT8 vx;
+	INT8 vx; //type for the SpriteGate
 	UINT8 wait;
 	INT8 hp;
 	UINT8 archer_posx;

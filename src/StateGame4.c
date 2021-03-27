@@ -72,7 +72,7 @@ const struct MapInfo** maps4[] = {map_4};
 
 const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 81, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
-UINT8 * thunder_delay = 24u;
+UINT8 thunder_delay = 16u;
 
 struct Sprite* spawn_enemy4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
 	SpriteManagerRemoveSprite(enem);
@@ -147,7 +147,7 @@ void Start_StateGame4() {
 				snake1 = spawn_enemy4(snake1, SpriteHurricane, 1u, 0u);	
 				snake2 = spawn_enemy4(snake2, SpriteHurricane, 2u, 0u);	
 				snake3 = spawn_enemy4(snake3, SpriteHurricane, 3u, 0u);	
-				snake4 = spawn_enemy4(snake4, SpriteHurricane, 10u, 0u);
+				snake4 = spawn_enemy4(snake4, SpriteHurricane, 10u, 0u);		
 			}
 			if(current_map == 1){
 				snake1 = spawn_enemy4(snake1, SpriteThunder, 1u, 0u);	
@@ -159,7 +159,7 @@ void Start_StateGame4() {
 		break;
 		case 5u:
 		break;		
-	}
+	}		
 	SHOW_SPRITES;
 	
 	//SCROLL
@@ -257,66 +257,94 @@ void Update_StateGame4() {
 	
 	// SPAWNING
 	if (scroll_target->x > (UINT16) 18u << 3){
+		struct EnemyInfo* datasnake1 = (struct EnemyInfo*)snake1->custom_data;
+		struct EnemyInfo* datasnake2 = (struct EnemyInfo*)snake2->custom_data;
+		struct EnemyInfo* datasnake3 = (struct EnemyInfo*)snake3->custom_data;
+		struct EnemyInfo* datasnake4 = (struct EnemyInfo*)snake4->custom_data;
 		switch(current_level){
 			case 3u:
 				switch(current_map){
-					case 0u:					
-						if (scroll_target->x >> 2 & 1){
-							struct EnemyInfo* datasnake1 = (struct EnemyInfo*)snake1->custom_data;
-							if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
-								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 10u, 6u);	
+					case 0u:
+						if (scroll_target->x > (UINT16) 93u << 3){							
+							if (scroll_target->x == (UINT16) 100u << 3){
+								scrigno_shield = spawn_item4(scrigno_shield, 110u, 9u, 2, 1);
 							}
-							struct EnemyInfo* datasnake2 = (struct EnemyInfo*)snake2->custom_data;
-							if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
-								snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) + 6u, 4u);
-							}
-							struct EnemyInfo* datasnake3 = (struct EnemyInfo*)snake2->custom_data;
-							if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
-								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 8u, 4u);
-							}
-						}
-						if (scroll_target->x > (UINT16) 100u << 3 ){
-							*thunder_delay--;
-							if (*thunder_delay == 0u){		
-								struct EnemyInfo* datasnake4 = (struct EnemyInfo*)snake4->custom_data;
-								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){
-									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 4u, 5u);
-									*thunder_delay = 16u;
+							/*
+							thunder_delay--;
+							if (thunder_delay == 8u || thunder_delay == 40u || thunder_delay == 25u){
+								if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
+									snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 1u, 5u);
+								}							
+								if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
+									snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) + 2u, 6u);
+								}
+								if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
+									snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 3u, 5u);
+									datasnake3->vx = -1;
 								}
 							}
+							if (thunder_delay == 10u){
+								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){
+									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 4u, 3u);
+								}
+							}
+							if(thunder_delay == 0u){
+								thunder_delay = 50u;
+							}*/						
+							if (scroll_target->x >> 2 & 1){
+								if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
+									snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 4u, 3u);	
+								}
+								if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
+									snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) + 5u, 4u);
+								}
+								if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
+									snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 3u, 5u);
+								}
+							}
+							thunder_delay--;
+							if (thunder_delay == 0u){		
+								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
+									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
+									thunder_delay = 20u;
+								}
+							}
+							
 						}
 					break;
 					case 1u:
 						if (scroll_target->x == (UINT16) 5u << 3 & scrigno_up == 0){
 							scrigno_up = spawn_item4(scrigno_up, 5u, 4u, 3, 1);
 						}
-						if (scroll_target->x == (UINT16) 33u << 3 & scrigno_dcoin == 0){
-							scrigno_dcoin = spawn_item4(scrigno_dcoin, 39u, 4u, 3, 1);
+						if (scroll_target->x == (UINT16) 33u << 3 & scrigno_shield == 0){
+							scrigno_shield = spawn_item4(scrigno_shield, 39u, 4u, 3, 1);
 						}						
 						if (scroll_target->x > (UINT16) 12u << 3){
 							if (scroll_target->x >> 2 & 1){
-								struct EnemyInfo* datasnake1 = (struct EnemyInfo*)snake1->custom_data;
 								if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
-									snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 2u);	
+									snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 1u);	
 								}
-								struct EnemyInfo* datasnake2 = (struct EnemyInfo*)snake2->custom_data;
 								if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
 									snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 4u, 2u);
 								}
-								struct EnemyInfo* datasnake3 = (struct EnemyInfo*)snake2->custom_data;
 								if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
-									snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) - 1u, 2u);
+									snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) - 1u, 0u);
 								}
 							}
-							*thunder_delay--;
-							if (*thunder_delay == 0u){		
-								struct EnemyInfo* datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+							thunder_delay--;
+							if (thunder_delay == 0u){		
 								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
-									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 2u);
-									*thunder_delay = 20u;
+									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
+									thunder_delay = 20u;
 								}
 							}
 						}
+						if(scroll_target->x == (UINT16) 140u << 3){
+							scrigno_dcoin = spawn_item4(scrigno_dcoin, 156u, 5u, 3, 1);							
+						}					
+						if(scroll_target->x == (UINT16) 180u << 3){
+							scrigno_shield = spawn_item4(scrigno_shield, 186u, 4u, 3, 1);
+						}						
 					break;
 				}
 			break;			
@@ -400,8 +428,8 @@ void UpdateHUD4(){
 	PRINT_POS(19,0);
 	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
-		case 2: Printf("]"); break;
-		case 3: Printf("["); break;
+		case 2: Printf("["); break;
+		case 3: Printf("]"); break;
 		case 4: Printf("#"); break;
 		case 5: Printf("@"); break;
 		default: Printf("$"); break;

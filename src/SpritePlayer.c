@@ -67,7 +67,7 @@ void Start_SpritePlayer() {
 	
 	THIS->coll_x = 4;
 	THIS->coll_y = 3;
-	THIS->coll_w = 8;
+	THIS->coll_w = 6;
 	THIS->coll_h = 13;
 	
 	archer_state = STATE_JUMPING;
@@ -84,10 +84,10 @@ void Update_SpritePlayer() {
 		if (show_diag == -1){ //NON TOCCARE
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
-		}else{		
+		}else{
 			if(show_diag < 2 & KEY_RELEASED(J_B)){ //show_diag < max_diag
-				show_diag += 1;	
-			}	
+				show_diag += 1;
+			}
 		}
 		return;
 	}
@@ -106,7 +106,7 @@ void Update_SpritePlayer() {
 	}
 	
 	switch(archer_state) {
-		case STATE_ASCENDING:			
+		case STATE_ASCENDING:
 			MoveArcher();
 			THIS->y--;
 		break;
@@ -363,7 +363,7 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
-			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder) {
+			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder  || ispr->type == SpriteIbex) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(ispr->type == SpriteWolf){
@@ -403,7 +403,7 @@ void Update_SpritePlayer() {
 					return;
 				}
 				UINT8 being_hit = 1u;
-				if(ispr->type != SpriteWolf & ispr->type != SpriteAlligator){
+				if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator && ispr->type != SpriteIbex){
 					if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
 						if (ispr->x < THIS->x){
 							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
@@ -436,6 +436,7 @@ void Update_SpritePlayer() {
 						break;
 						case SpriteWolf:
 						case SpriteAlligator:
+						case SpriteIbex:
 							enemydamage = 20;
 						break;
 					}
@@ -495,6 +496,11 @@ void Update_SpritePlayer() {
 						THIS->y = ispr->y - 12;
 					}
 				}
+			}
+		}
+		if(ispr->type == SpriteGate) {
+			if(CheckCollision(THIS, ispr)) {
+				THIS->x--;
 			}
 		}
 	}
@@ -611,26 +617,18 @@ void CheckCollisionTile() {
 					}
 				break;
 				case 1:
-					current_level_b = 1;
-					is_on_boss = 1;
-					archer_data->tool = 0; //tool consumato
-					load_next_b = 1;
-				break;
 				case 2:
-					current_level_b = 2;
+				case 3:
+				case 4:
+					current_level_b = current_level;
 					is_on_boss = 1;
 					archer_data->tool = 0; //tool consumato
 					load_next_b = 1;
 				break;
-			}
-			if (current_level == 1 | (archer_data->tool & current_level == 0)){
-				is_on_boss = 1;
-				archer_data->tool = 0; //tool consumato
-				load_next_b = 1;
 			}
 		break;
 		case 8u: //fine boss!
-			if(archer_data->tool | current_level_b == 1){
+			if(archer_data->tool | current_level_b > 1){
 				is_on_boss = -1;
 				archer_data->tool = 0; //tool consumato
 				load_next_b = 0;

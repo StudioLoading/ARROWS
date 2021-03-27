@@ -54,12 +54,23 @@ void Update_SpriteThunder() {
 			tdata->enemy_accel_y += 2;
 			tdata->tile_e_collision = TranslateSprite(THIS, 0, (tdata->enemy_accel_y >> 4) << delta_time);
 		}
-		if (tdata->tile_e_collision == 21u | tdata->tile_e_collision == 22u){
-			tdata->wait = 16u;
-			SetSpriteAnim(THIS, thunder_dead, 10u);
-			tdata->enemy_state = ENEMY_STATE_DEAD;
-		}else if (tdata->tile_e_collision == 100u | tdata->tile_e_collision == 101u){
-			THIS->y++;
+		switch(tdata->tile_e_collision){
+			case 2u:
+			case 18u:
+			case 20u:
+			case 21u:
+			case 22u:
+			case 23u:
+			case 29u:
+			case 40u:
+				tdata->wait = 16u;
+				SetSpriteAnim(THIS, thunder_dead, 10u);
+				tdata->enemy_state = ENEMY_STATE_DEAD;
+			break;
+			case 100u:
+			case 101u:
+				THIS->y++;
+			break;
 		}
 	}
 	

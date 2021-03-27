@@ -6,7 +6,7 @@
 #include "../res/src/mapboss0.h"
 #include "../res/src/mapboss1.h"
 #include "../res/src/mapboss2.h"
-#include "../res/src/gate.h"
+#include "../res/src/mapboss3.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -39,9 +39,12 @@ extern void ShowWindowDiag();
 extern void UpdateHUD();
 extern void Build_Next_Dialog();
 
+extern struct Sprite* snake1;
+extern struct Sprite* snake2;
+
 
 //Boss
-UINT8 current_level_b = 0u;
+UINT8 current_level_b = 2u;
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {
@@ -53,7 +56,10 @@ const struct MapInfo* boss_1[] = {
 const struct MapInfo* boss_2[] = {
 	&mapboss2
 };
-const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2};
+const struct MapInfo* boss_3[] = {
+	&mapboss3
+};
+const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2, boss_3};
 
 struct Sprite* boss = 0;
 INT8 boss_hp = 0;
@@ -86,8 +92,13 @@ void Start_StateBoss() {
 		case 2:
 			level_tool=0;
 			SpriteManagerLoad(SpriteEagle);
+			SpriteManagerLoad(SpriteKey);
+		case 3:
+			level_tool=0;
+			SpriteManagerLoad(SpriteIbex);
+			SpriteManagerLoad(SpriteThundergen);
 			SpriteManagerLoad(SpriteAmulet);
-			//SpriteManagerLoad(SpriteItem);
+			SpriteManagerLoad(SpriteGate);
 		break;
 	}
 	
@@ -95,7 +106,7 @@ void Start_StateBoss() {
 
 
 	//SCROLL
-	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
+	scroll_bottom_movement_limit = 80;//customizzo altezza archer sul display
 	const struct MapInfo** level_maps_b = bosses[current_level_b];
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps_b[current_map_b], &map_w, &map_h);
@@ -105,6 +116,8 @@ void Start_StateBoss() {
 	SHOW_BKG;
 	
 	struct Sprite* scrigno_sprite_boss = 0;
+	struct Sprite* gate_sprite = 0;
+	struct EnemyInfo* gatedata = 0;
 	is_on_boss = 0;
 	//INIT BOSS
 	switch(current_level_b){
@@ -117,7 +130,9 @@ void Start_StateBoss() {
 			boss = SpriteManagerAdd(SpriteAlligator, 21 << 3, 14 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
-			SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
+			gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
+			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+			gatedata->vx = 2;
 			scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
 			struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
 			datascrigno2->type = 2;
@@ -127,6 +142,16 @@ void Start_StateBoss() {
 			boss = SpriteManagerAdd(SpriteEagle, 9 << 3, 14 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
+		break;
+		case 3:
+			boss = SpriteManagerAdd(SpriteIbex, 24 << 3, 12 << 3);
+			boss_data_b = (struct EnemyInfo*)boss->custom_data;
+			boss_hp = boss_data_b->hp;
+			snake1 = SpriteManagerAdd(SpriteThundergen, 18 << 3,  9 << 3);
+			snake2 = SpriteManagerAdd(SpriteThundergen, 26 << 3,  9 << 3);
+			gate_sprite = SpriteManagerAdd(SpriteGate, 40 << 3,  13 << 3);
+			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+			gatedata->vx = 4;
 		break;
 	}
 	

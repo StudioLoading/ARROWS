@@ -68,6 +68,7 @@ void Update_SpriteAmulet() {
 		}
 		datak->setup = 1;
 	}
+	TranslateSprite(THIS, 0, 1 << delta_time);
 	if (datak->counter > 0){
 		datak->counter--;
 		if (datak->counter==0){

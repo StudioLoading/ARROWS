@@ -130,7 +130,7 @@ void Update_SpriteBird() {
 			if(CheckCollision(THIS, ibispr)) {
 				SpriteManagerRemoveSprite(ibispr);
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
-				if(arrowbidata->type != 1u){
+				if(arrowbidata->type == 1u){
 					data->enemy_state = ENEMY_STATE_HIT;
 					data->wait = 30u;
 					SetSpriteAnim(THIS, bird_hit, 24u); 
