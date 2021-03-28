@@ -55,20 +55,20 @@ void Update_SpriteArrow() {
 		SetupArrow();
 		data->original_type = internal_t;
 	}
-	if(data->counter){
-		data->counter--;
-	}else{
-		if(data->original_type == 1 | data->original_type == 4 | data->original_type == 5 ){
-			data->counter = 1;
+	if(data->original_type == 1 || data->original_type == 3){
+		if(!data->counter){
+			data->counter = 2;
+			return;
 		}
-		if(SPRITE_GET_VMIRROR(THIS)) {
-			THIS->coll_x = 0;
-			tile_a_collision = TranslateSprite(THIS, -data->vx << delta_time, data->vy << delta_time);
-		} else {
-			THIS->coll_x = 5;
-			tile_a_collision = TranslateSprite(THIS, data->vx << delta_time, data->vy << delta_time);
-		}	
+		data->counter--;
 	}
+	if(SPRITE_GET_VMIRROR(THIS)) {
+		THIS->coll_x = 0;
+		tile_a_collision = TranslateSprite(THIS, -data->vx << delta_time, data->vy << delta_time);
+	} else {
+		THIS->coll_x = 5;
+		tile_a_collision = TranslateSprite(THIS, data->vx << delta_time, data->vy << delta_time);
+	}	
 	if(tile_a_collision){
 		CheckCollisionArrowTile();
 	}
@@ -89,11 +89,6 @@ void Update_SpriteArrow() {
 					SpriteManagerRemove(THIS_IDX);
 					SpriteManagerRemoveSprite(iaspr);
 				}
-			}
-		}
-		if(iaspr->type == SpriteGate) {
-			if(CheckCollision(THIS, iaspr)) {
-				SpriteManagerRemove(THIS_IDX);
 			}
 		}
 	}
@@ -244,6 +239,12 @@ void CheckCollisionArrowTile() {
 			data->arrowdir = 1;
 			THIS->x -= 4;
 			THIS->y -= 4;
+		break;
+		case 90u: //thunder generator da DX a GIU
+			data->arrowdir = 4;
+			THIS->x -= 2;
+			THIS->y += 4;
+			data->original_type = 4; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		default:
 			SpriteManagerRemove(THIS_IDX);

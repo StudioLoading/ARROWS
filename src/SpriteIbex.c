@@ -133,7 +133,7 @@ void Update_SpriteIbex() {
 				if (ibex_data->hp <= 0){
 					ibex_data->hp = 0;
 					SetSpriteAnim(THIS, ibex_dead, 16u);
-					struct Sprite* key_s = SpriteManagerAdd(SpriteKey, (THIS->x)-8, (THIS->y)-8);
+					struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (THIS->x)-8, (THIS->y)-8);
 					struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
 					datak->type = 3;
 					datak->setup = 1;

@@ -18,7 +18,8 @@
 
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
-extern UINT8 collision_tiles[] ;
+extern UINT8 collision_tiles[];
+extern UINT8 collision_tiles4[];
 extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
@@ -44,7 +45,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 2u;
+UINT8 current_level_b = 3u; //0 wolf, 1 gator, 2 eagle, 3 ibex
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {
@@ -77,26 +78,25 @@ void Start_StateBoss() {
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	switch(current_level_b){
-		case 0:
+		case 0u:
 			level_tool=7;
 			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteWolf);
 		break;
-		case 1:
+		case 1u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
 			SpriteManagerLoad(SpriteItem);
 		break;
-		case 2:
+		case 2u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteEagle);
 			SpriteManagerLoad(SpriteKey);
-		case 3:
+		case 3u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteIbex);
-			SpriteManagerLoad(SpriteThundergen);
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
 		break;
@@ -112,7 +112,20 @@ void Start_StateBoss() {
 	GetMapSize(level_maps_b[current_map_b], &map_w, &map_h);
 	ScrollFindTile(level_maps_b[current_map_b], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
-	InitScroll(level_maps_b[current_map_b], collision_tiles, 0);
+	hp = 8;
+	switch (current_level_b){
+		case 0u:
+		case 1u:
+		case 2u:
+			InitScroll(level_maps_b[current_map_b], collision_tiles, 0);
+		break;
+		case 3u:
+		case 4u:
+		case 5u:
+			InitScroll(level_maps_b[current_map_b], collision_tiles4, 0);
+		break;
+	}
+	
 	SHOW_BKG;
 	
 	struct Sprite* scrigno_sprite_boss = 0;
@@ -121,12 +134,12 @@ void Start_StateBoss() {
 	is_on_boss = 0;
 	//INIT BOSS
 	switch(current_level_b){
-		case 0:
+		case 0u:
 			boss = SpriteManagerAdd(SpriteWolf, 24 << 3, 14 << 3); //34, 12
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 		break;
-		case 1:
+		case 1u:
 			boss = SpriteManagerAdd(SpriteAlligator, 21 << 3, 14 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
@@ -138,18 +151,16 @@ void Start_StateBoss() {
 			datascrigno2->type = 2;
 			datascrigno2->setup = 1u;
 		break;
-		case 2:
+		case 2u:
 			boss = SpriteManagerAdd(SpriteEagle, 9 << 3, 14 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 		break;
-		case 3:
+		case 3u:
 			boss = SpriteManagerAdd(SpriteIbex, 24 << 3, 12 << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
-			snake1 = SpriteManagerAdd(SpriteThundergen, 18 << 3,  9 << 3);
-			snake2 = SpriteManagerAdd(SpriteThundergen, 26 << 3,  9 << 3);
-			gate_sprite = SpriteManagerAdd(SpriteGate, 40 << 3,  13 << 3);
+			gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
 			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 			gatedata->vx = 4;
 		break;

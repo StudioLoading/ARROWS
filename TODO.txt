@@ -1,23 +1,43 @@
+LIV 0 ZOO -> Wolf -> tool per uscita
+LIV 1 SEWER -> Gator -> stone
+LIV 2 FOREST -> Eagle  -> tool per uscita
+LIV 3 SKY -> Ibex -> thunder
+LIV 4 MOUNTAINS + GROTTA CON STALATITI E STALAGMITI -> ??? tool di uscita
+LIV 5 VECCHIA FABBRICA -> ??? -> water
+LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
-Gator mi deve dare l' amuleto dell' acqua
-	devo fare uno state o una window apposta per mostrare l' amuleto per bene in grande ?
+problemi nelle collision_tiles4 all' accesso ibex da stage fulmini
 
-liv3 
-	map0 all' aperto
-	map1 in salita magari su un albero ? nemici ragni e uccelli
-	map2 sono sulla cima dell' albero e boss aquila
-	
+Platform che vada in alto e in basso oltre che dx sx
+
+devo fare un dialogo apposta per mostrare l' amuleto per bene in grande quando lo prendo
+
+devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
+
+bisogna pensare ad un maggior replay value: potrebbero esserci delle warp zone nelle stanze segrete (così posso usare lo SpriteGate dandogli la vx->fire) 
+il cui accesso è possibile solo rompendo un gate di fuoco ? Dato che il fuoco me lo da solo il boss finale ...
+ecco: la prima volta che incontro il boss finale, lui non muore, e mi rispedisce allo zoo. Nella secret delle fogne metto sta cosa, così c'è warp che mi porta al VERO ultimo stage,
+con di nuovo il boss finale, ma più incazzato.
+
+map3tree ha un uccello che spawna in screen
+
+state di inizio ogni nuovo livello, sarà un tileset magari con una bella immagine a tutto schermo, tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
+
+schermata di scelta livello / mappa !
+
+CONTROLLO di tutti i suggerimenti/dialoghi
+RIPRISTINARE IL SISTEMA DI DIALOGO CON BOSS IN WAIT, è figo.
 
 Cheat in titleScreen KonamiCode
 	99 lives
 	tutti gli amuleti
 
+per evitare i glitch quando ho troppe frecce in screen, dovrei mettere un contatore in RAM, direi dallo SpritePlayer,
+che ogni freccia che lasce fa +1, ad ogni destroy fa -1, e raggiunto un limite massimo non scocca più.
 
-FUNZIONALITA' DA IMPLEMENTARE: 
-	- CHECKPOINT DI SALVATAGGIO
+LA MORTE NEL BOSS DEVE FAR RIPARTIRE DAL LIVELLO BOSS, NON DALLA MAPPA
 
-OTTIMIZZAZIONI:
-	- SI PUO SPOSTARE L' ENEMYDAMAGE DAI CUSTOM_DATA DELL' EnemyInfo A DELLE COSTANTI
+GAMEOVER RESTYLED
 
 SOUND EFFECT DI 1UP
 SOUND EFFECT DI SHIELD
@@ -38,102 +58,27 @@ la sostituzione la fa, però se esco e rientro con la videata di scroll la tile 
 in più se è tipo un coin, questo mantiere le sue funzionalità di pickup, cioè
 la condizione dell' if è sempre vera anche se a video non vedo più il coin.
 
-
+DEATHMATCH CON LINK
 
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
 TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
 
-EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI
+RESTYLE DEL BORDO sgb A PARTIRE DA COVER E LOGO DI KATALIN. fUNZIONA TUTTO, è NELLA CARTELLA C:\GB\ZGBNEW\tools\border\
+
+
+POTREI EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI
 IN CAMBIO METTERE  tile sulla window:
 unsigned char face[] = {TILE0, TILE2, TILE1, TILE3};
 set_win_tiles(1, 2, 2, 2, face); // solito: (posx, posy, width, height, array di tiles in numeri interi)
-
+così risparmio qualche posizione sullo spazio per gli sprite.
 
 C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-master\Debug\ARROWS_Debug.noi -g
 
 
 DISCORD MARKDOWN: ```c ```
 
-SpritePlayer.c
-
-```c
-
-struct Sprite* snake1 = 0;
-...
-
-void spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
-	if(enem == 0){ 
-		enem = SpriteManagerAdd(spriteType, (UINT16) 17u << 3, (UINT16) 39u << 3); 
-	}else{ 
-		struct EnemyInfo* datae = (struct EnemyInfo*)enem->custom_data; 
-		if(datae->hp <= 0){
-			enem = SpriteManagerAdd(spriteType, posx, posy);
-		}
-	}						
-}
-
-void Update_StateGame(){
-...
-if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
-	spawn_enemy(snake1, SpriteRat, (UINT16) 43u << 3, (UINT16) 14u << 3);
-}
-...
-}
-```
-
-SpritePlayer.c
-```c
-if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 32u){
-		const unsigned char empty_tile[1] ={0};
-		set_bkg_tiles((THIS->x >> 3)+1, (THIS->y >> 3), 1, 1, empty_tile);
-		archer_data->coins += 1;
-	}
-```
-
-PER LE MONETE! 
-#include "..\res\src\tiles.h"
-...
-set_bkg_tiles(THIS->x, THIS->y, 1, 1, tiles.data->data+3u);
-
-
-tiles.h
-```c
-extern struct TilesInfo tiles;
-```
-
-TilesInfo.h
-```c
-
-struct TilesInfoInternal {
-	unsigned char width;
-	unsigned char height;
-	unsigned char num_frames;
-	unsigned char* data; // HERE IT IS !!
-	unsigned char* color_data; 
-};
-
-struct TilesInfo {
-	unsigned char bank;
-	struct TilesInfoInternal const* data;
-};
-
-```
-
-Now the declaration of the method I want to call:
-```c
-/** Sets the tiles in the background tile table.
-    Starting at position x,y in tiles and writing across for w tiles
-    and down for h tiles. Taking the values starting from the pointer
-    data.
-    @param data		Pointer to an unsigned char. Usually the 
-    			first element in an array. // HERE IT IS !!
-*/
-void
-set_bkg_tiles(UINT8 x,
-	      UINT8 y,
-	      UINT8 w,
-	      UINT8 h,
-	      unsigned char *tiles) NONBANKED; // HERE IT IS !!
+```c 
+	set_my_border();
 ```

@@ -6,6 +6,7 @@
 #include "../res/src/tiles4.h"
 #include "../res/src/map41.h"
 #include "../res/src/map4.h"
+#include "../res/src/map50.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -67,10 +68,15 @@ const struct MapInfo* map_4[] = {
 	&map41,
 	&map4
 };
+const struct MapInfo* map_5[] = {
+	&map50//, &map51
+};
 //Levels
-const struct MapInfo** maps4[] = {map_4};
+const struct MapInfo** maps4[] = {map_4, map_5};
 
-const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 81, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+extern const UINT8 collision_tiles4[];
+
+const UINT16 bg_palette4[] = {PALETTE_FROM_HEADER(tiles4)};
 
 UINT8 thunder_delay = 16u;
 
@@ -133,7 +139,7 @@ void ShowWindowDiag4(){
 void Start_StateGame4() {
 
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette4, 2);
 
 	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
@@ -164,7 +170,7 @@ void Start_StateGame4() {
 	
 	//SCROLL
 	scroll_bottom_movement_limit = 62;//customizzo altezza archer sul display
-	const struct MapInfo** level_maps4 = maps4[0]; //current_level-3
+	const struct MapInfo** level_maps4 = maps4[current_level-3u]; //current_level-3
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps4[current_map], &map_w, &map_h);
 	if (load_next_s){ //vengo da secret!
@@ -266,31 +272,9 @@ void Update_StateGame4() {
 				switch(current_map){
 					case 0u:
 						if (scroll_target->x > (UINT16) 93u << 3){							
-							if (scroll_target->x == (UINT16) 100u << 3){
-								scrigno_shield = spawn_item4(scrigno_shield, 110u, 9u, 2, 1);
+							if (scroll_target->x == (UINT16) 120u << 3){
+								scrigno_shield = spawn_item4(scrigno_shield, 133u, 9u, 2, 1);
 							}
-							/*
-							thunder_delay--;
-							if (thunder_delay == 8u || thunder_delay == 40u || thunder_delay == 25u){
-								if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
-									snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 1u, 5u);
-								}							
-								if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
-									snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) + 2u, 6u);
-								}
-								if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
-									snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 3u, 5u);
-									datasnake3->vx = -1;
-								}
-							}
-							if (thunder_delay == 10u){
-								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){
-									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 4u, 3u);
-								}
-							}
-							if(thunder_delay == 0u){
-								thunder_delay = 50u;
-							}*/						
 							if (scroll_target->x >> 2 & 1){
 								if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
 									snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 4u, 3u);	
@@ -331,11 +315,13 @@ void Update_StateGame4() {
 									snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) - 1u, 0u);
 								}
 							}
-							thunder_delay--;
-							if (thunder_delay == 0u){		
-								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
-									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
-									thunder_delay = 20u;
+							if (scroll_target->x > (UINT16) 140u << 3){
+								thunder_delay--;
+								if (thunder_delay == 0u){		
+									if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
+										snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
+										thunder_delay = 20u;
+									}
 								}
 							}
 						}

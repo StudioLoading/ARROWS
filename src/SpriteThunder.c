@@ -23,8 +23,8 @@ void Start_SpriteThunder() {
 	THIS->coll_y = 5;
 	THIS->coll_w = 4;
 	THIS->coll_h = 11;
-	THIS->lim_x = 152u;
-	THIS->lim_y = 152u;
+	THIS->lim_x = 250u;
+	THIS->lim_y = 250u;
 	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, thunder_idle, 8u);
 	tdata->enemy_accel_y = 40;

@@ -54,10 +54,10 @@ void Update_SpriteAmulet() {
 				SetSpriteAnim(THIS, amulet_normal, 8u);
 			break;
 			case 1:
-				SetSpriteAnim(THIS, amulet_water, 8u);
+				SetSpriteAnim(THIS, amulet_earth, 8u);
 			break;
 			case 2:
-				SetSpriteAnim(THIS, amulet_earth, 8u);
+				SetSpriteAnim(THIS, amulet_water, 8u);
 			break;
 			case 3:
 				SetSpriteAnim(THIS, amulet_blast, 8u);
@@ -68,7 +68,7 @@ void Update_SpriteAmulet() {
 		}
 		datak->setup = 1;
 	}
-	TranslateSprite(THIS, 0, 1 << delta_time);
+	//TranslateSprite(THIS, 0, 1 << delta_time);
 	if (datak->counter > 0){
 		datak->counter--;
 		if (datak->counter==0){

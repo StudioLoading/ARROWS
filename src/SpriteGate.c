@@ -21,22 +21,20 @@ void Start_SpriteGate() {
 	THIS->lim_y = 255u;
 	SetSpriteAnim(THIS, anim_gate, 16u);
 	struct EnemyInfo* gatedata = (struct EnemyInfo*)THIS->custom_data;
-	gatedata->hp = 50;
 	
 }
 
 void Update_SpriteGate() {
 	
-	UINT8 scroll_g_tile;
-	struct Sprite* gspr;
+	UINT8 scroll_gate_tile;
+	struct Sprite* gatespr;
 
-	SPRITEMANAGER_ITERATE(scroll_g_tile, gspr) {
-		if(gspr->type == SpriteArrow){
-			struct ArrowInfo* arrowdata = (struct ArrowInfo*)gspr->custom_data;
-			struct EnemyInfo* gatedata = (struct EnemyInfo*)THIS->custom_data;
-			if (arrowdata->type == gatedata->vx){ // uso il campo vx dell' EnemyInfo per capire con che freccia è rompibile.
-				gatedata->hp -= arrowdata->arrowdamage;
-				if(gatedata->hp<=0){
+	SPRITEMANAGER_ITERATE(scroll_gate_tile, gatespr) {
+		if(gatespr->type == SpriteArrow){
+			if(CheckCollision(THIS, gatespr)) {
+				struct ArrowInfo* arrowdata = (struct ArrowInfo*)gatespr->custom_data;
+				struct EnemyInfo* gdata = (struct EnemyInfo*)THIS->custom_data;
+				if (arrowdata->original_type == gdata->vx){ // uso il campo vx dell' EnemyInfo per capire con che freccia è rompibile.
 					SpriteManagerRemoveSprite(THIS);
 				}
 			}

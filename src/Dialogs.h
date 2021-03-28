@@ -1,0 +1,1 @@
+INT8 Build_Next_Dialog_Banked(struct Sprite * archer) __banked;
