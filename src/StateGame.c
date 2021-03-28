@@ -24,6 +24,9 @@
 #include "custom_datas.h"
 
 
+const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+
+
 const UINT16 bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 
 const UINT16 sprites_palette[] = {
@@ -37,8 +40,6 @@ const UINT16 sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
-const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 UINT8 amulet = 0u;
 UINT8 coins = 30u;
 INT8 ups = 3;
@@ -47,9 +48,9 @@ INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // mettere 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
 UINT8 current_level = 3u;
-UINT8 current_map = 1u;
+UINT8 current_map = 0u;
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -376,7 +377,7 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteSpider, 14u, 6u);
 						snake3 = spawn_enemy(snake3, SpriteSpider, 21u, 4u);
 					}
-					if (scroll_target->x == (UINT16) 18u << 3){
+					if (scroll_target->x == (UINT16) 5u << 3 | scroll_target->x == (UINT16) 6u << 3){
 						scrigno_up = spawn_item(scrigno_up, 26u, 5u, 3, 1);
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 35u, 6u);
 					}

@@ -10,6 +10,7 @@
 
 #include "custom_datas.h"
 
+
 extern UINT8 current_level_b;
 extern UINT8 current_level;
 extern UINT8 current_map;
@@ -113,8 +114,8 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							memcpy(d4, "", 18);
 							diag_found = 0;
 						}
-						if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 4u){
-							if (THIS->x > (UINT16) 43u << 3 & archer_data->tool == 0){//sto cercando di parlare col prig che ha la chiave
+						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 4u){
+							if (archer->x > (UINT16) 43u << 3 & archer_data->tool == 0){//sto cercando di parlare col prig che ha la chiave
 								if (archer_data->coins < 20u){
 									memcpy(d1, "SLAVE: 20 COINS", 18);
 									memcpy(d2, "FOR THE KEY", 18);
@@ -127,7 +128,7 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 									memcpy(d2, "HERE IS THE", 18);
 									memcpy(d3, "KEY.", 18);
 									memcpy(d4, ".. EH EH !", 18);								
-									struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+									struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, archer->x + 16u, archer->y);
 									struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 									datakey->type = 1;
 									datakey->setup = 1u;
@@ -141,11 +142,11 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								diag_found = 0;
 							}
 						}
-						if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 30u){
-							memcpy(d1, "SLAVE: NOW I FEEL", 18);
-							memcpy(d2, "WHAT THEY'VE FELT.", 18);
-							memcpy(d3, "", 18);
-							memcpy(d4, "", 18);
+						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 30u){
+							memcpy(d1, "SLAVE: ON THE", 18);
+							memcpy(d2, "UPPER RIGHT", 18);
+							memcpy(d3, "CORNER SOMEONE", 18);
+							memcpy(d4, "IS LAUGHING", 18);
 							diag_found = 0;
 						}
 						if(diag_found){//ho premuto la combo dei diag senza motivo
@@ -172,6 +173,12 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 								diag_found = 0;
 							}
+						}else{
+							memcpy(d1, "I CAN SMELL", 18);
+							memcpy(d2, "THE WOLF. THE CAVE", 18);
+							memcpy(d3, "CAN'T BE FAR.", 18);
+							memcpy(d4, "", 18);
+							diag_found = 0;							
 						}
 					break;
 				}
@@ -186,13 +193,13 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						diag_found = 0;
 					break;
 					case 1:
-					if(GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 58u){
+						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u){
 							if (archer_data->tool == 0){//sto cercando di parlare col prig che WRENCH
 								memcpy(d1, "SLAVE: I'LL NEVER", 18);
 								memcpy(d2, "GET OUT. PLEASE", 18);
 								memcpy(d3, "TAKE MY WRENCH.", 18);
 								memcpy(d4, "FREE US ALL!", 18);								
-								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, archer->x + 16u, archer->y);
 								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 								datakey->type = 2;
 								datakey->setup = 1u;
@@ -214,6 +221,20 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 								diag_found = 0;
 							}
+						}
+						if(diag_found){
+							if (archer_data->tool){							
+								memcpy(d1, "THE ONLY WAY", 18);
+								memcpy(d2, "IS UP !!", 18);
+								memcpy(d3, "", 18);
+								memcpy(d4, "", 18);									
+							}else{							
+								memcpy(d1, "BLEAH !!", 18);
+								memcpy(d2, "THE DEEPEST", 18);
+								memcpy(d3, "THE WORST IS GETTING", 18);
+								memcpy(d4, "", 18);	
+							}
+							diag_found = 0;
 						}
 					break;
 				}

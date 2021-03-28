@@ -612,13 +612,14 @@ void CheckCollisionTile() {
 			Build_Next_Dialog();
 			switch(current_level){
 				case 0u:
+				case 1u:
 					if(archer_data->tool){
+						current_level_b = current_level;
 						is_on_boss = 1;
 						archer_data->tool = 0; //tool consumato
 						load_next_b = 1;
 					}
 				break;
-				case 1u:
 				case 2u:
 				case 3u:
 				case 4u:
@@ -630,14 +631,17 @@ void CheckCollisionTile() {
 			}
 		break;
 		case 8u: //fine boss!
-			if(archer_data->tool | current_level_b > 1){
-				is_on_boss = -1;
-				archer_data->tool = 0; //tool consumato
-				load_next_b = 0;
-				current_level += 1u;
-				current_map = 0;
-				SetState(StateGame);
-			}			
+			if(current_level_b == 0 | current_level_b == 2){
+				if(!archer_data->tool){
+					return;
+				}
+			}
+			is_on_boss = -1;
+			archer_data->tool = 0; //tool consumato
+			load_next_b = 0;
+			current_level += 1u;
+			current_map = 0;
+			SetState(StateGame);
 		break;
 		case 19u: //exit secret room
 			load_next_s = -1;

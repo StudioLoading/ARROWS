@@ -128,6 +128,11 @@ void Update_SpriteIbex() {
 					ibex_data->wait = 28u;
 					SetSpriteAnim(THIS, ibex_hit, 18u);
 					ibex_data->hp -= arrowdata->arrowdamage;
+					if (ibex_data->vx < 0){
+						THIS->x++;
+					}else{
+						THIS->x--;
+					}
 				}
 				SpriteManagerRemoveSprite(ibbspr);
 				if (ibex_data->hp <= 0){
@@ -147,6 +152,7 @@ void Update_SpriteIbex() {
 void CheckCollisionIBTile() {
 	switch(ibex_data->tile_e_collision) {
 		case 3u:
+		case 16u:
 			TranslateSprite(THIS, 0, 2);
 		break;
 		case 4u:

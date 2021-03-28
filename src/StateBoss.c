@@ -14,12 +14,13 @@
 #include "Palette.h"
 #include "string.h"
 #include "Print.h"
+
 #include "custom_datas.h"
 
+
+extern UINT8 collision_tiles[];
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
-extern UINT8 collision_tiles[];
-extern UINT8 collision_tiles4[];
 extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
@@ -45,7 +46,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 3u; //0 wolf, 1 gator, 2 eagle, 3 ibex
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {
@@ -65,6 +66,8 @@ const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2, boss_3};
 struct Sprite* boss = 0;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
+
+const UINT8 collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -112,7 +115,6 @@ void Start_StateBoss() {
 	GetMapSize(level_maps_b[current_map_b], &map_w, &map_h);
 	ScrollFindTile(level_maps_b[current_map_b], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
-	hp = 8;
 	switch (current_level_b){
 		case 0u:
 		case 1u:
@@ -122,7 +124,7 @@ void Start_StateBoss() {
 		case 3u:
 		case 4u:
 		case 5u:
-			InitScroll(level_maps_b[current_map_b], collision_tiles4, 0);
+			InitScroll(level_maps_b[current_map_b], collision_btiles4, 0);
 		break;
 	}
 	

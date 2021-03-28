@@ -21,6 +21,9 @@
 #include "custom_datas.h"
 
 
+const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+
+
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -57,6 +60,7 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 extern UINT8 updatecounter;
 
+
 void UpdateHUD4();
 void ShowWindow4();
 void ShowWindowDiag4();
@@ -74,7 +78,6 @@ const struct MapInfo* map_5[] = {
 //Levels
 const struct MapInfo** maps4[] = {map_4, map_5};
 
-extern const UINT8 collision_tiles4[];
 
 const UINT16 bg_palette4[] = {PALETTE_FROM_HEADER(tiles4)};
 

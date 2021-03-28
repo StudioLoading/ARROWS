@@ -17,9 +17,9 @@
 #include "custom_datas.h"
 
 
+extern UINT8 collision_tiles[];
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
-extern UINT8 collision_tiles[] ;
 extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
