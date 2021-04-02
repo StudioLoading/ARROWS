@@ -13,10 +13,11 @@
 #include "Sound.h"
 #include "gbt_player.h"
 
-UINT8 wait_credit = 160u;
+UINT8 wait_credit = 250u;
 const UINT8 collision_tiles_credits[] = {1,0};
 const UINT16 bg_palette_credits[] = {PALETTE_FROM_HEADER(tilescredit)};
 UINT8 updatecounter = 20u;
+extern UINT8* credits_mod_Data[];
 
 const UINT16 sprites_palette_credits[] = {
 	PALETTE_INDEX(archer, 0),
@@ -39,11 +40,11 @@ void Start_StateCredit() {
 	InitScroll(&mapcredit0, collision_tiles_credits, 0);
 	SHOW_BKG;
 	
-	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	
+	PlayMusic(credits_mod_Data, 11, 1);
 }
 
 void Update_StateCredit() {
@@ -62,28 +63,24 @@ void Update_StateCredit() {
 	if (updatecounter < 20u) {
 		switch(updatecounter){
 			case 1:
-				set_bkg_tiles(5u, 7u, 1, 1, h_0); set_bkg_tiles(6u, 7u, 1, 1, h_0); set_bkg_tiles(7u, 7u, 1, 1, h_0);
+				set_bkg_tiles(6u, 7u, 1, 1, h_0); set_bkg_tiles(7u, 7u, 1, 1, h_0);
 				set_bkg_tiles(8u, 7u, 1, 1, h_0); set_bkg_tiles(9u, 7u, 1, 1, h_0); set_bkg_tiles(10u, 7u, 1, 1, h_0);
-				set_bkg_tiles(11u, 7u, 1, 1, h_0); set_bkg_tiles(12u, 7u, 1, 1, h_0); set_bkg_tiles(13u, 7u, 1, 1, h_0);
-				set_bkg_tiles(13u, 7u, 1, 1, h_0); set_bkg_tiles(14u, 7u, 1, 1, h_0);
-				set_bkg_tiles(5u, 10u, 1, 1, h_1); set_bkg_tiles(6u, 10u, 1, 1, h_1); set_bkg_tiles(7u, 10u, 1, 1, h_1);
+				set_bkg_tiles(11u, 7u, 1, 1, h_0); set_bkg_tiles(12u, 7u, 1, 1, h_0);
+				set_bkg_tiles(6u, 10u, 1, 1, h_1); set_bkg_tiles(7u, 10u, 1, 1, h_1);
 				set_bkg_tiles(8u, 10u, 1, 1, h_1); set_bkg_tiles(9u, 10u, 1, 1, h_1); set_bkg_tiles(10u, 10u, 1, 1, h_1);
-				set_bkg_tiles(11u, 10u, 1, 1, h_1); set_bkg_tiles(12u, 10u, 1, 1, h_1); set_bkg_tiles(13u, 10u, 1, 1, h_1);
-				set_bkg_tiles(13u, 10u, 1, 1, h_1); set_bkg_tiles(14u, 10u, 1, 1, h_1);
-				set_bkg_tiles(4u, 8u, 1, 1, v_1); set_bkg_tiles(4u, 9u, 1, 1, v_1);
-				set_bkg_tiles(15u, 8u, 1, 1, v_0); set_bkg_tiles(15u, 9u, 1, 1, v_0);
+				set_bkg_tiles(11u, 10u, 1, 1, h_1); set_bkg_tiles(12u, 10u, 1, 1, h_1);
+				set_bkg_tiles(5u, 8u, 1, 1, v_1); set_bkg_tiles(5u, 9u, 1, 1, v_1);
+				set_bkg_tiles(13u, 8u, 1, 1, v_0); set_bkg_tiles(13u, 9u, 1, 1, v_0);
 			break;
 			case 10:
-				set_bkg_tiles(5u, 7u, 1, 1, h_1); set_bkg_tiles(6u, 7u, 1, 1, h_1); set_bkg_tiles(7u, 7u, 1, 1, h_1);
+				set_bkg_tiles(6u, 7u, 1, 1, h_1); set_bkg_tiles(7u, 7u, 1, 1, h_1);
 				set_bkg_tiles(8u, 7u, 1, 1, h_1); set_bkg_tiles(9u, 7u, 1, 1, h_1); set_bkg_tiles(10u, 7u, 1, 1, h_1);
-				set_bkg_tiles(11u, 7u, 1, 1, h_1); set_bkg_tiles(12u, 7u, 1, 1, h_1); set_bkg_tiles(13u, 7u, 1, 1, h_1);
-				set_bkg_tiles(13u, 7u, 1, 1, h_1); set_bkg_tiles(14u, 7u, 1, 1, h_1);
-				set_bkg_tiles(5u, 10u, 1, 1, h_0); set_bkg_tiles(6u, 10u, 1, 1, h_0); set_bkg_tiles(7u, 10u, 1, 1, h_0);
+				set_bkg_tiles(11u, 7u, 1, 1, h_1); set_bkg_tiles(12u, 7u, 1, 1, h_1);
+				set_bkg_tiles(6u, 10u, 1, 1, h_0); set_bkg_tiles(7u, 10u, 1, 1, h_0);
 				set_bkg_tiles(8u, 10u, 1, 1, h_0); set_bkg_tiles(9u, 10u, 1, 1, h_0); set_bkg_tiles(10u, 10u, 1, 1, h_0);
-				set_bkg_tiles(11u, 10u, 1, 1, h_0); set_bkg_tiles(12u, 10u, 1, 1, h_0); set_bkg_tiles(13u, 10u, 1, 1, h_0);
-				set_bkg_tiles(13u, 10u, 1, 1, h_0); set_bkg_tiles(14u, 10u, 1, 1, h_0);
-				set_bkg_tiles(4u, 8u, 1, 1, v_0); set_bkg_tiles(4u, 9u, 1, 1, v_0);
-				set_bkg_tiles(15u, 8u, 1, 1, v_1); set_bkg_tiles(15u, 9u, 1, 1, v_1);
+				set_bkg_tiles(11u, 10u, 1, 1, h_0); set_bkg_tiles(12u, 10u, 1, 1, h_0);
+				set_bkg_tiles(5u, 8u, 1, 1, v_0); set_bkg_tiles(5u, 9u, 1, 1, v_0);
+				set_bkg_tiles(13u, 8u, 1, 1, v_1); set_bkg_tiles(13u, 9u, 1, 1, v_1);
 			break;
 		}
 	}else{

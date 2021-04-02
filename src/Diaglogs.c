@@ -174,8 +174,8 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								diag_found = 0;
 							}
 						}else{
-							memcpy(d1, "I CAN SMELL", 18);
-							memcpy(d2, "THE WOLF. THE CAVE", 18);
+							memcpy(d1, "I CAN SMELL...", 18);
+							memcpy(d2, "WOLF' CAVE", 18);
 							memcpy(d3, "CAN'T BE FAR.", 18);
 							memcpy(d4, "", 18);
 							diag_found = 0;							

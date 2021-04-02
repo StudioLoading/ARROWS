@@ -21,7 +21,7 @@
 #include "custom_datas.h"
 
 
-const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
 extern UINT16 bg_palette[];
@@ -86,6 +86,14 @@ UINT8 thunder_delay = 16u;
 struct Sprite* spawn_enemy4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
 	SpriteManagerRemoveSprite(enem);
 	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	return enem;
+}
+
+struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
+	SpriteManagerRemoveSprite(enem);
+	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	struct PlatformInfo* data_platform = (struct PlatformInfo*)enem->custom_data;
+	data_platform->type = 1;
 	return enem;
 }
 
@@ -165,6 +173,8 @@ void Start_StateGame4() {
 				snake4 = spawn_enemy4(snake4, SpriteThunder, 10u, 0u);						
 			}
 		case 4u:
+			SpriteManagerLoad(SpritePlatform);
+			SpriteManagerLoad(SpriteRat);
 		break;
 		case 5u:
 		break;		
@@ -304,7 +314,7 @@ void Update_StateGame4() {
 							scrigno_up = spawn_item4(scrigno_up, 5u, 4u, 3, 1);
 						}
 						if (scroll_target->x == (UINT16) 33u << 3 & scrigno_shield == 0){
-							scrigno_shield = spawn_item4(scrigno_shield, 39u, 4u, 3, 1);
+							scrigno_shield = spawn_item4(scrigno_shield, 39u, 4u, 2, 1);
 						}						
 						if (scroll_target->x > (UINT16) 12u << 3){
 							if (scroll_target->x >> 2 & 1){
@@ -332,11 +342,30 @@ void Update_StateGame4() {
 							scrigno_dcoin = spawn_item4(scrigno_dcoin, 156u, 5u, 3, 1);							
 						}					
 						if(scroll_target->x == (UINT16) 180u << 3){
-							scrigno_shield = spawn_item4(scrigno_shield, 186u, 4u, 3, 1);
+							scrigno_shield = spawn_item4(scrigno_shield, 186u, 4u, 2, 1);
 						}						
 					break;
 				}
-			break;			
+			break;
+			case 4u:
+				switch(current_map){
+					case 0u:
+						if(scroll_target->x == (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3){
+							scrigno_shield = spawn_item4(scrigno_shield, 31u, 17u, 2, 1);
+							snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
+						}
+						if(scroll_target->x == (UINT16) 33u << 3 && scroll_target->y == (UINT16) 36u << 3){
+							//snake1 = spawn_vplatform4(snake1, SpritePlatform, 37u, 39u);
+							snake1 = spawn_vplatform4(snake1, SpritePlatform, scroll_target->x >> 3 + 4u, 39u);
+							snake2 = spawn_enemy4(snake2, SpriteRat, 20u, 36u);
+							snake3 = spawn_enemy4(snake3, SpriteRat, 22u, 31u);
+						}
+						if(scroll_target->x == (UINT16) 42u << 3 && scroll_target->y ==(UINT16) 44u << 3 ){
+							snake1 = spawn_vplatform4(snake1, SpritePlatform, 37u, 50u);
+						}
+					break;
+				}
+			break;
 		}
 	}
 	

@@ -1,3 +1,6 @@
+problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. Dovrei chiedere suggerimento sul Discord
+
+
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
@@ -6,7 +9,7 @@ LIV 4 MOUNTAINS + GROTTA CON STALATITI E STALAGMITI -> ??? tool di uscita
 LIV 5 VECCHIA FABBRICA -> ??? -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
-problemi nelle collision_tiles4 all' accesso ibex da stage fulmini
+
 
 Platform che vada in alto e in basso oltre che dx sx
 
@@ -80,5 +83,9 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c 
-	set_my_border();
+
+extern UINT8* credits_mod_Data[];
+...
+PlayMusic(credits_mod_Data, 11, 1);
+
 ```

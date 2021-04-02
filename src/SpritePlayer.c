@@ -41,6 +41,7 @@ UINT8 tile_collision = 0u;
 INT16 archer_accel_y = 0;
 INT8 shoot_cooldown = 0;
 INT8 platform_vx = 0;
+INT8 platform_vy = 0;
 INT8 is_on_boss = -1;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
@@ -115,7 +116,6 @@ void Update_SpritePlayer() {
 			if(death_cooldown == 6){
 				SetSpriteAnim(THIS, anim_dead, 12u);
 				archer_data->ups -= 1;
-				//ups = archer_data->ups;
 			}
 			if (death_cooldown < 12){
 				TranslateSprite(THIS, 0, -2 );
@@ -125,12 +125,13 @@ void Update_SpritePlayer() {
 				}else{
 					death_cooldown = 0;
 					archer_data->hp = 100;
-					if (archer_data->ups == -1){SetState(StateGameOver);}
-					else{
+					if (archer_data->ups == -1){
+						current_map = 0;
+						SetState(StateGameOver);
+					}else{
 						if (is_on_boss != -1){
 							SetState(StateBoss);							
 						}else{						
-							current_map = 0;
 							if(current_level < 3){
 								SetState(StateGame);
 							}else if (current_level < 6){
@@ -236,6 +237,7 @@ void Update_SpritePlayer() {
 			MoveArcher();
 			if (hit_cooldown == 0){
 				platform_vx = 0;
+				platform_vy = 0;
 				hit_cooldown = 24;
 				if(KEY_PRESSED(J_A)) {
 					Jump();
@@ -251,11 +253,9 @@ void Update_SpritePlayer() {
 		if(archer_accel_y < 24) {
 			archer_accel_y += 1;
 		}
-		//tile_collision = TranslateSprite(THIS, platform_vx, archer_accel_y  >> 4 );
 		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
 		if(tile_collision == 0 & delta_time != 0 & archer_accel_y < 24) { //Do another iteration if there is no collision
 			archer_accel_y += 2;
-			//tile_collision = TranslateSprite(THIS, platform_vx, archer_accel_y >> 4);
 			tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
 		}
 		if(tile_collision) {
@@ -360,6 +360,8 @@ void Update_SpritePlayer() {
 				}
 				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
 				platform_vx = datap->vx;
+				platform_vy = datap->vy;
+				THIS->y = ispr->y-3;
 			}
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
@@ -367,38 +369,42 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder  || ispr->type == SpriteIbex) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
-				if(is_on_boss == 0){
-					if (dataenemy->enemy_state == ENEMY_STATE_WAIT){
-						if (ispr->x > THIS->x){
-							THIS->x -= 1;
-						}else{
-							THIS->x += 1;
-						}
-						is_on_boss = 1;						
-						if(KEY_TICKED(J_A)){
-							if (KEY_PRESSED(J_UP)){		
-								Build_Next_Dialog();	
+				switch(is_on_boss){
+					case 0:
+						if (dataenemy->enemy_state == ENEMY_STATE_WAIT){
+							if (ispr->x > THIS->x){
+								THIS->x -= 1;
+							}else{
+								THIS->x += 1;
 							}
-						}						
-						return;
-					}
-					if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
-						if (ispr->x > THIS->x){
-							THIS->x -= 1;
-						}else{
-							THIS->x += 1;
+							is_on_boss = 1;						
+							if(KEY_TICKED(J_A)){
+								if (KEY_PRESSED(J_UP)){		
+									Build_Next_Dialog();	
+								}
+							}						
+							return;
 						}
-						is_on_boss = 2;				
-						if(KEY_TICKED(J_A)){
-							if (KEY_PRESSED(J_UP)){		
-								Build_Next_Dialog();	
+						if(ispr->type == SpriteEagle & dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+							return;
+						}
+					break;
+					case 1:
+						if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
+							if (ispr->x > THIS->x){
+								THIS->x -= 1;
+							}else{
+								THIS->x += 1;
 							}
-						}						
-						return;
-					}
-					if(ispr->type == SpriteEagle & dataenemy->enemy_state != ENEMY_STATE_ATTACK){
-						return;
-					}
+							is_on_boss = 2;
+							if(KEY_TICKED(J_A)){
+								if (KEY_PRESSED(J_UP)){		
+									Build_Next_Dialog();	
+								}
+							}						
+							return;
+						}
+					break;
 				}
 				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
 					return;
@@ -556,12 +562,13 @@ void Jump() {
 }
 
 void MoveArcher() {
-	if(platform_vx){
-		if(archer_state == STATE_NORMAL_PLATFORM){
-			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 0);
+	if(platform_vx || platform_vy){
+		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);	
+		/*if(archer_state == STATE_NORMAL_PLATFORM){
+			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
 		}else{
 			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 1);	
-		}		
+		}*/		
 	}
 	if(KEY_PRESSED(J_LEFT)) {
 		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
@@ -586,14 +593,6 @@ void MoveArcher() {
 }
 
 void CheckCollisionTile() {
-	/*if (tile_collision != 111u & tile_collision != 119u){
-		if (platform_vx > 0){
-			platform_vx--;
-		}
-		if (platform_vx < 0){
-			platform_vx++;
-		}
-	}*/
 	switch(tile_collision) {
 		case 2u:
 		case 20u:
@@ -647,8 +646,9 @@ void CheckCollisionTile() {
 			load_next_s = -1;
 		break;
 		case 40u: //instant death
-			archer_data->hp = 0;
-			Die();
+			//archer_data->hp = 0;
+			//Die();
+			archer_data->hp--;
 		break;
 		case 41u: //next map
 			load_next = 1;

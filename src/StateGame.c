@@ -41,7 +41,7 @@ const UINT16 sprites_palette[] = {
 };
 
 UINT8 amulet = 0u;
-UINT8 coins = 30u;
+UINT8 coins = 0u;
 INT8 ups = 3;
 INT8 hp = 100;
 INT8 archer_tool = 0;
@@ -49,8 +49,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 3u;
-UINT8 current_map = 0u;
+UINT8 current_level = 4u; // 0u default
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -214,7 +214,6 @@ void Start_StateGame() {
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
 						scrigno_up = spawn_item(scrigno_up, 46u, 0u, 3, 1);
-						scrigno_dcoin = spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
 					}
 				break;
 			}
@@ -450,6 +449,7 @@ void Update_StateGame() {
 			switch(current_map){
 				case 0:
 					if (scroll_target->x == (UINT16) 5u << 3){
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
 						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
 					}

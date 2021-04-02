@@ -22,7 +22,7 @@ const UINT8 arrow_stone_g[] = {1, 12};
 const UINT8 arrow_blast_g[] = {1, 13};
 const UINT8 arrow_fire_g[] = {1, 14};
 const UINT8 spine[] = {1, 15};
-
+INT8 maxarrows = 0;
 UINT8 tile_a_collision;
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
@@ -44,9 +44,16 @@ void Start_SpriteArrow() {
 	data->original_type = 0;
 	data->arrowdir = -1;
 	data->counter = 0;
+	if(maxarrows <= 5){
+		maxarrows++;
+	}
 }
 
 void Update_SpriteArrow() {
+	if(maxarrows>5){
+		SpriteManagerRemove(THIS_IDX);
+		return;
+	}
 	UINT8 scroll_a_tile;
 	struct Sprite* iaspr;
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
@@ -256,4 +263,5 @@ void CheckCollisionArrowTile() {
 
 
 void Destroy_SpriteArrow() {
+	maxarrows--;
 }

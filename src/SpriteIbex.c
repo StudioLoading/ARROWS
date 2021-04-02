@@ -136,13 +136,15 @@ void Update_SpriteIbex() {
 				}
 				SpriteManagerRemoveSprite(ibbspr);
 				if (ibex_data->hp <= 0){
+					ibex_data->enemy_state = ENEMY_STATE_DEAD;
 					ibex_data->hp = 0;
+					THIS->x = (UINT16) 24u << 3;
+					THIS->y = (UINT16) 14u << 3;
 					SetSpriteAnim(THIS, ibex_dead, 16u);
-					struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (THIS->x)-8, (THIS->y)-8);
+					struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 23u, (UINT16) 14u);
 					struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
 					datak->type = 3;
 					datak->setup = 1;
-					ibex_data->enemy_state = ENEMY_STATE_DEAD;
 				}
 			}
 		}

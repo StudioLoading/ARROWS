@@ -32,7 +32,9 @@ struct PlatformInfo {
 	UINT8 distance;
 	UINT8 step;
 	UINT16 initx;
+	UINT16 inity;
 	INT8 vx;
+	INT8 vy;
 };
 struct ItemInfo{
 	UINT8 collided;
