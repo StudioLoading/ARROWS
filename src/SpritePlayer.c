@@ -649,6 +649,7 @@ void CheckCollisionTile() {
 			//archer_data->hp = 0;
 			//Die();
 			archer_data->hp--;
+			archer_data->hp--;
 		break;
 		case 41u: //next map
 			load_next = 1;

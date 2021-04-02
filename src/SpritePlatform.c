@@ -19,19 +19,18 @@ void Start_SpritePlatform() {
 	SetSpriteAnim(THIS, platform_normal, 8u);
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	data_platform->type = 0;
-	data_platform->distance = 240;
+	data_platform->distance = 200;
 	data_platform->step = 0;
 	data_platform->initx = THIS->x;
-	data_platform->inity = THIS->y;
 }
 
 void Update_SpritePlatform() {
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	UINT8 r = 0x1;//2;
-	if (data_platform->step < 30 | data_platform->step > 170){
+	if (data_platform->step < 30 || data_platform->step > 170){
 		r=0x7;//8;
 	}
-	if(data_platform->step > 70 & data_platform->step < 130){
+	if(data_platform->step > 70 && data_platform->step < 130){
 		r=0x7;//8;
 	}
 	if ((data_platform->step & r) == 0){
@@ -46,17 +45,18 @@ void Update_SpritePlatform() {
 		data_platform->vx = 0;
 		data_platform->vy = 0;
 	}
-	if (data_platform->type == 0){
-		data_platform->vy = 0;
-	}else{
+	
+	if (data_platform->type){// <>0 means its vertical
 		data_platform->vx = 0;
+	}else{
+		data_platform->vy = 0;
 	}
 	TranslateSprite(THIS, data_platform->vx, data_platform->vy);
+	
 	data_platform->step += 1;
 	if (data_platform->step >= data_platform->distance){
 		data_platform->step = 0;
 		THIS->x = data_platform->initx;		
-		THIS->y = data_platform->inity;
 	}
 }
 

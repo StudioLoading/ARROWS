@@ -88,7 +88,8 @@ void Start_StateSecret() {
 		scrigno_up = spawn_item(scrigno_up, 6u, 14u, 3, 1);
 		scrigno_dcoin = spawn_item(scrigno_dcoin, 8u, 14u, 7, 1);
 	}
-	if ((current_level == 0u & current_map == 1u) | (current_level == 1u & current_map == 0u) | (current_level == 2u & current_map == 0u)){
+	if ((current_level == 0u & current_map == 1u) || (current_level == 1u & current_map == 0u) 
+		|| (current_level == 2u & current_map == 0u) || (current_level == 4u & current_map == 0u)){
 		scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 14u, 7, 1);
 		scrigno_shield = spawn_item(scrigno_shield, 8u, 14u, 2, 1);
 	}

@@ -1,17 +1,17 @@
 problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. Dovrei chiedere suggerimento sul Discord
 
+Livl 4 Map 0 
+	non prende lo spawn dei rat al 14;40
+	il ritorno dal secret non è sulla freccia giusta ma sul tile di inizio mappa !s
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
-LIV 4 MOUNTAINS + GROTTA CON STALATITI E STALAGMITI -> ??? tool di uscita
-LIV 5 VECCHIA FABBRICA -> ??? -> water
+LIV 4 MOUNTAINS -> ??? tool di uscita
+LIV 5 GROTTA CON STALATITI E STALAGMITI -> ??? -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
-
-
-Platform che vada in alto e in basso oltre che dx sx
 
 devo fare un dialogo apposta per mostrare l' amuleto per bene in grande quando lo prendo
 
@@ -27,6 +27,8 @@ map3tree ha un uccello che spawna in screen
 state di inizio ogni nuovo livello, sarà un tileset magari con una bella immagine a tutto schermo, tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
 
 schermata di scelta livello / mappa !
+
+intro iniziale con poesia su una pergamena di carta !
 
 CONTROLLO di tutti i suggerimenti/dialoghi
 RIPRISTINARE IL SISTEMA DI DIALOGO CON BOSS IN WAIT, è figo.
@@ -82,10 +84,26 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 
 DISCORD MARKDOWN: ```c ```
 
-```c 
-
-extern UINT8* credits_mod_Data[];
+```c
 ...
-PlayMusic(credits_mod_Data, 11, 1);
+INT8 maxarrows = 0;
+...
+void Start_SpriteArrow() {
+...
+	if(maxarrows <= 5){
+		maxarrows++;
+	}
+..}
+
+void Update_SpriteArrow() {
+	if(maxarrows>5){
+		SpriteManagerRemove(THIS_IDX);
+		return;
+	}
+	...
+}
+void Destroy_SpriteArrow() {
+	maxarrows--;
+}
 
 ```

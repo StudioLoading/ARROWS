@@ -50,10 +50,6 @@ void Start_SpriteArrow() {
 }
 
 void Update_SpriteArrow() {
-	if(maxarrows>5){
-		SpriteManagerRemove(THIS_IDX);
-		return;
-	}
 	UINT8 scroll_a_tile;
 	struct Sprite* iaspr;
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
@@ -100,6 +96,11 @@ void Update_SpriteArrow() {
 		}
 	}
 	
+	if(maxarrows > 5){
+		SpriteManagerRemoveSprite(THIS);
+		//SpriteManagerRemove(THIS_IDX);
+		return;
+	}
 }
 
 void SetupArrow(){
