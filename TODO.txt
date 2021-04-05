@@ -1,3 +1,5 @@
+alleggerire il background, usare un solo colore.
+
 problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. Dovrei chiedere suggerimento sul Discord
 
 Livl 4 Map 0 

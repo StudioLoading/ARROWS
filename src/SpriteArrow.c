@@ -6,6 +6,12 @@
 #include "SpriteManager.h"
 #include "custom_datas.h"
 
+
+struct Arrows{
+	UINT8 ids[5];
+    INT8 falen;
+};
+
 const UINT8 arrow_normal[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 arrow_water[] = {1, 1};
 const UINT8 arrow_stone[] = {1, 2};
@@ -22,13 +28,17 @@ const UINT8 arrow_stone_g[] = {1, 12};
 const UINT8 arrow_blast_g[] = {1, 13};
 const UINT8 arrow_fire_g[] = {1, 14};
 const UINT8 spine[] = {1, 15};
-INT8 maxarrows = 0;
 UINT8 tile_a_collision;
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
+extern struct ArcherInfo * archer_data;
+UINT8 ids[4] = {0,0,0,0};
+INT8 falen = 0;
+
 void SetupArrow();
 void CheckCollisionArrowTile();
-
+void FApush(UINT8 new_val);
+void FApop();
 
 void Start_SpriteArrow() {
 	
@@ -44,12 +54,36 @@ void Start_SpriteArrow() {
 	data->original_type = 0;
 	data->arrowdir = -1;
 	data->counter = 0;
-	if(maxarrows <= 5){
-		maxarrows++;
+
+	FApush(THIS_IDX);
+}
+
+void FApush(UINT8 new_val){
+	archer_data->hp--;//falen;
+	if (falen < 4){
+		ids[falen] = new_val;
+	}else{
+		FApop();
+		ids[0] = new_val;
 	}
+	falen++;
+	archer_data->coins = falen;
+}
+
+void FApop(){
+	if (falen){
+		falen--;
+	}
+	archer_data->coins = falen;
+	SpriteManagerRemove(ids[falen]);
+	//ids[4] = ids[3];
+	ids[3] = ids[2];
+	ids[2] = ids[1];
+	ids[1] = ids[0];
 }
 
 void Update_SpriteArrow() {
+	
 	UINT8 scroll_a_tile;
 	struct Sprite* iaspr;
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
@@ -96,11 +130,6 @@ void Update_SpriteArrow() {
 		}
 	}
 	
-	if(maxarrows > 5){
-		SpriteManagerRemoveSprite(THIS);
-		//SpriteManagerRemove(THIS_IDX);
-		return;
-	}
 }
 
 void SetupArrow(){
@@ -264,5 +293,5 @@ void CheckCollisionArrowTile() {
 
 
 void Destroy_SpriteArrow() {
-	maxarrows--;
+	FApop();
 }

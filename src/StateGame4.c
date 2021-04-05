@@ -175,10 +175,11 @@ void Start_StateGame4() {
 		case 4u:
 			SpriteManagerLoad(SpritePlatform);
 			SpriteManagerLoad(SpriteRat);
+			SpriteManagerLoad(SpriteSpider);
 			if(current_map == 0){
 				snake1 = spawn_enemy4(snake1, SpriteRat, 3u, 5u);	
 				snake2 = spawn_enemy4(snake2, SpriteRat, 6u, 5u);	
-				snake3 = spawn_enemy4(snake3, SpriteRat, 7u, 5u);	
+				snake3 = spawn_enemy4(snake3, SpriteSpider, 7u, 5u);	
 				snake4 = spawn_enemy4(snake4, SpriteRat, 14u,5u);		
 			}
 		break;
@@ -357,20 +358,17 @@ void Update_StateGame4() {
 							scrigno_shield = spawn_item4(scrigno_shield, 31u, 17u, 2, 1);
 							snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
 						}
-						if(scroll_target->x == (UINT16) 33u << 3 && scroll_target->y ==(UINT16) 36u << 3 ){
+						if(scroll_target->x == (UINT16) 33u << 3 && scroll_target->y == (UINT16) 36u << 3 ){
 							snake2 = spawn_vplatform4(snake2, SpritePlatform, 37u, 43u);
 							snake1 = spawn_vplatform4(snake1, SpritePlatform, 42u, 51u);
 						}
-						if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y ==(UINT16) 60u << 3 ){
-							snake4 = spawn_enemy4(snake4, SpriteRat, (scroll_target->x >> 3), (scroll_target->y >> 3) - 4u);
+						if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y == (UINT16) 60u << 3 ){
+							snake3 = spawn_enemy4(snake3, SpriteRat, (scroll_target->x >> 3) -8u, (scroll_target->y >> 3) - 4u);
+							snake4 = spawn_enemy4(snake4, SpriteSpider, (UINT16) 20u, (UINT16) 58u);
 						}
-						if(scroll_target->x == (UINT16) 23u << 3 && scroll_target->y ==(UINT16) 60u << 3 ){
-							snake1 = spawn_enemy4(snake1, SpriteRat, (scroll_target->x >> 3), (scroll_target->y >> 3) -4u);
+						if(scroll_target->x == (UINT16) 23u << 3 && scroll_target->y == (UINT16) 60u << 3 ){
+							snake1 = spawn_enemy4(snake1, SpriteRat, (scroll_target->x >> 3) + 6u, (scroll_target->y >> 3) -4u);
 							snake2 = spawn_enemy4(snake2, SpriteRat, (scroll_target->x >> 3) - 8u, (scroll_target->y >> 3) -4u);
-						}
-						if(scroll_target->x == (UINT16) 15u << 3 && scroll_target->y ==(UINT16) 60u << 3 ){
-							snake3 = spawn_enemy4(snake3, SpriteRat, (scroll_target->x >> 3), (scroll_target->y >> 3) - 4u);
-							snake4 = spawn_enemy4(snake4, SpriteRat, (scroll_target->x >> 3) - 8u, (scroll_target->y >> 3) -4u);
 						}
 					break;
 				}
