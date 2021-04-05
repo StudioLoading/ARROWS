@@ -1,9 +1,6 @@
-alleggerire il background, usare un solo colore.
-
 problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. Dovrei chiedere suggerimento sul Discord
 
-Livl 4 Map 0 
-	non prende lo spawn dei rat al 14;40
+map50
 	il ritorno dal secret non è sulla freccia giusta ma sul tile di inizio mappa !s
 
 LIV 0 ZOO -> Wolf -> tool per uscita
@@ -21,8 +18,8 @@ devo fare lo state di inventario, con questa scusa metto le descrizioni e miniat
 
 bisogna pensare ad un maggior replay value: potrebbero esserci delle warp zone nelle stanze segrete (così posso usare lo SpriteGate dandogli la vx->fire) 
 il cui accesso è possibile solo rompendo un gate di fuoco ? Dato che il fuoco me lo da solo il boss finale ...
-ecco: la prima volta che incontro il boss finale, lui non muore, e mi rispedisce allo zoo. Nella secret delle fogne metto sta cosa, così c'è warp che mi porta al VERO ultimo stage,
-con di nuovo il boss finale, ma più incazzato.
+ecco: la prima volta che incontro il boss finale, lui non muore, e mi rispedisce allo zoo. Nella secret dello zoo metto sta cosa, così c'è warp che mi porta al VERO ultimo stage,
+con di nuovo il boss finale, ma più incazzato, e sensibile solo alle frecce di fuoco + pietra
 
 map3tree ha un uccello che spawna in screen
 
@@ -39,16 +36,17 @@ Cheat in titleScreen KonamiCode
 	99 lives
 	tutti gli amuleti
 
-per evitare i glitch quando ho troppe frecce in screen, dovrei mettere un contatore in RAM, direi dallo SpritePlayer,
-che ogni freccia che lasce fa +1, ad ogni destroy fa -1, e raggiunto un limite massimo non scocca più.
-
-LA MORTE NEL BOSS DEVE FAR RIPARTIRE DAL LIVELLO BOSS, NON DALLA MAPPA
-
 GAMEOVER RESTYLED
 
 SOUND EFFECT DI 1UP
 SOUND EFFECT DI SHIELD
 SOUND EFFECT DI EXIT SENZA TOOL
+
+
+RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
+SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
+
+TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
 
 
 SOSTITUZIONE TILES DI MAPPA:
@@ -67,10 +65,6 @@ la condizione dell' if è sempre vera anche se a video non vedo più il coin.
 
 DEATHMATCH CON LINK
 
-RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
-SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
-
-TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
 
 RESTYLE DEL BORDO sgb A PARTIRE DA COVER E LOGO DI KATALIN. fUNZIONA TUTTO, è NELLA CARTELLA C:\GB\ZGBNEW\tools\border\
 
