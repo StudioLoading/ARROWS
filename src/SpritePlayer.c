@@ -648,8 +648,7 @@ void CheckCollisionTile() {
 		case 40u: //instant death
 			//archer_data->hp = 0;
 			//Die();
-			archer_data->hp--;
-			archer_data->hp--;
+			archer_data->hp-=5;
 			Hit();
 		break;
 		case 41u: //next map
