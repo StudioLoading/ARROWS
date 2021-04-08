@@ -71,6 +71,7 @@ const UINT8 collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18,
 
 void WriteBBOSSHP();
 void populate_boss0();
+void SpawnReward();
 
 void Start_StateBoss() {
 
@@ -225,9 +226,9 @@ void Update_StateBoss() {
 
 		if (boss_hp != boss_data_b->hp){
 			boss_hp = boss_data_b->hp;
-			if (boss_hp <= 0){
-				boss_hp = 0;
-				boss_data_b->hp = 0;
+			if (boss_hp <= 0 && is_on_boss != 2){
+				is_on_boss = 2;
+				SpawnReward();
 			}
 			WriteBBOSSHP();		
 		}
@@ -285,6 +286,39 @@ void Update_StateBoss() {
 	}
 	
 	
+}
+
+void SpawnReward(){
+	struct Sprite* reward = 0;
+	if (current_level_b == 0u){// wolf -> wrench
+		reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
+		struct ItemInfo* datakk = (struct ItemInfo*)reward->custom_data;
+		datakk->type = 2;
+		datakk->setup = 1u;
+	}else if (current_level_b == 1u){ // gator -> amulet stone
+		reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 32u << 3, (UINT16) 13u << 3);
+		struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
+		datak->type = 2;
+		datak->setup = 1;
+	}else if (current_level_b == 2u){ // eagle -> key
+		reward = SpriteManagerAdd(SpriteKey, (UINT16) 9u << 3, (UINT16) 14u << 3);
+		struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
+		datak->type = 1;
+		datak->setup = 1;
+	}else if (current_level_b == 3u){ // ibex -> amulet thunder
+		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 23u, (UINT16) 14u);
+		struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
+		datak->type = 3;
+		datak->setup = 1;
+	}
+	/*
+	case 4u: // ??? -> wrench
+	break;		
+	case 5u: // tusk -> water amulet
+	break;
+	case 6u: // knight -> fire amulet + end game
+	break;
+	*/
 }
 
 void WriteBBOSSHP(){

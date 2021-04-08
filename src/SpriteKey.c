@@ -13,7 +13,6 @@ const UINT8 key_key[] = {1, 2}; //The first number indicates the number of frame
 
 
 void Start_SpriteKey() {
-
 	struct ItemInfo* keydata = (struct ItemInfo*)THIS->custom_data;
 	keydata->item_accel_y = 0;
 	keydata->type = 0;
@@ -29,7 +28,6 @@ void Update_SpriteKey() {
 	
 	struct ItemInfo* keydata = (struct ItemInfo*)THIS->custom_data;
 	if(keydata->setup){
-		keydata->vx = 0;
 		switch(keydata->type){
 			case 1: //key
 				SetSpriteAnim(THIS, key_key, 8u);
@@ -43,10 +41,10 @@ void Update_SpriteKey() {
 	if(keydata->item_accel_y < 24) {
 		keydata->item_accel_y += 1;
 	}
-	keydata->tile_i_collision = TranslateSprite(THIS, keydata->vx, keydata->item_accel_y >> 4);
+	keydata->tile_i_collision = TranslateSprite(THIS, 0, keydata->item_accel_y >> 4);
 	if(!keydata->tile_i_collision && delta_time != 0 && keydata->item_accel_y < 24) { //Do another iteration if there is no collision
 		keydata->item_accel_y += 2;
-		keydata->tile_i_collision = TranslateSprite(THIS, keydata->vx, keydata->item_accel_y >> 4);
+		keydata->tile_i_collision = TranslateSprite(THIS, 0, keydata->item_accel_y >> 4);
 	}
 	
 }

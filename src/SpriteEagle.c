@@ -161,10 +161,6 @@ void Update_SpriteEagle() {
 						data->enemy_accel_y = 0;
 						NR50_REG = 0x55; //Max volume		
 						PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-						struct Sprite* key_s = SpriteManagerAdd(SpriteKey, 9 << 3, 14 << 3);
-						struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
-						datak->type = 1;
-						datak->setup = 1;
 					}
 					SpriteManagerRemoveSprite(ibispr);
 				}

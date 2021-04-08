@@ -78,7 +78,6 @@ const struct MapInfo* map_5[] = {
 //Levels
 const struct MapInfo** maps4[] = {map_4, map_5};
 
-
 const UINT16 bg_palette4[] = {PALETTE_FROM_HEADER(tiles4)};
 
 UINT8 thunder_delay = 16u;

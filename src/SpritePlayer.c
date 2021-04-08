@@ -396,7 +396,6 @@ void Update_SpritePlayer() {
 							}else{
 								THIS->x += 1;
 							}
-							is_on_boss = 2;
 							if(KEY_TICKED(J_A)){
 								if (KEY_PRESSED(J_UP)){		
 									Build_Next_Dialog();	

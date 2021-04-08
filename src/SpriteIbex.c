@@ -141,10 +141,6 @@ void Update_SpriteIbex() {
 					THIS->x = (UINT16) 24u << 3;
 					THIS->y = (UINT16) 14u << 3;
 					SetSpriteAnim(THIS, ibex_dead, 16u);
-					struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 23u, (UINT16) 14u);
-					struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
-					datak->type = 3;
-					datak->setup = 1;
 				}
 			}
 		}

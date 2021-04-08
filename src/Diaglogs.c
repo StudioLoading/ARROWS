@@ -201,7 +201,7 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								memcpy(d4, "FREE US ALL!", 18);								
 								struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, archer->x + 16u, archer->y);
 								struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
-								datakey->type = 2;
+								datakey->type = 1;
 								datakey->setup = 1u;
 								diag_found = 0;		
 							}
@@ -223,7 +223,7 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							}
 						}
 						if(diag_found){
-							if (archer_data->tool){							
+							if (archer_data->tool){
 								memcpy(d1, "THE ONLY WAY", 18);
 								memcpy(d2, "IS UP !!", 18);
 								memcpy(d3, "", 18);
@@ -231,8 +231,8 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							}else{							
 								memcpy(d1, "BLEAH !!", 18);
 								memcpy(d2, "THE DEEPEST", 18);
-								memcpy(d3, "THE WORST IS GETTING", 18);
-								memcpy(d4, "", 18);	
+								memcpy(d3, "THE WORST IS", 18);
+								memcpy(d4, "GETTING", 18);
 							}
 							diag_found = 0;
 						}

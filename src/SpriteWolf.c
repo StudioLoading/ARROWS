@@ -16,7 +16,6 @@ const UINT8 wolf_hit[] = {2, 6, 5}; //The first number indicates the number of f
 const UINT8 wolf_dead[] = {1, 7}; //The first number indicates the number of frames
 
 INT8 jump_i = 0;
-
 struct EnemyInfo* wolf_data ;
 
 void CheckCollisionBTile();
@@ -110,7 +109,7 @@ void Update_SpriteWolf() {
 			}
 		}
 		if(ibspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, ibspr) & wolf_data->enemy_state != ENEMY_STATE_DEAD) {
+			if(CheckCollision(THIS, ibspr) && wolf_data->enemy_state != ENEMY_STATE_DEAD) {
 				if(wolf_data->enemy_state == ENEMY_STATE_JUMPING){ 
 					struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibspr->custom_data;
 					if (arrowdata->arrowdir != 1){ //hit solo se freccia non orizzontale
@@ -125,10 +124,6 @@ void Update_SpriteWolf() {
 				if (wolf_data->hp <= 0){
 					wolf_data->hp = 0;
 					SetSpriteAnim(THIS, wolf_dead, 16u);
-					struct Sprite* key_s = SpriteManagerAdd(SpriteKey, (THIS->x)-8, (THIS->y)-8);
-					struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
-					datak->type = 2;
-					datak->setup = 1;
 					wolf_data->enemy_state = ENEMY_STATE_DEAD;
 				}
 			}

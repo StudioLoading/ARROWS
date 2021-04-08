@@ -8,7 +8,7 @@ LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 MOUNTAINS -> ??? tool di uscita
-LIV 5 GROTTA CON STALATITI E STALAGMITI -> ??? -> water
+LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
 
