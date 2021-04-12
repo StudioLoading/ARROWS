@@ -130,7 +130,11 @@ void Update_StateSecret() {
 			break;
 			case -1: //torno dalla secret a game
 				//load_next_s = 0;
-				SetState(StateGame);
+				if(current_level < 3){
+					SetState(StateGame);	
+				}else if (current_level < 6){
+					SetState(StateGame4);
+				}				
 			break;
 		}
 	}
