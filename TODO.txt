@@ -1,13 +1,18 @@
-problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. Dovrei chiedere suggerimento sul Discord
+Dovrei chiedere suggerimento sul Discord ZGB:
+	- problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. 
+	- crash a caso a seguito di spawn di sprite
 
-map50
-	il ritorno dal secret non è sulla freccia giusta ma sul tile di inizio mappa !s
+
+map3tree ha un uccello che spawna in screen
+
+RIPRISTINARE IL SISTEMA DI DIALOGO CON BOSS IN WAIT, è figo.
+
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
-LIV 4 MOUNTAINS -> ??? tool di uscita
+LIV 4 TREES -> ??? tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
@@ -21,7 +26,6 @@ il cui accesso è possibile solo rompendo un gate di fuoco ? Dato che il fuoco m
 ecco: la prima volta che incontro il boss finale, lui non muore, e mi rispedisce allo zoo. Nella secret dello zoo metto sta cosa, così c'è warp che mi porta al VERO ultimo stage,
 con di nuovo il boss finale, ma più incazzato, e sensibile solo alle frecce di fuoco + pietra
 
-map3tree ha un uccello che spawna in screen
 
 state di inizio ogni nuovo livello, sarà un tileset magari con una bella immagine a tutto schermo, tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
 
@@ -30,7 +34,6 @@ schermata di scelta livello / mappa !
 intro iniziale con poesia su una pergamena di carta !
 
 CONTROLLO di tutti i suggerimenti/dialoghi
-RIPRISTINARE IL SISTEMA DI DIALOGO CON BOSS IN WAIT, è figo.
 
 Cheat in titleScreen KonamiCode
 	99 lives
@@ -63,10 +66,9 @@ la sostituzione la fa, però se esco e rientro con la videata di scroll la tile 
 in più se è tipo un coin, questo mantiere le sue funzionalità di pickup, cioè
 la condizione dell' if è sempre vera anche se a video non vedo più il coin.
 
-DEATHMATCH CON LINK
 
 
-RESTYLE DEL BORDO sgb A PARTIRE DA COVER E LOGO DI KATALIN. fUNZIONA TUTTO, è NELLA CARTELLA C:\GB\ZGBNEW\tools\border\
+BORDO sgb C:\GB\ZGBNEW\tools\border\
 
 
 POTREI EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI

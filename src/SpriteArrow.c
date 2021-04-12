@@ -31,12 +31,14 @@ const UINT8 spine[] = {1, 15};
 UINT8 tile_a_collision;
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
-UINT8 ids[4] = {0,0,0,0};
+//UINT8 ids[4] = {0,0,0,0};
+struct Sprite * ids[4] = {0,0,0,0};
 INT8 falen = 0;
 
 void SetupArrow();
 void CheckCollisionArrowTile();
-void FApush(UINT8 new_val);
+//void FApush(UINT8 new_val);
+void FApush();
 void FApop();
 
 void Start_SpriteArrow() {
@@ -54,15 +56,17 @@ void Start_SpriteArrow() {
 	data->arrowdir = -1;
 	data->counter = 0;
 
-	FApush(THIS_IDX);
+	FApush();
 }
 
-void FApush(UINT8 new_val){
+void FApush(){
 	if (falen < 4){
-		ids[falen] = new_val;
+		//ids[falen] = new_val;
+		ids[falen] = THIS;
 	}else{
 		FApop();
-		ids[0] = new_val;
+		//ids[0] = new_val;
+		ids[0] = THIS;
 	}
 	falen++;
 }
@@ -71,7 +75,8 @@ void FApop(){
 	if (falen){
 		falen--;
 	}
-	SpriteManagerRemove(ids[falen]);
+	//SpriteManagerRemove(ids[falen]);
+	SpriteManagerRemoveSprite(ids[falen]);
 	//ids[4] = ids[3];
 	ids[3] = ids[2];
 	ids[2] = ids[1];
