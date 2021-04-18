@@ -644,10 +644,10 @@ void CheckCollisionTile() {
 		case 19u: //exit secret room
 			load_next_s = -1;
 		break;
-		case 40u: //instant death
+		case 40u: //skull of death
 			//archer_data->hp = 0;
 			//Die();
-			archer_data->hp-=5;
+			archer_data->hp-=8;
 			Hit();
 		break;
 		case 41u: //next map

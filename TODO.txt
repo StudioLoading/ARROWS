@@ -1,6 +1,7 @@
+CRASH SECRET level 4 map 1 player invisibile e inattività totale
+
 Dovrei chiedere suggerimento sul Discord ZGB:
 	- problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. 
-	- crash a caso a seguito di spawn di sprite
 
 
 map3tree ha un uccello che spawna in screen
@@ -12,7 +13,7 @@ LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
-LIV 4 TREES -> ??? tool di uscita
+LIV 4 TREES -> Bear tool di uscita C:\GB\ZGBNEW\ZGB-template-master\altro
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 

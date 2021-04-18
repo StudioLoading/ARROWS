@@ -84,7 +84,8 @@ void Start_StateSecret() {
 	ShowWindow();
 	
 	//ITEMS
-	if ((current_level == 0u & current_map == 0u) | (current_level == 1u & current_map == 1u)){
+	if ((current_level == 0u & current_map == 0u) || (current_level == 1u & current_map == 1u) ||
+		(current_level == 4u & current_map == 1u)){
 		scrigno_up = spawn_item(scrigno_up, 6u, 14u, 3, 1);
 		scrigno_dcoin = spawn_item(scrigno_dcoin, 8u, 14u, 7, 1);
 	}
