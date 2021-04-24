@@ -366,7 +366,8 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
-			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder  || ispr->type == SpriteIbex) {
+			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder || ispr->type == SpriteIbex
+			|| ispr->type == SpriteBear) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
@@ -409,7 +410,9 @@ void Update_SpritePlayer() {
 					return;
 				}
 				UINT8 being_hit = 1u;
-				if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator && ispr->type != SpriteIbex){
+				if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
+					&& ispr->type != SpriteEagle
+					&& ispr->type != SpriteIbex && ispr->type != SpriteBear){
 					if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
 						if (ispr->x < THIS->x){
 							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
@@ -443,6 +446,7 @@ void Update_SpritePlayer() {
 						case SpriteWolf:
 						case SpriteAlligator:
 						case SpriteIbex:
+						case SpriteBear:
 							enemydamage = 20;
 							THIS->y--;
 						break;

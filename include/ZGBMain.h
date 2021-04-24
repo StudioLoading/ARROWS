@@ -30,6 +30,7 @@ _SPRITE_DMG(SpriteBird, bird)\
 _SPRITE_DMG(SpriteGate, gate)\
 _SPRITE_DMG(SpriteEagle, eagle)\
 _SPRITE_DMG(SpriteIbex, ibex)\
+_SPRITE_DMG(SpriteBear, bear)\
 SPRITE_DEF_END
 
 

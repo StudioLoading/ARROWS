@@ -7,6 +7,7 @@
 #include "../res/src/mapboss1.h"
 #include "../res/src/mapboss2.h"
 #include "../res/src/mapboss3.h"
+#include "../res/src/mapboss4.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -46,7 +47,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
+UINT8 current_level_b = 4u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {
@@ -61,13 +62,16 @@ const struct MapInfo* boss_2[] = {
 const struct MapInfo* boss_3[] = {
 	&mapboss3
 };
-const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2, boss_3};
+const struct MapInfo* boss_4[] = {
+	&mapboss4
+};
+const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4};
 
 struct Sprite* boss = 0;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
 
-const UINT8 collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -104,6 +108,12 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
 		break;
+		case 4u:
+			level_tool=0;
+			SpriteManagerLoad(SpriteBear);
+			SpriteManagerLoad(SpriteKey);
+			SpriteManagerLoad(SpritePlatform);
+		break;
 	}
 	
 	SHOW_SPRITES;
@@ -134,6 +144,7 @@ void Start_StateBoss() {
 	struct Sprite* scrigno_sprite_boss = 0;
 	struct Sprite* gate_sprite = 0;
 	struct EnemyInfo* gatedata = 0;
+	struct Sprite* platform_sprite = 0;
 	is_on_boss = 0;
 	//INIT BOSS
 	switch(current_level_b){
@@ -155,17 +166,22 @@ void Start_StateBoss() {
 			datascrigno2->setup = 1u;
 		break;
 		case 2u:
-			boss = SpriteManagerAdd(SpriteEagle, 9 << 3, 14 << 3);
+			boss = SpriteManagerAdd(SpriteEagle, (UINT16) 9u << 3, (UINT16) 14u << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 		break;
 		case 3u:
-			boss = SpriteManagerAdd(SpriteIbex, 24 << 3, 12 << 3);
+			boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 			gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
 			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 			gatedata->vx = 4;
+		case 4u:
+			boss = SpriteManagerAdd(SpriteBear, (UINT16) 24u << 3, (UINT16) 12u << 3);
+			boss_data_b = (struct EnemyInfo*)boss->custom_data;
+			boss_hp = boss_data_b->hp;
+			platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 21u << 3,  (UINT16) 13u << 3);
 		break;
 	}
 	
@@ -252,6 +268,15 @@ void Update_StateBoss() {
 	
 	/*PRINT_POS(13,2);
 	Printf("%u", gate_sprite->x);*/
+	
+	//SPAWN
+	if(current_level_b == 4){
+		if ((scroll_target->x == (UINT16) 16u << 3 || scroll_target->x == (UINT16) 17u << 3) 
+			&& scroll_target->y == (UINT16) 2u << 3){
+				//spawna scrigno
+			}
+	}
+	
 	
 	//MOVING BACKGROUND TILES	
 	if (current_level_b == 1 & current_map_b == 0){
