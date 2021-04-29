@@ -257,6 +257,22 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					break;
 				}
 			break;
+			case 4:
+				if (tile_collision == 7u){
+					memcpy(d1, "THERE IS TOO", 18);
+					memcpy(d2, "MUCH SILENCE", 18);
+					memcpy(d3, "FROM HERE ON.", 18);
+					memcpy(d4, "", 18);
+					PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
+					diag_found = 0;
+				}else{							
+					memcpy(d1, "I HAVE TO GO", 18);
+					memcpy(d2, "BACK ON THE", 18);
+					memcpy(d3, "PATH TO THE", 18);
+					memcpy(d4, "CASTLE !", 18);
+					diag_found = 0;
+				}
+			break;
 		}
 	}
 	return diag_found;

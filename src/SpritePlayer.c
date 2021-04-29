@@ -633,7 +633,7 @@ void CheckCollisionTile() {
 			}
 		break;
 		case 8u: //fine boss!
-			if(current_level_b == 0 | current_level_b == 2){
+			if(current_level_b == 0 || current_level_b == 2 || current_level_b == 4){
 				if(!archer_data->tool){
 					return;
 				}
