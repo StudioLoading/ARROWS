@@ -226,7 +226,12 @@ void Start_StateGame4() {
 		archer_tool = 0;
 		hp = 50;
 	}
-	archer_data->ups =ups;
+	archer_data->ups = ups;
+	if(archer_data->hp != 100){
+		archer_data->hp = hp;	
+	}else{
+		hp = 100;
+	}
 	archer_data->hp = hp;
 	archer_data->coins = coins;
 	
@@ -391,19 +396,20 @@ void Update_StateGame4() {
 					}
 				break;
 				case 1u:
-					if((scroll_target->x == (UINT16) 31u << 3 | scroll_target->x == (UINT16) 32u << 3 ) && 
-						scroll_target->y < (UINT16) 7u << 3){
+					if(scroll_target->x == (UINT16) 31u << 3 && scroll_target->y < (UINT16) 7u << 3){
 						scrigno_dcoin = spawn_item4(scrigno_dcoin, 34u, 2u, 3, 1);
 					}
-					if(scroll_target->x == (UINT16) 23u << 3 && scroll_target->y < (UINT16) 28u << 3){
+					if(scroll_target->x == (UINT16) 23u << 3 && 
+						scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3){
 						snake1 = spawn_enemy4(snake1, SpriteRat, 17u, 28u);
 					}
-					if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y < (UINT16) 28u << 3){
+					if(scroll_target->x == (UINT16) 30u << 3 && 
+						scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3){
 						snake2 = spawn_enemy4(snake2, SpriteRat, 30u, 28u);
 						snake3 = spawn_enemy4(snake3, SpriteSpider, 23u, 27u);
 					}
-					if((scroll_target->x == (UINT16) 34u << 3 | scroll_target->x == (UINT16) 35u << 3) && 
-						scroll_target->y < (UINT16) 38u << 3){
+					if(scroll_target->x == (UINT16) 34u << 3 && 
+						scroll_target->y < (UINT16) 39u << 3 && scroll_target->y > (UINT16) 36u << 3){
 						scrigno_shield = spawn_item4(scrigno_shield, 43u, 41u, 2, 1);
 					}
 				break;
@@ -468,8 +474,13 @@ void Update_StateGame4() {
 			coins = archer_data->coins;
 			UpdateHUD4();
 		}
-		if (hp != archer_data->hp){
-			hp = archer_data->hp;
+		if (hp != archer_data->hp && archer_data->hp >= 0){
+			if(archer_data->hp < hp){
+				hp--;
+			}else{
+				hp++;
+			}
+			//hp = archer_data->hp;
 			UpdateHUD4();
 		}
 		if (ups != archer_data->ups){
@@ -508,14 +519,14 @@ void UpdateHUD4(){
 	}
 	//write hp
 	PRINT_POS(7, 0);
-	if (archer_data->hp < 10){
-		Printf("00%d", archer_data->hp);
+	if (archer_data->hp < 10 && hp < 10){
+		Printf("00%d", hp);
 	}
-	if (archer_data->hp > 9 & archer_data->hp < 100){
-		Printf("0%d", archer_data->hp);
+	if (archer_data->hp > 9 && archer_data->hp < 100 && hp > 9){
+		Printf("0%d", hp);
 	}
 	if (archer_data->hp >= 100){
-		Printf("%d", archer_data->hp);	
+		Printf("%d", hp);	
 	}
 	//write tool
 	if (archer_data->tool == level_tool){

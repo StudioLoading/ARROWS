@@ -48,7 +48,7 @@ INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
 UINT8 current_level = 4u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
@@ -167,7 +167,12 @@ void Start_StateGame() {
 	}
 	
 	archer_data->ups = ups;
-	archer_data->hp = hp;
+	if(archer_data->hp != 100){
+		archer_data->hp = hp;	
+	}else{
+		hp = 100;
+	}
+	
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
 	
@@ -610,8 +615,13 @@ void Update_StateGame() {
 			coins = archer_data->coins;
 			UpdateHUD();
 		}
-		if (hp != archer_data->hp){
-			hp = archer_data->hp;
+		if (hp != archer_data->hp && archer_data->hp >= 0){
+			if(archer_data->hp < hp){
+				hp--;
+			}else{
+				hp++;
+			}
+			//hp = archer_data->hp;
 			UpdateHUD();
 		}
 		if (ups != archer_data->ups){
@@ -654,13 +664,13 @@ void UpdateHUD(){
 	//write hp
 	PRINT_POS(7, 0);
 	if (archer_data->hp < 10){
-		Printf("00%d", archer_data->hp);
+		Printf("00%d", hp);
 	}
-	if (archer_data->hp > 9 & archer_data->hp < 100){
-		Printf("0%d", archer_data->hp);
+	if (archer_data->hp > 9 && archer_data->hp < 100 && hp > 9){
+		Printf("0%d", hp);
 	}
 	if (archer_data->hp >= 100){
-		Printf("%d", archer_data->hp);	
+		Printf("%d", hp);	
 	}
 	//write tool
 	if (archer_data->tool == level_tool){

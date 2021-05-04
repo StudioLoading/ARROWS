@@ -83,17 +83,22 @@ void Start_StateSecret() {
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
 	
+	
+	scrigno_coin = 0;
+	scrigno_dcoin = 0;
+	scrigno_shield = 0;
+	scrigno_up = 0;
+
 	//ITEMS
-	if ((current_level == 0u & current_map == 0u) || (current_level == 1u & current_map == 1u) ||
-		(current_level == 4u & current_map == 1u)){
+	if ((current_level == 0u && current_map == 0u) || (current_level == 1u && current_map == 1u) ||
+		(current_level == 4u && current_map == 1u)){
 		scrigno_up = spawn_item(scrigno_up, 6u, 14u, 3, 1);
-		scrigno_dcoin = spawn_item(scrigno_dcoin, 8u, 14u, 7, 1);
+		scrigno_dcoin = spawn_item(scrigno_dcoin, 9u, 14u, 7, 1);
+	}else{
+		scrigno_coin = spawn_item(scrigno_coin, 6u, 14u, 1, 1);
+		scrigno_shield = spawn_item(scrigno_shield, 9u, 14u, 2, 1);
 	}
-	if ((current_level == 0u & current_map == 1u) || (current_level == 1u & current_map == 0u) 
-		|| (current_level == 2u & current_map == 0u) || (current_level == 4u & current_map == 0u)){
-		scrigno_dcoin = spawn_item(scrigno_dcoin, 6u, 14u, 7, 1);
-		scrigno_shield = spawn_item(scrigno_shield, 8u, 14u, 2, 1);
-	}
+	
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first

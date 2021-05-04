@@ -651,8 +651,14 @@ void CheckCollisionTile() {
 		case 40u: //skull of death
 			//archer_data->hp = 0;
 			//Die();
-			archer_data->hp-=8;
-			Hit();
+			if (archer_state != STATE_HIT){
+				archer_data->hp -=  8;
+				if (archer_data->hp <= 0){
+					archer_data->hp = 0;
+					archer_state = STATE_DEAD;
+				}
+				Hit();
+			}
 		break;
 		case 41u: //next map
 			load_next = 1;

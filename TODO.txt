@@ -5,8 +5,6 @@ CRASH da controllare
 Dovrei chiedere suggerimento sul Discord ZGB:
 	- problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. 
 
-map50 e 51 la tile 10 e la simmetrica da una maggiore profondità ai tronchi. usarla sui lati!
-
 map3tree ha un uccello che spawna in screen
 
 RIPRISTINARE IL SISTEMA DI DIALOGO CON BOSS IN WAIT, è figo.
