@@ -47,7 +47,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 4u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {
@@ -79,6 +79,8 @@ void SpawnReward();
 
 void Start_StateBoss() {
 
+	is_on_boss = 0;
+	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
 	SPRITES_8x16;
@@ -111,7 +113,6 @@ void Start_StateBoss() {
 		case 4u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteBear);
-			//SpriteManagerLoad(SpriteIbex);
 			SpriteManagerLoad(SpriteKey);
 		break;
 	}
@@ -145,7 +146,6 @@ void Start_StateBoss() {
 	struct Sprite* gate_sprite = 0;
 	struct EnemyInfo* gatedata = 0;
 	//struct Sprite* platform_sprite = 0;
-	is_on_boss = 0;
 	//INIT BOSS
 	switch(current_level_b){
 		case 0u:
@@ -180,10 +180,8 @@ void Start_StateBoss() {
 		break;
 		case 4u:
 			boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 12u << 3);
-			//boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
-			//platform_sprite = SpriteManagerAdd(SpritePlatform, (UINT16) 21u << 3,  (UINT16) 13u << 3);
 		break;
 	}
 	
@@ -203,7 +201,7 @@ void Start_StateBoss() {
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowWindow();
+	//ShowWindow();
 	WriteBBOSSHP();
 	
 	//SOUND
@@ -220,6 +218,7 @@ void Update_StateBoss() {
 		return;
 	}
 	if(archer_state == STATE_DIAG){
+		
 		if(show_diag > 0 ){
 			ShowWindowDiag();
 			return;
@@ -281,7 +280,7 @@ void Update_StateBoss() {
 	
 	
 	//MOVING BACKGROUND TILES	
-	if (current_level_b == 1 & current_map_b == 0){
+	if (current_level_b == 1u & current_map_b == 0){
 		UINT8 idxswamp = 0u;
 		updatecounter++;
 		if (updatecounter < 21) {

@@ -1,13 +1,4 @@
-CRASH da controllare
-	SECRET level 4 map 1 player invisibile e inattività totale
-	level 4 map 1 un po' a caso mentre giro. Direi in corrispondenza dello spawning di scrigno
-
-Dovrei chiedere suggerimento sul Discord ZGB:
-	- problemi nelle collision_tiles4 all' accesso ibex da stage fulmini. ho risolto sdoppiando l' array collision_tiles4 in due posizioni diverse. è molto sbagliato ma non so come altro fare. 
-
-map3tree ha un uccello che spawna in screen
-
-RIPRISTINARE IL SISTEMA DI DIALOGO CON BOSS IN WAIT, è figo.
+DIALOGO ALL' ENTRATA DEL BOSS DA CONTROLLARE PER I LIV > 3
 
 
 LIV 0 ZOO -> Wolf -> tool per uscita

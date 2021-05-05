@@ -66,16 +66,22 @@ void Start_SpritePlayer() {
 	archer_data->coins = 0u;
 	
 	
+	if(is_on_boss == 0){
+		Build_Next_Dialog();
+	}else{
+		archer_state = STATE_JUMPING;
+	}
+	
 	THIS->coll_x = 4;
 	THIS->coll_y = 3;
 	THIS->coll_w = 6;
 	THIS->coll_h = 13;
 	
-	archer_state = STATE_JUMPING;
 	
 	hit_cooldown = 36;
 	
 	NR50_REG = 0x55; //Max volume
+	
 
 }
 
@@ -195,7 +201,7 @@ void Update_SpritePlayer() {
 				}
 			}
 			//Check falling
-			if((archer_accel_y >> 3) > 1) {
+			if((archer_accel_y >> 3) > 1 && archer_state != STATE_DIAG) {
 				archer_state = STATE_JUMPING;
 			}
 			
@@ -371,7 +377,7 @@ void Update_SpritePlayer() {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
-					case 0:
+					case 0:/*
 						if (dataenemy->enemy_state == ENEMY_STATE_WAIT){
 							if (ispr->x > THIS->x){
 								THIS->x -= 1;
@@ -385,7 +391,7 @@ void Update_SpritePlayer() {
 								}
 							}						
 							return;
-						}
+						}*/
 						if(ispr->type == SpriteEagle & dataenemy->enemy_state != ENEMY_STATE_ATTACK){
 							return;
 						}
@@ -698,7 +704,7 @@ void Hit() {
 
 void Build_Next_Dialog(){
 	INT8 diag_found = Build_Next_Dialog_Banked(THIS);
-	if(diag_found == 0){	
+	if(diag_found == 0){
 		SetSpriteAnim(THIS, anim_idle, 33u);
 		archer_state = STATE_DIAG;
 		show_diag = 1;	
