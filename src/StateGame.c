@@ -48,9 +48,9 @@ INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 2u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -453,7 +453,7 @@ void Update_StateGame() {
 		case 2:
 			switch(current_map){
 				case 0:
-					if (scroll_target->x == (UINT16) 5u << 3){
+					if (scroll_target->x == (UINT16) 5u << 3 && scroll_target->y >= (UINT16) 8u << 3){
 						scrigno_dcoin = spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
 						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
@@ -663,7 +663,7 @@ void UpdateHUD(){
 	}
 	//write hp
 	PRINT_POS(7, 0);
-	if (archer_data->hp < 10){
+	if (archer_data->hp < 10 && hp < 10){
 		Printf("00%d", hp);
 	}
 	if (archer_data->hp > 9 && archer_data->hp < 100 && hp > 9){

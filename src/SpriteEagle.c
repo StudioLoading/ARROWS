@@ -155,8 +155,8 @@ void Update_SpriteEagle() {
 						THIS->coll_y=0;
 						THIS->lim_x = 8u;
 						THIS->lim_y = 16u;
-						THIS->x = 10<<3;
-						THIS->y = 12<<3;
+						THIS->x = (UINT16) 10u << 3;
+						THIS->y = (UINT16) 12u << 3;
 						data->vx=0;
 						data->enemy_accel_y = 0;
 						NR50_REG = 0x55; //Max volume		

@@ -36,9 +36,9 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 				break;
 				case 1u:
 					memcpy(d1, "HOW CAN I", 18);
-					memcpy(d2, "DESTROY THIS GATE,", 18);
-					memcpy(d3, "ALLIGATOR ?", 18);
-					memcpy(d4, "...", 18);
+					memcpy(d2, "DESTROY THIS", 18);
+					memcpy(d3, "GATE? WHAT?", 18);
+					memcpy(d4, "AN ALLIGATOR!!", 18);
 					diag_found = 0;
 				break;
 				case 2u:

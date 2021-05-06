@@ -47,7 +47,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
+UINT8 current_level_b = 2u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {

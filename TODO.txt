@@ -1,5 +1,13 @@
 DIALOGO ALL' ENTRATA DEL BOSS DA CONTROLLARE PER I LIV > 3
+	DOPPIO DIALOGO IN ENTRATA IBEX
 
+CHECK PRIMA MAPPA DOPO IBEX CRASHA CREAZIONE SPRITE
+
+SCAMBIARE ORDINE DI FRECCIA DI FULMINE CON QUELLA D' ACQUA.
+	DURANTE il gioco otteniamo prima quella di fulmine (ibex) 
+		poi quella dell' acqua (leone marino)
+
+verifica che Ibex restituisca l' amuleto del fulmine al posto giusto
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -9,6 +17,10 @@ LIV 4 TREES -> Bear tool di uscita C:\GB\ZGBNEW\ZGB-template-master\altro
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
+polish:
+	- frame arciere di cambio di direzione - potrei sacrificare il frame di discesa
+	- bordo cornice tutto schermo del livello bonus
+	- 
 
 devo fare un dialogo apposta per mostrare l' amuleto per bene in grande quando lo prendo
 

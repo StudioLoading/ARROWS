@@ -72,7 +72,7 @@ void Start_SpritePlayer() {
 		archer_state = STATE_JUMPING;
 	}
 	
-	THIS->coll_x = 4;
+	THIS->coll_x = 5;
 	THIS->coll_y = 3;
 	THIS->coll_w = 6;
 	THIS->coll_h = 13;
@@ -92,7 +92,7 @@ void Update_SpritePlayer() {
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
 		}else{
-			if(show_diag < 2 & KEY_RELEASED(J_B)){ //show_diag < max_diag
+			if(show_diag < 2 & KEY_TICKED(J_A)){ //show_diag < max_diag
 				show_diag += 1;
 			}
 		}
@@ -167,7 +167,7 @@ void Update_SpritePlayer() {
 				if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
 					SetSpriteAnim(THIS, anim_shield, 8u);
 					if (archer_state == STATE_NORMAL_PLATFORM){
-						THIS->coll_x = 3;
+						//THIS->coll_x = 3;
 						THIS->coll_y = 9;
 						THIS->coll_w = 10;
 						THIS->coll_h = 6;	
@@ -566,6 +566,7 @@ void Jump() {
 		archer_state = STATE_JUMPING;
 		archer_accel_y = -14;
 		princess_parent = 0;
+		THIS->coll_w = 6;
 		SetSpriteAnim(THIS, anim_jump_up, 12u);
 	}
 }
