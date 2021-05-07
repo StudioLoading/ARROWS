@@ -236,6 +236,7 @@ void Update_SpritePlayer() {
 			}else if (platform_vx < 0){
 				platform_vx++;
 			}
+			platform_vy = 0;
 			MoveArcher();
 		break;
 		case STATE_HIT:

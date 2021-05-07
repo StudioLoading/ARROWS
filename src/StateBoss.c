@@ -47,7 +47,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 2u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* boss_0[] = {
@@ -70,6 +70,7 @@ const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4};
 struct Sprite* boss = 0;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
+struct Sprite* reward = 0;
 
 const UINT8 collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
@@ -145,7 +146,6 @@ void Start_StateBoss() {
 	struct Sprite* scrigno_sprite_boss = 0;
 	struct Sprite* gate_sprite = 0;
 	struct EnemyInfo* gatedata = 0;
-	//struct Sprite* platform_sprite = 0;
 	//INIT BOSS
 	switch(current_level_b){
 		case 0u:
@@ -315,7 +315,6 @@ void Update_StateBoss() {
 }
 
 void SpawnReward(){
-	struct Sprite* reward = 0;
 	if (current_level_b == 0u){// wolf -> wrench
 		reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
 		struct ItemInfo* datakk = (struct ItemInfo*)reward->custom_data;
@@ -332,12 +331,12 @@ void SpawnReward(){
 		datak->type = 1;
 		datak->setup = 1;
 	}else if (current_level_b == 3u){ // ibex -> amulet thunder
-		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 23u, (UINT16) 14u);
+		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 37u << 3, (UINT16) 10u << 3);
 		struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
 		datak->type = 3;
 		datak->setup = 1;
 	}else if (current_level_b == 4u){ // bear -> wrench
-		reward = SpriteManagerAdd(SpriteKey, (UINT16) 16u << 3, (UINT16) 13u << 3);
+		reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 11u << 3);
 		struct ItemInfo* datakk = (struct ItemInfo*)reward->custom_data;
 		datakk->type = 2;
 		datakk->setup = 1u;

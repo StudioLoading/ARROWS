@@ -178,28 +178,7 @@ void SetupArrow(){
 			}						
 			data->type = 0;
 		break;
-		case 3: // WATER
-			data->arrowdamage = 10u;
-			switch(data->arrowdir){
-				case 1:
-					data->vy = 0;
-					data->vx = 2;
-					SetSpriteAnim(THIS, arrow_water, 18u);	
-				break;
-				case 3:
-					data->vy = -2;
-					data->vx = 0;
-					SetSpriteAnim(THIS, arrow_water_v, 18u);	
-				break;
-				case 4:
-					data->vy = 2;
-					data->vx = 0;
-					SetSpriteAnim(THIS, arrow_water_g, 18u);	
-				break;
-			}						
-			data->type = 0;
-		break;
-		case 4:// BLAST
+		case 3: // BLAST
 			data->arrowdamage =20u;
 			switch(data->arrowdir){
 				case 1:
@@ -216,6 +195,27 @@ void SetupArrow(){
 					data->vy = 3;
 					data->vx = 0;
 					SetSpriteAnim(THIS, arrow_blast_g, 18u);	
+				break;
+			}						
+			data->type = 0;
+		break;
+		case 4:// WATER
+			data->arrowdamage = 10u;
+			switch(data->arrowdir){
+				case 1:
+					data->vy = 0;
+					data->vx = 2;
+					SetSpriteAnim(THIS, arrow_water, 18u);	
+				break;
+				case 3:
+					data->vy = -2;
+					data->vx = 0;
+					SetSpriteAnim(THIS, arrow_water_v, 18u);	
+				break;
+				case 4:
+					data->vy = 2;
+					data->vx = 0;
+					SetSpriteAnim(THIS, arrow_water_g, 18u);	
 				break;
 			}						
 			data->type = 0;

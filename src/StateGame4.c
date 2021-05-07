@@ -179,6 +179,10 @@ void Start_StateGame4() {
 			}
 		case 4u:
 			SpriteManagerLoad(SpritePlatform);
+			snake1 = 0;
+			snake2 = 0;
+			snake3 = 0;
+			snake4 = 0;
 			if(current_map == 0){
 				SpriteManagerLoad(SpriteRat);
 				SpriteManagerLoad(SpriteSpider);
@@ -186,7 +190,6 @@ void Start_StateGame4() {
 				SpriteManagerLoad(SpriteRat);
 				SpriteManagerLoad(SpriteSpider);
 				SpriteManagerLoad(SpriteBird);
-				//SpriteManagerLoad(SpritePorcupine);
 				scrigno_dcoin = spawn_item4(scrigno_dcoin, 9u, 2u, 3, 1);							
 
 			}
@@ -297,7 +300,7 @@ void Update_StateGame4() {
 	
 	// SPAWNING
 	switch(current_level){
-		case 3u:
+		case 3u: // liv. 4 Sky -> Ibex
 			switch(current_map){
 				case 0u:
 					if (scroll_target->x > (UINT16) 93u << 3){							
@@ -363,14 +366,14 @@ void Update_StateGame4() {
 				break;
 			}
 		break;
-		case 4u:
+		case 4u: // liv. 5 Trees -> Bear
 			switch(current_map){
 				case 0u:
 					if(scroll_target->x == (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3){
 						scrigno_shield = spawn_item4(scrigno_shield, 31u, 17u, 2, 1);
-						snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
+						//snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
 					}
-					if((scroll_target->x == (UINT16) 25u << 3 | scroll_target->x == (UINT16) 26u << 3) && 
+					if((scroll_target->x == (UINT16) 25u << 3 || scroll_target->x == (UINT16) 26u << 3) && 
 						scroll_target->y == (UINT16) 38u << 3 ){
 						snake2 = spawn_vplatform4(snake2, SpritePlatform, 37u, 43u);
 						snake1 = spawn_vplatform4(snake1, SpritePlatform, 42u, 51u);
@@ -500,8 +503,8 @@ void UpdateHUD4(){
 	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
 		case 2: Printf("["); break;
-		case 3: Printf("]"); break;
-		case 4: Printf("#"); break;
+		case 3: Printf("#"); break;
+		case 4: Printf("]"); break;
 		case 5: Printf("@"); break;
 		default: Printf("$"); break;
 	}

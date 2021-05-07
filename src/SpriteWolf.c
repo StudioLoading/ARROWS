@@ -47,7 +47,9 @@ void Update_SpriteWolf() {
 		if(wolf_data->tile_e_collision==0){
 			wolf_data->tile_e_collision = TranslateSprite(THIS, 0, 1);	
 		}
-		wolf_data->hp = 0;
+		if(wolf_data->hp){
+			wolf_data->hp = 0;			
+		}
 		return;
 	}
 	if (wolf_data->enemy_state == ENEMY_STATE_JUMPING){
