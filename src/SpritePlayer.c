@@ -194,7 +194,7 @@ void Update_SpritePlayer() {
 			}
 			
 			if(shoot_cooldown) {
-				shoot_cooldown -= 1u;
+				shoot_cooldown -= 1;
 			} else {
 				if(KEY_TICKED(J_B) & (!KEY_PRESSED(J_DOWN) | (KEY_PRESSED(J_DOWN) & archer_state == STATE_JUMPING))) {
 					Shoot();
@@ -208,7 +208,7 @@ void Update_SpritePlayer() {
 		break;
 		case STATE_JUMPING:
 			if(shoot_cooldown) {
-				shoot_cooldown -= 1u;
+				shoot_cooldown -= 1;
 			}else{
 				if(KEY_TICKED(J_B)) {
 					Shoot();
@@ -557,7 +557,7 @@ void Shoot() {
 			arrow_data->arrowdir = 1;
 		}
 	}
-	shoot_cooldown = 4;//8
+	shoot_cooldown = 3;//8
 }
 
 void Jump() {

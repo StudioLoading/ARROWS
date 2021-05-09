@@ -33,7 +33,7 @@ UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
 //UINT8 ids[4] = {0,0,0,0};
 struct Sprite * ids[4] = {0,0,0,0};
-INT8 falen = 0;
+INT8 falen = 0; //counts in-screen arrows 
 
 void SetupArrow();
 void CheckCollisionArrowTile();
@@ -60,12 +60,10 @@ void Start_SpriteArrow() {
 }
 
 void FApush(){
-	if (falen < 4){
-		//ids[falen] = new_val;
-		ids[falen] = THIS;
+	if (falen <= 4){
+		ids[falen-1] = THIS;
 	}else{
 		FApop();
-		//ids[0] = new_val;
 		ids[0] = THIS;
 	}
 	falen++;
@@ -75,9 +73,7 @@ void FApop(){
 	if (falen){
 		falen--;
 	}
-	//SpriteManagerRemove(ids[falen]);
-	SpriteManagerRemoveSprite(ids[falen]);
-	//ids[4] = ids[3];
+	SpriteManagerRemoveSprite(ids[falen-1]);
 	ids[3] = ids[2];
 	ids[2] = ids[1];
 	ids[1] = ids[0];
@@ -285,7 +281,8 @@ void CheckCollisionArrowTile() {
 			data->original_type = 4; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		default:
-			SpriteManagerRemove(THIS_IDX);
+			data->arrowdamage = 100;
+			SpriteManagerRemoveSprite(THIS);
 			return;
 		break;
 	}
@@ -293,6 +290,11 @@ void CheckCollisionArrowTile() {
 }
 
 
-void Destroy_SpriteArrow() {
-	FApop();
+void Destroy_SpriteArrow() {	
+	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+	if(data->arrowdamage != 100){
+		FApop();
+	}else if (falen){
+		falen--;
+	}
 }

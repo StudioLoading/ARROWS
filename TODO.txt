@@ -1,4 +1,7 @@
-doppio dialogo quando per la prima volta entro in StateBoss da Mappa.
+purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
+
+3.0 -> lo scrigno avanti nel livello non resta, sparisce senza apparente motivo.
+
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -13,7 +16,7 @@ LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 polish:
 	- frame arciere di cambio di direzione - potrei sacrificare il frame di discesa
 	- bordo cornice tutto schermo del livello bonus
-	- 
+	- sound del salto - ce lo ha anche superMarioLand!
 
 devo fare un dialogo/schermata apposta per mostrare l' amuleto per bene in grande quando lo prendo
 
@@ -48,6 +51,12 @@ RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
 TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
+
+SOUND BACKGROUND PER OGNI LIVELLO
+
+COLORI
+
+RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
 
 
 SOSTITUZIONE TILES DI MAPPA:

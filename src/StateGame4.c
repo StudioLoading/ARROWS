@@ -153,7 +153,9 @@ void ShowWindowDiag4(){
 }
 
 void Start_StateGame4() {
-
+	
+	is_on_boss = -1;
+	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette4, 2);
 
@@ -216,7 +218,6 @@ void Start_StateGame4() {
 	
 	
 	//INIT ARCHER
-	is_on_boss = -1;
 	if (archer_data->ups > 0 & archer_data->ups != ups){
 		 ups = archer_data->ups;
 	}
@@ -280,18 +281,20 @@ void Update_StateGame4() {
 		SetState(StateSecret);
 	}
 	
-	if(load_next_b){
-		switch(load_next_b){
+	if(load_next_b == 1){
+		if(archer_state != STATE_DIAG){
+			load_next_b = 0;
+			SetState(StateBoss);//StateBoss
+		}
+	}
+	/*switch(load_next_b){
 			case 1: //vado allo StateBoss
-				if(archer_state != STATE_DIAG){
-					load_next_b = 0;
-					SetState(StateBoss);//StateBoss
-				}
+				
 			break;
 			//case 2: // provengo dal boss, vado al next level
 			//break;
 		}
-	}
+	}*/
 	
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 		ShowWindow4();
@@ -303,29 +306,29 @@ void Update_StateGame4() {
 		case 3u: // liv. 4 Sky -> Ibex
 			switch(current_map){
 				case 0u:
-					if (scroll_target->x > (UINT16) 93u << 3){							
+					if (scroll_target->x > (UINT16) 93u << 3){
 						if (scroll_target->x == (UINT16) 120u << 3){
 							scrigno_shield = spawn_item4(scrigno_shield, 133u, 9u, 2, 1);
 						}
-						if (scroll_target->x >> 2 & 1){
-							if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
-								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 4u, 3u);	
-							}
-							if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
-								snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) + 5u, 4u);
-							}
-							if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
-								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 3u, 5u);
-							}
+						switch(thunder_delay){
+							case 0u:
+								snake4 = spawn_enemy4(snake4, SpriteHurricane, (scroll_target->x >> 3) - 2u, 5u);
+								thunder_delay = 160u;
+							break;
+							case 60u:
+								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 4u, 5u);
+							break;
+							case 90u:
+								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 2u, 6u);
+								datasnake3->vx = -1;
+							break;
+							case 120u:
+								snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) - 4u, 6u);
+							break;
 						}
-						thunder_delay--;
-						if (thunder_delay == 0u){		
-							if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
-								snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
-								thunder_delay = 20u;
-							}
-						}
-						
+						thunder_delay -= 1u;
+						PRINT_POS(16,0);
+						Printf("%d", thunder_delay);
 					}
 				break;
 				case 1u:
@@ -509,16 +512,18 @@ void UpdateHUD4(){
 		default: Printf("$"); break;
 	}
 	//write coins
-	if (archer_data->coins == 100u){
-		archer_data->coins = 0u;
-		coins = 0u;
-		archer_data->ups += 1;	
-	}
-	PRINT_POS(12, 0);
-	if (archer_data->coins > 9){
-		Printf("%d", archer_data->coins);
-	}else{
-		Printf("0%d", archer_data->coins);
+	if (is_on_boss < 0){
+		if (archer_data->coins == 100u){
+			archer_data->coins = 0u;
+			coins = 0u;
+			archer_data->ups += 1;	
+		}
+		PRINT_POS(12, 0);
+		if (archer_data->coins > 9u){
+			Printf("%d", archer_data->coins);
+		}else{
+			Printf("0%d", archer_data->coins);
+		}
 	}
 	//write hp
 	PRINT_POS(7, 0);

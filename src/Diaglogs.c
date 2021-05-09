@@ -98,6 +98,13 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d4, "THUNDER AMULET!", 18);
 					diag_found = 0;
 				break;
+				case 4u:
+					memcpy(d1, "I...", 18);
+					memcpy(d2, "JUST NEEDED THE", 18);
+					memcpy(d3, "WRENCH TO GO", 18);
+					memcpy(d4, "ON. SORRY BEAR!", 18);
+					diag_found = 0;
+				break;
 			}	
 		break;
 	}

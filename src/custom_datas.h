@@ -25,7 +25,7 @@ struct ArrowInfo {
 	UINT8 vx:4;
 	INT8 vy;
 	INT8 arrowdir;
-	INT8 arrowdamage;
+	INT8 arrowdamage; //set to 100 not to pop it on destroy!
 	INT8 counter;
 };
 struct PlatformInfo {

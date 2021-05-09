@@ -41,7 +41,7 @@ void Update_SpriteBear() {
 			bear_data->wait--;
 			if(bear_data->wait > 0){			
 				if(bear_data->wait == 1  || bear_data->wait == 20 || bear_data->wait == 40 ){
-					THIS->y = (UINT16) 29u;
+					THIS->y = (UINT16) 29u << 3;
 				}else{
 					THIS->y = (UINT16) 12u << 3;
 				}

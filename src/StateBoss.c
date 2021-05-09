@@ -81,6 +81,7 @@ void SpawnReward();
 void Start_StateBoss() {
 
 	is_on_boss = 0;
+	reward = 0;
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
