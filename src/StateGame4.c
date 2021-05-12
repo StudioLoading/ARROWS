@@ -163,6 +163,10 @@ void Start_StateGame4() {
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
+	snake1 = 0;
+	snake2 = 0;
+	snake3 = 0;
+	snake4 = 0;
 	switch (current_level){
 		case 3u:
 			SpriteManagerLoad(SpriteThunder);
@@ -179,12 +183,9 @@ void Start_StateGame4() {
 				snake3 = spawn_enemy4(snake3, SpriteThunder, 3u, 0u);	
 				snake4 = spawn_enemy4(snake4, SpriteThunder, 10u, 0u);						
 			}
+		break;
 		case 4u:
 			SpriteManagerLoad(SpritePlatform);
-			snake1 = 0;
-			snake2 = 0;
-			snake3 = 0;
-			snake4 = 0;
 			if(current_map == 0){
 				SpriteManagerLoad(SpriteRat);
 				SpriteManagerLoad(SpriteSpider);
@@ -192,8 +193,6 @@ void Start_StateGame4() {
 				SpriteManagerLoad(SpriteRat);
 				SpriteManagerLoad(SpriteSpider);
 				SpriteManagerLoad(SpriteBird);
-				scrigno_dcoin = spawn_item4(scrigno_dcoin, 9u, 2u, 3, 1);							
-
 			}
 		break;
 		case 5u:
@@ -287,14 +286,6 @@ void Update_StateGame4() {
 			SetState(StateBoss);//StateBoss
 		}
 	}
-	/*switch(load_next_b){
-			case 1: //vado allo StateBoss
-				
-			break;
-			//case 2: // provengo dal boss, vado al next level
-			//break;
-		}
-	}*/
 	
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 		ShowWindow4();
@@ -327,45 +318,41 @@ void Update_StateGame4() {
 							break;
 						}
 						thunder_delay -= 1u;
-						PRINT_POS(16,0);
-						Printf("%d", thunder_delay);
+						//PRINT_POS(16,0);
+						//Printf("%d", thunder_delay);
 					}
 				break;
 				case 1u:
-					if (scroll_target->x == (UINT16) 5u << 3 & scrigno_up == 0){
-						scrigno_up = spawn_item4(scrigno_up, 5u, 4u, 3, 1);
+					switch(thunder_delay){
+						case 0u:
+							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 1u, 3u);
+							snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 1u, 3u);
+							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 3u, 2u);
+							snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) - 1u, 4u);
+							thunder_delay = 120u;
+						break;
+						case 60u:
+							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 1u, 3u);
+							snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 1u, 3u);
+							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 3u, 2u);
+							snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) - 1u, 4u);
+						break;
 					}
-					if (scroll_target->x == (UINT16) 33u << 3 & scrigno_shield == 0){
+					thunder_delay -= 1u;
+					
+					if (scroll_target->x == (UINT16) 5u << 3 && scrigno_up == 0){
+						scrigno_up = spawn_item4(scrigno_up, 10u, 9u, 3, 1);
+					}
+					if (scroll_target->x == (UINT16) 33u << 3){
 						scrigno_shield = spawn_item4(scrigno_shield, 39u, 4u, 2, 1);
-					}						
-					if (scroll_target->x > (UINT16) 12u << 3){
-						if (scroll_target->x >> 2 & 1){
-							if (datasnake1->enemy_state == ENEMY_STATE_DEAD){
-								snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 1u);	
-							}
-							if (datasnake2->enemy_state == ENEMY_STATE_DEAD){
-								snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 4u, 2u);
-							}
-							if (datasnake3->enemy_state == ENEMY_STATE_DEAD){
-								snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) - 1u, 0u);
-							}
-						}
-						if (scroll_target->x > (UINT16) 140u << 3){
-							thunder_delay--;
-							if (thunder_delay == 0u){		
-								if (datasnake4->enemy_state == ENEMY_STATE_DEAD){				
-									snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3), 0u);
-									thunder_delay = 20u;
-								}
-							}
-						}
 					}
-					if(scroll_target->x == (UINT16) 140u << 3){
+					if(scroll_target->x == (UINT16) 140u << 3 && scrigno_dcoin == 0){
 						scrigno_dcoin = spawn_item4(scrigno_dcoin, 156u, 5u, 3, 1);							
 					}					
-					if(scroll_target->x == (UINT16) 180u << 3){
-						scrigno_shield = spawn_item4(scrigno_shield, 186u, 4u, 2, 1);
-					}						
+					if(scroll_target->x == (UINT16) 175u << 3){
+						scrigno_shield = spawn_item4(scrigno_shield, 185u, 4u, 2, 1);
+					}
+					
 				break;
 			}
 		break;

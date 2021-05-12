@@ -161,6 +161,7 @@ void CheckCollisionIBTile() {
 			IBTurn();
 		break;
 		case 90u:
+		case 111u:
 			THIS->y++;
 		break;
 	}

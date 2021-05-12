@@ -68,9 +68,9 @@ void Update_SpriteAmulet() {
 		}
 		datak->setup = 1;
 	}
-	//TranslateSprite(THIS, 0, 1 << delta_time);
 	if (datak->counter > 0){
 		datak->counter--;
+		TranslateSprite(THIS, 0, 1);
 		if (datak->counter==0){
 			SpriteManagerRemoveSprite(THIS);
 		}

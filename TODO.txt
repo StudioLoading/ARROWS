@@ -1,6 +1,5 @@
-purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
-
-3.0 -> lo scrigno avanti nel livello non resta, sparisce senza apparente motivo.
+KNOWN ISSUE:
+	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
 
 
 LIV 0 ZOO -> Wolf -> tool per uscita
