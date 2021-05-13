@@ -1,3 +1,5 @@
+fare un nuovo repository gitHub in cui mettere solo la roba standalone per il lancio. creare anche l' .sh ?
+
 KNOWN ISSUE:
 	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
 
