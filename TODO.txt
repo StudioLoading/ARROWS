@@ -1,7 +1,12 @@
-fare un nuovo repository gitHub in cui mettere solo la roba standalone per il lancio. creare anche l' .sh ?
-
 KNOWN ISSUE:
 	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
+
+LINK all' ultima release:
+	https://github.com/StudioLoading/FLYING_ARROWS/releases/latest
+
+- The jump arc feels weird, given the constant rising speed
+
+- Enemies appear over the textbox as well (chiesto su discord https://discord.com/channels/790342889318252555/790346049377927168/843860593030201364)
 
 
 LIV 0 ZOO -> Wolf -> tool per uscita
@@ -11,13 +16,23 @@ LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
+LIVELLI BONUS
 
-
+nella demo dare il 2.0 come inizio !!!!
 
 polish:
 	- frame arciere di cambio di direzione - potrei sacrificare il frame di discesa
 	- bordo cornice tutto schermo del livello bonus
 	- sound del salto - ce lo ha anche superMarioLand!
+	- sound per quando corro contro una parete
+	- effetto di camera tramble che potrebbe essere utile da usare come effetto
+	- sound lancio freccia
+	- schermata di fine livello - direi con pergamena descrittiva
+	- sound quando viene spawnato un oggetto
+	- sound quando viene spawnato un amuleto!
+	- You can see the player's health reset before the fadeout on death
+
+
 
 devo fare un dialogo/schermata apposta per mostrare l' amuleto per bene in grande quando lo prendo
 
@@ -60,6 +75,12 @@ COLORI
 RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
 
 
+
+
+
+
+
+
 SOSTITUZIONE TILES DI MAPPA:
 GetScrollTile mi becca	se ci sono sopra o no, set_bkg_tiles(...) dovrebbe fare la sostituzione
 	MONETE   	-> TILE DI BACKGROUND
@@ -91,25 +112,22 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c
+//WINDOW
+	INIT_FONT(font, PRINT_WIN);
+	INIT_CONSOLE(font, 10, 2);
+	ShowWindow();
 ...
-INT8 maxarrows = 0;
-...
-void Start_SpriteArrow() {
-...
-	if(maxarrows <= 5){
-		maxarrows++;
-	}
-..}
 
-void Update_SpriteArrow() {
-	if(maxarrows>5){
-		SpriteManagerRemove(THIS_IDX);
-		return;
-	}
-	...
+void ShowWindow(){
+	showing_diag = 0;
+	show_diag = -1;
+	HIDE_WIN;
+	//WINDOW
+	WX_REG = 7;
+	WY_REG = 144 - 8;
+	InitWindow(0, 0, &window);
+	SHOW_WIN;
+	
+	UpdateHUD();
 }
-void Destroy_SpriteArrow() {
-	maxarrows--;
-}
-
 ```

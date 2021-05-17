@@ -1,4 +1,3 @@
-
 typedef enum  {
 	STATE_NORMAL,
 	STATE_NORMAL_PLATFORM,

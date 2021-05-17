@@ -31,9 +31,10 @@ void Start_SpriteEnemy() {
 	edata->enemy_state = ENEMY_STATE_NORMAL;
 	edata->hp = 45;
 	edata->enemy_accel_y = 24;
-	edata->vx = 1;
+	edata->vx = -1;
 	edata->wait = 0u;
 	edata->hp = 45;
+	SPRITE_SET_VMIRROR(THIS);
 }
 
 void Update_SpriteEnemy() {
@@ -59,7 +60,7 @@ void Update_SpriteEnemy() {
 		}
 	}else{
 		if(edata->enemy_accel_y < 24) {
-				edata->enemy_accel_y += 1;
+			edata->enemy_accel_y += 1;
 		}
 		edata->tile_e_collision = TranslateSprite(THIS, edata->vx << delta_time, (edata->enemy_accel_y >> 4)<< delta_time);
 		//CheckCollisionETile();

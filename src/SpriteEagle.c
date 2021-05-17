@@ -30,8 +30,8 @@ void Start_SpriteEagle() {
 	THIS->coll_y = 4;
 	THIS->coll_w = 22;
 	THIS->coll_h = 22;
-	THIS->lim_x = 255u;
-	THIS->lim_y = 168u;
+	/*THIS->lim_x = 255u;
+	THIS->lim_y = 168u;*/
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, eagle_idle, 14u);
 	data->enemy_accel_y = 0;

@@ -1,5 +1,7 @@
 #include "Banks/SetBank8.h"
 
+#include <stdbool.h>
+
 #include "../res/src/window4.h"
 #include "../res/src/diagnew4.h"
 #include "../res/src/font.h"
@@ -61,6 +63,9 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 extern UINT8 updatecounter;
 
+extern bool LCD_Installed;
+
+
 struct EnemyInfo* datasnake1;
 struct EnemyInfo* datasnake2;
 struct EnemyInfo* datasnake3;
@@ -69,6 +74,8 @@ struct EnemyInfo* datasnake4;
 void UpdateHUD4();
 void ShowWindow4();
 void ShowWindowDiag4();
+void set_window_y4(UBYTE y);
+void LCD_isr4();
 struct Sprite* spawn_enemy4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy);
 struct Sprite* spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
@@ -117,6 +124,7 @@ struct Sprite* spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8
 }
 
 void ShowWindow4(){
+	set_window_y4(144 - 8);
 	showing_diag = 0;
 	show_diag = -1;
 	HIDE_WIN;
@@ -260,6 +268,16 @@ void Start_StateGame4() {
 	datasnake2 = (struct EnemyInfo*)snake2->custom_data;
 	datasnake3 = (struct EnemyInfo*)snake3->custom_data;
 	datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+	if (!LCD_Installed) { 
+		CRITICAL {
+			add_LCD(LCD_isr4);
+			set_interrupts(VBL_IFLAG | LCD_IFLAG);
+			STAT_REG |= 0x40; 
+			set_window_y4(144-8);
+		}
+	    LCD_Installed = TRUE; 
+	}
+
 }
 
 void Update_StateGame4() {
@@ -540,4 +558,20 @@ void UpdateHUD4(){
 	PRINT_POS(2, 0); //up
 	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
 	else{Printf("0%d", archer_data->ups);}
+}
+
+void LCD_isr4() NONBANKED {
+    if (LYC_REG == 0) {
+        if (WY_REG == 0) HIDE_SPRITES; else SHOW_SPRITES; 
+        LYC_REG = WY_REG;
+    } else {
+        HIDE_SPRITES; 
+        LYC_REG = 0;
+    }
+}
+
+void set_window_y4(UBYTE y) {
+    WX_REG = 7u;
+    LYC_REG = WY_REG = y;
+    if (y < 144u) SHOW_WIN; else { HIDE_WIN; LYC_REG = 160u; } 
 }

@@ -22,6 +22,7 @@ extern unsigned char d4[];
 extern struct ArcherInfo* archer_data;
 extern UINT8 tile_collision;
 
+
 INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 	INT8 diag_found = 1;
 	switch (is_on_boss){

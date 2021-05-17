@@ -124,7 +124,7 @@ void Update_SpriteIbex() {
 		if(ibbspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ibbspr) & ibex_data->enemy_state != ENEMY_STATE_DEAD) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibbspr->custom_data;
-				if(arrowdata->original_type == 4){
+				if(arrowdata->original_type == 3){
 					ibex_data->wait = 28u;
 					SetSpriteAnim(THIS, ibex_hit, 18u);
 					ibex_data->hp -= arrowdata->arrowdamage;

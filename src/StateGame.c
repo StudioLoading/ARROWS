@@ -1,5 +1,7 @@
 #include "Banks/SetBank7.h"
 
+#include <stdbool.h>
+
 #include "../res/src/window.h"
 #include "../res/src/diagnew.h"
 #include "../res/src/font.h"
@@ -49,12 +51,14 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_level = 4u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
 INT8 showing_diag = 0;
+bool LCD_Installed = false;
+
 extern UINT8 updatecounter; //da StateCredit
 struct Sprite* platform_sprite = 0;
 struct Sprite* snake1 = 0;
@@ -93,6 +97,8 @@ extern UINT8 current_map_b;
 void UpdateHUD();
 void ShowWindow();
 void ShowWindowDiag();
+void set_window_y(UBYTE y);
+void LCD_isr();
 struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy);
 struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
@@ -202,6 +208,10 @@ void Start_StateGame() {
 						}
 					}
 				break;
+				case 1u:
+					snake1 = spawn_enemy(snake1, SpriteEnemy, 7u, 12u);
+					platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 9u, 21u);
+				break;
 			}
 		break;
 		case 1u:
@@ -219,6 +229,9 @@ void Start_StateGame() {
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
 						scrigno_up = spawn_item(scrigno_up, 46u, 0u, 3, 1);
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
+						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
+						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
 					}
 				break;
 			}
@@ -237,9 +250,21 @@ void Start_StateGame() {
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	
+	if (!LCD_Installed) { 
+		CRITICAL {
+			add_LCD(LCD_isr);
+			set_interrupts(VBL_IFLAG | LCD_IFLAG);
+			STAT_REG |= 0x40; 
+			set_window_y(144-8);
+		}
+	    LCD_Installed = true; 
+	}
+
+	
 }
 
 void ShowWindow(){
+	set_window_y(144 - 8);
 	showing_diag = 0;
 	show_diag = -1;
 	HIDE_WIN;
@@ -250,6 +275,7 @@ void ShowWindow(){
 	SHOW_WIN;
 	
 	UpdateHUD();
+	
 }
 
 void ShowWindowDiag(){
@@ -350,25 +376,28 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake2, SpriteEnemy, 22u, 39u);
 					}
 				break;
-				case 1:				
-					if (scroll_target->x == (UINT16) 2u << 3 & scroll_target->y < (UINT16) 8u << 3){
-						snake1 = spawn_enemy(snake1, SpriteEnemy, 7u, 12u);
-						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 9u, 21u);
-					}
-					if (scroll_target->x == (UINT16) 7u << 3 & scroll_target->y > (UINT16) 34u  << 3){
+				case 1:
+					if (scroll_target->x == (UINT16) 12u << 3 && scroll_target->y > (UINT16) 37u << 3){
+						snake2 = spawn_enemy(snake2, SpriteEnemy, 21u, 39u);
+						snake2 = spawn_enemy(snake2, SpriteEnemy, 21u, 39u);
 						snake3 = spawn_enemy(snake3, SpritePorcupine, 25u, 39u);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, 25u, 39u);
 					}
-					if (scroll_target->x == (UINT16) 24u << 3 & scroll_target->y == (UINT16) 21u  << 3){
+					if (scroll_target->x == (UINT16) 24u << 3 && scroll_target->y == (UINT16) 21u  << 3){
 						scrigno_up = spawn_item(scrigno_up, 28u, 18u, 3, 1);
 					}
-					if (scroll_target->x == (UINT16) 31u << 3 & scroll_target->y == (UINT16) 39u  << 3){
-						snake4 = spawn_enemy(snake4, SpriteScorpion, 38u, 39u);
+					if (scroll_target->x == (UINT16) 25u << 3 && scroll_target->y == (UINT16) 39u  << 3){
+						if(snake4 == 0){
+							snake4 = spawn_enemy(snake4, SpriteScorpion, 38u, 39u);
+						}
 					}
-					if (scroll_target->x == (UINT16) 36u << 3 & scroll_target->y <= (UINT16) 10u << 3 & scroll_target->y >= (UINT16) 6u << 3){
-						snake1 = spawn_enemy(snake1, SpriteEnemy, 25u, 9u);
-						snake2 = spawn_enemy(snake2, SpriteEnemy, 34u, 4u);
-						snake3 = spawn_enemy(snake3, SpriteScorpion, 20u, 4u);
+					if (scroll_target->x == (UINT16) 36u << 3 && scroll_target->y <= (UINT16) 20u << 3 && scroll_target->y > (UINT16) 17u << 3){
+						snake1 = spawn_enemy(snake1, SpriteEnemy, 27u, 8u);
+						snake2 = 0;
+						snake3 = 0;
+						snake4 = 0;
+					}
+					if ((scroll_target->x == (UINT16) 28u << 3 || scroll_target->x == (UINT16) 29u << 3) && (scroll_target->y >= (UINT16) 7u << 3 && scroll_target->y <= (UINT16) 10u << 3)){
+						snake3 = spawn_enemy(snake3, SpritePorcupine, 15u, 3u);
 					}
 				break;
 			}
@@ -453,11 +482,6 @@ void Update_StateGame() {
 		case 2:
 			switch(current_map){
 				case 0:
-					if (scroll_target->x == (UINT16) 5u << 3 && scroll_target->y >= (UINT16) 8u << 3){
-						scrigno_dcoin = spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
-						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
-						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
-					}
 					if (scroll_target->x == (UINT16) 48u << 3){
 						snake3 = spawn_enemy(snake3, SpriteSpider, 51u, 9u);
 						snake4 = spawn_enemy(snake4, SpriteSpider, 53u, 9u);
@@ -689,4 +713,20 @@ void UpdateHUD(){
 	PRINT_POS(2, 0); //up
 	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
 	else{Printf("0%d", archer_data->ups);}
+}
+
+void LCD_isr() NONBANKED {
+    if (LYC_REG == 0) {
+        if (WY_REG == 0) HIDE_SPRITES; else SHOW_SPRITES; 
+        LYC_REG = WY_REG;
+    } else {
+        HIDE_SPRITES; 
+        LYC_REG = 0;
+    }
+}
+
+void set_window_y(UBYTE y) {
+    WX_REG = 7u;
+    LYC_REG = WY_REG = y;
+    if (y < 144u) SHOW_WIN; else { HIDE_WIN; LYC_REG = 160u; } 
 }

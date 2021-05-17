@@ -93,6 +93,7 @@ void Update_SpritePlayer() {
 			archer_state = STATE_NORMAL;
 		}else{
 			if(show_diag < 2 & KEY_TICKED(J_A)){ //show_diag < max_diag
+				SetSpriteAnim(THIS, anim_idle, 33u);
 				show_diag += 1;
 			}
 		}
@@ -189,6 +190,8 @@ void Update_SpritePlayer() {
 					return;
 				}else{
 					//Check jumping
+					NR50_REG = 0x18; //Max volume		
+					PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 					Jump();
 				}
 			}
@@ -209,7 +212,8 @@ void Update_SpritePlayer() {
 		case STATE_JUMPING:
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
-			}else{
+			}
+			else{
 				if(KEY_TICKED(J_B)) {
 					Shoot();
 				}else{
@@ -423,12 +427,14 @@ void Update_SpritePlayer() {
 					if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
 						if (ispr->x < THIS->x){
 							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
-								ispr->x -= 10;
+								TranslateSprite(ispr, -10u << delta_time, -2u << delta_time);
+//								ispr->x -= 10;
 								being_hit = 0u;
 							}
 						}else{
 							if (!SPRITE_GET_VMIRROR(THIS)){
-								ispr->x += 10;
+								TranslateSprite(ispr, 10u << delta_time, -2u << delta_time);
+								//ispr->x += 10;
 								being_hit = 0u;
 							}
 						}					
@@ -562,8 +568,6 @@ void Shoot() {
 
 void Jump() {
 	if(archer_state != STATE_JUMPING) {
-		NR50_REG = 0x22; //Max volume		
-		//PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 		archer_state = STATE_JUMPING;
 		archer_accel_y = -14;
 		princess_parent = 0;
@@ -574,12 +578,7 @@ void Jump() {
 
 void MoveArcher() {
 	if(platform_vx || platform_vy){
-		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);	
-		/*if(archer_state == STATE_NORMAL_PLATFORM){
-			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
-		}else{
-			tile_collision = TranslateSprite(THIS, platform_vx << delta_time, 1);	
-		}*/		
+		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
 	}
 	if(KEY_PRESSED(J_LEFT)) {
 		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
