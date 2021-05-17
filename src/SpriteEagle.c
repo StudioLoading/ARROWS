@@ -30,8 +30,8 @@ void Start_SpriteEagle() {
 	THIS->coll_y = 4;
 	THIS->coll_w = 22;
 	THIS->coll_h = 22;
-	/*THIS->lim_x = 255u;
-	THIS->lim_y = 168u;*/
+	THIS->lim_x = 255u;
+	THIS->lim_y = 255u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, eagle_idle, 14u);
 	data->enemy_accel_y = 0;
@@ -150,15 +150,13 @@ void Update_SpriteEagle() {
 					if (data->hp <= 0){
 						data->enemy_state = ENEMY_STATE_DEAD;
 						data->hp = 0;
-						SetSpriteAnim(THIS, eagle_dead, 14u);
 						THIS->coll_x=0;
 						THIS->coll_y=0;
-						THIS->lim_x = 8u;
-						THIS->lim_y = 16u;
 						THIS->x = (UINT16) 10u << 3;
 						THIS->y = (UINT16) 12u << 3;
 						data->vx=0;
 						data->enemy_accel_y = 0;
+						SetSpriteAnim(THIS, eagle_dead, 14u);
 						NR50_REG = 0x55; //Max volume		
 						PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 					}

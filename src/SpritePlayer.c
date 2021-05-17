@@ -482,9 +482,9 @@ void Update_SpritePlayer() {
 		if(ispr->type == SpriteHurricane) {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {	
 				if (archer_state == STATE_JUMPING | archer_state == STATE_ASCENDING){
-					TranslateSprite(THIS, -2u << delta_time, -2u << delta_time);
+					TranslateSprite(THIS, -2u, -2u);
 				}else{
-					TranslateSprite(THIS, -2u << delta_time, -1u << delta_time);
+					TranslateSprite(THIS, -2u, -1u);
 				}
 			}
 		}

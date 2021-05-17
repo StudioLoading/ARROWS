@@ -19,6 +19,27 @@ LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 LIVELLI BONUS
 
 nella demo dare il 2.0 come inizio !!!!
+devo fare un dialogo/schermata apposta per mostrare l' amuleto per bene in grande quando lo prendo
+
+devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
+
+state di inizio ogni nuovo livello, sarà un tileset magari con una bella immagine a tutto schermo, tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
+
+schermata di scelta livello / mappa !
+
+intro iniziale con poesia su una pergamena di carta !
+
+
+GAMEOVER RESTYLED
+
+SOUND EFFECT DI 1UP
+SOUND EFFECT DI SHIELD
+SOUND EFFECT DI EXIT SENZA TOOL
+
+TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
+
+SOUND BACKGROUND PER OGNI LIVELLO
+
 
 polish:
 	- frame arciere di cambio di direzione - potrei sacrificare il frame di discesa
@@ -34,9 +55,6 @@ polish:
 
 
 
-devo fare un dialogo/schermata apposta per mostrare l' amuleto per bene in grande quando lo prendo
-
-devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
 
 bisogna pensare ad un maggior replay value: potrebbero esserci delle warp zone nelle stanze segrete (così posso usare lo SpriteGate dandogli la vx->fire) 
 il cui accesso è possibile solo rompendo un gate di fuoco ? Dato che il fuoco me lo da solo il boss finale ...
@@ -44,31 +62,15 @@ ecco: la prima volta che incontro il boss finale, lui non muore, e mi rispedisce
 con di nuovo il boss finale, ma più incazzato, e sensibile solo alle frecce di fuoco + pietra
 
 
-state di inizio ogni nuovo livello, sarà un tileset magari con una bella immagine a tutto schermo, tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
-
-schermata di scelta livello / mappa !
-
-intro iniziale con poesia su una pergamena di carta !
-
 CONTROLLO di tutti i suggerimenti/dialoghi
 
 Cheat in titleScreen KonamiCode
 	99 lives
 	tutti gli amuleti
 
-GAMEOVER RESTYLED
-
-SOUND EFFECT DI 1UP
-SOUND EFFECT DI SHIELD
-SOUND EFFECT DI EXIT SENZA TOOL
-
-
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
-TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
-
-SOUND BACKGROUND PER OGNI LIVELLO
 
 COLORI
 

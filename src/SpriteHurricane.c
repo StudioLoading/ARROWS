@@ -95,7 +95,7 @@ void Update_SpriteHurricane() {
 			if(CheckCollision(THIS, hspr)) {
 				struct ArrowInfo* arritem = (struct ArrowInfo*)hspr->custom_data;
 				if (arritem->original_type == 2u){
-					hdata->wait = 2u;
+					hdata->wait = 10u;
 					SetSpriteAnim(THIS, hurricane_dead, 10u);
 					hdata->enemy_state = ENEMY_STATE_DEAD;
 				}
@@ -106,6 +106,6 @@ void Update_SpriteHurricane() {
 }
 
 void Destroy_SpriteHurricane(){
-	struct EnemyInfo* hdata = (struct EnemyInfo*)THIS->custom_data;
-	hdata->enemy_state = ENEMY_STATE_DEAD;
+	struct EnemyInfo* hdata_dying = (struct EnemyInfo*)THIS->custom_data;
+	hdata_dying->enemy_state = ENEMY_STATE_DEAD;
 }

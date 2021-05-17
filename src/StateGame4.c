@@ -163,6 +163,11 @@ void ShowWindowDiag4(){
 void Start_StateGame4() {
 	
 	is_on_boss = -1;
+	scrigno_shield = 0;
+	scrigno_coin = 0;
+	scrigno_dcoin = 0;
+	scrigno_up = 0;
+	thunder_delay = 16u;
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette4, 2);
@@ -319,23 +324,26 @@ void Update_StateGame4() {
 						if (scroll_target->x == (UINT16) 120u << 3){
 							scrigno_shield = spawn_item4(scrigno_shield, 133u, 9u, 2, 1);
 						}
+						
 						switch(thunder_delay){
 							case 0u:
-								snake4 = spawn_enemy4(snake4, SpriteHurricane, (scroll_target->x >> 3) - 2u, 5u);
-								thunder_delay = 160u;
+								snake4 = spawn_enemy4(snake4, SpriteHurricane, (scroll_target->x >> 3), 7u);
+								datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+								thunder_delay = 121u;
 							break;
-							case 60u:
-								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 4u, 5u);
-							break;
-							case 90u:
-								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 2u, 6u);
-								datasnake3->vx = -1;
+							/*case 60u:
+								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 1u, 5u);
+								datasnake1 = (struct EnemyInfo*)snake1->custom_data;
+
 							break;
 							case 120u:
-								snake2 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3) - 4u, 6u);
-							break;
+								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
+								datasnake3 = (struct EnemyInfo*)snake3->custom_data;
+								datasnake3->vx = -1;
+							break;*/
 						}
 						thunder_delay -= 1u;
+						
 						//PRINT_POS(16,0);
 						//Printf("%d", thunder_delay);
 					}
@@ -343,17 +351,17 @@ void Update_StateGame4() {
 				case 1u:
 					switch(thunder_delay){
 						case 0u:
-							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 1u, 3u);
+							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 3u);
 							snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 1u, 3u);
-							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 3u, 2u);
-							snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) - 1u, 4u);
+							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 2u, 2u);
+							//snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 3u, 4u);
 							thunder_delay = 120u;
 						break;
 						case 60u:
-							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 1u, 3u);
+							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 3u);
 							snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 1u, 3u);
-							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 3u, 2u);
-							snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) - 1u, 4u);
+							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 2u, 2u);
+							//snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 3u, 4u);
 						break;
 					}
 					thunder_delay -= 1u;

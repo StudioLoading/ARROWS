@@ -51,7 +51,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 4u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_level = 2u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -693,7 +693,7 @@ void UpdateHUD(){
 	if (archer_data->hp > 9 && archer_data->hp < 100 && hp > 9){
 		Printf("0%d", hp);
 	}
-	if (archer_data->hp >= 100){
+	if (archer_data->hp >= 100 && hp >= 100){
 		Printf("%d", hp);	
 	}
 	//write tool
