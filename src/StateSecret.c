@@ -42,10 +42,10 @@ extern void UpdateHUD();
 extern struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
 //Secrets
-const struct MapInfo* secret_1[] = {
+const struct MapInfo* const secret_1[] = {
 	&mapsecret0
 };
-const struct MapInfo** secrets[] = {secret_1};
+const struct MapInfo** const secrets[] = {secret_1};
 
 //void ShowSWindow();
 

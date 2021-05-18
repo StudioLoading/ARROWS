@@ -26,12 +26,12 @@
 #include "custom_datas.h"
 
 
-const UINT8 collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 91, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 91, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
-const UINT16 bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
+const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 
-const UINT16 sprites_palette[] = {
+const UINT16 const sprites_palette[] = {
 	PALETTE_INDEX(archer, 0),
 	PALETTE_INDEX(archer, 1),
 	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
@@ -51,7 +51,7 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 2u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_level = 3u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -74,19 +74,19 @@ unsigned char d2[18];
 unsigned char d3[18];
 unsigned char d4[18];
 
-const struct MapInfo* level_1[] = {
+const struct MapInfo* const level_1[] = {
 	&map,
 	&map2
 };
-const struct MapInfo* level_2[] = {
+const struct MapInfo* const level_2[] = {
 	&mapsewer2,
 	&mapsewer
 };
-const struct MapInfo* level_3[] = {
+const struct MapInfo* const level_3[] = {
 	&map3,
 	&map3tree
 };
-const struct MapInfo** levels[] = {level_1, level_2, level_3};
+const struct MapInfo** const levels[] = {level_1, level_2, level_3};
 
 extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;

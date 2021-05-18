@@ -50,29 +50,29 @@ extern struct Sprite* snake2;
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 UINT8 current_map_b = 0u;
 
-const struct MapInfo* boss_0[] = {
+const struct MapInfo* const boss_0[] = {
 	&mapboss0
 };
-const struct MapInfo* boss_1[] = {
+const struct MapInfo* const boss_1[] = {
 	&mapboss1
 };
-const struct MapInfo* boss_2[] = {
+const struct MapInfo* const boss_2[] = {
 	&mapboss2
 };
-const struct MapInfo* boss_3[] = {
+const struct MapInfo* const boss_3[] = {
 	&mapboss3
 };
-const struct MapInfo* boss_4[] = {
+const struct MapInfo* const boss_4[] = {
 	&mapboss4
 };
-const struct MapInfo** bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4};
+const struct MapInfo** const bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4};
 
 struct Sprite* boss = 0;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
 struct Sprite* reward = 0;
 
-const UINT8 collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
 void WriteBBOSSHP();
 void populate_boss0();

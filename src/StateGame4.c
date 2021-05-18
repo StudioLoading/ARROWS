@@ -24,7 +24,7 @@
 #include "custom_datas.h"
 
 
-const UINT8 collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
 extern UINT16 bg_palette[];
@@ -81,15 +81,15 @@ struct Sprite* spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8
 
 
 //Maps
-const struct MapInfo* map_4[] = {
+const struct MapInfo* const map_4[] = {
 	&map41,
 	&map4
 };
-const struct MapInfo* map_5[] = {
+const struct MapInfo* const map_5[] = {
 	&map50, &map51
 };
 //Levels
-const struct MapInfo** maps4[] = {map_4, map_5};
+const struct MapInfo** const maps4[] = {map_4, map_5};
 
 const UINT16 bg_palette4[] = {PALETTE_FROM_HEADER(tiles4)};
 
