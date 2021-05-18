@@ -303,8 +303,9 @@ void ShowWindowDiag(){
 
 struct Sprite* spawn_enemy(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
 	SpriteManagerRemoveSprite(enem);
-	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
-	return enem;
+	enem = 0;
+	struct Sprite* enem_new = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	return enem_new;
 }
 
 struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){

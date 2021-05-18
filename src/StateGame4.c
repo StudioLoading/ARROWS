@@ -97,8 +97,9 @@ UINT8 thunder_delay = 16u;
 
 struct Sprite* spawn_enemy4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
 	SpriteManagerRemoveSprite(enem);
-	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
-	return enem;
+	enem = 0;
+	struct Sprite* enem_new = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	return enem_new;
 }
 
 struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
@@ -184,12 +185,7 @@ void Start_StateGame4() {
 		case 3u:
 			SpriteManagerLoad(SpriteThunder);
 			SpriteManagerLoad(SpriteHurricane);
-			if(current_map == 0){
-				snake1 = spawn_enemy4(snake1, SpriteHurricane, 1u, 0u);	
-				snake2 = spawn_enemy4(snake2, SpriteHurricane, 2u, 0u);	
-				snake3 = spawn_enemy4(snake3, SpriteHurricane, 3u, 0u);	
-				snake4 = spawn_enemy4(snake4, SpriteHurricane, 10u, 0u);		
-			}
+			//if(current_map == 0){}
 			if(current_map == 1){
 				snake1 = spawn_enemy4(snake1, SpriteThunder, 1u, 0u);	
 				snake2 = spawn_enemy4(snake2, SpriteThunder, 2u, 0u);	
@@ -215,7 +211,7 @@ void Start_StateGame4() {
 	
 	//SCROLL
 	scroll_bottom_movement_limit = 62;//customizzo altezza archer sul display
-	const struct MapInfo** level_maps4 = maps4[current_level-3u]; //current_level-3
+	const struct MapInfo** const level_maps4 = maps4[current_level-3u]; //current_level-3
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps4[current_map], &map_w, &map_h);
 	if (load_next_s){ //vengo da secret!
@@ -273,6 +269,7 @@ void Start_StateGame4() {
 	datasnake2 = (struct EnemyInfo*)snake2->custom_data;
 	datasnake3 = (struct EnemyInfo*)snake3->custom_data;
 	datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+	
 	if (!LCD_Installed) { 
 		CRITICAL {
 			add_LCD(LCD_isr4);
@@ -324,26 +321,28 @@ void Update_StateGame4() {
 						if (scroll_target->x == (UINT16) 120u << 3){
 							scrigno_shield = spawn_item4(scrigno_shield, 133u, 9u, 2, 1);
 						}
-						
 						switch(thunder_delay){
 							case 0u:
-								snake4 = spawn_enemy4(snake4, SpriteHurricane, (scroll_target->x >> 3), 7u);
-								datasnake4 = (struct EnemyInfo*)snake4->custom_data;
-								thunder_delay = 121u;
+								snake3 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3), 7u);
+								datasnake3 = (struct EnemyInfo*)snake3->custom_data;
+								thunder_delay = 180u;
 							break;
-							/*case 60u:
-								snake1 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 1u, 5u);
-								datasnake1 = (struct EnemyInfo*)snake1->custom_data;
-
+							case 60u:
+								snake4 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 5u, 5u);
+								datasnake4 = (struct EnemyInfo*)snake4->custom_data;
 							break;
 							case 120u:
-								snake3 = spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
-								datasnake3 = (struct EnemyInfo*)snake3->custom_data;
-								datasnake3->vx = -1;
-							break;*/
+								snake1= spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
+								datasnake2 = (struct EnemyInfo*)snake2->custom_data;
+								datasnake2->vx = -1;
+							break;
+							case 180u:
+								snake2= spawn_enemy4(snake4, SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
+								datasnake2 = (struct EnemyInfo*)snake2->custom_data;
+								datasnake2->vx = -1;
+							break;
 						}
 						thunder_delay -= 1u;
-						
 						//PRINT_POS(16,0);
 						//Printf("%d", thunder_delay);
 					}
