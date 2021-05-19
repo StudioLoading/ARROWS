@@ -422,19 +422,16 @@ void Update_SpritePlayer() {
 				}
 				UINT8 being_hit = 1u;
 				if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
-					&& ispr->type != SpriteEagle
-					&& ispr->type != SpriteIbex && ispr->type != SpriteBear){
-					if (KEY_PRESSED(J_DOWN)){ //se mi sto riparando e lo sono girato dove serve
+					&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider){
+					if (KEY_PRESSED(J_DOWN) && !dataenemy->tile_e_collision){ //se mi sto riparando e lo sono girato dove serve
 						if (ispr->x < THIS->x){
-							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene	
+							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene
 								TranslateSprite(ispr, -10u << delta_time, -2u << delta_time);
-//								ispr->x -= 10;
 								being_hit = 0u;
 							}
 						}else{
 							if (!SPRITE_GET_VMIRROR(THIS)){
 								TranslateSprite(ispr, 10u << delta_time, -2u << delta_time);
-								//ispr->x += 10;
 								being_hit = 0u;
 							}
 						}					
@@ -511,7 +508,7 @@ void Update_SpritePlayer() {
 					ispr->coll_y = 2;
 					ispr->coll_w = 8;
 					if (SPRITE_GET_VMIRROR(ispr)){
-						platform_vx = -datap->vx;	
+						platform_vx = 0-datap->vx;	
 					}else{
 						platform_vx = datap->vx;	
 					}					
@@ -697,7 +694,7 @@ void Hit() {
 	if (archer_state != STATE_DEAD & archer_state != STATE_HIT){
 		archer_state = STATE_HIT;
 		platform_vx = 1;
-		THIS->y -= 6;
+		tile_collision = TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
 		SetSpriteAnim(THIS, anim_hit, 32u);
 		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
 	}

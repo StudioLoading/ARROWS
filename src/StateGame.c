@@ -24,9 +24,10 @@
 #include "gbt_player.h"
 
 #include "custom_datas.h"
+#include "TileAnimations.h"
 
 
-const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 91, 92, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
 const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
@@ -51,8 +52,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 3u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+UINT8 current_level = 1u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -125,6 +126,7 @@ void Start_StateGame() {
 		break;
 		case 1u:
 			SpriteManagerLoad(SpriteKey);
+			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteRat);
 			SpriteManagerLoad(SpriteSpider);
 		break;
@@ -216,10 +218,18 @@ void Start_StateGame() {
 		break;
 		case 1u:
 			switch(current_map){
+				case 0u:
+					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
+						snake1 = spawn_enemy(snake2, SpriteSpider, 12u, 5u);
+						snake2 = spawn_enemy(snake3, SpriteSpider, 14u, 6u);
+					}
+				break;
 				case 1u:
 					level_tool = 6;
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
 						scrigno_shield = spawn_item(scrigno_shield, 42u, 21u, 2, 1);
+						snake1 = spawn_enemy(snake2, SpriteRat, 18u, 4u);
+						snake4 = spawn_enemy(snake3, SpriteEnemy, 17u, 4u);
 					}
 				break;
 			}
@@ -407,32 +417,23 @@ void Update_StateGame() {
 			switch(current_map){
 				case 0:
 					if (scroll_target->x == drop_player_x << 4){
-						snake1 = spawn_enemy(snake1, SpriteSpider, 12u, 5u);
-						snake2 = spawn_enemy(snake2, SpriteSpider, 14u, 6u);
-						snake3 = spawn_enemy(snake3, SpriteSpider, 21u, 4u);
+						snake3 = spawn_enemy(snake4, SpriteSpider, 21u, 4u);
 					}
 					if (scroll_target->x == (UINT16) 5u << 3 | scroll_target->x == (UINT16) 6u << 3){
 						scrigno_up = spawn_item(scrigno_up, 26u, 5u, 3, 1);
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 35u, 6u);
 					}
-					if (scroll_target->x == (UINT16) 43u << 3){
-						snake1 = spawn_enemy(snake1, SpriteRat, 51u, 6u);
-					}
 					if (scroll_target->x == (UINT16) 48u << 3){
-						SpriteManagerRemoveSprite(snake1);
-						SpriteManagerRemoveSprite(snake2);
-						SpriteManagerRemoveSprite(snake3);
-						SpriteManagerRemoveSprite(snake4);
-						snake2 = spawn_enemy(snake2, SpriteRat, 56u, 2u);
-						snake3 = spawn_enemy(snake3, SpriteRat, 58u, 2u);
+						snake1 = spawn_enemy(snake2, SpriteRat, 58u, 6u);
+						snake3 = spawn_enemy(snake4, SpriteRat, 61u, 6u);
+					}
+					if (scroll_target->x == (UINT16) 80u << 3 && scroll_target->y > (UINT16) 16u << 3){
+						scrigno_shield = spawn_item(scrigno_shield, 93u, 18u, 2, 1);
 					}
 					if (scroll_target->x == (UINT16) 67u << 3){
-						snake4 = spawn_enemy(snake4, SpriteRat, 81u, 3u);
-						SpriteManagerRemoveSprite(snake1);
-						SpriteManagerRemoveSprite(snake2);
-						SpriteManagerRemoveSprite(snake3);
-						snake1 = spawn_enemy(snake1, SpriteRat, 83u, 3u);
-						snake2 = spawn_enemy(snake2, SpriteSpider, 85u, 5u);
+						snake2 = spawn_enemy(snake1, SpriteRat, 81u, 3u);
+						snake4 = spawn_enemy(snake3, SpriteRat, 88u, 3u);
+						snake1 = spawn_enemy(snake3, SpriteSpider, 85u, 5u);
 						scrigno_dcoin = spawn_item(scrigno_dcoin, 85u, 5u, 7, 1);
 					}
 					if (scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3){
@@ -443,38 +444,27 @@ void Update_StateGame() {
 					}
 				break;
 				case 1:
-					if (scroll_target->x == drop_player_x << 3 & scroll_target->y == (drop_player_y +1u) << 3){
-						snake1 = spawn_enemy(snake1, SpriteRat, 18u, 4u);
-						snake2 = spawn_enemy(snake2, SpriteRat, 14u, 4u);
+					if (scroll_target->x == (UINT16) 4u << 3 && scroll_target->y >= (INT16) 12u  << 3 && scroll_target->y <= (INT16) 17u  << 3){
+						snake3 = spawn_enemy(snake1, SpriteRat, 14u, 14u);
+						snake2 = spawn_enemy(snake4, SpriteSpider, 13u, 13u);
 					}
-					if (scroll_target->x == (UINT16) 4u << 3 & scroll_target->y == (INT16) 14u  << 3){
-						SpriteManagerRemoveSprite(snake1);
-						SpriteManagerRemoveSprite(snake2);
-						snake3 = spawn_enemy(snake3, SpriteRat, 14u, 14u);
-						snake4 = spawn_enemy(snake4, SpriteSpider, 13u, 13u);
+					if (scroll_target->x == (UINT16) 29u << 3 && scroll_target->y == (INT16) 3u  << 3){
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 39u, 7u, 1, 1);
 					}
-					if (scroll_target->x == (UINT16) 29u << 3 & scroll_target->y == (INT16) 3u  << 3){
-						scrigno_coin = spawn_item(scrigno_coin, 45u, 3u, 1, 1);
-					}
-					if (scroll_target->x == (UINT16) 19u << 3 & scroll_target->y == (INT16) 14u  << 3){
-						snake1 = spawn_enemy(snake1, SpriteSpider, 31u, 11u);
-					}
-					if (scroll_target->x == (UINT16) 28u << 3 & scroll_target->y == (INT16) 14u  << 3){
+					if (scroll_target->x == (UINT16) 28u << 3 && scroll_target->y == (INT16) 14u  << 3){
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 34u, 14u);
-						snake2 = spawn_enemy(snake2, SpriteRat, 43u, 14u);
+						snake1 = spawn_enemy(snake3, SpriteRat, 43u, 14u);
 					}
-					if (scroll_target->x == (UINT16) 42u << 3 & scroll_target->y == (INT16) 28u  << 3){
-						snake3 = spawn_enemy(snake3, SpriteSpider, 48u, 26u);
+					if (scroll_target->x == (UINT16) 42u << 3 && scroll_target->y == (INT16) 28u  << 3){
+						snake4 = spawn_enemy(snake2, SpriteSpider, 48u, 26u);
 					}
-					if (scroll_target->x == (UINT16) 53u << 3 & scroll_target->y == (INT16) 28u  << 3){
-						snake4 = spawn_enemy(snake4, SpriteSpider, 64u, 21u);
+					if (scroll_target->x == (UINT16) 53u << 3 && scroll_target->y == (INT16) 28u  << 3){
+						snake2 = spawn_enemy(snake3, SpriteSpider, 64u, 21u);
 						scrigno_dcoin = spawn_item(scrigno_dcoin, 67u, 23u, 7, 1);
 					}
-					if (scroll_target->x == (UINT16) 66u << 3 & scroll_target->y == (INT16) 10u  << 3){
-						snake1 = spawn_enemy(snake1, SpriteRat, 64u, 15u);
-						snake2 = spawn_enemy(snake2, SpriteRat, 60u, 15u);
-						SpriteManagerRemoveSprite(snake3);
-						SpriteManagerRemoveSprite(snake4);
+					if (scroll_target->x == (UINT16) 66u << 3 && scroll_target->y == (INT16) 10u  << 3){
+						snake3 = spawn_enemy(snake4, SpriteRat, 64u, 15u);
+						snake2 = spawn_enemy(snake1, SpriteRat, 60u, 15u);
 						scrigno_up = spawn_item(scrigno_up, 62u, 15u, 3, 1);
 					}
 				break;
@@ -554,71 +544,31 @@ void Update_StateGame() {
 	}
 	
 	//MOVING BACKGROUND TILES	
-	
-	if (current_level == 1 & current_map == 0){
+	//if (current_level == 1){
 		updatecounter++;
 		if (updatecounter < 21) {
-			const unsigned char wv0[1] = {120};
-			const unsigned char wv1[1] = {127};
 			switch(updatecounter){
 				case 1:	
-					set_bkg_tiles(55, 9, 1, 1, wv0); set_bkg_tiles(56, 6, 1, 1, wv0); set_bkg_tiles(55, 10, 1, 1, wv0); set_bkg_tiles(56, 10, 1, 1, wv0); 
-					set_bkg_tiles(55, 11, 1, 1, wv0); set_bkg_tiles(56, 11, 1, 1, wv0); set_bkg_tiles(55, 12, 1, 1, wv0); set_bkg_tiles(56, 12, 1, 1, wv0); 
-					set_bkg_tiles(55, 13, 1, 1, wv0); set_bkg_tiles(56, 13, 1, 1, wv0); set_bkg_tiles(55, 14, 1, 1, wv0); set_bkg_tiles(56, 14, 1, 1, wv0); 
-					set_bkg_tiles(55, 15, 1, 1, wv0); set_bkg_tiles(56, 15, 1, 1, wv0); set_bkg_tiles(55, 16, 1, 1, wv0); set_bkg_tiles(56, 16, 1, 1, wv0); 
-					set_bkg_tiles(55, 17, 1, 1, wv0); set_bkg_tiles(56, 17, 1, 1, wv0); set_bkg_tiles(55, 18, 1, 1, wv0); set_bkg_tiles(56, 18, 1, 1, wv0); 
-					set_bkg_tiles(55, 19, 1, 1, wv0); set_bkg_tiles(56, 19, 1, 1, wv0); set_bkg_tiles(55, 20, 1, 1, wv0); set_bkg_tiles(56, 20, 1, 1, wv0); 
-					set_bkg_tiles(55, 21, 1, 1, wv0); set_bkg_tiles(56, 21, 1, 1, wv0); 
+					AnimMinifall0();
+					AnimWaterfall0();
+					AnimWaterHlight0();
+					AnimSlideRight0();
+					AnimSlideLeft0();
+					AnimSlideUp0();
 				break;
-				case 10:	
-					set_bkg_tiles(55, 9, 1, 1, wv1); set_bkg_tiles(56, 9, 1, 1, wv1); set_bkg_tiles(55, 10, 1, 1, wv1); set_bkg_tiles(56, 10, 1, 1, wv1); 
-					set_bkg_tiles(55, 11, 1, 1, wv1); set_bkg_tiles(56, 11, 1, 1, wv1); set_bkg_tiles(55, 12, 1, 1, wv1); set_bkg_tiles(56, 12, 1, 1, wv1); 
-					set_bkg_tiles(55, 13, 1, 1, wv1); set_bkg_tiles(56, 13, 1, 1, wv1); set_bkg_tiles(55, 14, 1, 1, wv1); set_bkg_tiles(56, 14, 1, 1, wv1); 
-					set_bkg_tiles(55, 15, 1, 1, wv1); set_bkg_tiles(56, 15, 1, 1, wv1); set_bkg_tiles(55, 16, 1, 1, wv1); set_bkg_tiles(56, 16, 1, 1, wv1); 
-					set_bkg_tiles(55, 17, 1, 1, wv1); set_bkg_tiles(56, 17, 1, 1, wv1); set_bkg_tiles(55, 18, 1, 1, wv1); set_bkg_tiles(56, 18, 1, 1, wv1); 
-					set_bkg_tiles(55, 19, 1, 1, wv1); set_bkg_tiles(56, 19, 1, 1, wv1); set_bkg_tiles(55, 20, 1, 1, wv1); set_bkg_tiles(56, 20, 1, 1, wv1); 
-					set_bkg_tiles(55, 21, 1, 1, wv1); set_bkg_tiles(56, 21, 1, 1, wv1); 
+				case 10:
+					AnimWaterfall1();
+					AnimMinifall1();
+					AnimWaterHlight1();
+					AnimSlideRight1();
+					AnimSlideLeft1();
+					AnimSlideUp1();
 				break;
 			}			
 		}else{
 			updatecounter = 0;
 		}
-	}
-	if (current_level == 1 & current_map == 1){
-		updatecounter++;
-		if (updatecounter < 21) {
-			const unsigned char wf0[1] = {123};
-			const unsigned char wf1[1] = {124};
-			const unsigned char wt0[1] = {125};
-			const unsigned char wt1[1] = {126};
-			const unsigned char wv0[1] = {120};
-			const unsigned char wv1[1] = {127};
-			switch(updatecounter){
-				case 1:	
-					set_bkg_tiles(32, 1, 1, 1, wf0); set_bkg_tiles(32, 2, 1, 1, wf0); set_bkg_tiles(32, 3, 1, 1, wf0);
-					set_bkg_tiles(61, 24, 1, 1, wf0); set_bkg_tiles(61, 25, 1, 1, wf0); set_bkg_tiles(61, 26, 1, 1, wf0); set_bkg_tiles(61, 27, 1, 1, wf0);
-					set_bkg_tiles(1, 6, 1, 1, wv0); set_bkg_tiles(2, 6, 1, 1, wv0); set_bkg_tiles(1, 7, 1, 1, wv0);
-					set_bkg_tiles(2, 7, 1, 1, wv0); set_bkg_tiles(1, 8, 1, 1, wv0); set_bkg_tiles(2, 8, 1, 1, wv0);
-					set_bkg_tiles(1, 9, 1, 1, wv0); set_bkg_tiles(2, 9, 1, 1, wv0); set_bkg_tiles(1,10, 1, 1, wv0);
-					set_bkg_tiles(2, 10, 1, 1, wv0); set_bkg_tiles(1, 11, 1, 1, wv0); set_bkg_tiles(2, 11, 1, 1, wv0);
-					set_bkg_tiles(1, 12, 1, 1, wv0); set_bkg_tiles(2, 12, 1, 1, wv0); set_bkg_tiles(1, 13, 1, 1, wv0);
-					set_bkg_tiles(2, 13, 1, 1, wv0); set_bkg_tiles(1, 14, 1, 1, wv0); set_bkg_tiles(2, 14, 1, 1, wv0);
-					set_bkg_tiles(31, 5, 1, 1, wt0); set_bkg_tiles(32, 4, 1, 1, wt0);
-				break;
-				case 10:	
-					set_bkg_tiles(32, 1, 1, 1, wf1); set_bkg_tiles(32, 2, 1, 1, wf1); set_bkg_tiles(32, 3, 1, 1, wf1);
-					set_bkg_tiles(61, 24, 1, 1, wf1); set_bkg_tiles(61, 25, 1, 1, wf1); set_bkg_tiles(61, 26, 1, 1, wf1); set_bkg_tiles(61, 27, 1, 1, wf1);
-					set_bkg_tiles(1, 6, 1, 1, wv1); set_bkg_tiles(2, 6, 1, 1, wv1); set_bkg_tiles(1, 7, 1, 1, wv1); set_bkg_tiles(2, 7, 1, 1, wv1);
-					set_bkg_tiles(1, 8, 1, 1, wv1); set_bkg_tiles(2, 8, 1, 1, wv1); set_bkg_tiles(1, 9, 1, 1, wv1); set_bkg_tiles(2, 9, 1, 1, wv1);
-					set_bkg_tiles(1, 10, 1, 1, wv1); set_bkg_tiles(2, 10, 1, 1, wv1); set_bkg_tiles(1, 11, 1, 1, wv1); set_bkg_tiles(2, 11, 1, 1, wv1);
-					set_bkg_tiles(1, 12, 1, 1, wv1);  set_bkg_tiles(2, 12, 1, 1, wv1); set_bkg_tiles(1, 13, 1, 1, wv1); set_bkg_tiles(2, 13, 1, 1, wv1);
-					set_bkg_tiles(1, 14, 1, 1, wv1); set_bkg_tiles(2, 14, 1, 1, wv1); set_bkg_tiles(32, 4, 1, 1, wt1);
-				break;
-			}			
-		}else{
-			updatecounter = 0;
-		}
-	}
+	//}
 	
 	
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 

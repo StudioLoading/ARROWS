@@ -1,0 +1,12 @@
+void AnimWaterfall0() __banked;
+void AnimWaterfall1() __banked;
+void AnimMinifall0() __banked;
+void AnimMinifall1() __banked;
+void AnimWaterHlight0() __banked;
+void AnimWaterHlight1() __banked;
+void AnimSlideRight0() __banked;
+void AnimSlideRight1() __banked;
+void AnimSlideLeft0() __banked;
+void AnimSlideLeft1() __banked;
+void AnimSlideUp0() __banked;
+void AnimSlideUp1() __banked;

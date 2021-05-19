@@ -1,13 +1,15 @@
 KNOWN ISSUE:
 	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
 
-LINK all' ultima release:
+
+- Dropping into this stage where enemies instantly attack seems a little harsh
+- crashes caricando gli snapshot su /home/utente/ARROWS/crashes/
+- entrando dal boss, la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappa
+
+CONFIG DI PROTOTIPO:
+	2.0 come inizio
 	https://github.com/StudioLoading/FLYING_ARROWS/releases/latest
-
-- The jump arc feels weird, given the constant rising speed
-
-- Enemies appear over the textbox as well (chiesto su discord https://discord.com/channels/790342889318252555/790346049377927168/843860593030201364)
-
+	
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -18,7 +20,8 @@ LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 LIVELLI BONUS
 
-nella demo dare il 2.0 come inizio !!!!
+
+
 devo fare un dialogo/schermata apposta per mostrare l' amuleto per bene in grande quando lo prendo
 
 devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
@@ -42,6 +45,7 @@ SOUND BACKGROUND PER OGNI LIVELLO
 
 
 polish:
+	- background animation sui nastri che mi fanno scivolare 
 	- frame arciere di cambio di direzione - potrei sacrificare il frame di discesa
 	- bordo cornice tutto schermo del livello bonus
 	- sound del salto - ce lo ha anche superMarioLand!
@@ -52,7 +56,8 @@ polish:
 	- sound quando viene spawnato un oggetto
 	- sound quando viene spawnato un amuleto!
 	- You can see the player's health reset before the fadeout on death
-
+	- sound di quando lo scrigno si apre !	
+	
 
 
 
@@ -114,22 +119,45 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c
-//WINDOW
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
-	ShowWindow();
-...
+set_bkg_data(120u, 1u, tiles->tiles_internal->tiles_tiles)
+```
+where :
+- tiles is 
+```c
+struct TilesInfo tiles = {
+	3, //bank
+	&tiles_internal, //data
+};```
 
-void ShowWindow(){
-	showing_diag = 0;
-	show_diag = -1;
-	HIDE_WIN;
-	//WINDOW
-	WX_REG = 7;
-	WY_REG = 144 - 8;
-	InitWindow(0, 0, &window);
-	SHOW_WIN;
-	
-	UpdateHUD();
+tiles_internal is 
+```c
+const struct TilesInfoInternal tiles_internal = {
+	8, //width
+	8, //height
+	128, //num_tiles
+	tiles_tiles, //tiles
+	tilesCGB, //CGB palette
+};```
+and finally tiles_tiles is
+
+```c
+set_bkg_data(120u, 1u, tiles.data->data+2032u);
+```
+I expect, in the map i am seeing in screen, every tile 120 be overwritten by tile 127.
+
+
+```c
+set_bkg_data(127u, 1u, tiles.data->data+1920u);
+```
+I expect, in the map i am seeing in screen, every tile 127 be overwritten by tile 120.
+
+```c
+snake3 = spawn_enemy4(snake2, SpriteHurricane, (scroll_target->x >> 3), 7u);
+...
+struct Sprite* spawn_enemy4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
+	SpriteManagerRemoveSprite(enem);
+	enem = 0;
+	struct Sprite* enem_new = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	return enem_new;
 }
 ```

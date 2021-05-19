@@ -30,7 +30,7 @@ void Start_SpriteRat() {
 	SetSpriteAnim(THIS, rat_idle, 8u);
 	rdata->enemy_accel_y = 24;
 	rdata->vx = 1;
-	rdata->wait = 0u;
+	rdata->wait = 20u;
 	rdata->hp = 24u;
 	rdata->enemy_state = ENEMY_STATE_NORMAL;
 }

@@ -28,7 +28,6 @@ const UINT8 arrow_stone_g[] = {1, 12};
 const UINT8 arrow_blast_g[] = {1, 13};
 const UINT8 arrow_fire_g[] = {1, 14};
 const UINT8 spine[] = {1, 15};
-UINT8 tile_a_collision;
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
 //UINT8 ids[4] = {0,0,0,0};
@@ -36,8 +35,7 @@ struct Sprite * ids[4] = {0,0,0,0};
 INT8 falen = 0; //counts in-screen arrows 
 
 void SetupArrow();
-void CheckCollisionArrowTile();
-//void FApush(UINT8 new_val);
+void CheckCollisionArrowTile(UINT8 ta);
 void FApush();
 void FApop();
 
@@ -54,7 +52,7 @@ void Start_SpriteArrow() {
 	data->type = 0;
 	data->original_type = 0;
 	data->arrowdir = -1;
-	data->counter = 0;
+	//data->counter = 0;
 
 	FApush();
 }
@@ -89,13 +87,15 @@ void Update_SpriteArrow() {
 		SetupArrow();
 		data->original_type = internal_t;
 	}
-	if(data->original_type == 1 || data->original_type == 3){
+	/*
+	if( data->original_type == 3){ // data->original_type == 1 ||
 		if(!data->counter){
 			data->counter = 2;
 			return;
 		}
 		data->counter--;
-	}
+	}*/
+	UINT8 tile_a_collision = 0u;
 	if(SPRITE_GET_VMIRROR(THIS)) {
 		THIS->coll_x = 0;
 		tile_a_collision = TranslateSprite(THIS, -data->vx << delta_time, data->vy << delta_time);
@@ -104,7 +104,7 @@ void Update_SpriteArrow() {
 		tile_a_collision = TranslateSprite(THIS, data->vx << delta_time, data->vy << delta_time);
 	}	
 	if(tile_a_collision){
-		CheckCollisionArrowTile();
+		CheckCollisionArrowTile(tile_a_collision);
 	}
 	SPRITEMANAGER_ITERATE(scroll_a_tile, iaspr) {
 		if(iaspr->type == SpriteItem) {
@@ -133,20 +133,20 @@ void SetupArrow(){
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	switch(internal_t) {
 		case 1: //NORMAL
-			data->arrowdamage = 7u;
+			data->arrowdamage = 8u;
 			switch(data->arrowdir){
 				case 1: //orizzontale
 					data->vy = 0;
-					data->vx = 2;
+					data->vx = 1;
 					SetSpriteAnim(THIS, arrow_normal, 18u);
 				break;
 				case 3: //verticale in su
-					data->vy = -2;
+					data->vy = -1;
 					data->vx = 0;
 					SetSpriteAnim(THIS, arrow_normal_v, 18u);	
 				break;
 				case 4: //verticale in giu
-					data->vy = 2;
+					data->vy = 1;
 					data->vx = 0;
 					SetSpriteAnim(THIS, arrow_normal_g, 18u);	
 				break;
@@ -154,7 +154,7 @@ void SetupArrow(){
 			data->type = 0;
 		break;
 		case 2: //STONE
-			data->arrowdamage = 15u;
+			data->arrowdamage = 16u;
 			switch(data->arrowdir){
 				case 1:
 					data->vy = 0;
@@ -250,9 +250,9 @@ void SetupArrow(){
 	}
 }
 
-void CheckCollisionArrowTile() {	
+void CheckCollisionArrowTile(UINT8 ta) {	
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	switch(tile_a_collision) {
+	switch(ta) {
 		case 11u: //da DX a GIU
 			data->arrowdir = 4;
 			THIS->x -= 2;
@@ -278,7 +278,7 @@ void CheckCollisionArrowTile() {
 			data->arrowdir = 4;
 			THIS->x -= 2;
 			THIS->y += 4;
-			data->original_type = 4; //questo dovrebbe triggerare il Setup al prossimo frame
+			data->original_type = 3; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		default:
 			data->arrowdamage = 100;
@@ -288,7 +288,6 @@ void CheckCollisionArrowTile() {
 	}
 	data->type = data->original_type;
 }
-
 
 void Destroy_SpriteArrow() {	
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;

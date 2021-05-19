@@ -177,7 +177,7 @@ void Start_StateBoss() {
 			boss_hp = boss_data_b->hp;
 			gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
 			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
-			gatedata->vx = 4;
+			gatedata->vx = 3;
 		break;
 		case 4u:
 			boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 12u << 3);
