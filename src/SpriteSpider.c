@@ -56,23 +56,23 @@ void Update_SpriteSpider() {
 			spdata->enemy_state = ENEMY_STATE_NORMAL;
 			SetSpriteAnim(THIS, spider_idle, 8u);
 		}
-		return;
-	}
-	
-	spdata->wait -= 1u;
-	if (spdata->wait > 0u){
-		//if(spdata->wait >> 2 < 2u){
-			spdata->tile_e_collision = TranslateSprite(THIS, 0, spdata->vx << delta_time);	
-		//}		
-	}
-	if (spdata->wait == 0u){
-		spdata->wait = 120u;
-	}
-	
-	CheckCollisionETile();
-	
-	if(spdata->tile_e_collision == 18u | spdata->tile_e_collision == 22u | spdata->tile_e_collision == 23u | spdata->tile_e_collision == 81u | spdata->tile_e_collision == 104u){
-		spdata->vx = -spdata->vx;
+		//return;
+	}else{
+		spdata->wait -= 1u;
+		if (spdata->wait > 0u){
+			//if(spdata->wait >> 2 < 2u){
+				spdata->tile_e_collision = TranslateSprite(THIS, 0, spdata->vx << delta_time);	
+			//}		
+		}
+		if (spdata->wait == 0u){
+			spdata->wait = 120u;
+		}
+		
+		CheckCollisionETile();
+		
+		if(spdata->tile_e_collision == 18u | spdata->tile_e_collision == 22u | spdata->tile_e_collision == 23u | spdata->tile_e_collision == 81u | spdata->tile_e_collision == 104u){
+			spdata->vx = -spdata->vx;
+		}
 	}
 	
 	UINT8 scroll_s_tile;

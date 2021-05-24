@@ -17,6 +17,7 @@
 #include "Print.h"
 
 #include "custom_datas.h"
+#include "TileAnimations.h"
 
 
 extern UINT8 collision_tiles[];
@@ -47,7 +48,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 3u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* const boss_0[] = {
@@ -72,7 +73,7 @@ INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
 struct Sprite* reward = 0;
 
-const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -282,29 +283,14 @@ void Update_StateBoss() {
 	
 	//MOVING BACKGROUND TILES	
 	if (current_level_b == 1u & current_map_b == 0){
-		UINT8 idxswamp = 0u;
 		updatecounter++;
-		if (updatecounter < 21) {
-			const unsigned char wf0[1] = {123};
-			const unsigned char wf1[1] = {124};
-			const unsigned char wt0[1] = {112};
-			const unsigned char wt1[1] = {113};
+		if (updatecounter < 41) {
 			switch(updatecounter){
-				case 1:	
-					set_bkg_tiles(15u, 12u, 1, 1, wf0); set_bkg_tiles(15u, 13u, 1, 1, wf0); set_bkg_tiles(15u, 14u, 1, 1, wf0);
-					set_bkg_tiles(26u, 12u, 1, 1, wf0); set_bkg_tiles(26u, 13u, 1, 1, wf0); set_bkg_tiles(26u, 14u, 1, 1, wf0);
-					set_bkg_tiles(37u, 12u, 1, 1, wf0); set_bkg_tiles(37u, 13u, 1, 1, wf0); set_bkg_tiles(37u, 14u, 1, 1, wf0);
-					for (idxswamp = 6u; idxswamp < 42u; idxswamp += 1u){
-						set_bkg_tiles(idxswamp, 15u, 1, 1, wt0); 
-					}
+				case 1:
+					AnimWaters0();
 				break;
-				case 10:	
-					set_bkg_tiles(15u, 12u, 1, 1, wf1); set_bkg_tiles(15u, 13u, 1, 1, wf1); set_bkg_tiles(15u, 14u, 1, 1, wf1);
-					set_bkg_tiles(26u, 12u, 1, 1, wf1); set_bkg_tiles(26u, 13u, 1, 1, wf1); set_bkg_tiles(26u, 14u, 1, 1, wf1);
-					set_bkg_tiles(37u, 12u, 1, 1, wf1); set_bkg_tiles(37u, 13u, 1, 1, wf1); set_bkg_tiles(37u, 14u, 1, 1, wf1);
-					for (idxswamp = 6u; idxswamp < 42u; idxswamp += 1u){
-						set_bkg_tiles(idxswamp, 15u, 1, 1, wt1); 
-					}
+				case 20:
+					AnimWaters1();
 				break;
 			}			
 		}else{

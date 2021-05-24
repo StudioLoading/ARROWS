@@ -110,7 +110,7 @@ void Update_SpriteAlligator() {
 			if(CheckCollision(THIS, iaspr) & alligator_data->enemy_state != ENEMY_STATE_DEAD) {
 				if(alligator_data->enemy_state != ENEMY_STATE_INVISIBLE & alligator_data->enemy_state != ENEMY_STATE_HIDDEN){ 
 					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iaspr->custom_data;
-					if (arrowdata->arrowdir != 1){ //hit solo se freccia non orizzontale
+					if (arrowdata->arrowdir != 1 && arrowdata->original_type == 2){ //hit solo se freccia non orizzontale
 						//alligator_data->wait = 28u;
 						SetSpriteAnim(THIS, alligator_hit, 18u);
 						if(arrowdata->arrowdamage){

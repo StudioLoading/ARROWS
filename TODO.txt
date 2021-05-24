@@ -2,9 +2,9 @@ KNOWN ISSUE:
 	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
 
 
-- Dropping into this stage where enemies instantly attack seems a little harsh
-- crashes caricando gli snapshot su /home/utente/ARROWS/crashes/
 - entrando dal boss, la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappa
+- l' amuleto scende infondo allo schermo e se ne fotte delle collisioni
+-
 
 CONFIG DI PROTOTIPO:
 	2.0 come inizio
@@ -13,11 +13,16 @@ CONFIG DI PROTOTIPO:
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
+	mettere ridirezione come con l' ibex !!
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
+		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
+		- piattaforma cadente quando ci atterro sopra
 LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
+		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
+
 LIVELLI BONUS
 
 

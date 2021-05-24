@@ -69,6 +69,8 @@ void Update_SpriteThunder() {
 			break;
 			case 100u:
 			case 101u:
+			case 102u:
+			case 103u:
 				THIS->y++;
 			break;
 		}

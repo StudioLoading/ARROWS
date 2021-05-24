@@ -87,14 +87,6 @@ void Update_SpriteArrow() {
 		SetupArrow();
 		data->original_type = internal_t;
 	}
-	/*
-	if( data->original_type == 3){ // data->original_type == 1 ||
-		if(!data->counter){
-			data->counter = 2;
-			return;
-		}
-		data->counter--;
-	}*/
 	UINT8 tile_a_collision = 0u;
 	if(SPRITE_GET_VMIRROR(THIS)) {
 		THIS->coll_x = 0;
@@ -273,6 +265,12 @@ void CheckCollisionArrowTile(UINT8 ta) {
 			data->arrowdir = 1;
 			THIS->x -= 4;
 			THIS->y -= 4;
+		break;
+		case 89u: //STONE generator da DX a GIU
+			data->arrowdir = 4;
+			THIS->x -= 2;
+			THIS->y += 4;
+			data->original_type = 2; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		case 90u: //thunder generator da DX a GIU
 			data->arrowdir = 4;

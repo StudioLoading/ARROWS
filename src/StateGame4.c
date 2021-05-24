@@ -22,9 +22,10 @@
 #include "gbt_player.h"
 
 #include "custom_datas.h"
+#include "TileAnimations.h"
 
 
-const UINT8 const collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
 extern UINT16 bg_palette[];
@@ -329,7 +330,7 @@ void Update_StateGame4() {
 							break;
 							case 60u:
 								snake4 = spawn_enemy4(snake1, SpriteHurricane, (scroll_target->x >> 3) + 5u, 5u);
-								datasnake4 = (struct EnemyInfo*)snake4->custom_data;
+								//datasnake4 = (struct EnemyInfo*)snake4->custom_data;
 							break;
 							case 120u:
 								snake1= spawn_enemy4(snake3, SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
@@ -357,8 +358,8 @@ void Update_StateGame4() {
 							thunder_delay = 120u;
 						break;
 						case 60u:
-							snake1 = spawn_enemy4(snake1, SpriteThunder, (scroll_target->x >> 3) + 4u, 3u);
-							snake2 = spawn_enemy4(snake2, SpriteThunder, (scroll_target->x >> 3) - 1u, 3u);
+							snake1 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 4u, 3u);
+							snake2 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) - 1u, 3u);
 							snake3 = spawn_enemy4(snake3, SpriteThunder, (scroll_target->x >> 3) + 2u, 2u);
 							//snake4 = spawn_enemy4(snake4, SpriteThunder, (scroll_target->x >> 3) + 3u, 4u);
 						break;
@@ -451,24 +452,12 @@ void Update_StateGame4() {
 				case 1:
 				case 16:
 				case 48:
-					for (idx_flash = min_flash_x; idx_flash < max_flash_x; idx_flash++){
-						set_bkg_tiles(idx_flash	, 3u, 1, 1, sx_b);
-						set_bkg_tiles(idx_flash, 4u, 1, 1, dx_c);
-						idx_flash++;
-						set_bkg_tiles(idx_flash, 3u, 1, 1, dx_b);
-						set_bkg_tiles(idx_flash	, 4u, 1, 1, sx_c);
-					}
+					AnimClouds0();
 				break;
 				case 4:
 				case 24:
 				case 42:
-					for (idx_flash = min_flash_x; idx_flash < max_flash_x; idx_flash++){
-						set_bkg_tiles(idx_flash	, 3u, 1, 1, sx_c);
-						set_bkg_tiles(idx_flash, 4u, 1, 1, dx_b);
-						idx_flash++;
-						set_bkg_tiles(idx_flash, 3u, 1, 1, dx_c);
-						set_bkg_tiles(idx_flash	, 4u, 1, 1, sx_b);
-					}
+					AnimClouds1();
 				break;
 			}
 		}else{

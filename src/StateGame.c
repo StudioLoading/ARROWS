@@ -27,7 +27,7 @@
 #include "TileAnimations.h"
 
 
-const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
 const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
@@ -51,9 +51,9 @@ INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 1u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 1u; // 0u default
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 3u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -227,7 +227,7 @@ void Start_StateGame() {
 				case 1u:
 					level_tool = 6;
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						scrigno_shield = spawn_item(scrigno_shield, 42u, 21u, 2, 1);
+						scrigno_shield = spawn_item(scrigno_shield, 41u, 3u, 2, 1);
 						snake1 = spawn_enemy(snake2, SpriteRat, 18u, 4u);
 						snake4 = spawn_enemy(snake3, SpriteEnemy, 17u, 4u);
 					}
@@ -238,7 +238,6 @@ void Start_StateGame() {
 			switch(current_map){
 				case 0u:
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						scrigno_up = spawn_item(scrigno_up, 46u, 0u, 3, 1);
 						scrigno_dcoin = spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
 						snake1 = spawn_enemy(snake1, SpriteSpider, 13u, 9u);
 						snake2 = spawn_enemy(snake2, SpriteSpider, 19u, 9u);
@@ -425,14 +424,14 @@ void Update_StateGame() {
 					}
 					if (scroll_target->x == (UINT16) 48u << 3){
 						snake1 = spawn_enemy(snake2, SpriteRat, 58u, 6u);
-						snake3 = spawn_enemy(snake4, SpriteRat, 61u, 6u);
+						snake3 = spawn_enemy(snake4, SpriteEnemy, 61u, 6u);
 					}
-					if (scroll_target->x == (UINT16) 80u << 3 && scroll_target->y > (UINT16) 16u << 3){
+					if ((scroll_target->x == (UINT16) 80u << 3 || scroll_target->x == (UINT16) 81u << 3) && scroll_target->y > (UINT16) 14u << 3){
 						scrigno_shield = spawn_item(scrigno_shield, 93u, 18u, 2, 1);
 					}
 					if (scroll_target->x == (UINT16) 67u << 3){
 						snake2 = spawn_enemy(snake1, SpriteRat, 81u, 3u);
-						snake4 = spawn_enemy(snake3, SpriteRat, 88u, 3u);
+						snake4 = spawn_enemy(snake3, SpriteEnemy, 88u, 3u);
 						snake1 = spawn_enemy(snake3, SpriteSpider, 85u, 5u);
 						scrigno_dcoin = spawn_item(scrigno_dcoin, 85u, 5u, 7, 1);
 					}
@@ -440,8 +439,12 @@ void Update_StateGame() {
 						SpriteManagerRemoveSprite(snake3);
 						SpriteManagerRemoveSprite(snake4);
 						snake3 = spawn_enemy(snake3, SpriteSpider, (scroll_target->x >> 3) + 2u, 3u);
-						snake4 = spawn_enemy(snake4, SpriteSpider, (scroll_target->x >> 3) - 2u, 3u);
+						snake4 = spawn_enemy(snake4, SpriteSpider, (scroll_target->x >> 3) - 3u, 3u);
 					}
+					if (scroll_target->x == (UINT16) 177u << 3){
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 192u, 7u, 7, 1);
+					}
+					
 				break;
 				case 1:
 					if (scroll_target->x == (UINT16) 4u << 3 && scroll_target->y >= (INT16) 12u  << 3 && scroll_target->y <= (INT16) 17u  << 3){
@@ -449,11 +452,17 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake4, SpriteSpider, 13u, 13u);
 					}
 					if (scroll_target->x == (UINT16) 29u << 3 && scroll_target->y == (INT16) 3u  << 3){
-						scrigno_dcoin = spawn_item(scrigno_dcoin, 39u, 7u, 1, 1);
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 45u, 3u, 1, 1);
+					}
+					if (scroll_target->x == (UINT16) 37u << 3 && scroll_target->y == (INT16) 21u  << 3){
+						scrigno_shield = spawn_item(scrigno_shield, 46u, 21u, 2, 0);
 					}
 					if (scroll_target->x == (UINT16) 28u << 3 && scroll_target->y == (INT16) 14u  << 3){
 						platform_sprite = spawn_enemy(platform_sprite, SpritePlatform, 34u, 14u);
-						snake1 = spawn_enemy(snake3, SpriteRat, 43u, 14u);
+						if (snake1 == 0){
+							snake1 = spawn_enemy(snake3, SpriteRat, 45u, 14u);
+						}
+						scrigno_up = spawn_item(scrigno_up, 44u, 13u, 3, 1);
 					}
 					if (scroll_target->x == (UINT16) 42u << 3 && scroll_target->y == (INT16) 28u  << 3){
 						snake4 = spawn_enemy(snake2, SpriteSpider, 48u, 26u);
@@ -467,13 +476,19 @@ void Update_StateGame() {
 						snake2 = spawn_enemy(snake1, SpriteRat, 60u, 15u);
 						scrigno_up = spawn_item(scrigno_up, 62u, 15u, 3, 1);
 					}
+					if (scroll_target->x == (UINT16) 89u << 3 && scroll_target->y == (INT16) 27u << 3){
+						scrigno_dcoin = spawn_item(scrigno_dcoin, 93u, 14u, 1, 1);
+					}
 				break;
 			}
 		break;
 		case 2:
 			switch(current_map){
 				case 0:
-					if (scroll_target->x == (UINT16) 48u << 3){
+					if (scroll_target->x == (UINT16) 37u << 3){
+						scrigno_up = spawn_item(scrigno_up, 46u, 0u, 3, 1);
+					}
+					if (scroll_target->x == (UINT16) 43u << 3){
 						snake3 = spawn_enemy(snake3, SpriteSpider, 51u, 9u);
 						snake4 = spawn_enemy(snake4, SpriteSpider, 53u, 9u);
 						snake1 = spawn_enemy(snake1, SpriteEnemy, 60u, 9u);
@@ -544,31 +559,21 @@ void Update_StateGame() {
 	}
 	
 	//MOVING BACKGROUND TILES	
-	//if (current_level == 1){
+	if (current_level == 1 || current_level == 2){
 		updatecounter++;
 		if (updatecounter < 21) {
 			switch(updatecounter){
-				case 1:	
-					AnimMinifall0();
-					AnimWaterfall0();
-					AnimWaterHlight0();
-					AnimSlideRight0();
-					AnimSlideLeft0();
-					AnimSlideUp0();
+				case 1:
+					AnimWaters0();
 				break;
 				case 10:
-					AnimWaterfall1();
-					AnimMinifall1();
-					AnimWaterHlight1();
-					AnimSlideRight1();
-					AnimSlideLeft1();
-					AnimSlideUp1();
+					AnimWaters1();
 				break;
 			}			
 		}else{
 			updatecounter = 0;
 		}
-	//}
+	}
 	
 	
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
@@ -596,7 +601,6 @@ void Update_StateGame() {
 			}else{
 				hp++;
 			}
-			//hp = archer_data->hp;
 			UpdateHUD();
 		}
 		if (ups != archer_data->ups){
@@ -638,14 +642,12 @@ void UpdateHUD(){
 	}
 	//write hp
 	PRINT_POS(7, 0);
-	if (archer_data->hp < 10 && hp < 10){
+	if (hp < 10){ // archer_data->hp < 10 &&
 		Printf("00%d", hp);
-	}
-	if (archer_data->hp > 9 && archer_data->hp < 100 && hp > 9){
-		Printf("0%d", hp);
-	}
-	if (archer_data->hp >= 100 && hp >= 100){
+	}else if (hp >= 100){ // archer_data->hp >= 100 &&
 		Printf("%d", hp);	
+	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
+		Printf("0%d", hp);
 	}
 	//write tool
 	if (archer_data->tool == level_tool){
