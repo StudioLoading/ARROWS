@@ -96,7 +96,11 @@ void Start_StateSecret() {
 		scrigno_dcoin = spawn_item(scrigno_dcoin, 9u, 14u, 7, 1);
 	}else{
 		scrigno_coin = spawn_item(scrigno_coin, 6u, 14u, 1, 1);
-		scrigno_shield = spawn_item(scrigno_shield, 9u, 14u, 2, 1);
+		if(archer_data->hp == 100){
+			scrigno_dcoin = spawn_item(scrigno_dcoin, 9u, 14u, 7, 1);
+		}else{
+			scrigno_shield = spawn_item(scrigno_shield, 9u, 14u, 2, 1);	
+		}		
 	}
 	
 	

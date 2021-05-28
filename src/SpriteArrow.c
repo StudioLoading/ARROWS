@@ -138,7 +138,7 @@ void SetupArrow(){
 					SetSpriteAnim(THIS, arrow_normal_v, 18u);	
 				break;
 				case 4: //verticale in giu
-					data->vy = 1;
+					data->vy = 2;
 					data->vx = 0;
 					SetSpriteAnim(THIS, arrow_normal_g, 18u);	
 				break;
@@ -159,7 +159,7 @@ void SetupArrow(){
 					SetSpriteAnim(THIS, arrow_stone_v, 18u);	
 				break;
 				case 4:
-					data->vy = 1;
+					data->vy = 2;
 					data->vx = 0;
 					SetSpriteAnim(THIS, arrow_stone_g, 18u);
 				break;
@@ -287,7 +287,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 	data->type = data->original_type;
 }
 
-void Destroy_SpriteArrow() {	
+void Destroy_SpriteArrow() {
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	if(data->arrowdamage != 100){
 		FApop();

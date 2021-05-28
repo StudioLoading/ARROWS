@@ -12,7 +12,7 @@
 const UINT8 bird_idle[] = {2, 1, 5}; //The first number indicates the number of frames
 const UINT8 bird_walk[] = {2, 1, 5}; //The first number indicates the number of frames
 const UINT8 bird_hit[] = {2, 2, 3}; //The first number indicates the number of frames
-const UINT8 bird_dead[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 bird_dead[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 bird_attack[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 bird_up[] = {1, 4}; //The first number indicates the number of frames
 

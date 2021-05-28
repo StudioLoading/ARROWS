@@ -3,8 +3,11 @@ KNOWN ISSUE:
 
 
 - entrando dal boss, la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappa
-- l' amuleto scende infondo allo schermo e se ne fotte delle collisioni
--
+
+- animazione candele liv0 map1
+
+- nella fifo delle frecce devo evitare di rimuovere la freccia su cui eventualmente sono a cavallo
+
 
 CONFIG DI PROTOTIPO:
 	2.0 come inizio
@@ -16,7 +19,7 @@ LIV 1 SEWER -> Gator -> stone
 	mettere ridirezione come con l' ibex !!
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
-LIV 4 TREES -> Bear tool di uscita
+LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
 		- piattaforma cadente quando ci atterro sopra
@@ -37,6 +40,7 @@ schermata di scelta livello / mappa !
 
 intro iniziale con poesia su una pergamena di carta !
 
+il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 
 GAMEOVER RESTYLED
 
@@ -124,8 +128,12 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c
-set_bkg_data(120u, 1u, tiles->tiles_internal->tiles_tiles)
-```
+utente@utente-Lenovo-Yoga-2-13:/usr/src/linux-headers-5.4.0-73-generic[/b]$ sudo make -f Makefile 
+make[1]: *** No rule to make target 'arch/x86/tools/relocs_32.c', needed by 'arch/x86/tools/relocs_32.o'.  Stop.
+make: *** [arch/x86/Makefile:235: archscripts] Error 2```
+
+
+
 where :
 - tiles is 
 ```c

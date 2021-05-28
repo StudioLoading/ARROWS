@@ -27,7 +27,7 @@ void Start_SpriteThunder() {
 	THIS->lim_y = 250u;
 	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, thunder_idle, 8u);
-	tdata->enemy_accel_y = 40;
+	tdata->enemy_accel_y = 42;
 	tdata->wait = 16u;
 	tdata->hp = 24u;
 	tdata->enemy_state = ENEMY_STATE_WAIT;
@@ -44,13 +44,14 @@ void Update_SpriteThunder() {
 			SetSpriteAnim(THIS, thunder_walk, 8u);
 			tdata->enemy_state = ENEMY_STATE_NORMAL;
 		}
+		return;
 	}
 	if(tdata->enemy_state == ENEMY_STATE_NORMAL){
-		if(tdata->enemy_accel_y < 40) {
+		if(tdata->enemy_accel_y < 42) {
 				tdata->enemy_accel_y += 1;
 		}
 		tdata->tile_e_collision = TranslateSprite(THIS, tdata->vx << delta_time, (tdata->enemy_accel_y >> 4)<< delta_time);
-		if(!tdata->tile_e_collision && delta_time != 0 && tdata->enemy_accel_y < 40) { //Do another itethunderion if there is no collision
+		if(!tdata->tile_e_collision && delta_time != 0 && tdata->enemy_accel_y < 42) { //Do another itethunderion if there is no collision
 			tdata->enemy_accel_y += 2;
 			tdata->tile_e_collision = TranslateSprite(THIS, 0, (tdata->enemy_accel_y >> 4) << delta_time);
 		}
@@ -96,8 +97,7 @@ void Update_SpriteThunder() {
 				}
 			}
 		}
-	}
-	
+	}	
 	
 }
 

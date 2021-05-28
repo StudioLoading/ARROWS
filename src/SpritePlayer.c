@@ -78,7 +78,7 @@ void Start_SpritePlayer() {
 	THIS->coll_h = 13;
 	
 	
-	hit_cooldown = 36;
+	hit_cooldown = 24;
 	
 	NR50_REG = 0x55; //Max volume
 	
@@ -245,14 +245,14 @@ void Update_SpritePlayer() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
+			if(KEY_PRESSED(J_A)) {
+				Jump();
+			}
 			MoveArcher();
 			if (hit_cooldown == 0){
 				platform_vx = 0;
 				platform_vy = 0;
 				hit_cooldown = 24;
-				if(KEY_PRESSED(J_A)) {
-					Jump();
-				}
 				archer_state = STATE_NORMAL;
 			}
 		break;
@@ -442,9 +442,10 @@ void Update_SpritePlayer() {
 					switch(ispr->type){
 						case SpriteEnemy:
 							enemydamage = 5;
+						case SpriteThunder:
+							enemydamage = 8;
 						case SpriteRat:
 						case SpriteBird:
-						case SpriteThunder:
 							enemydamage = 10;
 						break;
 						case SpriteScorpion:
@@ -458,7 +459,8 @@ void Update_SpritePlayer() {
 						case SpriteIbex:
 						case SpriteBear:
 							enemydamage = 20;
-							THIS->y--;
+							TranslateSprite(THIS, 0, -1);
+							//THIS->y--;
 						break;
 					}
 					archer_data->hp -= enemydamage;

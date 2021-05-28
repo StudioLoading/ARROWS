@@ -45,10 +45,10 @@ void Update_SpriteAmulet() {
 	}
 	if(!datak->setup){
 		air = 61;
-		THIS->coll_x = 0;
+		/*THIS->coll_x = 0;
 		THIS->coll_y = 0;
 		THIS->coll_w = 0;
-		THIS->coll_h = 0;
+		THIS->coll_h = 0;*/
 		switch(datak->type){
 			case 0:
 				SetSpriteAnim(THIS, amulet_normal, 8u);
@@ -67,8 +67,7 @@ void Update_SpriteAmulet() {
 			break;
 		}
 		datak->setup = 1;
-	}
-	if (datak->counter > 0){
+	}else if (datak->counter > 0){
 		datak->counter--;
 		TranslateSprite(THIS, 0, 1);
 		if (datak->counter==0){
@@ -76,7 +75,6 @@ void Update_SpriteAmulet() {
 		}
 	}
 }
-
 
 void Destroy_SpriteAmulet() {
 }

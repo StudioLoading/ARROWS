@@ -1,6 +1,6 @@
 #ifndef MAP_map2_H
 #define MAP_map2_H
-#define map2Width 48
+#define map2Width 60
 #define map2Height 62
 #include "MapInfo.h"
 extern unsigned char bank_map2;

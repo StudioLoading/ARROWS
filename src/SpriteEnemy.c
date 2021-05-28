@@ -24,8 +24,8 @@ void Start_SpriteEnemy() {
 	THIS->coll_y = 4;
 	THIS->coll_w = 6;
 	THIS->coll_h = 12;
-	THIS->lim_x = 64u;
-	THIS->lim_y = 64u;
+	THIS->lim_x = 255u;
+	THIS->lim_y = 244u;
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, enemy_idle, 8u);
 	edata->enemy_state = ENEMY_STATE_NORMAL;

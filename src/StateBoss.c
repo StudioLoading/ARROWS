@@ -48,7 +48,7 @@ extern struct Sprite* snake2;
 
 
 //Boss
-UINT8 current_level_b = 3u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 UINT8 current_map_b = 0u;
 
 const struct MapInfo* const boss_0[] = {
@@ -318,7 +318,7 @@ void SpawnReward(){
 		datak->type = 1;
 		datak->setup = 1;
 	}else if (current_level_b == 3u){ // ibex -> amulet thunder
-		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 37u << 3, (UINT16) 10u << 3);
+		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
 		struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
 		datak->type = 3;
 		datak->setup = 1;
@@ -339,11 +339,17 @@ void SpawnReward(){
 }
 
 void WriteBBOSSHP(){
-	PRINT_POS(10, 0);	
-	if(boss_hp > 0){
-		Printf("BOSS>%d", boss_hp);
+	PRINT_POS(10, 0);
+	if(boss_hp>0){
+		Printf("BOSS>00");
+		PRINT_POS(10, 0);
+		if(boss_hp > 9){
+			Printf("BOSS>%d", boss_hp);
+		}else if (boss_hp < 10){
+			Printf("BOSS>0%d", boss_hp);
+		}	
 	}else{
-		Printf("       ");
+		Printf("BOSS>00");
 		UpdateHUD();
 	}
 }

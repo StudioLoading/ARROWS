@@ -28,7 +28,7 @@ void Start_SpriteHurricane() {
 	struct EnemyInfo* hcdata = (struct EnemyInfo*)THIS->custom_data;
 	hcdata->enemy_state = ENEMY_STATE_WAIT;
 	hcdata->vx = 1;
-	hcdata->hp = 24u;
+	hcdata->hp = 60u;
 	hcdata->wait = 15u;
 	hcdata->enemy_accel_y = 28;
 }
@@ -37,8 +37,12 @@ void Update_SpriteHurricane() {
 	
 	struct EnemyInfo* hdata = (struct EnemyInfo*)THIS->custom_data;
 	
+	if(hdata->hp == 0){
+		hdata->enemy_state = ENEMY_STATE_DEAD;
+	}
+	
 	switch (hdata->enemy_state){
-		case ENEMY_STATE_NORMAL: //
+		case ENEMY_STATE_NORMAL:
 			if(hdata->enemy_accel_y < 28) {
 				hdata->enemy_accel_y += 1;
 			}
@@ -52,37 +56,14 @@ void Update_SpriteHurricane() {
 				hdata->vx = -1;
 				
 			}
-			hdata->tile_e_collision = TranslateSprite(THIS, hdata->vx << delta_time, 1 << delta_time);
+			hdata->tile_e_collision = TranslateSprite(THIS, hdata->vx << delta_time,  (hdata->enemy_accel_y >> 4) << delta_time); // 1
 			if(!hdata->tile_e_collision && delta_time != 0) { //Do another iteration if there is no collision
 				hdata->enemy_accel_y += 2;
 				hdata->tile_e_collision = TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
 			}
-			/*switch(hdata->tile_e_collision){
-				case 2u:
-				case 18u:
-				case 20u:
-				case 21u:
-				case 22u:
-				case 23u:
-				case 29u:
-				case 40u:
-					hdata->wait -= 1u;
-					if(hdata->archer_posx > THIS->x){
-						TranslateSprite(THIS, -1 << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
-					}else{
-						TranslateSprite(THIS, 1 << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
-					}
-					if (hdata->wait == 0u){
-						SetSpriteAnim(THIS, hurricane_dead, 10u);
-						hdata->enemy_state = ENEMY_STATE_DEAD;
-					}
-				break;				
-				case 100u:
-				case 101u:
-					THIS->y++;
-				break;
+			if(hdata->tile_e_collision){
+				hdata->hp-=1u;
 			}
-			*/
 		break;
 		case ENEMY_STATE_WAIT:
 			hdata->wait -= 1u;

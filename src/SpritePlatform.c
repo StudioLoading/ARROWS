@@ -9,12 +9,11 @@
 const UINT8 platform_normal[] = {1, 0}; //The first number indicates the number of frames
 
 void Start_SpritePlatform() {
-	
 	THIS->coll_x = 0;
 	THIS->coll_y = 12;
 	THIS->coll_w = 16;
 	THIS->coll_h = 4;
-	THIS->lim_x = 160u;
+	THIS->lim_x = 250u;
 	THIS->lim_y = 160u;
 	SetSpriteAnim(THIS, platform_normal, 8u);
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
