@@ -50,6 +50,8 @@ extern struct Sprite* snake2;
 //Boss
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 UINT8 current_map_b = 0u;
+UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+UINT8 current_camera_counter = 0u;
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -88,6 +90,7 @@ void Start_StateBoss() {
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
 	SPRITES_8x16;
 	
+	SpriteManagerLoad(SpriteCamerafocus);
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	switch(current_level_b){
@@ -124,12 +127,19 @@ void Start_StateBoss() {
 
 
 	//SCROLL
-	scroll_bottom_movement_limit = 80;//customizzo altezza archer sul display
 	const struct MapInfo** level_maps_b = bosses[current_level_b];
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps_b[current_map_b], &map_w, &map_h);
 	ScrollFindTile(level_maps_b[current_map_b], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+	if(current_camera_state != 4u){
+		scroll_top_movement_limit = 72; // INTRO
+		scroll_target = SpriteManagerAdd(SpriteCamerafocus, drop_player_x << 3, (UINT16)(drop_player_y << 3) + 8u); // INTRO
+		struct Sprite* archer_tmp = SpriteManagerAdd(SpritePlayer, drop_player_x<< 3, drop_player_y << 3);
+	}else{
+		scroll_top_movement_limit = 30;
+		scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+		scroll_bottom_movement_limit = 80;//customizzo altezza archer sul display
+	}
 	switch (current_level_b){
 		case 0u:
 		case 1u:
@@ -186,6 +196,10 @@ void Start_StateBoss() {
 			boss_hp = boss_data_b->hp;
 		break;
 	}
+	//INTRO
+	if (current_camera_state != 4){
+		boss_data_b->enemy_state = ENEMY_STATE_WAIT;
+	}
 	
 	//INIT ARCHER
 	if (archer_data->ups > 0 & archer_data->ups != ups){
@@ -210,9 +224,63 @@ void Start_StateBoss() {
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 
+	//INTRO
+	if(current_camera_state != 4u){
+		ShowWindow();
+	}
 }
 
 void Update_StateBoss() {
+	
+	// INTRO START	
+	if (current_camera_state != 4u){
+		switch(current_camera_state){//0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+			case 0u:
+				current_camera_counter += 1u;
+				if(current_camera_counter == 60u){
+					current_camera_state += 1u;
+					current_camera_counter = 0u;
+				}	
+			break;
+			case 1u:
+				if(scroll_target->y < boss->y){
+					scroll_target->y += 1;
+				}else if (scroll_target->y > boss->y){
+					scroll_target->y -= 1;
+				}else{
+					scroll_top_movement_limit = 40u;
+					if(scroll_target->x < boss->x){
+						scroll_target->x += 1;
+					}else if (scroll_target->x > boss->x){
+						scroll_target->x -= 1;
+					}else{
+						current_camera_state += 1u;
+					}
+				}
+			break;
+			case 2u:
+				current_camera_counter += 1u;
+				if(current_camera_counter == 120u){
+					current_camera_state += 1u;
+					current_camera_counter = 0u;
+				}	
+				//TODO trigger dialog
+			break;
+			case 3u:
+				current_camera_counter += 1u;
+				if(current_camera_counter == 60u){
+					current_camera_state += 1u;
+					current_camera_counter = 0u;
+					SetState(StateBoss);
+				}	
+			break;
+		}	
+		PRINT_POS(10, 0);
+		Printf("%d", current_camera_counter);
+		PRINT_POS(13, 0);
+		Printf("%d", current_camera_state);	
+	}
+	//INTRO END
 
 	if(show_diag >= 2){ // >=max_diag
 		ShowWindow();

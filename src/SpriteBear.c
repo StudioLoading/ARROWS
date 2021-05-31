@@ -67,10 +67,10 @@ void Update_SpriteBear() {
 				ToNormalState();
 			}
 		}
-		/*
+		
 		if(bear_data->enemy_state == ENEMY_STATE_WAIT){
 			return;
-		}*/
+		}
 		
 		if (bear_data->enemy_state == ENEMY_STATE_DEAD){
 			if(bear_data->tile_e_collision==0){
@@ -90,20 +90,10 @@ void Update_SpriteBear() {
 		}
 		return;
 	}
-	/*
-	if(bear_data->vx){
-		if (bear_data->vx > 0 & !SPRITE_GET_VMIRROR(THIS)){
-			SPRITE_SET_VMIRROR(THIS);
-		}
-		if(bear_data->vx < 0 & SPRITE_GET_VMIRROR(THIS)){
-			SPRITE_UNSET_VMIRROR(THIS);
-		}		
-	}
-	*/
+	
 	bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0);
 	CheckCollisionBETile();
 	if((THIS->x == (UINT16) 13u << 3 && bear_data->vx < 0) || (THIS->x == (UINT16) 22u << 3)){
-		//|| (THIS->x == (UINT16) 28u << 3) ||
 		if(bear_data->enemy_state != ENEMY_STATE_ATTACK){			
 			SetSpriteAnim(THIS, bear_attack, 12u);
 			bear_data->enemy_state = ENEMY_STATE_ATTACK;

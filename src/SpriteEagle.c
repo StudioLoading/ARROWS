@@ -45,7 +45,7 @@ void Update_SpriteEagle() {
 	
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
-	if (data->enemy_state == ENEMY_STATE_DEAD){
+	if (data->enemy_state == ENEMY_STATE_DEAD || data->enemy_state == ENEMY_STATE_WAIT){
 		return;
 	}
 	

@@ -23,6 +23,7 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
+extern UINT8 current_camera_state;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -66,7 +67,7 @@ void Start_SpritePlayer() {
 	archer_data->coins = 0u;
 	
 	
-	if(is_on_boss == 0){
+	if(is_on_boss == 0 && current_camera_state== 4u){
 		Build_Next_Dialog();
 	}else{
 		archer_state = STATE_JUMPING;
@@ -86,6 +87,10 @@ void Start_SpritePlayer() {
 }
 
 void Update_SpritePlayer() {
+
+	if (is_on_boss == 0 && current_camera_state != 4){
+		return;
+	}
 
 	if(archer_state == STATE_DIAG ){
 		if (show_diag == -1){ //NON TOCCARE
@@ -137,6 +142,7 @@ void Update_SpritePlayer() {
 						SetState(StateGameOver);
 					}else{
 						if (is_on_boss != -1){
+							current_camera_state = 0u;
 							SetState(StateBoss);							
 						}else{						
 							if(current_level < 3){
@@ -382,21 +388,7 @@ void Update_SpritePlayer() {
 			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
-					case 0:/*
-						if (dataenemy->enemy_state == ENEMY_STATE_WAIT){
-							if (ispr->x > THIS->x){
-								THIS->x -= 1;
-							}else{
-								THIS->x += 1;
-							}
-							is_on_boss = 1;						
-							if(KEY_TICKED(J_A)){
-								if (KEY_PRESSED(J_UP)){		
-									Build_Next_Dialog();	
-								}
-							}						
-							return;
-						}*/
+					case 0:
 						if(ispr->type == SpriteEagle & dataenemy->enemy_state != ENEMY_STATE_ATTACK){
 							return;
 						}

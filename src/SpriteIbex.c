@@ -40,6 +40,7 @@ void Start_SpriteIbex() {
 }
 
 void Update_SpriteIbex() {
+	
 	if(ibex_data->enemy_state == ENEMY_STATE_WAIT){
 		return;
 	}

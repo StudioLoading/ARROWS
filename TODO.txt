@@ -2,7 +2,20 @@ KNOWN ISSUE:
 	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
 
 
-- entrando dal boss, la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappa
+- entrando dal boss: la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappamo
+
+	0 - creare uno SpriteVuoto 8x16
+		- cioè con un frame che all' inizio coloro
+	1 - settare lo scroll_target dal pg allo sprite vuoto
+	2 - settare sul nuovo scroll_target i limiti corretti per far spostare la camera ovunque egli si sposti
+		- spawna il pg senza farlo muovere
+		- spawna il boss senza farlo muovere
+	3 - farlo spostare sul boss
+	4 - farlo tornare dal pg
+	5 - assegnazione scroll_target sul pg
+	6 - rimozione SpriteVuoto
+	
+	7 - dialogo boss-pg
 
 - animazione candele liv0 map1
 

@@ -31,6 +31,7 @@ _SPRITE_DMG(SpriteGate, gate)\
 _SPRITE_DMG(SpriteEagle, eagle)\
 _SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBear, bear)\
+_SPRITE_DMG(SpriteCamerafocus, camerafocus)\
 SPRITE_DEF_END
 
 
