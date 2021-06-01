@@ -197,7 +197,7 @@ void Start_StateBoss() {
 		break;
 	}
 	//INTRO
-	if (current_camera_state != 4){
+	if (current_camera_state != 4u){
 		boss_data_b->enemy_state = ENEMY_STATE_WAIT;
 	}
 	
@@ -350,7 +350,7 @@ void Update_StateBoss() {
 	
 	
 	//MOVING BACKGROUND TILES	
-	if (current_level_b == 1u & current_map_b == 0){
+	//if (current_level_b == 1u || && current_level_b == 4u){
 		updatecounter++;
 		if (updatecounter < 41) {
 			switch(updatecounter){
@@ -364,7 +364,7 @@ void Update_StateBoss() {
 		}else{
 			updatecounter = 0;
 		}
-	}
+	//}
 	
 	
 }
@@ -412,12 +412,12 @@ void WriteBBOSSHP(){
 		Printf("BOSS>00");
 		PRINT_POS(10, 0);
 		if(boss_hp > 9){
-			Printf("BOSS>%d", boss_hp);
+			Printf("BOSS>%d ", boss_hp);
 		}else if (boss_hp < 10){
-			Printf("BOSS>0%d", boss_hp);
+			Printf("BOSS>0%d ", boss_hp);
 		}	
 	}else{
-		Printf("BOSS>00");
+		Printf("BOSS>00 ");
 		UpdateHUD();
 	}
 }

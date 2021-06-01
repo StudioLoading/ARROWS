@@ -171,7 +171,10 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
+				if(KEY_PRESSED(J_B)){		
+					Build_Next_Dialog();
+					return;
+				}else if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
 					SetSpriteAnim(THIS, anim_shield, 8u);
 					if (archer_state == STATE_NORMAL_PLATFORM){
 						//THIS->coll_x = 3;
@@ -191,15 +194,15 @@ void Update_SpritePlayer() {
 			
 			//Jump / Dialog
 			if(KEY_TICKED(J_A)){
-				if (KEY_PRESSED(J_UP)){		
+				/*if (KEY_PRESSED(J_UP)){		
 					Build_Next_Dialog();
 					return;
-				}else{
+				}else{*/
 					//Check jumping
 					NR50_REG = 0x18; //Max volume		
 					PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 					Jump();
-				}
+				//}
 			}
 			
 			if(shoot_cooldown) {
@@ -641,6 +644,7 @@ void CheckCollisionTile() {
 			load_next_b = 0;
 			current_level += 1u;
 			current_map = 0;
+			current_camera_state = 0u;
 			SetState(StateGame);
 		break;
 		case 19u: //exit secret room

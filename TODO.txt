@@ -1,7 +1,3 @@
-KNOWN ISSUE:
-	purtroppo capita che ucciso un boss l' amuleto appaia e poi subito sparisca.
-
-
 - entrando dal boss: la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappamo
 
 	0 - creare uno SpriteVuoto 8x16
@@ -17,9 +13,10 @@ KNOWN ISSUE:
 	
 	7 - dialogo boss-pg
 
-- animazione candele liv0 map1
 
 - nella fifo delle frecce devo evitare di rimuovere la freccia su cui eventualmente sono a cavallo
+
+
 
 
 CONFIG DI PROTOTIPO:

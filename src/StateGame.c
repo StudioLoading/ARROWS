@@ -51,9 +51,9 @@ INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 1u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -562,7 +562,7 @@ void Update_StateGame() {
 	}
 	
 	//MOVING BACKGROUND TILES	
-	if (current_level == 1 || current_level == 2){
+	//if (current_level == 1u || current_level == 2u){
 		updatecounter++;
 		if (updatecounter < 21) {
 			switch(updatecounter){
@@ -576,7 +576,7 @@ void Update_StateGame() {
 		}else{
 			updatecounter = 0;
 		}
-	}
+	//}
 	
 	
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 

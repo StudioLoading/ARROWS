@@ -8,8 +8,11 @@
 
 #include "custom_datas.h"
 
-//IBEX
-const UINT8 bear_idle[] = {1, 1}; //The first number indicates the number of frames
+extern UINT8 current_camera_state;
+
+
+//BEAR
+const UINT8 bear_idle[] = {1, 3}; //The first number indicates the number of frames
 const UINT8 bear_walk[] = {4, 0, 1, 0, 2};//{4, 0, 1, 2, 1};
 const UINT8 bear_hit[] = {2, 0, 1};
 const UINT8 bear_dead[] = {1, 1};
@@ -24,13 +27,15 @@ void ToNormalState();
 void Start_SpriteBear() {
 	THIS->lim_x = 160u;
 	THIS->lim_y = 160u;
-	SetSpriteAnim(THIS, bear_walk, 10u);
+	SetSpriteAnim(THIS, bear_idle, 10u);
 	bear_data = (struct EnemyInfo*)THIS->custom_data;
 	bear_data->enemy_accel_y = 24;
 	bear_data->vx = -1;
 	bear_data->wait = 0u;
 	bear_data->hp = 100;
-	ToNormalState();
+	if(current_camera_state == 4u){
+		ToNormalState();		
+	}
 }
 
 void Update_SpriteBear() {

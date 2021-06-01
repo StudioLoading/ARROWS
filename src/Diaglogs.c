@@ -56,6 +56,13 @@ INT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d4, "", 18);
 					diag_found = 0;
 				break;
+				case 4u:
+					memcpy(d1, "HELLO", 18);
+					memcpy(d2, "TEDDY BEAR !", 18);
+					memcpy(d3, "LET ME", 18);
+					memcpy(d4, "PASS !", 18);
+					diag_found = 0;
+				break;
 			}	
 		break;
 		case 1:  //is_on_boss == 1 significa che ho toccato il boss che dovrebbe essere in WAIT
