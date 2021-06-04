@@ -50,10 +50,10 @@ void Update_SpriteThunder() {
 		if(tdata->enemy_accel_y < 42) {
 				tdata->enemy_accel_y += 1;
 		}
-		tdata->tile_e_collision = TranslateSprite(THIS, tdata->vx << delta_time, (tdata->enemy_accel_y >> 4)<< delta_time);
+		tdata->tile_e_collision = TranslateSprite(THIS, tdata->vx << delta_time, (tdata->enemy_accel_y >> 4) << delta_time);
 		if(!tdata->tile_e_collision && delta_time != 0 && tdata->enemy_accel_y < 42) { //Do another itethunderion if there is no collision
 			tdata->enemy_accel_y += 2;
-			tdata->tile_e_collision = TranslateSprite(THIS, 0, (tdata->enemy_accel_y >> 4) << delta_time);
+			//tdata->tile_e_collision = TranslateSprite(THIS, 0, (tdata->enemy_accel_y >> 4) << delta_time);
 		}
 		switch(tdata->tile_e_collision){
 			case 2u:

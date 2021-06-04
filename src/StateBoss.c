@@ -132,7 +132,7 @@ void Start_StateBoss() {
 	GetMapSize(level_maps_b[current_map_b], &map_w, &map_h);
 	ScrollFindTile(level_maps_b[current_map_b], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	if(current_camera_state != 4u){
-		scroll_top_movement_limit = 72; // INTRO
+		scroll_top_movement_limit = 60; // INTRO
 		scroll_target = SpriteManagerAdd(SpriteCamerafocus, drop_player_x << 3, (UINT16)(drop_player_y << 3) + 8u); // INTRO
 		struct Sprite* archer_tmp = SpriteManagerAdd(SpritePlayer, drop_player_x<< 3, drop_player_y << 3);
 	}else{
@@ -178,7 +178,7 @@ void Start_StateBoss() {
 			datascrigno2->setup = 1u;
 		break;
 		case 2u:
-			boss = SpriteManagerAdd(SpriteEagle, (UINT16) 9u << 3, (UINT16) 14u << 3);
+			boss = SpriteManagerAdd(SpriteEagle, (UINT16) 23u << 3, (UINT16) 14u << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 		break;
@@ -243,15 +243,16 @@ void Update_StateBoss() {
 				}	
 			break;
 			case 1u:
-				if(scroll_target->y < boss->y){
+				if(scroll_target->y < (boss->y + (boss->coll_h >> 1))){
 					scroll_target->y += 1;
-				}else if (scroll_target->y > boss->y){
+					return;
+				}else if (scroll_target->y > (boss->y + (boss->coll_h >> 1))){
 					scroll_target->y -= 1;
 				}else{
 					scroll_top_movement_limit = 40u;
-					if(scroll_target->x < boss->x){
+					if(scroll_target->x < (boss->x + boss->coll_x)){
 						scroll_target->x += 1;
-					}else if (scroll_target->x > boss->x){
+					}else if (scroll_target->x > (boss->x + boss->coll_x)){
 						scroll_target->x -= 1;
 					}else{
 						current_camera_state += 1u;
@@ -381,7 +382,7 @@ void SpawnReward(){
 		datak->type = 2;
 		datak->setup = 1;
 	}else if (current_level_b == 2u){ // eagle -> key
-		reward = SpriteManagerAdd(SpriteKey, (UINT16) 9u << 3, (UINT16) 14u << 3);
+		reward = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
 		struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
 		datak->type = 1;
 		datak->setup = 1;

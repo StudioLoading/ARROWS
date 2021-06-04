@@ -1,4 +1,4 @@
-- entrando dal boss: la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappamo
+- entrando dal boss: la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappa
 
 	0 - creare uno SpriteVuoto 8x16
 		- cioè con un frame che all' inizio coloro
@@ -13,7 +13,8 @@
 	
 	7 - dialogo boss-pg
 
-
+- liv 3 map 1 thunders: gli scrigni scompaiono !
+- testare movimento camera da wolf, gator, ibe e bear
 - nella fifo delle frecce devo evitare di rimuovere la freccia su cui eventualmente sono a cavallo
 
 

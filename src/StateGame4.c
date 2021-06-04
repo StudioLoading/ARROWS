@@ -49,12 +49,6 @@ extern INT8 show_diag;
 extern INT8 showing_diag;
 extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
-/*
-extern struct Sprite* scrigno_coin;
-extern struct Sprite* scrigno_dcoin;
-extern struct Sprite* scrigno_shield;
-extern struct Sprite* scrigno_up;
-*/
 extern struct Sprite* platform_sprite;
 extern struct Sprite* snake1;
 extern struct Sprite* snake2;
@@ -64,14 +58,18 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
+
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
 extern bool LCD_Installed;
 
+struct Sprite* scrigno0 = 0;
+struct Sprite* scrigno1 = 0;
+struct ItemInfo* datascrigno0 = 0;
+struct ItemInfo* datascrigno1 = 0;
 struct Sprite* enemies4[4] = {0,0,0,0};
 INT8 enlen4 = 0; //counts in-screen enemies
 INT8 itlen4 = 0;
-struct Sprite* items4[2] = {0,0};
 
 void UpdateHUD4();
 void ShowWindow4();
@@ -129,23 +127,38 @@ struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 po
 }
 
 void spawn_item4(UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
-	items4[itlen4] = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
-	struct ItemInfo* datascrigno = (struct ItemInfo*)items4[itlen4]->custom_data;
-	datascrigno->setup = 1u;
-	if(scrigno){
-		//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
-		if(content_type == 2 && archer_data->hp == 100){
-			content_type = 7;
-		}
-		datascrigno->content_type = content_type;
-		datascrigno->type = 10;
-	}else{
-		datascrigno->type = content_type;
-	}
 	if(itlen4){
+		SpriteManagerRemoveSprite(scrigno0);
+		scrigno1=SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
+		datascrigno1 = (struct ItemInfo*)scrigno1->custom_data;
 		itlen4=0;
+		datascrigno1->setup = 1u;
+		if(scrigno){
+			//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
+			if(content_type == 2 && archer_data->hp == 100){
+				content_type = 7;
+			}
+			datascrigno1->content_type = content_type;
+			datascrigno1->type = 10;
+		}else{
+			datascrigno1->type = content_type;
+		}
 	}else{
+		SpriteManagerRemoveSprite(scrigno1);
+		scrigno0=SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
+		datascrigno0 = (struct ItemInfo*)scrigno0->custom_data;
 		itlen4=1;
+		datascrigno0->setup = 1u;
+		if(scrigno){
+			//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
+			if(content_type == 2 && archer_data->hp == 100){
+				content_type = 7;
+			}
+			datascrigno0->content_type = content_type;
+			datascrigno0->type = 10;
+		}else{
+			datascrigno0->type = content_type;
+		}
 	}
 }
 
@@ -454,14 +467,7 @@ void Update_StateGame4() {
 	}
 	
 	//MOVING BACKGROUND TILES
-	UINT16 idx_flash = 0u;
-	UINT16 min_flash_x = 0u;
-	UINT16 max_flash_x = 32u;
-	const unsigned char sx_b[1] = {93};
-	const unsigned char sx_c[1] = {100};
-	const unsigned char dx_b[1] = {94};
-	const unsigned char dx_c[1] = {101};
-	if (current_level == 3){
+	if (current_level == 3u){
 		updatecounter++;
 		if (updatecounter < 120) {
 			switch(updatecounter){
