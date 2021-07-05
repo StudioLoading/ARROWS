@@ -64,6 +64,7 @@ void Update_SpriteThunder() {
 			case 23u:
 			case 29u:
 			case 40u:
+			case 104u:
 				tdata->wait = 16u;
 				SetSpriteAnim(THIS, thunder_dead, 10u);
 				tdata->enemy_state = ENEMY_STATE_DEAD;

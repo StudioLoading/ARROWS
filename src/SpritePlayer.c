@@ -24,6 +24,8 @@ extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
 extern UINT8 current_camera_state;
+extern UINT16 drop_player_x;
+extern UINT16 drop_player_y;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -44,6 +46,7 @@ INT8 shoot_cooldown = 0;
 INT8 platform_vx = 0;
 INT8 platform_vy = 0;
 INT8 is_on_boss = -1;
+UINT8 diag_found = 0u;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
@@ -699,11 +702,17 @@ void Hit() {
 }
 
 void Build_Next_Dialog(){
-	INT8 diag_found = Build_Next_Dialog_Banked(THIS);
-	if(diag_found == 0){
-		SetSpriteAnim(THIS, anim_idle, 33u);
+	diag_found = Build_Next_Dialog_Banked(THIS);
+	if(diag_found != 0u){
+		//SetSpriteAnim(THIS, anim_idle, 33u);
+		//settare le coordinate di ripristino dell' archer sulla mappa
+		//cambiare di stato verso StateDiag
+		drop_player_x = THIS->x >> 3;
+		drop_player_y = THIS->y >> 3 ;
 		archer_state = STATE_DIAG;
-		show_diag = 1;	
+		SetState(StateDiag);
+		//modificare lo StateGame, StateGame4 dicendo che se vengo da StateDiag devo spawnare alle coordinate salvate
+		//show_diag = 1;	
 	}
 }
 

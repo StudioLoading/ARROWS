@@ -30,7 +30,6 @@ const UINT8 arrow_fire_g[] = {1, 14};
 const UINT8 spine[] = {1, 15};
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
-//UINT8 ids[4] = {0,0,0,0};
 struct Sprite * ids[4] = {0,0,0,0};
 INT8 falen = 0; //counts in-screen arrows 
 
@@ -58,7 +57,7 @@ void Start_SpriteArrow() {
 }
 
 void FApush(){
-	if (falen <= 4){
+	if (falen <= 3 && falen > 0){
 		ids[falen-1] = THIS;
 	}else{
 		FApop();
@@ -70,8 +69,8 @@ void FApush(){
 void FApop(){
 	if (falen){
 		falen--;
+		SpriteManagerRemoveSprite(ids[falen-1]);
 	}
-	SpriteManagerRemoveSprite(ids[falen-1]);
 	ids[3] = ids[2];
 	ids[2] = ids[1];
 	ids[1] = ids[0];

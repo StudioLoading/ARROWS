@@ -183,7 +183,7 @@ void Start_StateBoss() {
 			boss_hp = boss_data_b->hp;
 		break;
 		case 3u:
-			boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
+			boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 14u << 3);
 			boss_data_b = (struct EnemyInfo*)boss->custom_data;
 			boss_hp = boss_data_b->hp;
 			gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
@@ -243,21 +243,16 @@ void Update_StateBoss() {
 				}	
 			break;
 			case 1u:
-				if(scroll_target->y < (boss->y + (boss->coll_h >> 1))){
+				if(scroll_target->y < (boss->y + (boss->coll_h >> 1)))
 					scroll_target->y += 1;
-					return;
-				}else if (scroll_target->y > (boss->y + (boss->coll_h >> 1))){
+				if (scroll_target->y > (boss->y + (boss->coll_h >> 1)))
 					scroll_target->y -= 1;
-				}else{
-					scroll_top_movement_limit = 40u;
-					if(scroll_target->x < (boss->x + boss->coll_x)){
-						scroll_target->x += 1;
-					}else if (scroll_target->x > (boss->x + boss->coll_x)){
-						scroll_target->x -= 1;
-					}else{
+				if(scroll_target->x < (boss->x + boss->coll_x))
+					scroll_target->x += 1;
+				if (scroll_target->x > (boss->x + boss->coll_x))
+					scroll_target->x -= 1;
+				if (scroll_target->x == (boss->x + boss->coll_x) && scroll_target->y == (boss->y + (boss->coll_h >> 1)))
 						current_camera_state += 1u;
-					}
-				}
 			break;
 			case 2u:
 				current_camera_counter += 1u;

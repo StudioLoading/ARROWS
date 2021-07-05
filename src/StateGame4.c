@@ -50,10 +50,10 @@ extern INT8 showing_diag;
 extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
 extern struct Sprite* platform_sprite;
-extern struct Sprite* snake1;
-extern struct Sprite* snake2;
-extern struct Sprite* snake3;
-extern struct Sprite* snake4;
+extern struct Sprite* enemies_0;
+extern struct Sprite* enemies_1;
+extern struct Sprite* enemies_2;
+extern struct Sprite* enemies_3;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -67,9 +67,13 @@ struct Sprite* scrigno0 = 0;
 struct Sprite* scrigno1 = 0;
 struct ItemInfo* datascrigno0 = 0;
 struct ItemInfo* datascrigno1 = 0;
-struct Sprite* enemies4[4] = {0,0,0,0};
-INT8 enlen4 = 0; //counts in-screen enemies
-INT8 itlen4 = 0;
+//struct Sprite* enemies4[4] = {0,0,0,0};
+/*struct Sprite* enemies4_0 = 0;
+struct Sprite* enemies4_1 = 0;
+struct Sprite* enemies4_2 = 0;
+struct Sprite* enemies4_3 = 0;*/
+//INT8 enlen4 = 0; //counts in-screen enemies
+//INT8 itlen4 = 0;
 
 void UpdateHUD4();
 void ShowWindow4();
@@ -100,20 +104,12 @@ void spawn_enemy4(UINT8 spriteType, UINT16 posx, UINT16 posy){
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
-	}
-	if (enlen4 <= 4){
-		enemies4[enlen4-1] = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
-	}else{
-		if (enlen4>1){
-			enlen4--;
-		}
-		SpriteManagerRemoveSprite(enemies4[enlen4-1]);
-		enemies4[3] = enemies4[2];
-		enemies4[2] = enemies4[1];
-		enemies4[1] = enemies4[0];
-		enemies4[0] = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
-	}
-	enlen4++;
+	}	
+	SpriteManagerRemoveSprite(enemies_3);
+	enemies_3 = enemies_2;
+	enemies_2 = enemies_1;
+	//enemies4_1 = enemies4_0;
+	enemies_0 = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
 	/*PRINT_POS(16, 0);
 	Printf("%d", enlen4);*/
 }
@@ -127,38 +123,18 @@ struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 po
 }
 
 void spawn_item4(UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
-	if(itlen4){
-		SpriteManagerRemoveSprite(scrigno0);
-		scrigno1=SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
-		datascrigno1 = (struct ItemInfo*)scrigno1->custom_data;
-		itlen4=0;
-		datascrigno1->setup = 1u;
-		if(scrigno){
-			//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
-			if(content_type == 2 && archer_data->hp == 100){
-				content_type = 7;
-			}
-			datascrigno1->content_type = content_type;
-			datascrigno1->type = 10;
-		}else{
-			datascrigno1->type = content_type;
+	scrigno1=SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
+	datascrigno1 = (struct ItemInfo*)scrigno1->custom_data;
+	datascrigno1->setup = 1u;
+	if(scrigno){
+		//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
+		if(content_type == 2 && archer_data->hp == 100){
+			content_type = 7;
 		}
+		datascrigno1->content_type = content_type;
+		datascrigno1->type = 10;
 	}else{
-		SpriteManagerRemoveSprite(scrigno1);
-		scrigno0=SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
-		datascrigno0 = (struct ItemInfo*)scrigno0->custom_data;
-		itlen4=1;
-		datascrigno0->setup = 1u;
-		if(scrigno){
-			//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
-			if(content_type == 2 && archer_data->hp == 100){
-				content_type = 7;
-			}
-			datascrigno0->content_type = content_type;
-			datascrigno0->type = 10;
-		}else{
-			datascrigno0->type = content_type;
-		}
+		datascrigno1->type = content_type;
 	}
 }
 
@@ -202,10 +178,6 @@ void ShowWindowDiag4(){
 void Start_StateGame4() {
 	
 	is_on_boss = -1;
-	/*scrigno_shield = 0;
-	scrigno_coin = 0;
-	scrigno_dcoin = 0;
-	scrigno_up = 0;*/
 	thunder_delay = 16u;
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
@@ -215,10 +187,6 @@ void Start_StateGame4() {
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
-	snake1 = 0;
-	snake2 = 0;
-	snake3 = 0;
-	snake4 = 0;
 	switch (current_level){
 		case 3u:
 			SpriteManagerLoad(SpriteThunder);
@@ -243,15 +211,18 @@ void Start_StateGame4() {
 	//SCROLL
 	scroll_bottom_movement_limit = 62;//customizzo altezza archer sul display
 	const struct MapInfo** const level_maps4 = maps4[current_level-3u]; //current_level-3
+
 	UINT8 map_w, map_h;
-	GetMapSize(level_maps4[current_map], &map_w, &map_h);
+	GetMapSize(level_maps4[current_map], &map_w, &map_h);	
 	if (load_next_s){ //vengo da secret!
 		load_next_s = 0;
 		ScrollFindTile(level_maps4[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else{ //vengo da altra map
+	}else if(archer_state != STATE_DIAG){ //non vengo da dialogo
 		ScrollFindTile(level_maps4[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	}else{
+		load_next_s = 1; // START UGLY STORY : tracking the fact that the previous state is a Dialog, so I don't want initial spawnings !
 	}
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
+	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 	InitScroll(level_maps4[current_map], collision_tiles4, 0);
 	SHOW_BKG;
 	
@@ -299,7 +270,9 @@ void Start_StateGame4() {
 	memcpy(d2, "DIALOG2", 18);
 	memcpy(d3, "DIALOG3", 18);
 	memcpy(d4, "DIALOG4", 18);
-	
+
+	if(load_next_s) load_next_s = 0; //END UGLY STORY: for track a previous state for which I don't want the initial spawning
+
 	if(archer_tool == level_tool){
 		UpdateHUD4();
 	}
@@ -395,19 +368,19 @@ void Update_StateGame4() {
 								spawn_enemy4(SpriteThunder, (scroll_target->x >> 3) + 5u, 4u);
 								thunder_delay = 160u;
 							break;
+							default:
+								if (scroll_target->x == (UINT16) 30u << 3){
+									spawn_item4(39u, 4u, 2, 1);
+								}
+								if(scroll_target->x == (UINT16) 140u << 3){
+									spawn_item4(156u, 5u, 3, 1);							
+								}					
+								if(scroll_target->x == (UINT16) 175u << 3){
+									spawn_item4(185u, 4u, 2, 1);
+								}
+							break;
 						}
-						thunder_delay -= 1u;
-						
-						if (scroll_target->x == (UINT16) 33u << 3){
-							spawn_item4(39u, 4u, 2, 1);
-						}
-						if(scroll_target->x == (UINT16) 140u << 3){
-							spawn_item4(156u, 5u, 3, 1);							
-						}					
-						if(scroll_target->x == (UINT16) 175u << 3){
-							spawn_item4(185u, 4u, 2, 1);
-						}
-						
+						thunder_delay -= 1u;					
 					break;
 				}
 			break;
@@ -420,8 +393,8 @@ void Update_StateGame4() {
 						}
 						if((scroll_target->x == (UINT16) 25u << 3 || scroll_target->x == (UINT16) 26u << 3) && 
 							scroll_target->y == (UINT16) 38u << 3 ){
-							snake2 = spawn_vplatform4(snake2, SpritePlatform, 37u, 43u);
-							snake1 = spawn_vplatform4(snake1, SpritePlatform, 42u, 51u);
+							enemies_0 = spawn_vplatform4(enemies_2, SpritePlatform, 37u, 43u);
+							enemies_1 = spawn_vplatform4(enemies_3, SpritePlatform, 42u, 51u);
 						}
 						if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y == (UINT16) 60u << 3 ){
 							spawn_enemy4(SpriteRat, (scroll_target->x >> 3) -8u, (scroll_target->y >> 3) - 4u);

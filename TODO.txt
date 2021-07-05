@@ -1,23 +1,26 @@
-- entrando dal boss: la camera deve muoversi fino verso un certo punto, poi tornare indietro e dare infine il controllo. Così il giocatore ha subito visione di tutta la mappa
+- disegnare lo stato di dialogo 160×144
+	- immagini grosse di
+		- protagonista
+		- slave in gabbia
+		- slave incatenato
+		- wolf
+		- gator
+		- eagle
+		- ibex
+		- bear
+		- tusk
+		- cattivone con frusta
+		- tile che converte il tipo di freccia
 
-	0 - creare uno SpriteVuoto 8x16
-		- cioè con un frame che all' inizio coloro
-	1 - settare lo scroll_target dal pg allo sprite vuoto
-	2 - settare sul nuovo scroll_target i limiti corretti per far spostare la camera ovunque egli si sposti
-		- spawna il pg senza farlo muovere
-		- spawna il boss senza farlo muovere
-	3 - farlo spostare sul boss
-	4 - farlo tornare dal pg
-	5 - assegnazione scroll_target sul pg
-	6 - rimozione SpriteVuoto
-	
-	7 - dialogo boss-pg
+- entrando dal boss: la camera deve 
+	- aspettare in posizione pg
+	- state di dialogo
+	- spostarsi verso boss
+	- state di dialogo
 
-- liv 3 map 1 thunders: gli scrigni scompaiono !
-- testare movimento camera da wolf, gator, ibe e bear
-- nella fifo delle frecce devo evitare di rimuovere la freccia su cui eventualmente sono a cavallo
+- Dialogo apposta per mostrare l' amuleto per bene in grande quando lo prendo
 
-
+- aggiungere frames al wolf, c'è molta sprite-vram a disposizione
 
 
 CONFIG DI PROTOTIPO:
@@ -40,8 +43,9 @@ LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 LIVELLI BONUS
 
 
+- nella fifo delle frecce devo evitare di rimuovere la freccia su cui eventualmente sono a cavallo
 
-devo fare un dialogo/schermata apposta per mostrare l' amuleto per bene in grande quando lo prendo
+
 
 devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
 
@@ -103,7 +107,15 @@ RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
 
 
 
-
+CREAZIONE MAP+TILES DA PNG
+E:\tools>png2gbtiles.exe mapdiag.archer.png -gbm -g -pal=mypal.pal
+maypal.pal file di testo contenente solo le seguenti
+#C6D783
+#8DCD53
+#2D632F
+#11380F
+ovviamente palette del Paint.NET con cui ho fatto il png contiene gli stessi codici, senza # e con FF iniziali per azzerare opacità
+png 160x144
 
 
 
@@ -126,6 +138,17 @@ la condizione dell' if è sempre vera anche se a video non vedo più il coin.
 
 BORDO sgb C:\GB\ZGBNEW\tools\border\
 
+DIAGS https://github.com/gbdev/rgbds/releases
+rgbgfx.exe -o test.2bpp -t test.map -u archer_mine.png
+import del 2bpp dal tile designer 
+type 			Binary 8x8 tiles
+First tile 		0
+tile count		122
+first byte to	0
+Format			Gameboy VRAM 
+e salvarlo come .gbr
+
+
 
 POTREI EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI
 IN CAMBIO METTERE  tile sulla window:
@@ -136,12 +159,20 @@ così risparmio qualche posizione sullo spazio per gli sprite.
 C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-master\Debug\ARROWS_Debug.noi -g
 
 
+DA VIDEO A GIF
+ffmpeg -ss 8 -t 7 -i itemdisappears.mkv -vf "fps=30,scale=320:-1:flags=lanczos" itemdisappears.gif
+-ss 	sono i numeri dei primi secondi da saltare
+-t 		il numero di secondi da prendere
+scale 	è la width da ridimensionare, la height viene calcolata automaticamente
+
 DISCORD MARKDOWN: ```c ```
 
 ```c
-utente@utente-Lenovo-Yoga-2-13:/usr/src/linux-headers-5.4.0-73-generic[/b]$ sudo make -f Makefile 
-make[1]: *** No rule to make target 'arch/x86/tools/relocs_32.c', needed by 'arch/x86/tools/relocs_32.o'.  Stop.
-make: *** [arch/x86/Makefile:235: archscripts] Error 2```
+C:\GB\ZGBNEW\tools\gimp-tilemap-gb-master\console\bin\windows>png2gbtiles.exe C:\GB\ZGBNEW\ZGB-template-master\altro\diag_archer.png -gbr C:\GB\ZGBNEW\ZGB-template-master\altro\out.gbr
+Loading image from file: C:\GB\ZGBNEW\ZGB-template-master\altro\diag_archer.png
+Writing output to file: C:\GB\ZGBNEW\ZGB-template-master\altro\out.gbr
+Error: invalid image dimensions for GBR. Entire image must be 8, 16 or 32 pixels wide
+```
 
 
 

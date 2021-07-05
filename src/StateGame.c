@@ -52,8 +52,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 3u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 1u; // 0u default
+UINT8 current_level = 0u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -62,12 +62,12 @@ bool LCD_Installed = false;
 
 extern UINT8 updatecounter; //da StateCredit
 struct Sprite* platform_sprite = 0;
-struct Sprite* snake1 = 0;
-struct Sprite* snake2 = 0 ;
-struct Sprite* snake3 = 0 ;
-struct Sprite* snake4 = 0 ;
-struct Sprite* enemies[4] = {0,0,0,0};
-INT8 enlen = 0; //counts in-screen enemies
+struct Sprite* enemies_0 = 0;
+struct Sprite* enemies_1 = 0 ;
+struct Sprite* enemies_2 = 0 ;
+struct Sprite* enemies_3 = 0 ;
+//struct Sprite* enemies[4] = {0,0,0,0};
+//INT8 enlen = 0; //counts in-screen enemies
 struct Sprite* scrigno_coin = 0;
 struct Sprite* scrigno_dcoin = 0;
 struct Sprite* scrigno_shield = 0;
@@ -157,8 +157,10 @@ void Start_StateGame() {
 	if (load_next_s){ //vengo da secret!
 		load_next_s = 0;
 		ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else{ //vengo da altra map
-		ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	}else if(archer_state != STATE_DIAG){ //non vengo da dialogo
+			ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	}else{
+		load_next_s = 1; // START UGLY STORY : tracking the fact that the previous state is a Dialog, so I don't want initial spawnings !
 	}
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 	InitScroll(lvls[current_map], collision_tiles, 0);
@@ -258,9 +260,8 @@ void Start_StateGame() {
 		break;
 	}
 	
-	if (load_next_s){ //vengo da secret!
-		load_next_s = 0;
-	}
+	if(load_next_s) load_next_s = 0; //END UGLY STORY: for track a previous state for which I don't want the initial spawning
+	
 	if(archer_tool == level_tool){
 		UpdateHUD();
 	}
@@ -298,8 +299,9 @@ void ShowWindow(){
 	
 }
 
+
 void ShowWindowDiag(){
-	if (showing_diag == 0){	
+/*	if (showing_diag == 0){	
 		HIDE_WIN;
 		//WINDOW
 		WX_REG = 7;
@@ -319,27 +321,23 @@ void ShowWindowDiag(){
 	if (showing_diag == 0){
 		showing_diag = 1;
 	}
+	*/
 }
 
 void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
-	}
-	if (enlen <= 4){
-		enemies[enlen-1] = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
-	}else{
-		if (enlen>1){
-			enlen--;
-		}
-		SpriteManagerRemoveSprite(enemies[enlen-1]);
-		enemies[3] = enemies[2];
-		enemies[2] = enemies[1];
-		enemies[1] = enemies[0];
-		enemies[0] = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
-	}
-	enlen++;
+	}	
+	SpriteManagerRemoveSprite(enemies_3);
+	enemies_3 = enemies_2;
+	enemies_2 = enemies_1;
+	//enemies4_1 = enemies4_0;
+	enemies_0 = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
+	/*PRINT_POS(16, 0);
+	Printf("%d", enlen4);*/
 }
+
 
 void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
 	SpriteManagerRemoveSprite(itemin);

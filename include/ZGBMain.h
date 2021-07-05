@@ -7,6 +7,7 @@ _STATE(StateGame)\
 _STATE(StateGame4)\
 _STATE(StateSecret)\
 _STATE(StateBoss)\
+_STATE(StateDiag)\
 _STATE(StateGameOver)\
 STATE_DEF_END
 
