@@ -79,7 +79,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d1, "HOW CAN I", 18);
 					memcpy(d2, "DESTROY THIS GATE", 18);
 					memcpy(d3, "... IBEX ?", 18);
-					memcpy(d4, "", 18);
+					memcpy(d4, "             ", 18);
 					diag_found = 1u;
 				break;
 				case 4u:
@@ -97,7 +97,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d1, "BEAST! BACK", 18);
 					memcpy(d2, "TO YOUR CAGE!", 18);
 					memcpy(d3, "-GRRR!", 18);
-					memcpy(d4, "", 18);
+					memcpy(d4, "             ", 18);
 					diag_found = 1u;
 				break;
 			}	
@@ -152,7 +152,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							memcpy(d1, "THIS KEY OPENS", 18);
 							memcpy(d2, "THE BLACK WOLF", 18);
 							memcpy(d3, "CAVE. LET'S GO.", 18);
-							memcpy(d4, "", 18);
+							memcpy(d4, "             ", 18);
 							diag_found = 1u;
 						}
 						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 4u){
@@ -160,8 +160,8 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								if (archer_data->coins < 20u){
 									memcpy(d1, "SLAVE: 20 COINS", 18);
 									memcpy(d2, "FOR THE KEY", 18);
-									memcpy(d3, "", 18);
-									memcpy(d4, "", 18);
+									memcpy(d3, "             ", 18);
+									memcpy(d4, "             ", 18);
 									diag_found = 1u;
 								}else{
 									archer_data->coins -= 20u;
@@ -179,8 +179,8 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								memcpy(d1, "SLAVE: WHAT'VE", 18);
 								memcpy(d2, "WE DONE !?", 18);
 								memcpy(d3, "SIGH!", 18);
-								memcpy(d4, "", 18);
-								diag_found = 1u;
+								memcpy(d4, "             ", 18);
+								diag_found = 4u;
 							}
 						}
 						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 30u){
@@ -188,15 +188,15 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							memcpy(d2, "UPPER RIGHT", 18);
 							memcpy(d3, "CORNER SOMEONE", 18);
 							memcpy(d4, "IS LAUGHING", 18);
-							diag_found = 1u;
+							diag_found = 5u;
 						}
-						if(diag_found){//ho premuto la combo dei diag senza motivo
+						/*if(diag_found){//ho premuto la combo dei diag senza motivo
 							memcpy(d1, "I GOT TO FIND", 18);
 							memcpy(d2, "THE KEY TO ENTER", 18);
 							memcpy(d3, "THE BLACK WOLF", 18);
 							memcpy(d4, "CAVE.", 18);
 							diag_found = 1u;
-						}
+						}*/
 					break;
 					case 1:
 						if (tile_collision == 7u){
@@ -218,7 +218,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							memcpy(d1, "I CAN SMELL...", 18);
 							memcpy(d2, "WOLF' CAVE", 18);
 							memcpy(d3, "CAN'T BE FAR.", 18);
-							memcpy(d4, "", 18);
+							memcpy(d4, "             ", 18);
 							diag_found = 1u;							
 						}
 					break;
@@ -258,7 +258,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								memcpy(d1, "SWAMP. I NEED", 18);
 								memcpy(d2, "THE WRENCH TO", 18);
 								memcpy(d3, "OPEN THIS DOOR.", 18);
-								memcpy(d4, "", 18);
+								memcpy(d4, "             ", 18);
 								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 								diag_found = 1u;
 							}
@@ -267,8 +267,8 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							if (archer_data->tool){
 								memcpy(d1, "THE ONLY WAY", 18);
 								memcpy(d2, "IS UP !!", 18);
-								memcpy(d3, "", 18);
-								memcpy(d4, "", 18);									
+								memcpy(d3, "             ", 18);
+								memcpy(d4, "             ", 18);									
 							}else{							
 								memcpy(d1, "BLEAH !!", 18);
 								memcpy(d2, "THE DEEPEST", 18);
@@ -293,7 +293,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d1, "AAH-AAH-AH", 18);
 						memcpy(d2, "....!", 18);
 						memcpy(d3, "THUN-DERS !!", 18);
-						memcpy(d4, "", 18);
+						memcpy(d4, "             ", 18);
 						diag_found = 1u;
 					break;
 				}
@@ -303,7 +303,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d1, "THERE IS TOO", 18);
 					memcpy(d2, "MUCH SILENCE", 18);
 					memcpy(d3, "FROM HERE ON.", 18);
-					memcpy(d4, "", 18);
+					memcpy(d4, "             ", 18);
 					PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 					diag_found = 1u;
 				}else{							

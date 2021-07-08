@@ -50,6 +50,7 @@ UINT8 diag_found = 0u;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
+struct Sprite* archer_player = 0;
 
 void Die();
 void Shoot();
@@ -702,6 +703,7 @@ void Hit() {
 }
 
 void Build_Next_Dialog(){
+	archer_player = THIS;
 	diag_found = Build_Next_Dialog_Banked(THIS);
 	if(diag_found != 0u){
 		//SetSpriteAnim(THIS, anim_idle, 33u);

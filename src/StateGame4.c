@@ -153,7 +153,7 @@ void ShowWindow4(){
 }
 
 void ShowWindowDiag4(){
-	if (showing_diag == 0){	
+	/*if (showing_diag == 0){	
 		HIDE_WIN;
 		//WINDOW
 		WX_REG = 7;
@@ -173,6 +173,7 @@ void ShowWindowDiag4(){
 	if (showing_diag == 0){
 		showing_diag = 1;
 	}
+	*/
 }
 
 void Start_StateGame4() {

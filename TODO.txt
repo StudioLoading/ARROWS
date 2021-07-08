@@ -1,4 +1,4 @@
-- disegnare lo stato di dialogo 160×144
+- disegnare lo stato di dialogo 160×144 120 tiles
 	- immagini grosse di
 		- protagonista
 		- slave in gabbia
@@ -11,6 +11,7 @@
 		- tusk
 		- cattivone con frusta
 		- tile che converte il tipo di freccia
+		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
 - entrando dal boss: la camera deve 
 	- aspettare in posizione pg

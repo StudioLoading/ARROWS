@@ -5,7 +5,11 @@
 #include "../res/src/font.h"
 #include "../res/src/diagnew.h"
 #include "../res/src/mapdiagarcher.h"
+#include "../res/src/mapdiagslave1.h"
+#include "../res/src/mapdiagslave2.h"
 #include "../res/src/diagarcher.h"
+#include "../res/src/diagslave1.h"
+#include "../res/src/diagslave2.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -38,6 +42,7 @@ extern struct Sprite* enemies_0;
 extern struct Sprite* enemies_1;
 extern struct Sprite* enemies_2;
 extern struct Sprite* enemies_3;
+extern struct Sprite* archer_player;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -46,11 +51,6 @@ extern unsigned char d4[];
 const UINT16 bg_paletted[] = {PALETTE_FROM_HEADER(diagarcher)};
 const UINT8 const collision_dtiles[] = {0,0};
 
-const struct MapInfo* const diagplayer[] = {
-	&mapdiagarcher
-};
-
-const struct MapInfo** const diagmaps[] = {0, diagplayer};
 
 void Start_StateDiag() {
 	
@@ -60,9 +60,21 @@ void Start_StateDiag() {
 	SPRITES_8x16;
 	SHOW_SPRITES;	
 	
-	UINT8 n = Build_Next_Dialog_Banked(0);
-	const struct MapInfo** diag_maps = diagmaps[n];
-	InitScroll(&mapdiagarcher, collision_dtiles, 0);
+	UINT8 n = Build_Next_Dialog_Banked(archer_player);
+	switch(n){
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			InitScroll(&mapdiagarcher, collision_dtiles, 0);
+		break;
+		case 4:
+			InitScroll(&mapdiagslave1, collision_dtiles, 0);
+		break;
+		case 5:
+			InitScroll(&mapdiagslave2, collision_dtiles, 0);
+		break;
+	}
 	SHOW_BKG;
 	
 	INIT_FONT(font, PRINT_WIN);

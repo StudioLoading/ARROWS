@@ -299,7 +299,6 @@ void ShowWindow(){
 	
 }
 
-
 void ShowWindowDiag(){
 /*	if (showing_diag == 0){	
 		HIDE_WIN;
@@ -337,7 +336,6 @@ void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
 	/*PRINT_POS(16, 0);
 	Printf("%d", enlen4);*/
 }
-
 
 void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
 	SpriteManagerRemoveSprite(itemin);
