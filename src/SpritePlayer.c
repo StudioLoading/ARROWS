@@ -50,7 +50,6 @@ UINT8 diag_found = 0u;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
-struct Sprite* archer_player = 0;
 
 void Die();
 void Shoot();
@@ -75,6 +74,21 @@ void Start_SpritePlayer() {
 		Build_Next_Dialog();
 	}else{
 		archer_state = STATE_JUMPING;
+	}
+	
+	if(diag_found == 21u){ //spawn key
+		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+		datakey->type = 1;
+		datakey->setup = 1u;
+		diag_found = 0u;
+	}
+	if(diag_found == 20u){ //spawn wrench			
+		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
+		datakey->type = 2;
+		datakey->setup = 1u;
+		diag_found = 0u;
 	}
 	
 	THIS->coll_x = 5;
@@ -357,17 +371,21 @@ void Update_SpritePlayer() {
 			if(CheckCollision(THIS, ispr)) {
 				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
 				switch(datakey->type){
-					case 1: //key
+					case 1: //key					
+						if (current_level == 0u && current_map == 0u){
+							if( archer_data->coins < 20u){
+								return;
+							}
+							archer_data->coins -= 20u;
+						}
 						SetSpriteAnim(THIS, anim_idle, 12u);
 						archer_data->tool = 6;
 						SpriteManagerRemoveSprite(ispr);	
-						Build_Next_Dialog();
 					break;
 					case 2: //wrench
 						SetSpriteAnim(THIS, anim_idle, 12u);
 						archer_data->tool = 7;
 						SpriteManagerRemoveSprite(ispr);
-						Build_Next_Dialog();
 						return;
 					break;
 				}
@@ -703,18 +721,16 @@ void Hit() {
 }
 
 void Build_Next_Dialog(){
-	archer_player = THIS;
 	diag_found = Build_Next_Dialog_Banked(THIS);
-	if(diag_found != 0u){
-		//SetSpriteAnim(THIS, anim_idle, 33u);
-		//settare le coordinate di ripristino dell' archer sulla mappa
-		//cambiare di stato verso StateDiag
-		drop_player_x = THIS->x >> 3;
-		drop_player_y = THIS->y >> 3 ;
+	if(diag_found){
 		archer_state = STATE_DIAG;
-		SetState(StateDiag);
-		//modificare lo StateGame, StateGame4 dicendo che se vengo da StateDiag devo spawnare alle coordinate salvate
-		//show_diag = 1;	
+		if(diag_found != 99u){ // 99u means no state changing, just simple diag message to show from StateGame			
+			drop_player_x = THIS->x >> 3;
+			drop_player_y = THIS->y >> 3 ;
+			SetState(StateDiag);
+		}else{
+			show_diag = 1;	
+		}		
 	}
 }
 

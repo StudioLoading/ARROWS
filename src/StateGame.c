@@ -44,7 +44,7 @@ const UINT16 const sprites_palette[] = {
 };
 
 UINT8 amulet = 0u;
-UINT8 coins = 0u;
+UINT8 coins = 30u;
 INT8 ups = 3;
 INT8 hp = 100;
 INT8 archer_tool = 0;
@@ -52,8 +52,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 swamp, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -190,6 +190,7 @@ void Start_StateGame() {
 	
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
+	UpdateHUD();
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -210,16 +211,12 @@ void Start_StateGame() {
 					//wrench
 					if(archer_data->tool == 0){
 						if (!load_next_s){ 
-							spawn_item(scrigno_coin, 9u, 12u, 1, 1);
-							spawn_item(scrigno_shield, 9u, 22u, 2, 1);
-							spawn_item(scrigno_dcoin, 6u, 4u, 7, 1);
-							spawn_item(scrigno_up, 31u, 27u, 3, 0);
+							spawn_item(scrigno_dcoin, 9u, 12u, 1, 1);
+							//spawn_item(scrigno_shield, 9u, 22u, 2, 1);
+							//spawn_item(scrigno_dcoin, 10u, 3u, 7, 1);
+							spawn_item(scrigno_up, 1u, 9u, 3, 0);
 						}
 					}
-				break;
-				case 1u:
-					spawn_enemy(SpriteEnemy, 7u, 12u);
-					spawn_enemy(SpritePlatform, 9u, 21u);
 				break;
 			}
 		break;
@@ -232,7 +229,7 @@ void Start_StateGame() {
 					}
 				break;
 				case 1u:
-					level_tool = 6;
+					level_tool = 7;
 					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
 						spawn_item(scrigno_shield, 41u, 3u, 2, 1);
 						spawn_enemy(SpriteRat, 16u, 4u);
@@ -290,7 +287,7 @@ void ShowWindow(){
 	show_diag = -1;
 	HIDE_WIN;
 	//WINDOW
-	WX_REG = 7;
+	WX_REG = 4;
 	WY_REG = 144 - 8;
 	InitWindow(0, 0, &window);
 	SHOW_WIN;
@@ -300,27 +297,27 @@ void ShowWindow(){
 }
 
 void ShowWindowDiag(){
-/*	if (showing_diag == 0){	
+	if (showing_diag == 0){	
 		HIDE_WIN;
 		//WINDOW
 		WX_REG = 7;
-		WY_REG = 144 - 48; //40
+		WY_REG = 144 - 32; //40
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;
 	}
-	PRINT_POS(1,1);
+	PRINT_POS(1,0);
 	Printf(d1);
-	PRINT_POS(1,2);
+	PRINT_POS(1,1);
 	Printf(d2);
-	PRINT_POS(1,3);
+	PRINT_POS(1,2);
 	Printf(d3);
-	PRINT_POS(1,4);
+	PRINT_POS(1,3);
 	Printf(d4);
 	
 	if (showing_diag == 0){
 		showing_diag = 1;
 	}
-	*/
+	
 }
 
 void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
@@ -411,17 +408,27 @@ void Update_StateGame() {
 						}
 					break;
 					case 1:
-						if (scroll_target->x == (UINT16) 12u << 3 && scroll_target->y > (UINT16) 37u << 3){
-							spawn_enemy(SpriteEnemy, 21u, 39u);
-							spawn_enemy(SpriteEnemy, 23u, 39u);
+						if (scroll_target->x == (UINT16) 10u << 3){
+							spawn_enemy(SpriteEnemy, 22u, 7u);
+							spawn_enemy(SpriteEnemy, 28u, 6u);
 						}
-						if (scroll_target->x == (UINT16) 25u << 3 && scroll_target->y == (UINT16) 39u  << 3){
-							spawn_enemy(SpriteScorpion, 38u, 39u);
+						if (scroll_target->x == (UINT16) 30u << 3 ){
+							spawn_enemy(SpritePlatform, 38u, 8u);
 						}
-						if (scroll_target->x == (UINT16) 37u << 3 && scroll_target->y <= (UINT16) 19u << 3 && scroll_target->y > (UINT16) 15u << 3){
-							spawn_enemy(SpriteEnemy, 27u, 8u);
-							spawn_enemy(SpritePorcupine, 48u, 9u);							
-							spawn_enemy(SpriteScorpion, 17u, 3u);
+						if (scroll_target->x == (UINT16) 47u << 3){
+							spawn_enemy(SpriteScorpion, 56u, 8u);
+						}
+						if (scroll_target->x == (UINT16) 77u << 3){
+							spawn_enemy(SpriteEnemy, 85u, 7u);
+						}
+						if (scroll_target->x == (UINT16) 95u << 3){
+							spawn_enemy(SpriteScorpion, 107u, 8u);
+						}
+						if (scroll_target->x == (UINT16) 146u << 3){
+							spawn_enemy(SpritePorcupine, 155u, 8u);
+						}
+						if (scroll_target->x == (UINT16) 150u << 3){
+							spawn_item(scrigno_shield, 155u, 2u, 2, 1);
 						}
 					break;
 				}
@@ -458,35 +465,26 @@ void Update_StateGame() {
 						
 					break;
 					case 1:
-						if (scroll_target->x == (UINT16) 4u << 3 && scroll_target->y >= (INT16) 12u  << 3 && scroll_target->y <= (INT16) 17u  << 3){
-							spawn_enemy(SpriteRat, 14u, 14u);
-							spawn_enemy(SpriteSpider, 13u, 13u);
+						if (scroll_target->x == (UINT16) 29u << 3){
+							spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
 						}
-						if (scroll_target->x == (UINT16) 29u << 3 && scroll_target->y == (INT16) 3u  << 3){
-							spawn_item(scrigno_dcoin, 45u, 3u, 1, 1);
+						if (scroll_target->x == (UINT16) 37u << 3){
+							spawn_enemy(SpriteSpider, 50u, 7u);
+							spawn_enemy(SpriteRat, 48u, 7u);
 						}
-						if (scroll_target->x == (UINT16) 37u << 3 && scroll_target->y == (INT16) 21u  << 3){
-							spawn_item(scrigno_shield, 46u, 21u, 2, 0);
+						if (scroll_target->x == (UINT16) 51u << 3 ){
+							spawn_enemy(SpritePlatform, 63u, 8u);
+							spawn_item(scrigno_up, 71u, 6u, 3, 1);
 						}
-						if (scroll_target->x == (UINT16) 28u << 3 && scroll_target->y == (INT16) 14u << 3){
-							spawn_enemy(SpritePlatform, 34u, 14u);
-							spawn_enemy(SpriteRat, 45u, 14u);
-							spawn_item(scrigno_up, 44u, 13u, 3, 1);
+						if (scroll_target->x == (UINT16) 89u << 3){
+							spawn_enemy(SpriteSpider, 94u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 42u << 3 && scroll_target->y == (INT16) 28u  << 3){
-							spawn_enemy(SpriteSpider, 48u, 26u);
+						if (scroll_target->x == (UINT16) 105u << 3 ){
+							spawn_item(scrigno_dcoin, 122u, 0u, 7, 0);
 						}
-						if (scroll_target->x == (UINT16) 53u << 3 && scroll_target->y == (INT16) 28u  << 3){
-							spawn_enemy(SpriteSpider, 64u, 21u);
-							spawn_item(scrigno_dcoin, 67u, 23u, 7, 1);
-						}
-						if (scroll_target->x == (UINT16) 66u << 3 && scroll_target->y == (INT16) 10u  << 3){
-							spawn_enemy(SpriteRat, 64u, 15u);
-							spawn_enemy(SpriteRat, 60u, 15u);
-							spawn_item(scrigno_up, 62u, 15u, 3, 1);
-						}
-						if (scroll_target->x == (UINT16) 89u << 3 && scroll_target->y == (INT16) 27u << 3){
-							spawn_item(scrigno_dcoin, 93u, 14u, 1, 1);
+						if (scroll_target->x == (UINT16) 125u << 3 ){
+							spawn_enemy(SpriteSpider, 149u, 5u);
+							spawn_enemy(SpriteSpider, 150u, 5u);
 						}
 					break;
 				}
@@ -579,13 +577,14 @@ void Update_StateGame() {
 		ShowWindow();
 		return;
 	}
+	
 	if(archer_state == STATE_DIAG){
 		if(show_diag > 0 ){
 			ShowWindowDiag();
 			return;
 		}
 	}
-	else{
+	//else{
 		if (amulet != archer_data->amulet | amulet == 0u){
 			amulet = archer_data->amulet;
 			UpdateHUD();
@@ -610,7 +609,7 @@ void Update_StateGame() {
 			archer_tool = archer_data->tool;
 			UpdateHUD();
 		}
-	}
+	//}
 	
 }
 

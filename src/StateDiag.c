@@ -4,12 +4,20 @@
 
 #include "../res/src/font.h"
 #include "../res/src/diagnew.h"
-#include "../res/src/mapdiagarcher.h"
+#include "../res/src/mapdiagarcher1.h"
 #include "../res/src/mapdiagslave1.h"
 #include "../res/src/mapdiagslave2.h"
-#include "../res/src/diagarcher.h"
+#include "../res/src/mapdiagslave3.h"
+#include "../res/src/mapdiagkey.h"
+#include "../res/src/mapdiagwrench.h"
+#include "../res/src/mapdiagwolf.h"
+#include "../res/src/diagarcher1.h"
 #include "../res/src/diagslave1.h"
 #include "../res/src/diagslave2.h"
+#include "../res/src/diagslave3.h"
+#include "../res/src/diagkey.h"
+#include "../res/src/diagwrench.h"
+#include "../res/src/diagwolf.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -42,13 +50,14 @@ extern struct Sprite* enemies_0;
 extern struct Sprite* enemies_1;
 extern struct Sprite* enemies_2;
 extern struct Sprite* enemies_3;
-extern struct Sprite* archer_player;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
 
-const UINT16 bg_paletted[] = {PALETTE_FROM_HEADER(diagarcher)};
+extern UINT8 diag_found;
+
+const UINT16 bg_paletted[] = {PALETTE_FROM_HEADER(diagarcher1)};
 const UINT8 const collision_dtiles[] = {0,0};
 
 
@@ -60,40 +69,52 @@ void Start_StateDiag() {
 	SPRITES_8x16;
 	SHOW_SPRITES;	
 	
-	UINT8 n = Build_Next_Dialog_Banked(archer_player);
-	switch(n){
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-			InitScroll(&mapdiagarcher, collision_dtiles, 0);
+	switch(diag_found){
+		case 0u:
+		case 1u:
+		case 2u:
+		case 3u:
+			InitScroll(&mapdiagarcher1, collision_dtiles, 0);
 		break;
-		case 4:
+		case 4u:
 			InitScroll(&mapdiagslave1, collision_dtiles, 0);
 		break;
-		case 5:
+		case 5u:
 			InitScroll(&mapdiagslave2, collision_dtiles, 0);
+		break;
+		case 6u:
+			InitScroll(&mapdiagslave3, collision_dtiles, 0);
+		break;
+		case 20u:
+			InitScroll(&mapdiagwrench, collision_dtiles, 0);
+		break;
+		case 21u:
+			InitScroll(&mapdiagkey, collision_dtiles, 0);
+		break;
+		case 51u:
+			InitScroll(&mapdiagwolf, collision_dtiles, 0);
 		break;
 	}
 	SHOW_BKG;
 	
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
-	
 	HIDE_WIN;
+
+	INIT_FONT(font, PRINT_WIN);
+	INIT_CONSOLE(font, 3, 4);
+	
 	//WINDOW
 	WX_REG = 7;
-	WY_REG = 144 - 48; //40
+	WY_REG = 144 - 40; //40
 	InitWindow(0, 0, &diagnew);
 	SHOW_WIN;
 	
-	PRINT_POS(1,1);
+	PRINT_POS(1,0);
 	Printf(d1);
-	PRINT_POS(1,2);
+	PRINT_POS(1,1);
 	Printf(d2);
-	PRINT_POS(1,3);
+	PRINT_POS(1,2);
 	Printf(d3);
-	PRINT_POS(1,4);
+	PRINT_POS(1,3);
 	Printf(d4);
 	
 	//SOUND

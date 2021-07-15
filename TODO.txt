@@ -1,9 +1,5 @@
-- disegnare lo stato di dialogo 160×144 120 tiles
+- disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
-		- protagonista
-		- slave in gabbia
-		- slave incatenato
-		- wolf
 		- gator
 		- eagle
 		- ibex
@@ -13,6 +9,13 @@
 		- tile che converte il tipo di freccia
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
+
+- rifare level 0 mappa 1, seconda mappa di gioco, perchè la voglio dritta
+
+- all' entrata del boss lo state di dialogo entra in loop
+
+- rifare stanza segreta, è troppo brutta così. buona l' idea della tile, ma vorrei organizzarla diversa.
+- il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile!
 - entrando dal boss: la camera deve 
 	- aspettare in posizione pg
 	- state di dialogo
@@ -52,9 +55,10 @@ devo fare lo state di inventario, con questa scusa metto le descrizioni e miniat
 
 state di inizio ogni nuovo livello, sarà un tileset magari con una bella immagine a tutto schermo, tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
 
-schermata di scelta livello / mappa !
+schermata di scelta livello / mappa ! per replay value, si può scegliere l' ultimo livello solo con tutti e 4 gli amuleti ottenuti.
 
-intro iniziale con poesia su una pergamena di carta !
+intro iniziale con poesia su una pergamena di carta ! audio da Leandro ? me ne accennò, di un suo pezzo, allo svilupparty 2021...
+
 
 il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 
@@ -85,11 +89,11 @@ polish:
 	
 
 
+bisogna pensare ad un maggior replay value:
+start screen è selezione del livello. Si può scegliere ultimo livello del castello solo coi 4 amuleti ottenuti.
+in questo modo chi ricomincia può andare a scegliere solo i livelli con gli amuleti e arrivare al castello.
+direi di aggiungere il fatto che se si giocano anche livelli senza amuleti, il boss del livello entra "in gioco" nello scontro finale col boss e lo picchia - buttandogli giù della vita.
 
-bisogna pensare ad un maggior replay value: potrebbero esserci delle warp zone nelle stanze segrete (così posso usare lo SpriteGate dandogli la vx->fire) 
-il cui accesso è possibile solo rompendo un gate di fuoco ? Dato che il fuoco me lo da solo il boss finale ...
-ecco: la prima volta che incontro il boss finale, lui non muore, e mi rispedisce allo zoo. Nella secret dello zoo metto sta cosa, così c'è warp che mi porta al VERO ultimo stage,
-con di nuovo il boss finale, ma più incazzato, e sensibile solo alle frecce di fuoco + pietra
 
 
 CONTROLLO di tutti i suggerimenti/dialoghi
