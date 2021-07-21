@@ -92,14 +92,14 @@ void Start_StateSecret() {
 	//ITEMS
 	if ((current_level == 0u && current_map == 0u) || (current_level == 1u && current_map == 1u) ||
 		(current_level == 4u && current_map == 1u)){
-		scrigno_up = spawn_item(scrigno_up, 6u, 14u, 3, 1);
-		scrigno_dcoin = spawn_item(scrigno_dcoin, 9u, 14u, 7, 1);
+		scrigno_up = spawn_item(scrigno_up, 5u, 5u, 3, 1);
+		scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
 	}else{
-		scrigno_coin = spawn_item(scrigno_coin, 6u, 14u, 1, 1);
+		scrigno_coin = spawn_item(scrigno_coin, 5u, 5u, 1, 1);
 		if(archer_data->hp == 100){
-			scrigno_dcoin = spawn_item(scrigno_dcoin, 9u, 14u, 7, 1);
+			scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
 		}else{
-			scrigno_shield = spawn_item(scrigno_shield, 9u, 14u, 2, 1);	
+			scrigno_shield = spawn_item(scrigno_shield, 11u, 11u, 2, 1);	
 		}		
 	}
 	

@@ -1,3 +1,6 @@
+- il pistolamento del StateDiag mi ha fatto notare che il player cambia stato. Non va bene. Gli stati vanno cambiato dagli stati, non dagli sprite.
+
+
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
 		- gator
@@ -10,11 +13,8 @@
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
 
-- rifare level 0 mappa 1, seconda mappa di gioco, perchè la voglio dritta
-
 - all' entrata del boss lo state di dialogo entra in loop
 
-- rifare stanza segreta, è troppo brutta così. buona l' idea della tile, ma vorrei organizzarla diversa.
 - il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile!
 - entrando dal boss: la camera deve 
 	- aspettare in posizione pg
@@ -26,6 +26,7 @@
 
 - aggiungere frames al wolf, c'è molta sprite-vram a disposizione
 
+- fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
 
 CONFIG DI PROTOTIPO:
 	2.0 come inizio

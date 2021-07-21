@@ -25,6 +25,7 @@
 
 #include "custom_datas.h"
 #include "TileAnimations.h"
+#include "Dialogs.h"
 
 
 const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
@@ -50,10 +51,11 @@ INT8 hp = 100;
 INT8 archer_tool = 0;
 INT8 level_tool = -1;
 INT8 load_next = 0;
+INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
 UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 1u; // 0u default
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -97,6 +99,7 @@ extern INT8 is_on_boss;
 extern UINT8 current_level_b;
 extern UINT8 current_map_b;
 extern INT8 platform_vx;
+extern UINT8 diag_found;
 
 void UpdateHUD();
 void ShowWindow();
@@ -157,10 +160,10 @@ void Start_StateGame() {
 	if (load_next_s){ //vengo da secret!
 		load_next_s = 0;
 		ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else if(archer_state != STATE_DIAG){ //non vengo da dialogo
-			ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	}else if(load_next_d){ //non vengo da dialogo
+		load_next_d = 0;
 	}else{
-		load_next_s = 1; // START UGLY STORY : tracking the fact that the previous state is a Dialog, so I don't want initial spawnings !
+		ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
 	}
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 	InitScroll(lvls[current_map], collision_tiles, 0);
@@ -196,69 +199,78 @@ void Start_StateGame() {
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
-	
+	/*
 	memcpy(d1, "DIALOG1", 18);
 	memcpy(d2, "DIALOG2", 18);
 	memcpy(d3, "DIALOG3", 18);
 	memcpy(d4, "DIALOG4", 18);
+	*/
 	
-	//INIT SPAWNING
+	//SET LEVEL TOOL
 	switch(current_level){
 		case 0u:
 			switch(current_map){
 				case 0u:
 					level_tool = 6;
-					//wrench
-					if(archer_data->tool == 0){
-						if (!load_next_s){ 
-							spawn_item(scrigno_dcoin, 9u, 12u, 1, 1);
-							//spawn_item(scrigno_shield, 9u, 22u, 2, 1);
-							//spawn_item(scrigno_dcoin, 10u, 3u, 7, 1);
-							spawn_item(scrigno_up, 1u, 9u, 3, 0);
-						}
-					}
 				break;
 			}
 		break;
-		case 1u:
+		case 1:
 			switch(current_map){
-				case 0u:
-					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						spawn_enemy(SpriteSpider, 12u, 5u);
-						spawn_enemy(SpriteSpider, 14u, 6u);
-					}
-				break;
 				case 1u:
 					level_tool = 7;
-					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						spawn_item(scrigno_shield, 41u, 3u, 2, 1);
-						spawn_enemy(SpriteRat, 16u, 4u);
-						spawn_enemy(SpriteEnemy, 17u, 4u);
-					}
-				break;
-			}
-		break;
-		case 2u:
-			switch(current_map){
-				case 0u:
-					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
-						spawn_enemy(SpriteSpider, 13u, 9u);
-						spawn_enemy(SpriteSpider, 19u, 9u);
-					}
-				break;
-				case 1u:
-					if (!load_next_s){ // se non vengo da secret. se no si arricchisce a caso senza freni
-						spawn_enemy(SpriteSpider, 16u, 9u);
-						spawn_enemy(SpriteSpider, 17u, 9u);
-					}
 				break;
 			}
 		break;
 	}
 	
-	if(load_next_s) load_next_s = 0; //END UGLY STORY: for track a previous state for which I don't want the initial spawning
+	//INIT SPAWNING	
+	if (load_next_s == 0){ // NON vengo da secret!
+		switch(current_level){
+			case 0u:
+				switch(current_map){
+					case 0u:
+						//wrench
+						if(archer_data->tool == 0){
+							spawn_item(scrigno_dcoin, 9u, 12u, 1, 1);
+							spawn_item(scrigno_up, 1u, 9u, 3, 0);
+						}
+					break;
+				}
+			break;
+			case 1u:
+				switch(current_map){
+					case 0u:
+						spawn_enemy(SpriteSpider, 12u, 5u);
+						spawn_enemy(SpriteSpider, 14u, 6u);
+					break;
+					case 1u:
+						spawn_item(scrigno_shield, 41u, 3u, 2, 1);
+						spawn_enemy(SpriteRat, 16u, 4u);
+						spawn_enemy(SpriteEnemy, 17u, 4u);
+					break;
+				}
+			break;
+			case 2u:
+				switch(current_map){
+					case 0u:
+						spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
+						spawn_enemy(SpriteSpider, 13u, 9u);
+						spawn_enemy(SpriteSpider, 19u, 9u);
+					break;
+					case 1u:
+						spawn_enemy(SpriteSpider, 16u, 9u);
+						spawn_enemy(SpriteSpider, 17u, 9u);
+					break;
+				}
+			break;
+		}
+	}
 	
+	if(load_next_s){
+		load_next_s = 0;
+	}
+		
 	if(archer_tool == level_tool){
 		UpdateHUD();
 	}
@@ -352,7 +364,20 @@ void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_ty
 }
 
 void Update_StateGame() {
-
+	
+	if(load_next_d){
+		switch(load_next_d){
+			case 1: //vado allo StateDiag
+				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				load_next_d = 2;
+				SetState(StateDiag);
+			break;
+			case 2:
+				load_next_d = 0;
+			break;
+		}		
+	}
+	
 	if(load_next) {
 		switch(load_next){
 			case 1: //stage
@@ -470,11 +495,9 @@ void Update_StateGame() {
 						}
 						if (scroll_target->x == (UINT16) 37u << 3){
 							spawn_enemy(SpriteSpider, 50u, 7u);
-							spawn_enemy(SpriteRat, 48u, 7u);
 						}
 						if (scroll_target->x == (UINT16) 51u << 3 ){
 							spawn_enemy(SpritePlatform, 63u, 8u);
-							spawn_item(scrigno_up, 71u, 6u, 3, 1);
 						}
 						if (scroll_target->x == (UINT16) 89u << 3){
 							spawn_enemy(SpriteSpider, 94u, 5u);
@@ -486,6 +509,10 @@ void Update_StateGame() {
 							spawn_enemy(SpriteSpider, 149u, 5u);
 							spawn_enemy(SpriteSpider, 150u, 5u);
 						}
+						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 ){
+							spawn_enemy(SpriteRat, 143u, 13u);
+						}
+						
 					break;
 				}
 			break;

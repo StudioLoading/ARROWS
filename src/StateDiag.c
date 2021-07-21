@@ -11,6 +11,7 @@
 #include "../res/src/mapdiagkey.h"
 #include "../res/src/mapdiagwrench.h"
 #include "../res/src/mapdiagwolf.h"
+#include "../res/src/mapdiagcave.h"
 #include "../res/src/diagarcher1.h"
 #include "../res/src/diagslave1.h"
 #include "../res/src/diagslave2.h"
@@ -18,6 +19,7 @@
 #include "../res/src/diagkey.h"
 #include "../res/src/diagwrench.h"
 #include "../res/src/diagwolf.h"
+#include "../res/src/diagcave.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -84,6 +86,9 @@ void Start_StateDiag() {
 		break;
 		case 6u:
 			InitScroll(&mapdiagslave3, collision_dtiles, 0);
+		break;
+		case 19u:
+			InitScroll(&mapdiagcave, collision_dtiles, 0);
 		break;
 		case 20u:
 			InitScroll(&mapdiagwrench, collision_dtiles, 0);

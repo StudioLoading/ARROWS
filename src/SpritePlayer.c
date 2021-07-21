@@ -14,6 +14,7 @@
 extern UINT8 amulet;
 extern INT8 load_next;
 extern INT8 load_next_s;
+extern INT8 load_next_d;
 extern INT8 load_next_b;
 extern UINT8 current_level;
 extern UINT8 current_map;
@@ -47,6 +48,8 @@ INT8 platform_vx = 0;
 INT8 platform_vy = 0;
 INT8 is_on_boss = -1;
 UINT8 diag_found = 0u;
+UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+UINT8 current_camera_counter = 0u;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
@@ -69,12 +72,11 @@ void Start_SpritePlayer() {
 	archer_data->ups = 0;
 	archer_data->coins = 0u;
 	
-	
-	if(is_on_boss == 0 && current_camera_state== 4u){
+	/*if(is_on_boss >= 0){
 		Build_Next_Dialog();
-	}else{
+	}else{*/
 		archer_state = STATE_JUMPING;
-	}
+	//}
 	
 	if(diag_found == 21u){ //spawn key
 		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
@@ -106,7 +108,7 @@ void Start_SpritePlayer() {
 
 void Update_SpritePlayer() {
 
-	if (is_on_boss == 0 && current_camera_state != 4){
+	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
 	}
 
@@ -115,15 +117,19 @@ void Update_SpritePlayer() {
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
 		}else{
-			if(show_diag < 2 & KEY_TICKED(J_A)){ //show_diag < max_diag
-				SetSpriteAnim(THIS, anim_idle, 33u);
-				show_diag += 1;
-			}
+			//if(show_diag < 2){
+				if (KEY_TICKED(J_B) || KEY_TICKED(J_A)){ //show_diag < max_diag
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					show_diag += 1;
+				}
+			//}
 		}
 		return;
 	}
 	
 	if(KEY_TICKED(J_START)){
+		//se sono sullo stato del boss non fare un bel niente !!!!!!
+		//non si mette in pausa al mostro!
 		SetState(StateGame);
 		return;
 	}
@@ -634,13 +640,14 @@ void CheckCollisionTile() {
 			}
 		break;
 		case 7u: //fine level - goto boss!
-			Build_Next_Dialog();
+			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+			current_camera_counter = 0u;
 			switch(current_level){
 				case 0u:
 				case 1u:
 					if(archer_data->tool){
 						current_level_b = current_level;
-						is_on_boss = 1;
+						is_on_boss = 0;
 						archer_data->tool = 0; //tool consumato
 						load_next_b = 1;
 					}
@@ -649,14 +656,15 @@ void CheckCollisionTile() {
 				case 3u:
 				case 4u:
 					current_level_b = current_level;
-					is_on_boss = 1;
+					is_on_boss = 0;
 					archer_data->tool = 0; //tool consumato
 					load_next_b = 1;
 				break;
 			}
+			Build_Next_Dialog();
 		break;
 		case 8u: //fine boss!
-			if(current_level_b == 0 || current_level_b == 2 || current_level_b == 4){
+			if(current_level_b == 0u || current_level_b == 2u || current_level_b == 4u){
 				if(!archer_data->tool){
 					return;
 				}
@@ -667,7 +675,12 @@ void CheckCollisionTile() {
 			current_level += 1u;
 			current_map = 0;
 			current_camera_state = 0u;
-			SetState(StateGame);
+			current_camera_counter = 0u;
+			if(current_level_b < 4u){
+				SetState(StateGame);	
+			}else{
+				SetState(StateGame4);
+			}
 		break;
 		case 19u: //exit secret room
 			load_next_s = -1;
@@ -723,12 +736,13 @@ void Hit() {
 void Build_Next_Dialog(){
 	diag_found = Build_Next_Dialog_Banked(THIS);
 	if(diag_found){
-		archer_state = STATE_DIAG;
 		if(diag_found != 99u){ // 99u means no state changing, just simple diag message to show from StateGame			
 			drop_player_x = THIS->x >> 3;
-			drop_player_y = THIS->y >> 3 ;
-			SetState(StateDiag);
+			drop_player_y = THIS->y >> 3;
+			//SetState(StateDiag);
+			load_next_d = 1;
 		}else{
+			archer_state = STATE_DIAG;
 			show_diag = 1;	
 		}		
 	}
