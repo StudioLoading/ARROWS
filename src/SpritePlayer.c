@@ -72,12 +72,6 @@ void Start_SpritePlayer() {
 	archer_data->ups = 0;
 	archer_data->coins = 0u;
 	
-	/*if(is_on_boss >= 0){
-		Build_Next_Dialog();
-	}else{*/
-		archer_state = STATE_JUMPING;
-	//}
-	
 	if(diag_found == 21u){ //spawn key
 		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
@@ -166,7 +160,7 @@ void Update_SpritePlayer() {
 						SetState(StateGameOver);
 					}else{
 						if (is_on_boss != -1){
-							current_camera_state = 0u;
+							current_camera_state = 3u;
 							SetState(StateBoss);							
 						}else{						
 							if(current_level < 3){
@@ -645,23 +639,20 @@ void CheckCollisionTile() {
 			switch(current_level){
 				case 0u:
 				case 1u:
+					Build_Next_Dialog();
 					if(archer_data->tool){
 						current_level_b = current_level;
 						is_on_boss = 0;
-						archer_data->tool = 0; //tool consumato
-						load_next_b = 1;
 					}
 				break;
 				case 2u:
 				case 3u:
 				case 4u:
+					Build_Next_Dialog();
 					current_level_b = current_level;
 					is_on_boss = 0;
-					archer_data->tool = 0; //tool consumato
-					load_next_b = 1;
 				break;
 			}
-			Build_Next_Dialog();
 		break;
 		case 8u: //fine boss!
 			if(current_level_b == 0u || current_level_b == 2u || current_level_b == 4u){
@@ -674,8 +665,6 @@ void CheckCollisionTile() {
 			load_next_b = 0;
 			current_level += 1u;
 			current_map = 0;
-			current_camera_state = 0u;
-			current_camera_counter = 0u;
 			if(current_level_b < 4u){
 				SetState(StateGame);	
 			}else{
@@ -739,7 +728,6 @@ void Build_Next_Dialog(){
 		if(diag_found != 99u){ // 99u means no state changing, just simple diag message to show from StateGame			
 			drop_player_x = THIS->x >> 3;
 			drop_player_y = THIS->y >> 3;
-			//SetState(StateDiag);
 			load_next_d = 1;
 		}else{
 			archer_state = STATE_DIAG;

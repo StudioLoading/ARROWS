@@ -13,7 +13,10 @@
 extern UINT8 current_level_b;
 extern UINT8 current_level;
 extern UINT8 current_map;
+extern UINT8 current_camera_state;
+extern UINT8 current_camera_counter;
 extern INT8 is_on_boss;
+extern INT8 load_next_b;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -70,10 +73,10 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 				break;
 				case 1u:
 					memcpy(d1, "THE EXIT IS    ", 18);
-					memcpy(d2, "BEYOND A GATOR", 18);
+					memcpy(d2, "BEYOND A GATOR ", 18);
 					memcpy(d3, "I NEED HIS AMULET", 18);
 					memcpy(d4, "LET'S FIGHT!", 18);
-					diagf = 99u;
+					diagf = 1u;
 				break;
 				case 2u:
 					memcpy(d1, "AN EAGLE OWNS", 18);
@@ -105,14 +108,24 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d2, "TO YOUR CAGE!    ", 18);
 					memcpy(d3, "-GRRR!           ", 18);
 					memcpy(d4, "                 ", 18);
+					current_camera_state = 3u;
 					diagf = 51u;
 				break;
 				case 1u:				
 					memcpy(d1, "FILTHY HUMAN !!  ", 18);
 					memcpy(d2, "I'LL EAT YOU AND ", 18);
-					memcpy(d3, "  MAKE YOUR SKIN ", 18);
-					memcpy(d4, " A FASHION BELT !", 18);
-					diagf = 51u; //TODO 52 !
+					memcpy(d3, "MAKE A BELT OUT  ", 18);
+					memcpy(d4, "OF YOUR SKIN.", 18);
+					current_camera_state = 3u;
+					diagf = 52u;
+				break;
+				case 2u:				
+					memcpy(d1, "THE SKY IS MINE ", 18);
+					memcpy(d2, "                ", 18);
+					memcpy(d3, "                ", 18);
+					memcpy(d4, "                ", 18);
+					current_camera_state = 3u;
+					diagf = 53u;
 				break;
 			}	
 		break;
@@ -162,7 +175,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			case 0u:
 				switch(current_map){
 					case 0u:
-						if (archer_data->tool == 6){//ho trovato la chiave
+						if (load_next_b == 1){//ho trovato la chiave
 							memcpy(d1, "THIS KEY OPENS", 18);
 							memcpy(d2, "THE BLACK WOLF", 18);
 							memcpy(d3, "CAVE. LET'S GO.", 18);
@@ -218,7 +231,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					break;
 					case 1u:
 						if (tile_collision == 7u){
-							if (archer_data->tool){
+							if (load_next_b == 1){
 								memcpy(d1, "-----------------", 18);
 								memcpy(d2, "   CAVE OF THE", 18);
 								memcpy(d3, "   BLACK WOLF ", 18);
@@ -275,10 +288,16 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								memcpy(d3, "TAKE MY WRENCH.", 18);
 								memcpy(d4, "FREE US ALL!", 18);
 								diagf = 20u;		
+							}else{
+								memcpy(d1, "YOU CAN DO THIS. ", 18);
+								memcpy(d2, "                 ", 18);
+								memcpy(d3, "                 ", 18);
+								memcpy(d4, "                 ", 18);
+								diagf = 6u;
 							}
 						}
 						if (tile_collision == 7u){
-							if (archer_data->tool){
+							if (archer_data->tool != 0){
 								memcpy(d1, "----------------", 18);
 								memcpy(d2, "  SWAMP OF THE", 18);
 								memcpy(d3, "     ALLIGATOR ", 18);
@@ -294,18 +313,18 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							}
 						}
 						if(diagf == 0u){
-							if (archer_data->tool){
+							/*if (archer_data->tool){
 								memcpy(d1, "THE ONLY WAY", 18);
 								memcpy(d2, "IS UP !!", 18);
 								memcpy(d3, "                 ", 18);
 								memcpy(d4, "                 ", 18);									
-							}else{							
+							}else{							*/
 								memcpy(d1, "BLEAH !!", 18);
 								memcpy(d2, "THE DEEPEST", 18);
 								memcpy(d3, "THE WORST IS", 18);
 								memcpy(d4, "GETTING", 18);
-							}
-							diagf = 99u;
+							//}
+								diagf = 99u;
 						}
 					break;
 				}

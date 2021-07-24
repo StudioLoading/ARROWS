@@ -4,6 +4,7 @@
 
 #include "../res/src/font.h"
 #include "../res/src/diagnew.h"
+
 #include "../res/src/mapdiagarcher1.h"
 #include "../res/src/mapdiagslave1.h"
 #include "../res/src/mapdiagslave2.h"
@@ -12,6 +13,9 @@
 #include "../res/src/mapdiagwrench.h"
 #include "../res/src/mapdiagwolf.h"
 #include "../res/src/mapdiagcave.h"
+#include "../res/src/mapdiaggator.h"
+#include "../res/src/mapdiageagle.h"
+
 #include "../res/src/diagarcher1.h"
 #include "../res/src/diagslave1.h"
 #include "../res/src/diagslave2.h"
@@ -20,6 +24,8 @@
 #include "../res/src/diagwrench.h"
 #include "../res/src/diagwolf.h"
 #include "../res/src/diagcave.h"
+#include "../res/src/diaggator.h"
+#include "../res/src/diageagle.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -99,6 +105,12 @@ void Start_StateDiag() {
 		case 51u:
 			InitScroll(&mapdiagwolf, collision_dtiles, 0);
 		break;
+		case 52u:
+			InitScroll(&mapdiaggator, collision_dtiles, 0);
+		break;
+		case 53u:
+			InitScroll(&mapdiageagle, collision_dtiles, 0);
+		break;
 	}
 	SHOW_BKG;
 	
@@ -131,6 +143,7 @@ void Start_StateDiag() {
 void Update_StateDiag() {
 	
 	if(KEY_PRESSED(J_B)) {
+		HIDE_WIN;
 		if(is_on_boss >= 0){
 			SetState(StateBoss);
 		}else{

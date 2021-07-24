@@ -132,7 +132,7 @@ void Start_StateBoss() {
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps_b[0], &map_w, &map_h);
 	ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	if(current_camera_state != 3u){
+	if(current_camera_state < 3u){
 		scroll_top_movement_limit = 60;
 		scroll_target = SpriteManagerAdd(SpriteCamerafocus, drop_player_x << 3, drop_player_y << 3);
 	}else{
@@ -198,7 +198,7 @@ void Start_StateBoss() {
 		break;
 	}
 	//INTRO
-	if (current_camera_state != 3u){
+	if (current_camera_state < 3u){
 		boss_data_b->enemy_state = ENEMY_STATE_WAIT;
 		return;
 	}
@@ -214,7 +214,7 @@ void Start_StateBoss() {
 	archer_data->ups =ups;
 	archer_data->hp = hp;
 	archer_data->coins = coins;
-	
+	archer_data->tool = 0;
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -235,7 +235,7 @@ void Start_StateBoss() {
 void Update_StateBoss() {
 	
 	// INTRO START	
-	if (current_camera_state != 3u){
+	if (current_camera_state < 3u){
 		switch(current_camera_state){//0 initial wait, 1 move to boss, 2 go to Diag, 
 			case 0u:
 				current_camera_counter += 1u;
@@ -259,7 +259,7 @@ void Update_StateBoss() {
 				current_camera_counter += 1u;
 				if(current_camera_counter == 40u){
 					diag_found = Build_Next_Dialog_Banked(scroll_target);
-					current_camera_state += 1u;
+					//current_camera_state += 1u;
 					current_camera_counter = 0u;
 					SetState(StateDiag);
 				}	

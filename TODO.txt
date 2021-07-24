@@ -1,9 +1,7 @@
-- il pistolamento del StateDiag mi ha fatto notare che il player cambia stato. Non va bene. Gli stati vanno cambiato dagli stati, non dagli sprite.
-
+- viene saltato il primo dialog quando cerco di entrare dal gator
 
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
-		- gator
 		- eagle
 		- ibex
 		- bear

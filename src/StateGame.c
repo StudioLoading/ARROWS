@@ -99,6 +99,8 @@ extern INT8 is_on_boss;
 extern UINT8 current_level_b;
 extern UINT8 current_map_b;
 extern INT8 platform_vx;
+extern UINT8 current_camera_state;
+extern UINT8 current_camera_counter;
 extern UINT8 diag_found;
 
 void UpdateHUD();
@@ -112,6 +114,10 @@ void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_ty
 
 
 void Start_StateGame() {
+	
+	
+	current_camera_state = 0u;
+	current_camera_counter = 0u;
 	
 	if (current_level > 2u){
 		SetState(StateGame4);
@@ -157,10 +163,10 @@ void Start_StateGame() {
 	UINT8 map_w;
 	UINT8 map_h;
 	GetMapSize(lvls[current_map], &map_w, &map_h);
-	if (load_next_s){ //vengo da secret!
+	if (load_next_s == -1){ //vengo da secret!
 		load_next_s = 0;
 		ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else if(load_next_d){ //non vengo da dialogo
+	}else if(load_next_d){ //vengo da dialogo
 		load_next_d = 0;
 	}else{
 		ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
@@ -171,10 +177,10 @@ void Start_StateGame() {
 	
 	//INIT ARCHER
 	is_on_boss = -1;
-	if (archer_data->ups & archer_data->ups != ups){
+	if (archer_data->ups && archer_data->ups != ups){
 		ups = archer_data->ups;
 	}
-	if (archer_data->tool & archer_data->tool != archer_tool){
+	if (archer_data->tool && archer_data->tool != archer_tool){
 		archer_tool = archer_data->tool;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
@@ -225,7 +231,7 @@ void Start_StateGame() {
 	}
 	
 	//INIT SPAWNING	
-	if (load_next_s == 0){ // NON vengo da secret!
+	if (load_next_s > -1){ // NON vengo da secret!
 		switch(current_level){
 			case 0u:
 				switch(current_map){
@@ -267,13 +273,15 @@ void Start_StateGame() {
 		}
 	}
 	
-	if(load_next_s){
+	if(load_next_s == -1){
 		load_next_s = 0;
 	}
 		
 	if(archer_tool == level_tool){
 		UpdateHUD();
 	}
+	
+	archer_state = STATE_JUMPING;
 
 	
 	//SOUND
@@ -374,6 +382,9 @@ void Update_StateGame() {
 			break;
 			case 2:
 				load_next_d = 0;
+				if(is_on_boss == 0){
+					load_next_b = 1;
+				}
 			break;
 		}		
 	}
@@ -402,7 +413,7 @@ void Update_StateGame() {
 		} 
 	}
 	
-	if(load_next_s){
+	if(load_next_s == 1){
 		load_next_s = 0;
 		SetState(StateSecret);
 	}
@@ -493,7 +504,7 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 29u << 3){
 							spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
 						}
-						if (scroll_target->x == (UINT16) 37u << 3){
+						if (scroll_target->x == (UINT16) 38u << 3){
 							spawn_enemy(SpriteSpider, 50u, 7u);
 						}
 						if (scroll_target->x == (UINT16) 51u << 3 ){
@@ -505,7 +516,7 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 105u << 3 ){
 							spawn_item(scrigno_dcoin, 122u, 0u, 7, 0);
 						}
-						if (scroll_target->x == (UINT16) 125u << 3 ){
+						if (scroll_target->x == (UINT16) 126u << 3 ){
 							spawn_enemy(SpriteSpider, 149u, 5u);
 							spawn_enemy(SpriteSpider, 150u, 5u);
 						}

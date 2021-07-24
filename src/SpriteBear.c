@@ -33,7 +33,7 @@ void Start_SpriteBear() {
 	bear_data->vx = -1;
 	bear_data->wait = 0u;
 	bear_data->hp = 100;
-	if(current_camera_state == 4u){
+	if(current_camera_state == 3u){
 		ToNormalState();		
 	}
 }

@@ -134,12 +134,7 @@ void Update_StateSecret() {
 	
 	if(load_next_s){
 		switch(load_next_s){
-			case 1: //entro in secret
-				load_next_s = 0;
-				SetState(StateSecret);
-			break;
 			case -1: //torno dalla secret a game
-				//load_next_s = 0;
 				if(current_level < 3){
 					SetState(StateGame);	
 				}else if (current_level < 6){
