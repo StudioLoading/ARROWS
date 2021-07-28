@@ -9,6 +9,7 @@
 
 
 void Start_StateGameOver() {
+	HIDE_WIN;
 	InitScroll(&mapgameover, 0, 0);
 	SHOW_BKG;
 }

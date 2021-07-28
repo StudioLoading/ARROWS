@@ -18,13 +18,13 @@ void AnimWaters0() __banked{ //re-assign the tile to its mapped value
 	set_bkg_data(119u, 1u, tiles.data->data+1904u);// + 16u * 119 tile index
 	set_bkg_data(99u, 1u, tiles.data->data+1584u);// + 16u * 99 tile index SLIDING UP TILES 99 100
 	set_bkg_data(112u, 1u, tiles.data->data+1792u);// + 16u * 112 tile index
-	if (current_level == 0u){ //I use 37 for water surface
+	if (current_level != 2u){ //I use 37 for water surface
 		set_bkg_data(37u, 1u, tiles4.data->data+1216u);
 	}else{
-		if (current_level != 2u){// normally I use tile 28 for water surface
+		//if (current_level != 2u){// normally I use tile 28 for water surface
 		//but its used on bg for level 2u, so I use 37 on level 2u and 0u
 			set_bkg_data(28u, 1u, tiles4.data->data+1216u);// + 16u * 76 tile index	
-		}
+		//}
 	}
 	set_bkg_data(24u, 1u, tiles.data->data+384u);// + 16u * 24 candle
 	
@@ -43,12 +43,12 @@ void AnimWaters1() __banked{
 	}
 	set_bkg_data(112u, 1u, tilesanims.data->data+1792u);// + 16u * 112 tile index
 	
-	if (current_level == 0u){ //I use 37 for water surface
+	if (current_level != 2u){ //I use 37 for water surface
 		set_bkg_data(37u, 1u, tiles4.data->data+1232u);
 	}else{
-		if (current_level != 2u){
+		//if (current_level != 2u){
 			set_bkg_data(28u, 1u, tiles4.data->data+1232u);// + 16u * 77 tile index
-		}
+		//}
 	}
 	set_bkg_data(24u, 1u, tilesanims.data->data+384u);// + 16u * 24 candle
 

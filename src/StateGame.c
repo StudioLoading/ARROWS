@@ -53,9 +53,9 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 3u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -115,7 +115,6 @@ void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_ty
 
 void Start_StateGame() {
 	
-	
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	
@@ -131,6 +130,7 @@ void Start_StateGame() {
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
+	//LOAD THE SPRITES FOR THE MAP
 	switch (current_level){
 		case 0u:
 			SpriteManagerLoad(SpriteKey);
@@ -154,23 +154,20 @@ void Start_StateGame() {
 
 	//SCROLL
 	if (current_level == 2u & current_map == 0u){
-		scroll_bottom_movement_limit = 82;//customizzo altezza archer sul display
+		scroll_bottom_movement_limit = 82;
 	}else{
-		scroll_bottom_movement_limit = 62;//customizzo altezza archer sul display
+		scroll_bottom_movement_limit = 62;
 	}
 
 	const struct MapInfo** lvls = levels[current_level];
 	UINT8 map_w;
 	UINT8 map_h;
 	GetMapSize(lvls[current_map], &map_w, &map_h);
-	if (load_next_s == -1){ //vengo da secret!
-		load_next_s = 0;
+	if (load_next_s == -1){ //COME FROM STATE SECRET
 		ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else if(load_next_d){ //vengo da dialogo
-		load_next_d = 0;
-	}else{
+	}else if(load_next || load_next_d == 0 || ups == -1){
 		ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
-	}
+	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 	InitScroll(lvls[current_map], collision_tiles, 0);
 	SHOW_BKG;
@@ -205,12 +202,6 @@ void Start_StateGame() {
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
-	/*
-	memcpy(d1, "DIALOG1", 18);
-	memcpy(d2, "DIALOG2", 18);
-	memcpy(d3, "DIALOG3", 18);
-	memcpy(d4, "DIALOG4", 18);
-	*/
 	
 	//SET LEVEL TOOL
 	switch(current_level){
@@ -231,7 +222,7 @@ void Start_StateGame() {
 	}
 	
 	//INIT SPAWNING	
-	if (load_next_s > -1){ // NON vengo da secret!
+	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
 			case 0u:
 				switch(current_map){
@@ -273,6 +264,10 @@ void Start_StateGame() {
 		}
 	}
 	
+	if(load_next_d){
+		load_next_d = 0;
+	}
+	
 	if(load_next_s == -1){
 		load_next_s = 0;
 	}
@@ -307,7 +302,7 @@ void ShowWindow(){
 	show_diag = -1;
 	HIDE_WIN;
 	//WINDOW
-	WX_REG = 4;
+	WX_REG = 7;
 	WY_REG = 144 - 8;
 	InitWindow(0, 0, &window);
 	SHOW_WIN;
@@ -583,10 +578,12 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 163u << 3){
 							spawn_enemy(SpriteBird, 175u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 170u << 3){
+						if (scroll_target->x == (UINT16) 168u << 3){
 							spawn_enemy(SpriteBird, 182u, 5u);
-							spawn_enemy(SpriteSpider, 173u, 8u);
 						}
+						if (scroll_target->x == (UINT16) 169u << 3){
+							spawn_enemy(SpriteSpider, 173u, 8u);
+						}							
 					break;
 				}
 			break;
@@ -622,32 +619,30 @@ void Update_StateGame() {
 			return;
 		}
 	}
-	//else{
-		if (amulet != archer_data->amulet | amulet == 0u){
-			amulet = archer_data->amulet;
-			UpdateHUD();
+	if (amulet != archer_data->amulet | amulet == 0u){
+		amulet = archer_data->amulet;
+		UpdateHUD();
+	}
+	if (coins != archer_data->coins){
+		coins = archer_data->coins;
+		UpdateHUD();
+	}
+	if (hp != archer_data->hp && archer_data->hp >= 0){
+		if(archer_data->hp < hp){
+			hp--;
+		}else{
+			hp++;
 		}
-		if (coins != archer_data->coins){
-			coins = archer_data->coins;
-			UpdateHUD();
-		}
-		if (hp != archer_data->hp && archer_data->hp >= 0){
-			if(archer_data->hp < hp){
-				hp--;
-			}else{
-				hp++;
-			}
-			UpdateHUD();
-		}
-		if (ups != archer_data->ups){
-			ups = archer_data->ups;
-			UpdateHUD();
-		}
-		if(archer_tool != archer_data->tool){// & archer_tool == level_tool
-			archer_tool = archer_data->tool;
-			UpdateHUD();
-		}
-	//}
+		UpdateHUD();
+	}
+	if (ups != archer_data->ups){
+		ups = archer_data->ups;
+		UpdateHUD();
+	}
+	if(archer_tool != archer_data->tool){// & archer_tool == level_tool
+		archer_tool = archer_data->tool;
+		UpdateHUD();
+	}
 	
 }
 

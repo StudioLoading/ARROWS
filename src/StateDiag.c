@@ -15,6 +15,7 @@
 #include "../res/src/mapdiagcave.h"
 #include "../res/src/mapdiaggator.h"
 #include "../res/src/mapdiageagle.h"
+#include "../res/src/mapdiagibex.h"
 
 #include "../res/src/diagarcher1.h"
 #include "../res/src/diagslave1.h"
@@ -26,6 +27,7 @@
 #include "../res/src/diagcave.h"
 #include "../res/src/diaggator.h"
 #include "../res/src/diageagle.h"
+#include "../res/src/diagibex.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -110,6 +112,9 @@ void Start_StateDiag() {
 		break;
 		case 53u:
 			InitScroll(&mapdiageagle, collision_dtiles, 0);
+		break;
+		case 54u:
+			InitScroll(&mapdiagibex, collision_dtiles, 0);
 		break;
 	}
 	SHOW_BKG;

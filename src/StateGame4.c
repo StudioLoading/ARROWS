@@ -23,6 +23,7 @@
 
 #include "custom_datas.h"
 #include "TileAnimations.h"
+#include "Dialogs.h"
 
 
 const UINT8 const collision_tiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
@@ -37,11 +38,15 @@ extern INT8 hp;
 extern INT8 load_next;
 extern INT8 load_next_b;
 extern INT8 load_next_s;
+extern INT8 load_next_d;
 extern INT8 level_tool;
 extern UINT8 current_level;
 extern UINT8 current_map;
 extern INT8 is_on_boss;
 extern INT8 archer_tool;
+extern UINT8 current_camera_state;
+extern UINT8 current_camera_counter;
+extern UINT8 diag_found;
 
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
@@ -67,13 +72,6 @@ struct Sprite* scrigno0 = 0;
 struct Sprite* scrigno1 = 0;
 struct ItemInfo* datascrigno0 = 0;
 struct ItemInfo* datascrigno1 = 0;
-//struct Sprite* enemies4[4] = {0,0,0,0};
-/*struct Sprite* enemies4_0 = 0;
-struct Sprite* enemies4_1 = 0;
-struct Sprite* enemies4_2 = 0;
-struct Sprite* enemies4_3 = 0;*/
-//INT8 enlen4 = 0; //counts in-screen enemies
-//INT8 itlen4 = 0;
 
 void UpdateHUD4();
 void ShowWindow4();
@@ -153,33 +151,39 @@ void ShowWindow4(){
 }
 
 void ShowWindowDiag4(){
-	/*if (showing_diag == 0){	
+	if (showing_diag == 0){	
 		HIDE_WIN;
 		//WINDOW
 		WX_REG = 7;
-		WY_REG = 144 - 48; //40
+		WY_REG = 144 - 32; //40
 		InitWindow(0, 0, &diagnew4);
 		SHOW_WIN;
 	}
-	PRINT_POS(1,1);
+	PRINT_POS(1,0);
 	Printf(d1);
-	PRINT_POS(1,2);
+	PRINT_POS(1,1);
 	Printf(d2);
-	PRINT_POS(1,3);
+	PRINT_POS(1,2);
 	Printf(d3);
-	PRINT_POS(1,4);
+	PRINT_POS(1,3);
 	Printf(d4);
 	
 	if (showing_diag == 0){
 		showing_diag = 1;
 	}
-	*/
+	
 }
 
 void Start_StateGame4() {
 	
 	is_on_boss = -1;
 	thunder_delay = 16u;
+	current_camera_state = 0u;
+	current_camera_counter = 0u;
+	
+	if (current_level < 3u){
+		SetState(StateGame);
+	}
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette4, 2);
@@ -188,6 +192,8 @@ void Start_StateGame4() {
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
+	SpriteManagerLoad(SpritePlatform);
+	//LOAD SPRITES OF THE MAP
 	switch (current_level){
 		case 3u:
 			SpriteManagerLoad(SpriteThunder);
@@ -208,31 +214,30 @@ void Start_StateGame4() {
 		break;		
 	}		
 	SHOW_SPRITES;
-	
-	//SCROLL
-	scroll_bottom_movement_limit = 62;//customizzo altezza archer sul display
-	const struct MapInfo** const level_maps4 = maps4[current_level-3u]; //current_level-3
 
-	UINT8 map_w, map_h;
-	GetMapSize(level_maps4[current_map], &map_w, &map_h);	
-	if (load_next_s){ //vengo da secret!
-		load_next_s = 0;
-		ScrollFindTile(level_maps4[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else if(archer_state != STATE_DIAG){ //non vengo da dialogo
-		ScrollFindTile(level_maps4[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else{
-		load_next_s = 1; // START UGLY STORY : tracking the fact that the previous state is a Dialog, so I don't want initial spawnings !
-	}
+	//SCROLL
+	//if (current_level == 2u & current_map == 0u)
+	scroll_bottom_movement_limit = 62;
+
+	const struct MapInfo** lvls4 = maps4[current_level-3u];
+	UINT8 map_w4;
+	UINT8 map_h4;
+	GetMapSize(lvls4[current_map], &map_w4, &map_h4);
+	if (load_next_s == -1){ //COME FROM STATE SECRET
+		ScrollFindTile(lvls4[current_map], 45, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);
+	}else if(load_next || load_next_d == 0){
+		ScrollFindTile(lvls4[current_map], 9, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);		
+	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
-	InitScroll(level_maps4[current_map], collision_tiles4, 0);
+	InitScroll(lvls4[current_map], collision_tiles4, 0);
 	SHOW_BKG;
 	
-	
 	//INIT ARCHER
-	if (archer_data->ups > 0 & archer_data->ups != ups){
-		 ups = archer_data->ups;
+	is_on_boss = -1;
+	if (archer_data->ups && archer_data->ups != ups){
+		ups = archer_data->ups;
 	}
-	if (archer_data->tool & archer_data->tool != archer_tool){
+	if (archer_data->tool && archer_data->tool != archer_tool){
 		archer_tool = archer_data->tool;
 	}
 	if (ups == -1){ //cioè vengo dal gameOver
@@ -240,44 +245,65 @@ void Start_StateGame4() {
 		coins = 0u;
 		archer_tool = 0;
 		hp = 50;
-	}
+	}	
 	archer_data->ups = ups;
 	if(archer_data->hp != 100){
 		archer_data->hp = hp;	
 	}else{
 		hp = 100;
-	}
-	archer_data->hp = hp;
+	}	
 	archer_data->coins = coins;
-	
-	//INIT ENEMY
-	switch(current_level){
-		case 3:
-			switch(current_map){
-				case 1u:
-					spawn_item4(10u, 9u, 3, 1);
-				break;
-			}
-		break;
-	}
-
+	archer_data->tool = archer_tool;
+	UpdateHUD4();
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow4();
 	
-	memcpy(d1, "DIALOG1", 18);
-	memcpy(d2, "DIALOG2", 18);
-	memcpy(d3, "DIALOG3", 18);
-	memcpy(d4, "DIALOG4", 18);
-
-	if(load_next_s) load_next_s = 0; //END UGLY STORY: for track a previous state for which I don't want the initial spawning
-
+	//SET LEVEL TOOL
+	/*switch(current_level){
+		case 0u:
+			switch(current_map){
+				case 0u:
+					level_tool = 6;
+				break;
+			}
+		break;
+		case 1:
+			switch(current_map){
+				case 1u:
+					level_tool = 7;
+				break;
+			}
+		break;
+	}*/
+	
+	//INIT SPAWNING	
+	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
+		switch(current_level){
+			case 3:
+				switch(current_map){
+					case 1u:
+						spawn_item4(10u, 9u, 3, 1);
+					break;
+				}
+			break;
+		}
+	}
+	
+	if(load_next_d){
+		load_next_d = 0;
+	}	
+	if(load_next_s == -1){
+		load_next_s = 0;
+	}		
 	if(archer_tool == level_tool){
 		UpdateHUD4();
 	}
+	archer_state = STATE_JUMPING;
 
+	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
@@ -289,12 +315,28 @@ void Start_StateGame4() {
 			STAT_REG |= 0x40; 
 			set_window_y4(144-8);
 		}
-	    LCD_Installed = TRUE; 
+	    LCD_Installed = true; 
 	}
-
+	
 }
 
 void Update_StateGame4() {
+	
+	if(load_next_d){
+		switch(load_next_d){
+			case 1: //vado allo StateDiag
+				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				load_next_d = 2;
+				SetState(StateDiag);
+			break;
+			case 2:
+				load_next_d = 0;
+				if(is_on_boss == 0){
+					load_next_b = 1;
+				}
+			break;
+		}		
+	}
 	
 	if(load_next) {
 		switch(load_next){
@@ -304,25 +346,41 @@ void Update_StateGame4() {
 			break;
 		}
 		load_next = 0;
-		SetState(StateGame4);
+		switch(current_level){
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+				SetState(StateGame);	
+			break;
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				SetState(StateGame4);
+			break;
+		} 
 	}
 	
-	if(load_next_s){
+	if(load_next_s == 1){
 		load_next_s = 0;
 		SetState(StateSecret);
 	}
 	
-	if(load_next_b == 1){
-		if(archer_state != STATE_DIAG){
-			load_next_b = 0;
-			SetState(StateBoss);//StateBoss
+	if(load_next_b){
+		switch(load_next_b){
+			case 1: //vado allo StateBoss
+				if(archer_state != STATE_DIAG){
+					load_next_b = 0;
+					SetState(StateBoss);//StateBoss
+				}
+			break;
+			/*case 2: // provengo dal boss, vado al next level
+			break;*/
 		}
 	}
 	
-	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
-		ShowWindow4();
-		return;
-	}
+	
 	
 	// SPAWNING
 	if(!SPRITE_GET_VMIRROR(scroll_target) && archer_state != STATE_HIT && platform_vx == 0u){
@@ -441,6 +499,8 @@ void Update_StateGame4() {
 	}
 	
 	//MOVING BACKGROUND TILES
+	
+	//MOVING BACKGROUND TILES	
 	if (current_level == 3u){
 		updatecounter++;
 		if (updatecounter < 120) {
@@ -461,6 +521,10 @@ void Update_StateGame4() {
 		}
 	}
 	
+	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+		ShowWindow4();
+		return;
+	}
 	
 	if(archer_state == STATE_DIAG){
 		if(show_diag > 0 ){
@@ -468,31 +532,29 @@ void Update_StateGame4() {
 			return;
 		}
 	}
-	else{	
-		if (amulet != archer_data->amulet){
-			amulet = archer_data->amulet;
-			UpdateHUD4();
+	if (amulet != archer_data->amulet){
+		amulet = archer_data->amulet;
+		UpdateHUD4();
+	}
+	if (coins != archer_data->coins){
+		coins = archer_data->coins;
+		UpdateHUD4();
+	}
+	if (hp != archer_data->hp && archer_data->hp >= 0){
+		if(archer_data->hp < hp){
+			hp--;
+		}else{
+			hp++;
 		}
-		if (coins != archer_data->coins){
-			coins = archer_data->coins;
-			UpdateHUD4();
-		}
-		if (hp != archer_data->hp && archer_data->hp >= 0){
-			if(archer_data->hp < hp){
-				hp--;
-			}else{
-				hp++;
-			}
-			//hp = archer_data->hp;
-			UpdateHUD4();
-		}
-		if (ups != archer_data->ups){
-			ups = archer_data->ups;
-			UpdateHUD4();
-		}	
-		if(archer_data->tool == level_tool){
-			UpdateHUD4();
-		}
+		//hp = archer_data->hp;
+		UpdateHUD4();
+	}
+	if (ups != archer_data->ups){
+		ups = archer_data->ups;
+		UpdateHUD4();
+	}	
+	if(archer_data->tool == level_tool){
+		UpdateHUD4();
 	}
 	
 }

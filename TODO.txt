@@ -1,8 +1,5 @@
-- viene saltato il primo dialog quando cerco di entrare dal gator
-
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
-		- eagle
 		- ibex
 		- bear
 		- tusk
@@ -10,21 +7,19 @@
 		- tile che converte il tipo di freccia
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
-
-- all' entrata del boss lo state di dialogo entra in loop
-
 - il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile!
-- entrando dal boss: la camera deve 
-	- aspettare in posizione pg
-	- state di dialogo
-	- spostarsi verso boss
-	- state di dialogo
 
 - Dialogo apposta per mostrare l' amuleto per bene in grande quando lo prendo
 
-- aggiungere frames al wolf, c'è molta sprite-vram a disposizione
+- aggiungere frames al wolf, c'è molta sprite-vram a disposizione, direi che ne abbia bisogno sulla corsa
 
 - fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
+
+- l' amuleto ha qualcosa che non va
+
+- capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
+
+- migliorare la composizione del livello Eagle, fa un po' schifo... provare a render più simmetrico...
 
 CONFIG DI PROTOTIPO:
 	2.0 come inizio
@@ -58,6 +53,7 @@ schermata di scelta livello / mappa ! per replay value, si può scegliere l' ult
 
 intro iniziale con poesia su una pergamena di carta ! audio da Leandro ? me ne accennò, di un suo pezzo, allo svilupparty 2021...
 
+l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolare da far dire a quello di mezzo ?
 
 il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 

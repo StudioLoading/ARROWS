@@ -119,6 +119,8 @@ void Update_SpriteAlligator() {
 								alligator_data->hp = 0;
 								SetSpriteAnim(THIS, alligator_dead, 16u);
 								alligator_data->enemy_state = ENEMY_STATE_DEAD;
+								THIS->x = (UINT16) 21u << 3;
+								THIS->y = (UINT16) 14u << 3;
 							}
 							alligator_data->hp = new_boss_hp;
 							alligator_data->wait = 121u;

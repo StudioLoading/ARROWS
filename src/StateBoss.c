@@ -49,7 +49,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 3u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -139,6 +139,7 @@ void Start_StateBoss() {
 		scroll_top_movement_limit = 30;
 		scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 		scroll_bottom_movement_limit = 80;//customizzo altezza archer sul display
+		archer_state = STATE_JUMPING;
 	}
 	diag_found = Build_Next_Dialog_Banked(scroll_target);
 	switch (current_level_b){
@@ -365,7 +366,7 @@ void SpawnReward(){
 		datakk->type = 2;
 		datakk->setup = 1u;
 	}else if (current_level_b == 1u){ // gator -> amulet stone
-		reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 32u << 3, (UINT16) 13u << 3);
+		reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 24u << 3, (UINT16) 13u << 3);
 		struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
 		datak->type = 1;
 		datak->setup = 1;
@@ -379,6 +380,10 @@ void SpawnReward(){
 		struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
 		datak->type = 3;
 		datak->setup = 1;
+		struct Sprite* scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 46u << 3, (UINT16) 20u << 3);
+		struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
+		datascrigno2->type = 2;
+		datascrigno2->setup = 1u;
 	}else if (current_level_b == 4u){ // bear -> wrench
 		reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 11u << 3);
 		struct ItemInfo* datakk = (struct ItemInfo*)reward->custom_data;

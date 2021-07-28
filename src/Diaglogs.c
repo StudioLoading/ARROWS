@@ -127,6 +127,14 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					current_camera_state = 3u;
 					diagf = 53u;
 				break;
+				case 3u:				
+					memcpy(d1, "NOBODY HAS EVER ", 18);
+					memcpy(d2, "GONE THROUGH MY ", 18);
+					memcpy(d3, "THUNDERS! NOW   ", 18);
+					memcpy(d4, "FACE MY HORNS!  ", 18);
+					current_camera_state = 3u;
+					diagf = 54u;
+				break;
 			}	
 		break;
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
@@ -313,32 +321,43 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							}
 						}
 						if(diagf == 0u){
-							/*if (archer_data->tool){
-								memcpy(d1, "THE ONLY WAY", 18);
-								memcpy(d2, "IS UP !!", 18);
-								memcpy(d3, "                 ", 18);
-								memcpy(d4, "                 ", 18);									
-							}else{							*/
-								memcpy(d1, "BLEAH !!", 18);
-								memcpy(d2, "THE DEEPEST", 18);
-								memcpy(d3, "THE WORST IS", 18);
-								memcpy(d4, "GETTING", 18);
-							//}
-								diagf = 99u;
+							memcpy(d1, "BLEAH !!", 18);
+							memcpy(d2, "THE DEEPEST", 18);
+							memcpy(d3, "THE WORST IS", 18);
+							memcpy(d4, "GETTING", 18);
+							diagf = 99u;
 						}
 					break;
 				}
 			break;
-			case 3:
+			case 2u:
 				switch(current_map){
-					case 0:
+					case 0u:
+						memcpy(d1, "I NEED DEXTERITY  ", 18);
+						memcpy(d2, "TO GET TO THE END ", 18);
+						memcpy(d3, "OF THIS FOREST.   ", 18);
+						memcpy(d4, "                  ", 18);
+						diagf = 99u;
+					break;
+					case 1u:
+						memcpy(d1, "I'D BETTER        ", 18);
+						memcpy(d2, "WATCH OUT FROM    ", 18);
+						memcpy(d3, "THE BIRDS         ", 18);
+						memcpy(d4, "                  ", 18);
+						diagf = 99u;
+					break;					
+				}
+			break;
+			case 3u:
+				switch(current_map){
+					case 0u:
 						memcpy(d1, "BETTER NOT TO", 18);
 						memcpy(d2, "FALL. CERTAIN", 18);
 						memcpy(d3, "DEATH ON THIS", 18);
 						memcpy(d4, "HEIGHT !", 18);
 						diagf = 99u;
 					break;
-					case 1:
+					case 1u:
 						memcpy(d1, "AAH-AAH-AH", 18);
 						memcpy(d2, "....!", 18);
 						memcpy(d3, "THUN-DERS !!", 18);
@@ -347,7 +366,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					break;
 				}
 			break;
-			case 4:
+			case 4u:
 				if (tile_collision == 7u){
 					memcpy(d1, "THERE IS TOO", 18);
 					memcpy(d2, "MUCH SILENCE", 18);

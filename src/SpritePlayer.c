@@ -24,9 +24,9 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
-extern UINT8 current_camera_state;
 extern UINT16 drop_player_x;
 extern UINT16 drop_player_y;
+extern INT8 archer_tool;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 10};
@@ -189,7 +189,7 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_B)){		
+				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL){		
 					Build_Next_Dialog();
 					return;
 				}else if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
@@ -210,17 +210,11 @@ void Update_SpritePlayer() {
 				}
 			}
 			
-			//Jump / Dialog
+			//Jump
 			if(KEY_TICKED(J_A)){
-				/*if (KEY_PRESSED(J_UP)){		
-					Build_Next_Dialog();
-					return;
-				}else{*/
-					//Check jumping
-					NR50_REG = 0x18; //Max volume		
-					PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
-					Jump();
-				//}
+				NR50_REG = 0x18; //Max volume		
+				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				Jump();
 			}
 			
 			if(shoot_cooldown) {
@@ -639,18 +633,20 @@ void CheckCollisionTile() {
 			switch(current_level){
 				case 0u:
 				case 1u:
-					Build_Next_Dialog();
 					if(archer_data->tool){
 						current_level_b = current_level;
 						is_on_boss = 0;
+						Build_Next_Dialog();
+					}else{
+						Build_Next_Dialog();
 					}
 				break;
 				case 2u:
 				case 3u:
 				case 4u:
-					Build_Next_Dialog();
 					current_level_b = current_level;
 					is_on_boss = 0;
+					Build_Next_Dialog();
 				break;
 			}
 		break;
@@ -661,6 +657,7 @@ void CheckCollisionTile() {
 				}
 			}
 			is_on_boss = -1;
+			archer_tool = 0;
 			archer_data->tool = 0; //tool consumato
 			load_next_b = 0;
 			current_level += 1u;
