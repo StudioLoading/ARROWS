@@ -41,6 +41,7 @@ extern UINT8 updatecounter;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 extern UINT8 current_camera_counter;
 extern UINT8 diag_found;
+extern INT8 load_next_d;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
@@ -49,7 +50,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 3u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -131,11 +132,14 @@ void Start_StateBoss() {
 	const struct MapInfo** level_maps_b = bosses[current_level_b];
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps_b[0], &map_w, &map_h);
-	ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	if(current_camera_state < 3u){
+		ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 		scroll_top_movement_limit = 60;
 		scroll_target = SpriteManagerAdd(SpriteCamerafocus, drop_player_x << 3, drop_player_y << 3);
 	}else{
+		if(is_on_boss < 2){
+			ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);	
+		}		
 		scroll_top_movement_limit = 30;
 		scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 		scroll_bottom_movement_limit = 80;//customizzo altezza archer sul display
@@ -157,52 +161,65 @@ void Start_StateBoss() {
 	
 	SHOW_BKG;
 	
-	struct Sprite* scrigno_sprite_boss = 0;
-	struct Sprite* gate_sprite = 0;
-	struct EnemyInfo* gatedata = 0;
+	
 	//INIT BOSS
-	switch(current_level_b){
-		case 0u:
-			boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 14u << 3); //34, 12
-			boss_data_b = (struct EnemyInfo*)boss->custom_data;
-			boss_hp = boss_data_b->hp;
-		break;
-		case 1u:
-			boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 21u << 3, (UINT16) 14u << 3);
-			boss_data_b = (struct EnemyInfo*)boss->custom_data;
-			boss_hp = boss_data_b->hp;
-			gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
-			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
-			gatedata->vx = 2;
-			scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
-			struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
-			datascrigno2->type = 2;
-			datascrigno2->setup = 1u;
-		break;
-		case 2u:
-			boss = SpriteManagerAdd(SpriteEagle, (UINT16) 23u << 3, (UINT16) 14u << 3);
-			boss_data_b = (struct EnemyInfo*)boss->custom_data;
-			boss_hp = boss_data_b->hp;
-		break;
-		case 3u:
-			boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 14u << 3);
-			boss_data_b = (struct EnemyInfo*)boss->custom_data;
-			boss_hp = boss_data_b->hp;
-			gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
-			gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
-			gatedata->vx = 3;
-		break;
-		case 4u:
-			boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 12u << 3);
-			boss_data_b = (struct EnemyInfo*)boss->custom_data;
-			boss_hp = boss_data_b->hp;
-		break;
-	}
+		struct Sprite* scrigno_sprite_boss = 0;
+		struct Sprite* gate_sprite = 0;
+		struct EnemyInfo* gatedata = 0;
+		switch(current_level_b){
+			case 0u:
+				if (is_on_boss < 2){
+					boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 14u << 3); //34, 12
+					boss_data_b = (struct EnemyInfo*)boss->custom_data;
+					boss_hp = boss_data_b->hp;
+				}
+			break;
+			case 1u:
+				if (is_on_boss < 2){
+					boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 21u << 3, (UINT16) 14u << 3);
+					boss_data_b = (struct EnemyInfo*)boss->custom_data;
+					boss_hp = boss_data_b->hp;
+				}
+				gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
+				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+				gatedata->vx = 2;
+				scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
+				struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
+				datascrigno2->type = 2;
+				datascrigno2->setup = 1u;
+			break;
+			case 2u:
+				if (is_on_boss < 2){
+					boss = SpriteManagerAdd(SpriteEagle, (UINT16) 23u << 3, (UINT16) 14u << 3);
+					boss_data_b = (struct EnemyInfo*)boss->custom_data;
+					boss_hp = boss_data_b->hp;
+				}
+			break;
+			case 3u:
+				if (is_on_boss < 2){
+					boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 14u << 3);
+					boss_data_b = (struct EnemyInfo*)boss->custom_data;
+					boss_hp = boss_data_b->hp;
+				}
+				gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
+				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+				gatedata->vx = 3;
+			break;
+			case 4u:
+				if (is_on_boss < 2){
+					boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 12u << 3);
+					boss_data_b = (struct EnemyInfo*)boss->custom_data;
+					boss_hp = boss_data_b->hp;
+				}
+			break;
+		}
+		
 	//INTRO
 	if (current_camera_state < 3u){
 		boss_data_b->enemy_state = ENEMY_STATE_WAIT;
 		return;
 	}
+		
 	
 	//INIT ARCHER
 	if (archer_data->ups > 0 & archer_data->ups != ups){
@@ -234,6 +251,22 @@ void Start_StateBoss() {
 }
 
 void Update_StateBoss() {
+	
+	if(load_next_d){
+		switch(load_next_d){
+			case 1: //vado allo StateDiag
+				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				load_next_d = 2;
+				SetState(StateDiag);
+			break;
+			case 2:
+				load_next_d = 0;
+			//	if(is_on_boss == 0){
+				//	load_next_b = 1;
+			//	}
+			break;
+		}		
+	}
 	
 	// INTRO START	
 	if (current_camera_state < 3u){
@@ -303,7 +336,7 @@ void Update_StateBoss() {
 
 		if (boss_hp != boss_data_b->hp){
 			boss_hp = boss_data_b->hp;
-			if (boss_hp <= 0){// && is_on_boss != 2){
+			if (boss_hp <= 0 && is_on_boss != 2){
 				is_on_boss = 2;
 				SpawnReward();
 			}

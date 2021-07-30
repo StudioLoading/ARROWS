@@ -23,7 +23,7 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 extern struct ArcherInfo* archer_data;
 extern UINT8 tile_collision;
-
+extern ARCHER_STATE archer_state;
 
 UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 	UINT8 diagf = 0u;
@@ -45,7 +45,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 		19	Door
 		20	wrench
 		21	key
-		30 	amulet
+		30 	amulet calice stone
 		31 	amulet
 		32 	amulet
 		33 	amulet
@@ -135,47 +135,67 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					current_camera_state = 3u;
 					diagf = 54u;
 				break;
+				case 4u:				
+					memcpy(d1, "                ", 18);
+					memcpy(d2, "                ", 18);
+					memcpy(d3, "                ", 18);
+					memcpy(d4, "                ", 18);
+					current_camera_state = 3u;
+					diagf = 55u;
+				break;
 			}	
 		break;
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
-			switch(current_level_b){
-				case 0u:
-					memcpy(d1, "I...", 18);
-					memcpy(d2, "JUST NEEDED THE", 18);
-					memcpy(d3, "WRENCH TO GO", 18);
-					memcpy(d4, "ON. SORRY WOLF!", 18);
-					diagf = 1u;
-				break;
-				case 1u:
-					memcpy(d1, "FINALLY YOU", 18);
-					memcpy(d2, "GAVE ME WHAT I", 18);
-					memcpy(d3, "NEEDED. THE", 18);
-					memcpy(d4, "STONE AMULET!", 18);
-					diagf = 1u;
-				break;
-				case 2u:
-					memcpy(d1, "I...", 18);
-					memcpy(d2, "JUST NEEDED THE", 18);
-					memcpy(d3, "WRENCH TO GO", 18);
-					memcpy(d4, "ON. SORRY EAGLE!", 18);
-					diagf = 1u;
-				break;
-				case 3u:
-					memcpy(d1, "FINALLY YOU", 18);
-					memcpy(d2, "GAVE ME WHAT I", 18);
-					memcpy(d3, "NEEDED. THE", 18);
-					memcpy(d4, "THUNDER AMULET!", 18);
-					diagf = 1u;
-				break;
-				case 4u:
-					memcpy(d1, "I...", 18);
-					memcpy(d2, "JUST NEEDED THE", 18);
-					memcpy(d3, "WRENCH TO GO", 18);
-					memcpy(d4, "ON. SORRY BEAR!", 18);
-					diagf = 1u;
-				break;
-			}	
-		break;
+			if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
+				switch(current_level_b){
+					case 0u:
+						memcpy(d1, "I...", 18);
+						memcpy(d2, "JUST NEEDED THE", 18);
+						memcpy(d3, "WRENCH TO GO", 18);
+						memcpy(d4, "ON. SORRY WOLF!", 18);
+						diagf = 1u;
+					break;
+					case 1u:
+						memcpy(d1, "FINALLY YOU", 18);
+						memcpy(d2, "GAVE ME WHAT I", 18);
+						memcpy(d3, "NEEDED. THE", 18);
+						memcpy(d4, "STONE CALICE!", 18);
+						diagf = 1u;
+					break;
+					case 2u:
+						memcpy(d1, "I...           ", 18);
+						memcpy(d2, "JUST NEEDED THE", 18);
+						memcpy(d3, "WRENCH TO GO   ", 18);
+						memcpy(d4, "ON. SORRY EAGLE!", 18);
+						diagf = 1u;
+					break;
+					case 3u:
+						memcpy(d1, "FINALLY YOU    ", 18);
+						memcpy(d2, "GAVE ME WHAT I ", 18);
+						memcpy(d3, "NEEDED. THE    ", 18);
+						memcpy(d4, "THUNDER HORN  !", 18);
+						diagf = 1u;
+					break;
+					case 4u:
+						memcpy(d1, "I...           ", 18);
+						memcpy(d2, "JUST NEEDED THE", 18);
+						memcpy(d3, "WRENCH TO GO   ", 18);
+						memcpy(d4, "ON. SORRY BEAR!", 18);
+						diagf = 1u;
+					break;
+				}				
+			}else{ // one of the amulet has been collided
+				switch(archer_state){
+					case STATE_AMULET_STONE:
+						memcpy(d1, "THE STONE CALICE", 18);
+						memcpy(d2, "GIVES ME        ", 18);
+						memcpy(d3, "STONE ARROWS   ", 18);
+						memcpy(d4, "            [  ", 18);
+						diagf = 30u;					
+					break;
+				}
+			}
+			break;
 	}
 	
 	if (diagf == 0u){

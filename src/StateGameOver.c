@@ -1,7 +1,7 @@
 #include "Banks/SetBank6.h"
 
 #include "../res/src/tiles.h"
-#include "../res/src/mapgameover.h"
+#include "../res/src/mapdiaggameover.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -10,7 +10,7 @@
 
 void Start_StateGameOver() {
 	HIDE_WIN;
-	InitScroll(&mapgameover, 0, 0);
+	InitScroll(&mapdiaggameover, 0, 0);
 	SHOW_BKG;
 }
 

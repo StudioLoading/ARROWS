@@ -121,6 +121,11 @@ void Update_SpritePlayer() {
 		return;
 	}
 	
+	if (archer_state == STATE_AMULET_STONE){
+		SetSpriteAnim(THIS, anim_jump, 32u);
+		return;
+	}
+	
 	if(KEY_TICKED(J_START)){
 		//se sono sullo stato del boss non fare un bel niente !!!!!!
 		//non si mette in pausa al mostro!
@@ -325,6 +330,8 @@ void Update_SpritePlayer() {
 					dataamulet->setup = 0;
 					ispr->y -= 8u;
 					archer_data->hp = 100u;
+					archer_state = STATE_AMULET_STONE;
+					Build_Next_Dialog();
 				}
 			}
 		}

@@ -1,6 +1,5 @@
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
-		- ibex
 		- bear
 		- tusk
 		- cattivone con frusta
@@ -34,8 +33,10 @@ LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
+		- stalattiti che cadono dall' alto traballando
 		- piattaforma cadente quando ci atterro sopra
-LIV 6 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
+LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
+LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
 
 LIVELLI BONUS
