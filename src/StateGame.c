@@ -12,7 +12,9 @@
 #include "../res/src/mapsewer2.h"
 #include "../res/src/map3.h"
 #include "../res/src/map3tree.h"
+
 #include "../res/src/archer.h"
+#include "../res/src/wolf.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -36,7 +38,7 @@ const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 const UINT16 const sprites_palette[] = {
 	PALETTE_INDEX(archer, 0),
 	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
+	PALETTE_INDEX(wolf, 2), //o PALETTE_INDEX(enemy,  2)
 	PALETTE_INDEX(archer, 3),
 	PALETTE_INDEX(archer, 4),
 	PALETTE_INDEX(archer, 5),

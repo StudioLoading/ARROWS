@@ -336,11 +336,11 @@ void Update_StateBoss() {
 
 		if (boss_hp != boss_data_b->hp){
 			boss_hp = boss_data_b->hp;
+			WriteBBOSSHP();	
 			if (boss_hp <= 0 && is_on_boss != 2){
 				is_on_boss = 2;
 				SpawnReward();
-			}
-			WriteBBOSSHP();		
+			}	
 		}
 		
 		if(level_tool & level_tool == archer_data->tool){

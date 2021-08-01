@@ -123,7 +123,7 @@ void Update_SpriteWolf() {
 					}
 				}
 				SpriteManagerRemoveSprite(ibspr);
-				if (wolf_data->hp <= 0){
+				if (wolf_data->hp <= 0 && wolf_data->enemy_state != ENEMY_STATE_DEAD){
 					wolf_data->hp = 0;
 					SetSpriteAnim(THIS, wolf_dead, 16u);
 					wolf_data->enemy_state = ENEMY_STATE_DEAD;

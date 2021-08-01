@@ -6,9 +6,9 @@
 #define tilesCGBPal0c3 5344
 
 #define tilesCGBPal1c0 6076
-#define tilesCGBPal1c1 24
-#define tilesCGBPal1c2 16
-#define tilesCGBPal1c3 5344
+#define tilesCGBPal1c1 8935
+#define tilesCGBPal1c2 452
+#define tilesCGBPal1c3 0
 
 #define tilesCGBPal2c0 6076
 #define tilesCGBPal2c1 23254

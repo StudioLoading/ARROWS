@@ -3,7 +3,7 @@
 #define archerCGBPal0c0 6076
 #define archerCGBPal0c1 20318
 #define archerCGBPal0c2 435
-#define archerCGBPal0c3 32259
+#define archerCGBPal0c3 2078
 
 #define archerCGBPal1c0 6076
 #define archerCGBPal1c1 20318

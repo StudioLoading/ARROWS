@@ -43,7 +43,7 @@ void Update_SpriteAmulet() {
 			air = 0;
 		}
 	}
-	if(!datak->setup){
+	if(datak->setup){ // !
 		air = 61;
 		/*THIS->coll_x = 0;
 		THIS->coll_y = 0;
