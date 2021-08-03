@@ -26,6 +26,7 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 extern UINT16 drop_player_x;
 extern UINT16 drop_player_y;
+extern INT8 level_tool;
 extern INT8 archer_tool;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
@@ -121,11 +122,6 @@ void Update_SpritePlayer() {
 		return;
 	}
 	
-	if (archer_state == STATE_AMULET_STONE){
-		SetSpriteAnim(THIS, anim_jump, 32u);
-		return;
-	}
-	
 	if(KEY_TICKED(J_START)){
 		//se sono sullo stato del boss non fare un bel niente !!!!!!
 		//non si mette in pausa al mostro!
@@ -194,7 +190,7 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL){		
+				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL && is_on_boss != 1){		
 					Build_Next_Dialog();
 					return;
 				}else if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
@@ -218,7 +214,7 @@ void Update_SpritePlayer() {
 			//Jump
 			if(KEY_TICKED(J_A)){
 				NR50_REG = 0x18; //Max volume		
-				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				//PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 				Jump();
 			}
 			
@@ -330,7 +326,21 @@ void Update_SpritePlayer() {
 					dataamulet->setup = 0;
 					ispr->y -= 8u;
 					archer_data->hp = 100u;
-					archer_state = STATE_AMULET_STONE;
+					switch(dataamulet->type){
+						case 1:
+							archer_state = STATE_AMULET_STONE;
+						break;
+						case 2:
+							archer_state = STATE_AMULET_ICE;
+						break;
+						case 3:
+							archer_state = STATE_AMULET_THUNDER;
+						break;
+						case 4:
+							archer_state = STATE_AMULET_FIRE;
+						break;
+					}
+					
 					Build_Next_Dialog();
 				}
 			}
@@ -370,6 +380,7 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteKey) {
 			if(CheckCollision(THIS, ispr)) {
+				//archer_tool = 0;
 				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
 				switch(datakey->type){
 					case 1: //key					
@@ -659,7 +670,7 @@ void CheckCollisionTile() {
 		break;
 		case 8u: //fine boss!
 			if(current_level_b == 0u || current_level_b == 2u || current_level_b == 4u){
-				if(!archer_data->tool){
+				if(archer_data->tool != level_tool){
 					return;
 				}
 			}

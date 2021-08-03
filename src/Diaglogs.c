@@ -113,9 +113,9 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 				break;
 				case 1u:				
 					memcpy(d1, "FILTHY HUMAN !!  ", 18);
-					memcpy(d2, "I'LL EAT YOU AND ", 18);
-					memcpy(d3, "MAKE A BELT OUT  ", 18);
-					memcpy(d4, "OF YOUR SKIN.", 18);
+					memcpy(d2, "I'LL MAKE A      ", 18);
+					memcpy(d3, "BELT OUT OF      ", 18);
+					memcpy(d4, "YOUR SKIN.       ", 18);
 					current_camera_state = 3u;
 					diagf = 52u;
 				break;
@@ -153,45 +153,66 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d2, "JUST NEEDED THE", 18);
 						memcpy(d3, "WRENCH TO GO", 18);
 						memcpy(d4, "ON. SORRY WOLF!", 18);
-						diagf = 1u;
+						diagf = 99u;
 					break;
 					case 1u:
-						memcpy(d1, "FINALLY YOU", 18);
-						memcpy(d2, "GAVE ME WHAT I", 18);
-						memcpy(d3, "NEEDED. THE", 18);
-						memcpy(d4, "STONE CALICE!", 18);
-						diagf = 1u;
+						memcpy(d1, "PRESS SELECT   ", 18);
+						memcpy(d2, "TO THE [ SYMBOL", 18);
+						memcpy(d3, "AND BREAK      ", 18);
+						memcpy(d4, "THE GATE       ", 18);
+						diagf = 99u;
 					break;
 					case 2u:
 						memcpy(d1, "I...           ", 18);
 						memcpy(d2, "JUST NEEDED THE", 18);
-						memcpy(d3, "WRENCH TO GO   ", 18);
-						memcpy(d4, "ON. SORRY EAGLE!", 18);
-						diagf = 1u;
+						memcpy(d3, "KEY TO GO ON   ", 18);
+						memcpy(d4, "SORRY EAGLE!", 18);
+						diagf = 99u;
 					break;
 					case 3u:
-						memcpy(d1, "FINALLY YOU    ", 18);
-						memcpy(d2, "GAVE ME WHAT I ", 18);
-						memcpy(d3, "NEEDED. THE    ", 18);
-						memcpy(d4, "THUNDER HORN  !", 18);
-						diagf = 1u;
+						memcpy(d1, "PRESS SELECT   ", 18);
+						memcpy(d2, "TO THE # SYMBOL", 18);
+						memcpy(d3, "AND BREAK      ", 18);
+						memcpy(d4, "THE GATE       ", 18);
+						diagf = 99u;
 					break;
 					case 4u:
 						memcpy(d1, "I...           ", 18);
 						memcpy(d2, "JUST NEEDED THE", 18);
 						memcpy(d3, "WRENCH TO GO   ", 18);
 						memcpy(d4, "ON. SORRY BEAR!", 18);
-						diagf = 1u;
+						diagf = 99u;
 					break;
 				}				
 			}else{ // one of the amulet has been collided
 				switch(archer_state){
 					case STATE_AMULET_STONE:
 						memcpy(d1, "THE STONE CALICE", 18);
-						memcpy(d2, "GIVES ME        ", 18);
-						memcpy(d3, "STONE ARROWS   ", 18);
-						memcpy(d4, "            [  ", 18);
+						memcpy(d2, "                ", 18);
+						memcpy(d3, "NOW I CAN THROW ", 18);
+						memcpy(d4, "STONE ARROWS   +[", 18);
 						diagf = 30u;					
+					break;
+					case STATE_AMULET_THUNDER:
+						memcpy(d1, "THE THUNDER HORN ", 18);
+						memcpy(d2, "                 ", 18);
+						memcpy(d3, "NOW I CAN THROW  ", 18);
+						memcpy(d4, "THUNDER ARROWS +#", 18);
+						diagf = 31u;					
+					break;
+					case STATE_AMULET_ICE:
+						memcpy(d1, "STALAGMITE NECK  ", 18);
+						memcpy(d2, "        ", 18);
+						memcpy(d3, "NOW I CAN THROW ", 18);
+						memcpy(d4, "ICE ARROWS  + ] ", 18);
+						diagf = 32u;					
+					break;
+					case STATE_AMULET_FIRE:
+						memcpy(d1, "VULKAN PYRAMID  ", 18);
+						memcpy(d2, "                  ", 18);
+						memcpy(d3, "NOW I CAN THROW  ", 18);
+						memcpy(d4, "FIRE ARROWS   +] ", 18);
+						diagf = 32u;					
 					break;
 				}
 			}

@@ -55,8 +55,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 2u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -124,8 +124,8 @@ void Start_StateGame() {
 		SetState(StateGame4);
 	}
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7);
 
 	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
@@ -687,11 +687,11 @@ void UpdateHUD(){
 	//write tool
 	if (archer_data->tool == level_tool){
 		switch(level_tool){
-			case 6:
+			case 6: //key
 				PRINT_POS(16, 0);
 				Printf("{");
 			break;
-			case 7:
+			case 7: //wrench
 				PRINT_POS(16, 0);
 				Printf("<");
 			break;

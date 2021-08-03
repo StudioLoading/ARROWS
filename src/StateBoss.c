@@ -50,7 +50,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 2u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -109,7 +109,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteItem);
 		break;
 		case 2u:
-			level_tool=7;
+			level_tool=6;
 			SpriteManagerLoad(SpriteEagle);
 			SpriteManagerLoad(SpriteKey);
 		case 3u:
@@ -232,12 +232,13 @@ void Start_StateBoss() {
 	archer_data->ups =ups;
 	archer_data->hp = hp;
 	archer_data->coins = coins;
-	archer_data->tool = 0;
+	//archer_data->tool = 0;
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowWindow();
+	UpdateHUD();
 	WriteBBOSSHP();
 	
 	//SOUND
@@ -317,35 +318,45 @@ void Update_StateBoss() {
 			return;
 		}
 	}else{*/
-		if (amulet != archer_data->amulet){
-			amulet = archer_data->amulet;
-			UpdateHUD();
+	if(archer_state == STATE_DIAG){
+		if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+			ShowWindow();
+			return;
 		}
-		if (coins != archer_data->coins){
-			coins = archer_data->coins;
-			UpdateHUD();
-		}
-		if (hp != archer_data->hp){
-			hp = archer_data->hp;
-			UpdateHUD();
-		}
-		if (ups != archer_data->ups){
-			ups = archer_data->ups;
-			UpdateHUD();
-		}
+		if(show_diag > 0 ){
+			ShowWindowDiag();
+			return;
+		}		
+	}
+	if (amulet != archer_data->amulet){
+		amulet = archer_data->amulet;
+		UpdateHUD();
+	}
+	if (coins != archer_data->coins){
+		coins = archer_data->coins;
+		UpdateHUD();
+	}
+	if (hp != archer_data->hp){
+		hp = archer_data->hp;
+		UpdateHUD();
+	}
+	if (ups != archer_data->ups){
+		ups = archer_data->ups;
+		UpdateHUD();
+	}
 
-		if (boss_hp != boss_data_b->hp){
-			boss_hp = boss_data_b->hp;
-			WriteBBOSSHP();	
-			if (boss_hp <= 0 && is_on_boss != 2){
-				is_on_boss = 2;
-				SpawnReward();
-			}	
-		}
-		
-		if(level_tool & level_tool == archer_data->tool){
-			UpdateHUD();
-		}
+	if (boss_hp != boss_data_b->hp){
+		boss_hp = boss_data_b->hp;
+		WriteBBOSSHP();	
+		if (boss_hp <= 0 && is_on_boss != 2){
+			is_on_boss = 2;
+			SpawnReward();
+		}	
+	}
+	
+	if(level_tool & level_tool == archer_data->tool){
+		UpdateHUD();
+	}
 	//}
 	
 	if(load_next_b){
