@@ -177,7 +177,7 @@ void Start_StateBoss() {
 			break;
 			case 1u:
 				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 21u << 3, (UINT16) 14u << 3);
+					boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, (UINT16) 14u << 3);
 					boss_data_b = (struct EnemyInfo*)boss->custom_data;
 					boss_hp = boss_data_b->hp;
 				}
@@ -246,26 +246,19 @@ void Start_StateBoss() {
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 
-	//INTRO
-	//if(current_camera_state != 3u){
-		//ShowWindow();
-	//}
 }
 
 void Update_StateBoss() {
 	
 	if(load_next_d){
 		switch(load_next_d){
-			case 1: //vado allo StateDiag
+			case 1: //go to StateDiag
 				diag_found = Build_Next_Dialog_Banked(scroll_target);
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
 			case 2:
 				load_next_d = 0;
-			//	if(is_on_boss == 0){
-				//	load_next_b = 1;
-			//	}
 			break;
 		}		
 	}
@@ -316,18 +309,7 @@ void Update_StateBoss() {
 		Printf("%d", current_camera_state);	
 	}
 	//INTRO END
-	/*
-	if(show_diag >= 2){ // >=max_diag
-		ShowWindow();
-		WriteBBOSSHP();
-		return;
-	}
-	if(archer_state == STATE_DIAG){		
-		if(show_diag > 0 ){
-			ShowWindowDiag();
-			return;
-		}
-	}else{*/
+	
 	if(archer_state == STATE_DIAG){
 		if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 			ShowWindow();
@@ -367,26 +349,12 @@ void Update_StateBoss() {
 	if(level_tool && level_tool == archer_data->tool){
 		UpdateHUD();
 	}
-	//}
-	
 	
 	//UPDATE ARCHER POSX IN BOSS CUSTOM_DATA
 	boss_data_b->archer_posx = scroll_target->x;
 	
-	/*PRINT_POS(13,2);
-	Printf("%u", gate_sprite->x);*/
-	
-	//SPAWN
-	/*if(current_level_b == 4){
-		if ((scroll_target->x == (UINT16) 16u << 3 || scroll_target->x == (UINT16) 17u << 3) 
-			&& scroll_target->y == (UINT16) 2u << 3){
-				//spawna scrigno
-			}
-	}*/
-	
-	
 	//MOVING BACKGROUND TILES	
-	//if (current_level_b == 1u || && current_level_b == 4u){
+	if (current_level_b != 3u){ // ibex has not to be animated with water
 		updatecounter++;
 		if (updatecounter < 41) {
 			switch(updatecounter){
@@ -400,7 +368,7 @@ void Update_StateBoss() {
 		}else{
 			updatecounter = 0;
 		}
-	//}
+	}
 	
 	
 }
@@ -431,11 +399,7 @@ void SpawnReward(){
 			key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
 			datak = (struct ItemInfo*)key_s->custom_data;
 			datak->type = 3;
-			datak->setup = 1;
-			struct Sprite* scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 46u << 3, (UINT16) 20u << 3);
-			struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
-			datascrigno2->type = 2;
-			datascrigno2->setup = 1u;		
+			datak->setup = 1;	
 		break;
 		case 4u: // bear -> wrench
 			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 11u << 3);

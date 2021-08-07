@@ -53,10 +53,10 @@ void Update_SpriteThunder() {
 		tdata->tile_e_collision = TranslateSprite(THIS, tdata->vx << delta_time, (tdata->enemy_accel_y >> 4) << delta_time);
 		if(!tdata->tile_e_collision && delta_time != 0 && tdata->enemy_accel_y < 42) { //Do another itethunderion if there is no collision
 			tdata->enemy_accel_y += 2;
-			//tdata->tile_e_collision = TranslateSprite(THIS, 0, (tdata->enemy_accel_y >> 4) << delta_time);
 		}
 		switch(tdata->tile_e_collision){
 			case 2u:
+			case 7u:
 			case 18u:
 			case 20u:
 			case 21u:
@@ -91,7 +91,7 @@ void Update_SpriteThunder() {
 		if(thuspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, thuspr)) {
 				struct ArrowInfo* arritem = (struct ArrowInfo*)thuspr->custom_data;
-				if (arritem->original_type == 3u){
+				if (arritem->original_type == 2u){
 					tdata->wait = 2u;
 					SetSpriteAnim(THIS, thunder_dead, 10u);
 					tdata->enemy_state = ENEMY_STATE_DEAD;

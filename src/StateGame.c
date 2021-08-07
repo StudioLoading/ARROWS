@@ -206,11 +206,7 @@ void Start_StateGame() {
 	//SET LEVEL TOOL
 	switch(current_level){
 		case 0u:
-			switch(current_map){
-				case 1u:
-					level_tool = 6;
-				break;
-			}
+			level_tool = 6;
 		break;
 		case 1u:
 			switch(current_map){
@@ -542,19 +538,23 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 119u << 3){
 							spawn_enemy(SpritePlatform, 131u, 10u);
 							spawn_enemy(SpriteBird, 140u, 3u);
-							spawn_enemy(SpriteBird, 114u, 4u);
+							//spawn_enemy(SpriteBird, 114u, 4u);
 						}
 						if (scroll_target->x == (UINT16) 143u << 3){
 							spawn_enemy(SpriteBird, 155u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 150u << 3 | scroll_target->x == (UINT16) 151u << 3){
-							spawn_enemy(SpriteBird, 140u, 3u);
-							spawn_enemy(SpriteSpider, 162u, 9u);
+						if (scroll_target->x == (UINT16) 150u << 3){
+							//spawn_enemy(SpriteSpider, 162u, 9u);
 							spawn_enemy(SpriteEnemy, 165u, 9u);
+						}
+						if (scroll_target->x == (UINT16) 151u << 3){
+							spawn_enemy(SpriteBird, 140u, 3u);
+						}
+						if (scroll_target->x == (UINT16) 163u << 3){
+							spawn_enemy(SpriteBird, 160u, 3u);
 						}
 						if (scroll_target->x == (UINT16) 167u << 3){
 							spawn_enemy(SpriteBird, 178u, 3u);
-							spawn_enemy(SpriteBird, 160u, 3u);
 						}
 						if (scroll_target->x == (UINT16) 170u << 3){
 							spawn_item(scrigno_shield, 183u, 6u, 2, 1);
@@ -567,7 +567,7 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 128u << 3){
 							spawn_enemy(SpriteBird, 116u, 5u);
 							spawn_enemy(SpriteSpider, 135u, 10u);
-							spawn_enemy(SpriteSpider, 136u, 9u);
+							//spawn_enemy(SpriteSpider, 136u, 9u);
 						}
 						if (scroll_target->x == (UINT16) 141u << 3){
 							spawn_enemy(SpriteBird, 130u, 5u);
@@ -580,10 +580,7 @@ void Update_StateGame() {
 						}
 						if (scroll_target->x == (UINT16) 168u << 3){
 							spawn_enemy(SpriteBird, 182u, 5u);
-						}
-						if (scroll_target->x == (UINT16) 169u << 3){
-							spawn_enemy(SpriteSpider, 173u, 8u);
-						}							
+						}		
 					break;
 				}
 			break;

@@ -279,13 +279,26 @@ void Start_StateGame4() {
 		break;
 	}*/
 	
-	//INIT SPAWNING	
+	//INIT SPAWNING
+	
+	enemies_0 = 0;
+	enemies_1 = 0;
+	enemies_2 = 0;
+	enemies_3 = 0;
+
 	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
-			case 3:
+			case 3u:
 				switch(current_map){
 					case 1u:
 						spawn_item4(10u, 9u, 3, 1);
+					break;
+				}
+			break;
+			case 4u:
+				switch(current_map){
+					case 1u:
+						spawn_item4(9u, 2u, 2, 1);
 					break;
 				}
 			break;
@@ -375,17 +388,13 @@ void Update_StateGame4() {
 					SetState(StateBoss);//StateBoss
 				}
 			break;
-			/*case 2: // provengo dal boss, vado al next level
-			break;*/
 		}
-	}
-	
-	
+	}	
 	
 	// SPAWNING
 	if(!SPRITE_GET_VMIRROR(scroll_target) && archer_state != STATE_HIT && platform_vx == 0u){
 		switch(current_level){
-			case 3u: // liv. 4 Sky -> Ibex
+			case 3u: // Sky -> Ibex
 				switch(current_map){
 					case 0u:
 						if (scroll_target->x > (UINT16) 93u << 3){
@@ -443,14 +452,14 @@ void Update_StateGame4() {
 					break;
 				}
 			break;
-			case 4u: // liv. 5 Trees -> Bear
+			case 4u: // Trees -> Bear
 				switch(current_map){
 					case 0u:
 						if(scroll_target->x == (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3){
 							spawn_item4(31u, 17u, 2, 1);
 							//snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
 						}
-						if((scroll_target->x == (UINT16) 25u << 3 || scroll_target->x == (UINT16) 26u << 3) && 
+						if(scroll_target->x == (UINT16) 26u << 3 && 
 							scroll_target->y == (UINT16) 38u << 3 ){
 							enemies_0 = spawn_vplatform4(enemies_2, SpritePlatform, 37u, 43u);
 							enemies_1 = spawn_vplatform4(enemies_3, SpritePlatform, 42u, 51u);
@@ -476,8 +485,8 @@ void Update_StateGame4() {
 						}
 					break;
 					case 1u:
-						if(scroll_target->x == (UINT16) 31u << 3 && scroll_target->y < (UINT16) 7u << 3){
-							spawn_item4(34u, 2u, 3, 1);
+						if(scroll_target->x == (UINT16) 31u << 3 && scroll_target->y < (UINT16) 10u << 3){
+							spawn_item4(34u, 2u, 1, 0);
 						}
 						if(scroll_target->x == (UINT16) 23u << 3 && 
 							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3){

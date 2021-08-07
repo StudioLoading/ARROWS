@@ -6,39 +6,23 @@
 		- tile che converte il tipo di freccia
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
-- non mi prende la chiave tirata fuori dalla eagle, mentre col wolf tutto ok. deve essere questione di numeri archer_tool, level_tool ... 
-
-- gli hurricane sul gb pocket vanno troppo veloci verticalmente
-
-- la telecamera sul boss gator non mi mostra la uscita, o la sposto in alto o do più altezza alla mappa, aggiungendo in basso.
+- verificare che i thunder muoiano quando incontrano la exit e anche quando vengono colpiti da frecce di pietra
 
 - il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile!
 
-- migliorare la tile in cui pesto i piedo sul livello l3 sky ibex. fa un po' schifo lasciato così.
-
-- Dialogo sulla pietra che riflette il cambio di freccia
-
-- mettere bottone di cambio da dialogo in avanti qualsiasi, perchè di istinto non mi viene da usare B (quello a sx)
-
-- l' hidden item sullo stateBoss dell' ibex non sta funzionando. problema di distanza dal pg ? Dovrei generarlo quando torno allo StateBoss dallo StateDiag a boss ucciso, cioè dopo che viene presentato il Thunder Horn.
-
-- l4m2 non appare l' item  in alto sulla destra, forse solita questione di distanza dal pg
-
 - credito di ZGB, GameLoop, BolognaNERD, The Misty Hills,
 
-- se apro il dialogo dopo aver preso l' item il nemico in WAIT non riappare
+- modificare gli amulet con le forme in piccolo dell' amuleto vero, cioèe dell' oggetto che poi sul dialogo è in grande.
 
 - aggiungere frames al wolf, c'è molta sprite-vram a disposizione, direi che ne abbia bisogno sulla corsa
-
-- fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
-
-- capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
 
 - migliorare la composizione del livello Eagle, fa un po' schifo... provare a render più simmetrico...
 
 - sommare alle frecce orizzontali la velocità relativa di quando mi trovo su una piattaforma movente o su un' altra freccia !!
 
 -L4 forest tree le platform verticali appaiono troppe e glitchano il gioco
+
+- sprite di puff! per gli enemy che muoiono
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -59,7 +43,10 @@ LIVELLI BONUS
 
 - nella fifo delle frecce devo evitare di rimuovere la freccia su cui eventualmente sono a cavallo
 
-
+SHOULD I.. ?
+- Dialogo sulla pietra che riflette il cambio di freccia
+- capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
+- fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
 
 devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
 

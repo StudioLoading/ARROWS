@@ -174,7 +174,7 @@ void Start_StateDiag() {
 
 void Update_StateDiag() {
 	
-	if(KEY_PRESSED(J_B)) {
+	if(KEY_PRESSED(J_B) || KEY_PRESSED(J_A)) {
 		HIDE_WIN;
 		if(is_on_boss >= 0){
 			SetState(StateBoss);
