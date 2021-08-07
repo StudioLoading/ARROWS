@@ -20,6 +20,8 @@
 
 #include "../res/src/mapdiagamuletstone.h"
 #include "../res/src/mapdiagamuletthunder.h"
+#include "../res/src/mapdiagamuletice.h"
+#include "../res/src/mapdiagamuletfire.h"
 
 #include "../res/src/diagarcher1.h"
 #include "../res/src/diagslave1.h"
@@ -36,6 +38,8 @@
 
 #include "../res/src/diagamuletstone.h"
 #include "../res/src/diagamuletthunder.h"
+#include "../res/src/diagamuletice.h"
+#include "../res/src/diagamuletfire.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -117,6 +121,12 @@ void Start_StateDiag() {
 		break;
 		case 31u:
 			InitScroll(&mapdiagamuletthunder, collision_dtiles, 0);
+		break;
+		case 32u:
+			InitScroll(&mapdiagamuletice, collision_dtiles, 0);
+		break;
+		case 33u:
+			InitScroll(&mapdiagamuletfire, collision_dtiles, 0);
 		break;
 		case 51u:
 			InitScroll(&mapdiagwolf, collision_dtiles, 0);

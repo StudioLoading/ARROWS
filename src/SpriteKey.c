@@ -16,6 +16,7 @@ void Start_SpriteKey() {
 	struct ItemInfo* keydata = (struct ItemInfo*)THIS->custom_data;
 	keydata->item_accel_y = 0;
 	keydata->type = 0;
+	keydata->setup = 0;
 	THIS->coll_x = 0;
 	THIS->coll_y = 0;
 	THIS->coll_w = 8;

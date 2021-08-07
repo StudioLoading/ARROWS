@@ -383,16 +383,17 @@ void Update_SpritePlayer() {
 				//archer_tool = 0;
 				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
 				switch(datakey->type){
-					case 1: //key					
+					case 1: //key				
+						SetSpriteAnim(THIS, anim_idle, 12u);	
 						if (current_level == 0u && current_map == 0u){
 							if( archer_data->coins < 20u){
 								return;
 							}
 							archer_data->coins -= 20u;
 						}
-						SetSpriteAnim(THIS, anim_idle, 12u);
 						archer_data->tool = 6;
-						SpriteManagerRemoveSprite(ispr);	
+						SpriteManagerRemoveSprite(ispr);
+						return;
 					break;
 					case 2: //wrench
 						SetSpriteAnim(THIS, anim_idle, 12u);

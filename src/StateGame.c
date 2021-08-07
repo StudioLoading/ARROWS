@@ -55,8 +55,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 2u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -70,8 +70,6 @@ struct Sprite* enemies_0 = 0;
 struct Sprite* enemies_1 = 0 ;
 struct Sprite* enemies_2 = 0 ;
 struct Sprite* enemies_3 = 0 ;
-//struct Sprite* enemies[4] = {0,0,0,0};
-//INT8 enlen = 0; //counts in-screen enemies
 struct Sprite* scrigno_coin = 0;
 struct Sprite* scrigno_dcoin = 0;
 struct Sprite* scrigno_shield = 0;
@@ -209,12 +207,12 @@ void Start_StateGame() {
 	switch(current_level){
 		case 0u:
 			switch(current_map){
-				case 0u:
+				case 1u:
 					level_tool = 6;
 				break;
 			}
 		break;
-		case 1:
+		case 1u:
 			switch(current_map){
 				case 1u:
 					level_tool = 7;

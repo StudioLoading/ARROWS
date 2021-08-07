@@ -50,7 +50,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 2u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -112,6 +112,7 @@ void Start_StateBoss() {
 			level_tool=6;
 			SpriteManagerLoad(SpriteEagle);
 			SpriteManagerLoad(SpriteKey);
+		break;
 		case 3u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteIbex);
@@ -269,6 +270,15 @@ void Update_StateBoss() {
 		}		
 	}
 	
+	if(load_next_b){
+		switch(load_next_b){
+			case 2: //esco dal boss col tool
+				is_on_boss = -1;
+				SetState(StateGame);
+			break;
+		}
+	}
+	
 	// INTRO START	
 	if (current_camera_state < 3u){
 		switch(current_camera_state){//0 initial wait, 1 move to boss, 2 go to Diag, 
@@ -345,28 +355,20 @@ void Update_StateBoss() {
 		UpdateHUD();
 	}
 
-	if (boss_hp != boss_data_b->hp){
+	if (boss_hp != boss_data_b->hp && is_on_boss != 2){
 		boss_hp = boss_data_b->hp;
-		WriteBBOSSHP();	
-		if (boss_hp <= 0 && is_on_boss != 2){
+		WriteBBOSSHP();
+		if (boss_hp <= 0){
 			is_on_boss = 2;
 			SpawnReward();
-		}	
+		}
 	}
 	
-	if(level_tool & level_tool == archer_data->tool){
+	if(level_tool && level_tool == archer_data->tool){
 		UpdateHUD();
 	}
 	//}
 	
-	if(load_next_b){
-		switch(load_next_b){
-			case 2: //esco dal boss col tool
-				is_on_boss = -1;
-				SetState(StateGame);
-			break;
-		}
-	}
 	
 	//UPDATE ARCHER POSX IN BOSS CUSTOM_DATA
 	boss_data_b->archer_posx = scroll_target->x;
@@ -404,49 +406,50 @@ void Update_StateBoss() {
 }
 
 void SpawnReward(){
-	if (current_level_b == 0u){// wolf -> wrench
-		reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
-		struct ItemInfo* datakk = (struct ItemInfo*)reward->custom_data;
-		datakk->type = 2;
-		datakk->setup = 1u;
-	}else if (current_level_b == 1u){ // gator -> amulet stone
-		reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 24u << 3, (UINT16) 13u << 3);
-		struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
-		datak->type = 1;
-		datak->setup = 1;
-	}else if (current_level_b == 2u){ // eagle -> key
-		reward = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
-		struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
-		datak->type = 1;
-		datak->setup = 1;
-	}else if (current_level_b == 3u){ // ibex -> amulet thunder
-		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
-		struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
-		datak->type = 3;
-		datak->setup = 1;
-		struct Sprite* scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 46u << 3, (UINT16) 20u << 3);
-		struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
-		datascrigno2->type = 2;
-		datascrigno2->setup = 1u;
-	}else if (current_level_b == 4u){ // bear -> wrench
-		reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 11u << 3);
-		struct ItemInfo* datakk = (struct ItemInfo*)reward->custom_data;
-		datakk->type = 2;
-		datakk->setup = 1u;
-	}else if (current_level_b == 3u){ // tusk -> amulet water
-		struct Sprite* key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
-		struct ItemInfo* datak = (struct ItemInfo*)key_s->custom_data;
-		datak->type = 2;
-		datak->setup = 1;
+	struct ItemInfo* datak = 0;
+	struct Sprite* key_s = 0;
+	switch (current_level_b){
+		case 0u:// wolf -> wrench
+			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
+			datak = (struct ItemInfo*)reward->custom_data;
+			datak->type = 2;
+			datak->setup = 1u;
+		break;
+		case 1u: // gator -> amulet stone
+			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 24u << 3, (UINT16) 13u << 3);
+			datak = (struct ItemInfo*)reward->custom_data;
+			datak->type = 1;
+			datak->setup = 1;
+		break;
+		case 2u: // eagle -> key
+			reward = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
+			datak = (struct ItemInfo*)reward->custom_data;
+			datak->type = 1;
+			datak->setup = 1u;
+		break;
+		case 3u: // ibex -> amulet thunder
+			key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
+			datak = (struct ItemInfo*)key_s->custom_data;
+			datak->type = 3;
+			datak->setup = 1;
+			struct Sprite* scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 46u << 3, (UINT16) 20u << 3);
+			struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
+			datascrigno2->type = 2;
+			datascrigno2->setup = 1u;		
+		break;
+		case 4u: // bear -> wrench
+			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 11u << 3);
+			datak = (struct ItemInfo*)reward->custom_data;
+			datak->type = 2;
+			datak->setup = 1u;
+		break;
+		case 5u: // tusk -> amulet water
+			key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
+			datak = (struct ItemInfo*)key_s->custom_data;
+			datak->type = 2;
+			datak->setup = 1;
+		break;
 	}
-	/*
-	case 4u: // ??? -> wrench
-	break;		
-	case 5u: // tusk -> water amulet
-	break;
-	case 6u: // knight -> fire amulet + end game
-	break;
-	*/
 }
 
 void WriteBBOSSHP(){
@@ -459,6 +462,5 @@ void WriteBBOSSHP(){
 		}	
 	}else{
 		Printf("BOSS>00");
-		UpdateHUD();
 	}
 }

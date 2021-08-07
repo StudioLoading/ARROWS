@@ -212,7 +212,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d2, "                  ", 18);
 						memcpy(d3, "NOW I CAN THROW  ", 18);
 						memcpy(d4, "FIRE ARROWS   +] ", 18);
-						diagf = 32u;					
+						diagf = 33u;					
 					break;
 				}
 			}

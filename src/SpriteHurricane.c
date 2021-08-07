@@ -58,7 +58,7 @@ void Update_SpriteHurricane() {
 			}
 			hdata->tile_e_collision = TranslateSprite(THIS, hdata->vx << delta_time,  (hdata->enemy_accel_y >> 4) << delta_time); // 1
 			if(!hdata->tile_e_collision && delta_time != 0) { //Do another iteration if there is no collision
-				hdata->enemy_accel_y += 2;
+				//hdata->enemy_accel_y += 2;
 				hdata->tile_e_collision = TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
 			}
 			if(hdata->tile_e_collision){
