@@ -374,10 +374,10 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			case 2u:
 				switch(current_map){
 					case 0u:
-						memcpy(d1, "I NEED DEXTERITY  ", 18);
-						memcpy(d2, "TO GET TO THE END ", 18);
-						memcpy(d3, "OF THIS FOREST.   ", 18);
-						memcpy(d4, "                  ", 18);
+						memcpy(d1, "I NEED DEXTERITY ", 18);
+						memcpy(d2, "TO GET TO THE END", 18);
+						memcpy(d3, "OF THIS FOREST.  ", 18);
+						memcpy(d4, "                 ", 18);
 						diagf = 99u;
 					break;
 					case 1u:
@@ -392,10 +392,10 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			case 3u:
 				switch(current_map){
 					case 0u:
-						memcpy(d1, "BETTER NOT TO", 18);
-						memcpy(d2, "FALL. CERTAIN", 18);
-						memcpy(d3, "DEATH ON THIS", 18);
-						memcpy(d4, "HEIGHT !", 18);
+						memcpy(d1, "BETTER NOT     ", 18);
+						memcpy(d2, "FALL. CERTAIN  ", 18);
+						memcpy(d3, "DEATH FROM THIS", 18);
+						memcpy(d4, "HEIGHT !       ", 18);
 						diagf = 99u;
 					break;
 					case 1u:
@@ -416,10 +416,10 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 					diagf = 99u;
 				}else{							
-					memcpy(d1, "I HAVE TO GO", 18);
-					memcpy(d2, "BACK ON THE", 18);
-					memcpy(d3, "PATH TO THE", 18);
-					memcpy(d4, "CASTLE !", 18);
+					memcpy(d1, "I HAVE TO GO  ", 18);
+					memcpy(d2, "BELOW THESE   ", 18);
+					memcpy(d3, "DEATHLY TREES ", 18);
+					memcpy(d4, "              ", 18);
 					diagf = 99u;
 				}
 			break;

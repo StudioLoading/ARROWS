@@ -441,7 +441,7 @@ void Update_StateGame4() {
 									spawn_item4(39u, 4u, 2, 1);
 								}
 								if(scroll_target->x == (UINT16) 140u << 3){
-									spawn_item4(156u, 5u, 3, 1);							
+									spawn_item4(156u, 5u, 2, 1);							
 								}					
 								if(scroll_target->x == (UINT16) 175u << 3){
 									spawn_item4(185u, 4u, 2, 1);
@@ -570,7 +570,7 @@ void Update_StateGame4() {
 
 void UpdateHUD4(){
 	//write amulet
-	PRINT_POS(19,0);
+	PRINT_POS(18,0);
 	switch (archer_data->amulet){
 		case 1: Printf("$"); break;
 		case 2: Printf("["); break;

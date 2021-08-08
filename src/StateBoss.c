@@ -50,7 +50,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 1u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -191,7 +191,7 @@ void Start_StateBoss() {
 			break;
 			case 2u:
 				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteEagle, (UINT16) 23u << 3, (UINT16) 14u << 3);
+					boss = SpriteManagerAdd(SpriteEagle, (UINT16) 28u << 3, (UINT16) 14u << 3);
 					boss_data_b = (struct EnemyInfo*)boss->custom_data;
 					boss_hp = boss_data_b->hp;
 				}
