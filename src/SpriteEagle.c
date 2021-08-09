@@ -152,8 +152,8 @@ void Update_SpriteEagle() {
 						data->hp = 0;
 						THIS->coll_x=0;
 						THIS->coll_y=0;
-						THIS->x = (UINT16) 20u << 3;
-						THIS->y = (UINT16) 12u << 3;
+						THIS->x = (UINT16) 23u << 3;
+						THIS->y = (UINT16) 13u << 3;
 						data->vx=0;
 						data->enemy_accel_y = 0;
 						SetSpriteAnim(THIS, eagle_dead, 14u);

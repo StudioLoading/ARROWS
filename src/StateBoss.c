@@ -50,7 +50,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 1u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -128,7 +128,6 @@ void Start_StateBoss() {
 	
 	SHOW_SPRITES;
 
-
 	//SCROLL
 	const struct MapInfo** level_maps_b = bosses[current_level_b];
 	UINT8 map_w, map_h;
@@ -161,7 +160,6 @@ void Start_StateBoss() {
 	}
 	
 	SHOW_BKG;
-	
 	
 	//INIT BOSS
 		struct Sprite* scrigno_sprite_boss = 0;

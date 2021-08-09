@@ -6,15 +6,18 @@
 		- tile che converte il tipo di freccia
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
-- il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile!
 
-- credito di ZGB, GameLoop, BolognaNERD, The Misty Hills,
+- credito di ZGB, GameLoop, BolognaNERD, The Misty Hills, /home/utente/ARROWS/CREDITS ho messo già i png
 
 - aggiungere frames al wolf, c'è molta sprite-vram a disposizione, direi che ne abbia bisogno sulla corsa
 
 - sommare alle frecce orizzontali la velocità relativa di quando mi trovo su una piattaforma movente o su un' altra freccia !!
 
 - sprite di puff! per gli enemy che muoiono
+
+- centrare i testi
+
+- verificare che il salto e lo sparo siano i tasti giusti, chiedere feedback
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -29,12 +32,13 @@ LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
 
-LIVELLI BONUS
+LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
 SHOULD I.. ?
 - Dialogo sulla pietra che riflette il cambio di freccia
 - capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
 - fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
+- comparsa del testo lettera per lettera
 
 devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
 
@@ -48,37 +52,36 @@ l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolar
 
 il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 
-GAMEOVER RESTYLED
+GAMEOVER RESTYLED - tombstone che cade dall' alto e trema arrivata ad una certa altezza ?
 
 SOUND EFFECT DI 1UP
 SOUND EFFECT DI SHIELD
 SOUND EFFECT DI EXIT SENZA TOOL
 
-TITLESCREEN COME DA LOGO CONCORDATO CON KATALIN
+TITLESCREEN COME DA LOGO
 
 SOUND BACKGROUND PER OGNI LIVELLO
 
 
 polish:
-	- background animation sui nastri che mi fanno scivolare 
-	- frame arciere di cambio di direzione - potrei sacrificare il frame di discesa
+	- frame arciere di cambio di direzione - che guardi il giocatore, a spalle verso il background - potrei sacrificare il frame di discesa
 	- bordo cornice tutto schermo del livello bonus
 	- sound del salto - ce lo ha anche superMarioLand!
 	- sound per quando corro contro una parete
-	- effetto di camera tramble che potrebbe essere utile da usare come effetto
 	- sound lancio freccia
-	- schermata di fine livello - direi con pergamena descrittiva
 	- sound quando viene spawnato un oggetto
 	- sound quando viene spawnato un amuleto!
-	- You can see the player's health reset before the fadeout on death
 	- sound di quando lo scrigno si apre !	
+	- You can see the player's health reset before the fadeout on death
+	- effetto di camera tramble che potrebbe essere utile da usare come effetto
+	- schermata di fine livello - direi con pergamena descrittiva
 	
 
 
 bisogna pensare ad un maggior replay value:
-start screen è selezione del livello. Si può scegliere ultimo livello del castello solo coi 4 amuleti ottenuti.
+start screen è selezione del livello. Si può scegliere ultimo livello del castello, ma verrà inquadrato un cancello attorno al quale depositare gli amuleti. solo coi 4 amuleti ottenuti il cancello si aprirà.
 in questo modo chi ricomincia può andare a scegliere solo i livelli con gli amuleti e arrivare al castello.
-direi di aggiungere il fatto che se si giocano anche livelli senza amuleti, il boss del livello entra "in gioco" nello scontro finale col boss e lo picchia - buttandogli giù della vita.
+dopo i boss senza amuleti si accede ad un livello bonus, se lo si supera, il boss del livello entra "in gioco" nello scontro finale col boss finale e lo picchia - buttandogli giù della vita.
 
 
 
@@ -91,15 +94,14 @@ Cheat in titleScreen KonamiCode
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
-
 COLORI
 
 RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
 
 
 
-CREAZIONE MAP+TILES DA PNG
-E:\tools>png2gbtiles.exe mapdiag.archer.png -gbm -g -pal=mypal.pal
+PNG2MAP
+C:\GB\ZGBNEW\tools\png2map\png2gbtiles.exe mapdiag.archer.png -gbm -g -pal=mypal.pal
 maypal.pal file di testo contenente solo le seguenti
 #C6D783
 #8DCD53
@@ -109,37 +111,12 @@ ovviamente palette del Paint.NET con cui ho fatto il png contiene gli stessi cod
 png 160x144
 
 
+BORDO sgb 
+C:\GB\ZGBNEW\tools\border\
 
 
-SOSTITUZIONE TILES DI MAPPA:
-GetScrollTile mi becca	se ci sono sopra o no, set_bkg_tiles(...) dovrebbe fare la sostituzione
-	MONETE   	-> TILE DI BACKGROUND
-	CESPUGLIO 	-> RAMO
-sul player ho verificato che funziona:
-	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 32u){
-		const unsigned char empty_tile[1] ={0};
-		set_bkg_tiles((THIS->x >> 3)+1, (THIS->y >> 3), 1, 1, empty_tile);
-		archer_data->coins += 1;
-	}
-la sostituzione la fa, però se esco e rientro con la videata di scroll la tile vecchia viene ripristinata
-in più se è tipo un coin, questo mantiere le sue funzionalità di pickup, cioè
-la condizione dell' if è sempre vera anche se a video non vedo più il coin.
-
-
-
-BORDO sgb C:\GB\ZGBNEW\tools\border\
-
-DIAGS https://github.com/gbdev/rgbds/releases
-rgbgfx.exe -o test.2bpp -t test.map -u archer_mine.png
-import del 2bpp dal tile designer 
-type 			Binary 8x8 tiles
-First tile 		0
-tile count		122
-first byte to	0
-Format			Gameboy VRAM 
-e salvarlo come .gbr
-
-
+- il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile! Ho anche rifatto la tile e map con un nuovo png ma niente da fare
+E' comunque un problema della mappa, Diags.c -> Build_Next_Dialog_Banked() -> diaf = 4u;
 
 POTREI EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI
 IN CAMBIO METTERE  tile sulla window:
