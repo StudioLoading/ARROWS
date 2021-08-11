@@ -6,19 +6,6 @@
 		- tile che converte il tipo di freccia
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
-
-- credito di ZGB, GameLoop, BolognaNERD, The Misty Hills, /home/utente/ARROWS/CREDITS ho messo già i png
-
-- aggiungere frames al wolf, c'è molta sprite-vram a disposizione, direi che ne abbia bisogno sulla corsa
-
-- sommare alle frecce orizzontali la velocità relativa di quando mi trovo su una piattaforma movente o su un' altra freccia !!
-
-- sprite di puff! per gli enemy che muoiono
-
-- centrare i testi
-
-- verificare che il salto e lo sparo siano i tasti giusti, chiedere feedback
-
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
@@ -34,13 +21,18 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
-SHOULD I.. ?
-- Dialogo sulla pietra che riflette il cambio di freccia
-- capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
-- fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
-- comparsa del testo lettera per lettera
 
-devo fare lo state di inventario, con questa scusa metto le descrizioni e miniature degli amuleti. E' un feticismo che dovrebbe aiutare all' estetica del gioco, senza aggiungere effettivamente valore aggiunto. Così ad es metto 5 campi vuoti per mostrare che è possibile collezionare massimo 5 amuleti
+- credito di ZGB, GameLoop, BolognaNERD, The Misty Hills, /home/utente/ARROWS/CREDITS ho messo già i png
+
+- aggiungere frames al wolf, c'è molta sprite-vram a disposizione, direi che ne abbia bisogno sulla corsa
+
+- sprite di puff! per gli enemy che muoiono
+
+- centrare i testi
+
+- verificare che il salto e lo sparo siano i tasti giusti, chiedere feedback
+
+
 
 state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
 
@@ -52,18 +44,15 @@ l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolar
 
 il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 
-GAMEOVER RESTYLED - tombstone che cade dall' alto e trema arrivata ad una certa altezza ?
-
-SOUND EFFECT DI 1UP
-SOUND EFFECT DI SHIELD
-SOUND EFFECT DI EXIT SENZA TOOL
-
 TITLESCREEN COME DA LOGO
 
 SOUND BACKGROUND PER OGNI LIVELLO
 
 
 polish:
+	- SOUND EFFECT DI 1UP
+	- SOUND EFFECT DI SHIELD
+	- SOUND EFFECT DI EXIT SENZA TOOL
 	- frame arciere di cambio di direzione - che guardi il giocatore, a spalle verso il background - potrei sacrificare il frame di discesa
 	- bordo cornice tutto schermo del livello bonus
 	- sound del salto - ce lo ha anche superMarioLand!
@@ -97,6 +86,15 @@ SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 COLORI
 
 RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
+
+
+
+
+SHOULD I.. ?
+- Dialogo sulla pietra che riflette il cambio di freccia
+- capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
+- fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
+- comparsa del testo lettera per lettera
 
 
 

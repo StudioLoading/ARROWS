@@ -6,11 +6,12 @@
 #include "SpriteManager.h"
 #include "custom_datas.h"
 
+extern INT8 platform_vx;
 
-struct Arrows{
+/*struct Arrows{
 	UINT8 ids[5];
     INT8 falen;
-};
+};*/
 
 const UINT8 arrow_normal[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 arrow_water[] = {1, 1};
@@ -78,8 +79,6 @@ void FApop(){
 
 void Update_SpriteArrow() {
 	
-	UINT8 scroll_a_tile;
-	struct Sprite* iaspr;
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	internal_t = data->type;
 	if (internal_t != 0 & data->arrowdir != -1) {
@@ -97,6 +96,9 @@ void Update_SpriteArrow() {
 	if(tile_a_collision){
 		CheckCollisionArrowTile(tile_a_collision);
 	}
+	
+	UINT8 scroll_a_tile;
+	struct Sprite* iaspr;
 	SPRITEMANAGER_ITERATE(scroll_a_tile, iaspr) {
 		if(iaspr->type == SpriteItem) {
 			if(CheckCollision(THIS, iaspr)) {
@@ -238,6 +240,14 @@ void SetupArrow(){
 			}
 			//data->type = 0;
 		break;
+	}
+	//RELATIVE MOVEMENT ON X AXIS!
+	if(platform_vx){
+		if(platform_vx > 0 && !SPRITE_GET_VMIRROR(THIS)){
+			data->vx += platform_vx;
+		}else if (platform_vx < 0 && SPRITE_GET_VMIRROR(THIS)){
+			data->vx -= platform_vx;
+		}		
 	}
 }
 
