@@ -1,6 +1,7 @@
 #include "Banks/SetBank6.h"
 #include "main.h"
 
+#include "Keys.h"
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"

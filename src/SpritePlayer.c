@@ -112,12 +112,10 @@ void Update_SpritePlayer() {
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
 		}else{
-			//if(show_diag < 2){
-				if (KEY_TICKED(J_B) || KEY_TICKED(J_A)){ //show_diag < max_diag
-					SetSpriteAnim(THIS, anim_idle, 33u);
-					show_diag += 1;
-				}
-			//}
+			if (KEY_TICKED(J_B) || KEY_TICKED(J_A)){ //show_diag < max_diag
+				SetSpriteAnim(THIS, anim_idle, 33u);
+				show_diag += 1;
+			}
 		}
 		return;
 	}
@@ -278,8 +276,7 @@ void Update_SpritePlayer() {
 				archer_state = STATE_NORMAL;
 			}
 		break;
-	}//end switch archer_state
-	
+	}//end switch archer_state	
 	
 	if(princess_parent == 0 & archer_state != STATE_LADDER & archer_state != STATE_HIT & archer_state != STATE_DEAD) {
 		//Simple gravity physics 
@@ -557,7 +554,6 @@ void Update_SpritePlayer() {
 			}
 		}
 	}
-
 }
 
 void Die(){

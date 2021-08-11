@@ -17,6 +17,7 @@
 #include "string.h"
 #include "Print.h"
 #include "Sound.h"
+#include "Fade.h"
 #include "gbt_player.h"
 
 UINT8 wait_credit = 250u;
@@ -92,6 +93,7 @@ void Update_StateCredit() {
 		updatecounter = 0u;
 		wait_credit = 250u;
 		credit_step += 1u;
+		//FadeOut();
 		HIDE_BKG;
 		switch (credit_step){
 			case 1u:
@@ -104,10 +106,11 @@ void Update_StateCredit() {
 				InitScroll(&mapcredits1, collision_tiles_credits, 0);
 			break;
 			case 4u:
-				SetState(StateGame);
+				SetState(StateGame); // TitleScreen !
 			break;
 		}
 		SHOW_BKG;
+		//FadeIn();
 		return;
 	}
 	
