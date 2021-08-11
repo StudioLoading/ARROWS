@@ -122,7 +122,7 @@ void Update_SpritePlayer() {
 		return;
 	}
 	
-	if(KEY_TICKED(J_START)){
+	if(KEY_TICKED(J_START) && is_on_boss < 0){
 		//se sono sullo stato del boss non fare un bel niente !!!!!!
 		//non si mette in pausa al mostro!
 		SetState(StateGame);
