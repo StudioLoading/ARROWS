@@ -48,7 +48,7 @@ const UINT16 const sprites_palette[] = {
 
 UINT8 amulet = 0u;
 UINT8 coins = 30u;
-INT8 ups = 3;
+INT8 ups = 0;
 INT8 hp = 100;
 INT8 archer_tool = 0;
 INT8 level_tool = -1;
@@ -335,14 +335,13 @@ void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
-	}	
+	}
 	SpriteManagerRemoveSprite(enemies_3);
 	enemies_3 = enemies_2;
 	enemies_2 = enemies_1;
-	//enemies4_1 = enemies4_0;
-	enemies_0 = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);;
-	/*PRINT_POS(16, 0);
-	Printf("%d", enlen4);*/
+	if(enemies_0 == 0 || enemies_1 == 0 || enemies_2 == 0 || enemies_3 == 0){
+		enemies_0 = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	}
 }
 
 void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){

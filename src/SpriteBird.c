@@ -9,7 +9,6 @@
 #include "custom_datas.h"
 
 //BIRD
-const UINT8 bird_idle[] = {2, 1, 5}; //The first number indicates the number of frames
 const UINT8 bird_walk[] = {2, 1, 5}; //The first number indicates the number of frames
 const UINT8 bird_hit[] = {2, 2, 3}; //The first number indicates the number of frames
 const UINT8 bird_dead[] = {1, 0}; //The first number indicates the number of frames
@@ -32,7 +31,7 @@ void Start_SpriteBird() {
 	THIS->lim_x = 255u;
 	THIS->lim_y = 128u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
-	SetSpriteAnim(THIS, bird_idle, 8u);
+	SetSpriteAnim(THIS, bird_walk, 8u);
 	data->enemy_accel_y = 0;
 	data->vx = 1;
 	data->wait = bird_time_normal;

@@ -7,12 +7,12 @@
 #include "custom_datas.h"
 
 
-const UINT8 amulet_closed[] = {1, 5}; //The first number indicates the number of frames
-const UINT8 amulet_normal[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 amulet_water[] = {1, 1}; //The first number indicates the number of frames
-const UINT8 amulet_earth[] = {1, 2}; //The first number indicates the number of frames
-const UINT8 amulet_blast[] = {1, 3}; //The first number indicates the number of frames
-const UINT8 amulet_fire[] = {1, 4};
+const UINT8 amulet_closed[] = {1, 0}; //The first number indicates the number of frames
+//const UINT8 amulet_normal[] = {1, 0}; //The first number indicates the number of frames
+const UINT8 amulet_water[] = {2, 0, 1}; //The first number indicates the number of frames
+const UINT8 amulet_earth[] = {2, 0, 2}; //The first number indicates the number of frames
+const UINT8 amulet_blast[] = {2, 0, 3}; //The first number indicates the number of frames
+const UINT8 amulet_fire[] = {2, 0, 4};
 
 struct ItemInfo* datak;
 INT8 air = 0x0;
@@ -50,20 +50,20 @@ void Update_SpriteAmulet() {
 		THIS->coll_w = 0;
 		THIS->coll_h = 0;*/
 		switch(datak->type){
-			case 0:
+			/*case 0:
 				SetSpriteAnim(THIS, amulet_normal, 8u);
-			break;
+			break;*/
 			case 1:
-				SetSpriteAnim(THIS, amulet_earth, 8u);
+				SetSpriteAnim(THIS, amulet_earth, 16u);
 			break;
 			case 2:
-				SetSpriteAnim(THIS, amulet_water, 8u);
+				SetSpriteAnim(THIS, amulet_water, 16u);
 			break;
 			case 3:
-				SetSpriteAnim(THIS, amulet_blast, 8u);
+				SetSpriteAnim(THIS, amulet_blast, 16u);
 			break;
 			case 4:
-				SetSpriteAnim(THIS, amulet_fire, 8u);
+				SetSpriteAnim(THIS, amulet_fire, 16u);
 			break;
 		}
 		datak->setup = 1;

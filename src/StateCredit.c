@@ -4,10 +4,12 @@
 #include "../res/src/mapcredit0.h"
 #include "../res/src/archer.h"
 
+#include <gb/gb.h>
+
 #include "ZGBMain.h"
+#include "Palette.h"
 #include "Scroll.h"
 #include "SpriteManager.h"
-#include "Palette.h"
 #include "string.h"
 #include "Print.h"
 #include "Sound.h"
@@ -54,36 +56,20 @@ void Update_StateCredit() {
 		updatecounter = 0u;
 		SetState(StateGame);
 	}
-	
-	const unsigned char h_0[1] = {14};
-	const unsigned char h_1[1] = {22};
-	const unsigned char v_0[1] = {15};
-	const unsigned char v_1[1] = {23};
 	updatecounter++;
 	if (updatecounter < 20u) {
 		switch(updatecounter){
-			case 1:
-				set_bkg_tiles(6u, 7u, 1, 1, h_0); set_bkg_tiles(7u, 7u, 1, 1, h_0);
-				set_bkg_tiles(8u, 7u, 1, 1, h_0); set_bkg_tiles(9u, 7u, 1, 1, h_0); set_bkg_tiles(10u, 7u, 1, 1, h_0);
-				set_bkg_tiles(11u, 7u, 1, 1, h_0); set_bkg_tiles(12u, 7u, 1, 1, h_0);
-				set_bkg_tiles(6u, 10u, 1, 1, h_1); set_bkg_tiles(7u, 10u, 1, 1, h_1);
-				set_bkg_tiles(8u, 10u, 1, 1, h_1); set_bkg_tiles(9u, 10u, 1, 1, h_1); set_bkg_tiles(10u, 10u, 1, 1, h_1);
-				set_bkg_tiles(11u, 10u, 1, 1, h_1); set_bkg_tiles(12u, 10u, 1, 1, h_1);
-				set_bkg_tiles(5u, 8u, 1, 1, v_1); set_bkg_tiles(5u, 9u, 1, 1, v_1);
-				set_bkg_tiles(13u, 8u, 1, 1, v_0); set_bkg_tiles(13u, 9u, 1, 1, v_0);
+			case 1u:
+				set_bkg_data(14u, 1u, tilescredit.data->data+352u);// 16 * 22 tile index
+				set_bkg_data(15u, 1u, tilescredit.data->data+368u);// 16 * 22 tile index
 			break;
-			case 10:
-				set_bkg_tiles(6u, 7u, 1, 1, h_1); set_bkg_tiles(7u, 7u, 1, 1, h_1);
-				set_bkg_tiles(8u, 7u, 1, 1, h_1); set_bkg_tiles(9u, 7u, 1, 1, h_1); set_bkg_tiles(10u, 7u, 1, 1, h_1);
-				set_bkg_tiles(11u, 7u, 1, 1, h_1); set_bkg_tiles(12u, 7u, 1, 1, h_1);
-				set_bkg_tiles(6u, 10u, 1, 1, h_0); set_bkg_tiles(7u, 10u, 1, 1, h_0);
-				set_bkg_tiles(8u, 10u, 1, 1, h_0); set_bkg_tiles(9u, 10u, 1, 1, h_0); set_bkg_tiles(10u, 10u, 1, 1, h_0);
-				set_bkg_tiles(11u, 10u, 1, 1, h_0); set_bkg_tiles(12u, 10u, 1, 1, h_0);
-				set_bkg_tiles(5u, 8u, 1, 1, v_0); set_bkg_tiles(5u, 9u, 1, 1, v_0);
-				set_bkg_tiles(13u, 8u, 1, 1, v_1); set_bkg_tiles(13u, 9u, 1, 1, v_1);
+			case 10u:
+				set_bkg_data(14u, 1u, tilescredit.data->data+224u);// restore tile
+				set_bkg_data(15u, 1u, tilescredit.data->data+240u);// restore tile
 			break;
 		}
 	}else{
 		updatecounter = 0;
 	}
+	
 }

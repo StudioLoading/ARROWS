@@ -21,6 +21,11 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
+- annerire l' amuleto delle frecce normali e sulle tiles e sul font
+
+- mettere un cap gli spawn, se no c'è rischio crash. un contatore che azzero ad ogni StateGame, lo incremento ad ogni spawn e nella condizione dello spawn metto un contatore == numero_dello_spawn, in modo tale che ci passo una volta e spawna, ma se ci ripasso non rispawna
+OPPURE
+controllare che tra i 4 nemici possibili ce ne sia almeno uno morto.
 
 - credito di ZGB, GameLoop, BolognaNERD, The Misty Hills, /home/utente/ARROWS/CREDITS ho messo già i png
 
@@ -30,11 +35,9 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 - centrare i testi
 
-- verificare che il salto e lo sparo siano i tasti giusti, chiedere feedback
+- pausa con sonoro trionfale quando collido con nuovo amulet, prima dello StateDiag dell' amuleto nuovo
 
-
-
-state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
+- state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
 
 schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 
