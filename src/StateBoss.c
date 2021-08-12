@@ -168,7 +168,7 @@ void Start_StateBoss() {
 		switch(current_level_b){
 			case 0u:
 				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 14u << 3); //34, 12
+					boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 12u << 3); //34, 12
 					boss_data_b = (struct EnemyInfo*)boss->custom_data;
 					boss_hp = boss_data_b->hp;
 				}
@@ -217,6 +217,8 @@ void Start_StateBoss() {
 	if (current_camera_state < 3u){
 		boss_data_b->enemy_state = ENEMY_STATE_WAIT;
 		return;
+	}else{
+		boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
 	}
 		
 	

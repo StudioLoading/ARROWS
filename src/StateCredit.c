@@ -5,6 +5,7 @@
 #include "../res/src/mapcredits1.h"
 #include "../res/src/mapcredits2.h"
 #include "../res/src/mapcredits3.h"
+#include "../res/src/mapcredits4.h"
 #include "../res/src/archer.h"
 
 #include <gb/gb.h>
@@ -44,25 +45,11 @@ void Start_StateCredit() {
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_credits, 2);
 	SPRITES_8x16;
 	SHOW_SPRITES;
-	/*
-	switch(credit_step){
-		case 0u:*/
-			InitScroll(&mapcredit0, collision_tiles_credits, 0);	
-			//SOUND
-			NR52_REG = 0x80; //Enables sound, you should always setup this first
-			NR51_REG = 0xFF; //Enables all channels (left and right)
-			PlayMusic(credits_mod_Data, 11, 1);
-	/*	break;			
-		case 1u:
-			InitScroll(&mapcredits2, collision_tiles_credits, 0);
-		break;			
-		case 2u:
-			InitScroll(&mapcredits3, collision_tiles_credits, 0);
-		break;			
-		case 3u:
-			InitScroll(&mapcredits1, collision_tiles_credits, 0);
-		break;			
-	}*/
+	InitScroll(&mapcredit0, collision_tiles_credits, 0);	
+	//SOUND
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR51_REG = 0xFF; //Enables all channels (left and right)
+	PlayMusic(credits_mod_Data, 11, 1);
 	
 	SHOW_BKG;
 	
@@ -93,24 +80,30 @@ void Update_StateCredit() {
 		updatecounter = 0u;
 		wait_credit = 250u;
 		credit_step += 1u;
-		//FadeOut();
-		HIDE_BKG;
+		FadeIn();
+		DISPLAY_OFF;
+		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
 		switch (credit_step){
 			case 1u:
 				InitScroll(&mapcredits2, collision_tiles_credits, 0);
 			break;
 			case 2u:
-				InitScroll(&mapcredits3, collision_tiles_credits, 0);
+				InitScroll(&mapcredits4, collision_tiles_credits, 0);
 			break;
 			case 3u:
-				InitScroll(&mapcredits1, collision_tiles_credits, 0);
+				InitScroll(&mapcredits3, collision_tiles_credits, 0);
 			break;
 			case 4u:
+				InitScroll(&mapcredits1, collision_tiles_credits, 0);
+			break;
+			default:
+				DISPLAY_ON;
+				FadeOut();
 				SetState(StateGame); // TitleScreen !
 			break;
 		}
-		SHOW_BKG;
-		//FadeIn();
+		DISPLAY_ON;
+		FadeOut();
 		return;
 	}
 	

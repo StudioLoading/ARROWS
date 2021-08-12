@@ -39,7 +39,7 @@ l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolar
 
 il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 
-TITLESCREEN COME DA LOGO
+TITLESCREEN COME DA LOGO + COVER
 
 SOUND BACKGROUND PER OGNI LIVELLO
 
@@ -134,25 +134,30 @@ if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_START) || wait_credit == 0
 		wait_credit = 250u;
 		credit_step += 1u;
 		FadeIn();
+		DISPLAY_OFF;
 		//HIDE_BKG;
 		switch (credit_step){
 			case 1u:
 				InitScroll(&mapcredits2, collision_tiles_credits, 0);
 			break;
 			case 2u:
-				InitScroll(&mapcredits3, collision_tiles_credits, 0);
+				InitScroll(&mapcredits4, collision_tiles_credits, 0);
 			break;
 			case 3u:
-				InitScroll(&mapcredits1, collision_tiles_credits, 0);
+				InitScroll(&mapcredits3, collision_tiles_credits, 0);
 			break;
 			case 4u:
-				SetState(StateGame);
+				InitScroll(&mapcredits1, collision_tiles_credits, 0);
+			break;
+			case 5u:
+				SetState(StateGame); // TitleScreen !
 			break;
 		}
 		//SHOW_BKG;
+		DISPLAY_ON;
 		FadeOut();
 		return;
-	}
+	}	
 ```
 
 

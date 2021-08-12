@@ -9,11 +9,11 @@
 #include "custom_datas.h"
 
 //WOLF
-const UINT8 wolf_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 wolf_uuu[] = {1, 4}; //The first number indicates the number of frames
-const UINT8 wolf_walk[] = {4, 1, 2, 3, 2}; //The first number indicates the number of frames
-const UINT8 wolf_hit[] = {2, 6, 5}; //The first number indicates the number of frames
-const UINT8 wolf_dead[] = {1, 7}; //The first number indicates the number of frames
+const UINT8 wolf_idle[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 wolf_uuu[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 wolf_walk[] = {4, 0, 1, 2, 3}; //The first number indicates the number of frames
+const UINT8 wolf_hit[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 wolf_dead[] = {1, 5}; //The first number indicates the number of frames
 
 INT8 jump_i = 0;
 struct EnemyInfo* wolf_data ;
@@ -24,8 +24,8 @@ void BTurn();
 void Start_SpriteWolf() {
 	wolf_data = (struct EnemyInfo*)THIS->custom_data;
 	THIS->coll_x = 4;
-	THIS->coll_y = 5;
-	THIS->coll_w = 8;
+	THIS->coll_y = 5+16;
+	THIS->coll_w = 8+16;
 	THIS->coll_h = 11;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
@@ -55,7 +55,7 @@ void Update_SpriteWolf() {
 	if (wolf_data->enemy_state == ENEMY_STATE_JUMPING){
 		jump_i += 1;
 		if (jump_i == 44){
-			SetSpriteAnim(THIS, wolf_walk, 8u);
+			SetSpriteAnim(THIS, wolf_walk, 12u);
 			wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 			jump_i = 0;
 			wolf_data->enemy_accel_y = 20;
@@ -64,7 +64,7 @@ void Update_SpriteWolf() {
 	if (wolf_data->wait > 0u){
 		wolf_data->wait -= 1u;
 		if (wolf_data->wait == 0u){
-			SetSpriteAnim(THIS, wolf_walk, 8u);
+			SetSpriteAnim(THIS, wolf_walk, 12u);
 		}
 	}else{
 		if(wolf_data->enemy_accel_y < 24) {
@@ -85,7 +85,7 @@ void Update_SpriteWolf() {
 		if(wolf_data->tile_e_collision) {
 			if(wolf_data->enemy_state == ENEMY_STATE_JUMPING & wolf_data->enemy_accel_y > 0) {
 				wolf_data->enemy_state = ENEMY_STATE_NORMAL;
-				SetSpriteAnim(THIS, wolf_walk, 8u);
+				SetSpriteAnim(THIS, wolf_walk, 12u);
 			}else{
 				wolf_data->enemy_accel_y = 0;	
 			}

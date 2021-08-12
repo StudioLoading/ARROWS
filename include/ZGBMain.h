@@ -23,7 +23,7 @@ _SPRITE_DMG(SpriteScorpion, scorpion)\
 _SPRITE_DMG(SpritePorcupine, porcupine)\
 _SPRITE_DMG(SpriteThunder, thunder)\
 _SPRITE_DMG(SpriteHurricane, hurricane)\
-_SPRITE_DMG(SpriteWolf, wolf)\
+_SPRITE_DMG(SpriteWolf, wolf_new)\
 _SPRITE_DMG(SpriteRat, rat)\
 _SPRITE_DMG(SpriteSpider, spider)\
 _SPRITE_DMG(SpriteAlligator, alligator)\
@@ -34,6 +34,8 @@ _SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteCamerafocus, camerafocus)\
 SPRITE_DEF_END
+
+/*_SPRITE_DMG(SpriteWolf, wolf)\ */
 
 
 #include "ZGBMain_Init.h"
