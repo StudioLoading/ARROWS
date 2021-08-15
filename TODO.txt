@@ -21,7 +21,7 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
-- aggiungere frames al wolf, c'è molta sprite-vram a disposizione, direi che ne abbia bisogno sulla corsa
+
 
 - sprite di puff! per gli enemy che muoiono
 
@@ -38,8 +38,6 @@ intro iniziale con poesia su una pergamena di carta ! audio da Leandro ? me ne a
 l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolare da far dire a quello di mezzo ?
 
 il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
-
-TITLESCREEN COME DA LOGO + COVER
 
 SOUND BACKGROUND PER OGNI LIVELLO
 
@@ -59,6 +57,7 @@ polish:
 	- You can see the player's health reset before the fadeout on death
 	- effetto di camera tramble che potrebbe essere utile da usare come effetto
 	- schermata di fine livello - direi con pergamena descrittiva
+	- polish della titlescreen
 	
 
 
