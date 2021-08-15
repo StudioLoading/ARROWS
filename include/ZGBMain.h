@@ -3,6 +3,7 @@
 
 #define STATES \
 _STATE(StateCredit)\
+_STATE(StateTitlescreen)\
 _STATE(StateGame)\
 _STATE(StateGame4)\
 _STATE(StateSecret)\
@@ -33,6 +34,7 @@ _SPRITE_DMG(SpriteEagle, eagle)\
 _SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteCamerafocus, camerafocus)\
+_SPRITE_DMG(SpriteLogo, logo)\
 SPRITE_DEF_END
 
 /*_SPRITE_DMG(SpriteWolf, wolf)\ */

@@ -9,10 +9,10 @@
 #include "custom_datas.h"
 
 //WOLF
-const UINT8 wolf_idle[] = {1, 5}; //The first number indicates the number of frames
 const UINT8 wolf_uuu[] = {1, 5}; //The first number indicates the number of frames
 const UINT8 wolf_walk[] = {4, 0, 1, 2, 3}; //The first number indicates the number of frames
-const UINT8 wolf_hit[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 wolf_jump[] = {1, 0}; //The first number indicates the number of frames
+const UINT8 wolf_hit[] = {2, 4, 5}; //The first number indicates the number of frames
 const UINT8 wolf_dead[] = {1, 5}; //The first number indicates the number of frames
 
 INT8 jump_i = 0;
@@ -30,7 +30,7 @@ void Start_SpriteWolf() {
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	SetSpriteAnim(THIS, wolf_uuu, 8u);
-	wolf_data->enemy_accel_y = 24;
+	wolf_data->enemy_accel_y = 25;
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
 	wolf_data->hp = 50;
@@ -55,47 +55,48 @@ void Update_SpriteWolf() {
 	if (wolf_data->enemy_state == ENEMY_STATE_JUMPING){
 		jump_i += 1;
 		if (jump_i == 44){
-			SetSpriteAnim(THIS, wolf_walk, 12u);
+			SetSpriteAnim(THIS, wolf_walk, 13u);
 			wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 			jump_i = 0;
-			wolf_data->enemy_accel_y = 20;
+			wolf_data->enemy_accel_y = 25;
 		}
 	}
 	if (wolf_data->wait > 0u){
 		wolf_data->wait -= 1u;
 		if (wolf_data->wait == 0u){
-			SetSpriteAnim(THIS, wolf_walk, 12u);
+			SetSpriteAnim(THIS, wolf_walk, 13u);
 		}
 	}else{
-		if(wolf_data->enemy_accel_y < 24) {
+		if(wolf_data->enemy_accel_y < 25) {
 			wolf_data->enemy_accel_y += 1;
 		}
-		if (wolf_data->vx > 0 & !SPRITE_GET_VMIRROR(THIS)){
+		if (wolf_data->vx > 0 && !SPRITE_GET_VMIRROR(THIS)){
 			SPRITE_SET_VMIRROR(THIS);
 		}
-		if(wolf_data->vx < 0 & SPRITE_GET_VMIRROR(THIS)){
+		if(wolf_data->vx < 0 && SPRITE_GET_VMIRROR(THIS)){
 			SPRITE_UNSET_VMIRROR(THIS);
 		}
 		wolf_data->tile_e_collision = TranslateSprite(THIS, wolf_data->vx << delta_time, (wolf_data->enemy_accel_y >> 4)<< delta_time);
-		if(!wolf_data->tile_e_collision && delta_time != 0 && wolf_data->enemy_accel_y < 24) { //Do another iteration if there is no collision
+		if(!wolf_data->tile_e_collision && delta_time != 0 && wolf_data->enemy_accel_y < 26) { //Do another iteration if there is no collision
 			wolf_data->enemy_accel_y += 2;
 			wolf_data->tile_e_collision = TranslateSprite(THIS, 0, (wolf_data->enemy_accel_y >> 4) << delta_time);
 		}
 		
 		if(wolf_data->tile_e_collision) {
-			if(wolf_data->enemy_state == ENEMY_STATE_JUMPING & wolf_data->enemy_accel_y > 0) {
+			if(wolf_data->enemy_state == ENEMY_STATE_JUMPING && wolf_data->enemy_accel_y > 0) {
 				wolf_data->enemy_state = ENEMY_STATE_NORMAL;
-				SetSpriteAnim(THIS, wolf_walk, 12u);
+				SetSpriteAnim(THIS, wolf_walk, 13u);
 			}else{
 				wolf_data->enemy_accel_y = 0;	
 			}
 			CheckCollisionBTile();
 		}
 		
-		if(THIS->x == 25*8 & wolf_data->enemy_state != ENEMY_STATE_JUMPING){
-			SetSpriteAnim(THIS, wolf_idle, 8u);
+		if((THIS->x == (UINT16) 24u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && SPRITE_GET_VMIRROR(THIS)) ||
+			(THIS->x == (UINT16) 26u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && !SPRITE_GET_VMIRROR(THIS))){
+			SetSpriteAnim(THIS, wolf_jump, 8u);
 			wolf_data->enemy_state = ENEMY_STATE_JUMPING;
-			wolf_data->enemy_accel_y = -24;
+			wolf_data->enemy_accel_y = -25;
 		}
 	}//fine else non wait
 	
@@ -116,7 +117,7 @@ void Update_SpriteWolf() {
 					struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibspr->custom_data;
 					if (arrowdata->arrowdir != 1){ //hit solo se freccia non orizzontale
 						wolf_data->wait = 28u;
-						SetSpriteAnim(THIS, wolf_hit, 18u);
+						SetSpriteAnim(THIS, wolf_hit, 16u);
 						if(arrowdata->arrowdamage){
 							wolf_data->hp -= arrowdata->arrowdamage;
 						}

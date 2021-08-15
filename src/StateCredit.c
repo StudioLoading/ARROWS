@@ -80,6 +80,10 @@ void Update_StateCredit() {
 		updatecounter = 0u;
 		wait_credit = 250u;
 		credit_step += 1u;
+		if(credit_step == 5u){
+			SetState(StateTitlescreen);
+			return;
+		}
 		FadeIn();
 		DISPLAY_OFF;
 		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
@@ -95,11 +99,6 @@ void Update_StateCredit() {
 			break;
 			case 4u:
 				InitScroll(&mapcredits1, collision_tiles_credits, 0);
-			break;
-			default:
-				DISPLAY_ON;
-				FadeOut();
-				SetState(StateGame); // TitleScreen !
 			break;
 		}
 		DISPLAY_ON;
