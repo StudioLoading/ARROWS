@@ -23,7 +23,7 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 
 
-- sprite di puff! per gli enemy che muoiono
+- Test sprite di puff! per i livelli e i boss (messo sul gate non so se c'è vram)
 
 - centrare i testi
 

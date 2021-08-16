@@ -44,8 +44,8 @@ void Update_SpriteRat() {
 			THIS->y--;
 			rdata->wait--;
 		}else{
-			THIS->y++;	
-			THIS->y++;
+			//THIS->y++;
+			//THIS->y++;
 			SpriteManagerRemoveSprite(THIS);
 		}		
 		return;
@@ -119,4 +119,6 @@ void Update_SpriteRat() {
 	
 }
 
-void Destroy_SpriteRat(){}
+void Destroy_SpriteRat(){
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+}

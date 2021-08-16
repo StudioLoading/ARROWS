@@ -44,4 +44,5 @@ void Update_SpriteGate() {
 
 
 void Destroy_SpriteGate() {
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 }

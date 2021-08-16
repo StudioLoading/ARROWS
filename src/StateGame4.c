@@ -194,6 +194,7 @@ void Start_StateGame4() {
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpritePlatform);
+	SpriteManagerLoad(SpritePuff);
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
 		case 3u:

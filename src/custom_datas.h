@@ -74,3 +74,7 @@ struct LogoInfo{
 	INT8 setup; // =1 means animation needs to be set according to frame, =0 animation frame not set yet
 	INT8 frame; //0 to 5
 };
+
+struct PuffInfo{
+	INT8 puff_counter;
+};

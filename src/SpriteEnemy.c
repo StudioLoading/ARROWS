@@ -47,8 +47,8 @@ void Update_SpriteEnemy() {
 			edata->wait--;
 		}else{
 			SpriteManagerRemoveSprite(THIS);
-			THIS->y++;	
-			THIS->y++;
+			//THIS->y++;	
+			//THIS->y++;
 		}		
 		return;
 	}
@@ -117,6 +117,8 @@ void Update_SpriteEnemy() {
 					edata->wait = 8u;
 					THIS->lim_x = 8u;
 					THIS->lim_y = 16u;
+					THIS->coll_h = 0;
+					THIS->coll_w = 0;
 				}
 			}
 		}
@@ -168,4 +170,6 @@ void ETurn(){
 	
 }
 
-void Destroy_SpriteEnemy(){}
+void Destroy_SpriteEnemy(){
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+}

@@ -45,8 +45,6 @@ void Update_SpriteScorpion() {
 			data->wait--;
 		}else{
 			SpriteManagerRemoveSprite(THIS);
-			THIS->y++;	
-			THIS->y++;
 		}		
 		return;
 	}
@@ -124,4 +122,5 @@ void Update_SpriteScorpion() {
 void Destroy_SpriteScorpion() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	data->enemy_state = ENEMY_STATE_DEAD;
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 }
