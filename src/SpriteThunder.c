@@ -95,6 +95,7 @@ void Update_SpriteThunder() {
 					tdata->wait = 2u;
 					SetSpriteAnim(THIS, thunder_dead, 10u);
 					tdata->enemy_state = ENEMY_STATE_DEAD;
+					SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 				}
 			}
 		}

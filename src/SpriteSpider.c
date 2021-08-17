@@ -43,8 +43,6 @@ void Update_SpriteSpider() {
 			THIS->y--;
 			spdata->wait--;
 		}else{
-			THIS->y++;	
-			THIS->y++;
 			SpriteManagerRemoveSprite(THIS);
 		}		
 		return;
@@ -109,4 +107,6 @@ void Update_SpriteSpider() {
 	}	
 }
 
-void Destroy_SpriteSpider(){}
+void Destroy_SpriteSpider(){
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+}

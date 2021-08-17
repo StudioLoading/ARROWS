@@ -597,12 +597,14 @@ void UpdateHUD4(){
 	}
 	//write hp
 	PRINT_POS(7, 0);
-	if (hp < 10){ // archer_data->hp < 10 &&
+	if(hp < 0){
+		Printf("XX");
+	}else if (hp < 10){ // archer_data->hp < 10 &&
 		Printf("00");
 		PRINT_POS(9, 0);
 		Printf("%d", hp);
 	}else if (hp >= 100){ // archer_data->hp >= 100 &&
-		Printf("%d", hp);	
+		Printf("99");	
 	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
 		Printf("0%d", hp);
 	}

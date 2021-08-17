@@ -35,9 +35,9 @@ void Update_SpriteAmulet() {
 	if (air != 61){
 		air++;
 		if(air == 10 | air == 20){
-			TranslateSprite(THIS, 0, -1 << delta_time);
+			//TranslateSprite(THIS, 0, -1 << delta_time);
 		}else if (air == 40 | air == 50){
-			TranslateSprite(THIS, 0, 1 << delta_time);
+			//TranslateSprite(THIS, 0, 1 << delta_time);
 		}
 		if(air == 60){
 			air = 0;
@@ -69,9 +69,9 @@ void Update_SpriteAmulet() {
 		datak->setup = 1;
 	}else if (datak->counter > 0){
 		datak->counter--;
-		TranslateSprite(THIS, 0, 1);
+		//TranslateSprite(THIS, 0, 1);
 		if (datak->counter==0){
-			SpriteManagerRemoveSprite(THIS);
+			//SpriteManagerRemoveSprite(THIS);
 		}
 	}
 }

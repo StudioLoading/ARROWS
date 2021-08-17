@@ -74,6 +74,7 @@ void Update_SpriteItem() {
 		if (data->collided | data->item_accel_y | data->counter == 0){
 			if (data->setup){ //inizio setup
 				data->setup = 0u;
+				SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 				switch(data->type){
 					case 1: //coin
 						SetSpriteAnim(THIS, item_coin, 8u);

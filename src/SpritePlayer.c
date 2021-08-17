@@ -106,6 +106,15 @@ void Update_SpritePlayer() {
 	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
 	}
+	
+	if(archer_state == STATE_AMULET_STONE || archer_state == STATE_AMULET_ICE 
+		|| archer_state == STATE_AMULET_THUNDER || archer_state == STATE_AMULET_FIRE){
+		death_cooldown--;
+		if(death_cooldown <= -100){				
+			Build_Next_Dialog();
+		}
+		return;
+	}
 
 	if(archer_state == STATE_DIAG ){
 		if (show_diag == -1){ //NON TOCCARE
@@ -321,8 +330,11 @@ void Update_SpritePlayer() {
 				if(dataamulet->counter == -1){
 					dataamulet->counter = 60;
 					dataamulet->setup = 0;
-					ispr->y -= 8u;
+					ispr->y -= 12u;
 					archer_data->hp = 100u;
+					death_cooldown = 127;
+					THIS->x = ispr->x-3u;
+					THIS->y = ispr->y+15u;
 					switch(dataamulet->type){
 						case 1:
 							archer_state = STATE_AMULET_STONE;
@@ -337,8 +349,8 @@ void Update_SpritePlayer() {
 							archer_state = STATE_AMULET_FIRE;
 						break;
 					}
-					
-					Build_Next_Dialog();
+					SetSpriteAnim(THIS, anim_jump, 8u);
+					//Build_Next_Dialog();
 				}
 			}
 		}
@@ -420,7 +432,8 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
 			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder || ispr->type == SpriteIbex
 			|| ispr->type == SpriteBear) {
-			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {
+			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
+				archer_state = STATE_HIT;
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
 					case 0:
@@ -448,9 +461,9 @@ void Update_SpritePlayer() {
 					return;
 				}
 				UINT8 being_hit = 1u;
-				if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
-					&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider){
-					if (KEY_PRESSED(J_DOWN) && !dataenemy->tile_e_collision){ //se mi sto riparando e lo sono girato dove serve
+				if (KEY_PRESSED(J_DOWN)){// && !dataenemy->tile_e_collision){ //se mi sto riparando e lo sono girato dove serve
+					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
+						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider){
 						if (ispr->x < THIS->x){
 							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene
 								TranslateSprite(ispr, -10u << delta_time, -2u << delta_time);
@@ -487,7 +500,6 @@ void Update_SpritePlayer() {
 						case SpriteBear:
 							enemydamage = 20;
 							TranslateSprite(THIS, 0, -1);
-							//THIS->y--;
 						break;
 					}
 					archer_data->hp -= enemydamage;
@@ -725,7 +737,7 @@ void CheckCollisionTile() {
 }
 
 void Hit() {
-	if (archer_state != STATE_DEAD & archer_state != STATE_HIT){
+	if (archer_state != STATE_DEAD){
 		archer_state = STATE_HIT;
 		platform_vx = 1;
 		tile_collision = TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;

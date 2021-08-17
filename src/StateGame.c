@@ -55,9 +55,9 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 1u; // 0u default
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -666,12 +666,14 @@ void UpdateHUD(){
 	}
 	//write hp
 	PRINT_POS(7, 0);
-	if (hp < 10){ // archer_data->hp < 10 &&
+	if(hp < 0){
+		Printf("XX");
+	}else if (hp < 10){ // archer_data->hp < 10 &&
 		Printf("00");
 		PRINT_POS(9, 0);
 		Printf("%d", hp);
 	}else if (hp >= 100){ // archer_data->hp >= 100 &&
-		Printf("%d", hp);	
+		Printf("99");	
 	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
 		Printf("0%d", hp);
 	}

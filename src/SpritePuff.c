@@ -13,12 +13,12 @@ const UINT8 anim_puff[] = {2, 0, 1}; //The first number indicates the number of 
 
 void Start_SpritePuff() {
 	struct PuffInfo* puff_data = (struct PuffInfo*)THIS->custom_data;
-	puff_data->puff_counter = 30;
+	puff_data->puff_counter = 24;
 }
 
 void Update_SpritePuff() {
 	struct PuffInfo* puff_data = (struct PuffInfo*)THIS->custom_data;
-	if(puff_data->puff_counter == 30){
+	if(puff_data->puff_counter == 24){
 		SetSpriteAnim(THIS, anim_puff, 8u);
 	}
 	puff_data->puff_counter--;

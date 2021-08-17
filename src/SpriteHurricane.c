@@ -89,6 +89,7 @@ void Update_SpriteHurricane() {
 					hdata->wait = 10u;
 					SetSpriteAnim(THIS, hurricane_dead, 10u);
 					hdata->enemy_state = ENEMY_STATE_DEAD;
+					SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 				}
 			}
 		}
