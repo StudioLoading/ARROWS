@@ -14,7 +14,7 @@
 #include "../res/src/map3tree.h"
 
 #include "../res/src/archer.h"
-#include "../res/src/wolf.h"
+//#include "../res/src/wolf_new.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -38,7 +38,7 @@ const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 const UINT16 const sprites_palette[] = {
 	PALETTE_INDEX(archer, 0),
 	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(wolf, 2), //o PALETTE_INDEX(enemy,  2)
+	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
 	PALETTE_INDEX(archer, 3),
 	PALETTE_INDEX(archer, 4),
 	PALETTE_INDEX(archer, 5),
@@ -55,8 +55,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -675,7 +675,7 @@ void UpdateHUD(){
 	}else if (hp >= 100){ // archer_data->hp >= 100 &&
 		Printf("99");	
 	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
-		Printf("0%d", hp);
+		Printf("%d", hp);
 	}
 	//write tool
 	if (archer_data->tool == level_tool){

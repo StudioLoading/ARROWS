@@ -482,8 +482,10 @@ void Update_SpritePlayer() {
 					switch(ispr->type){
 						case SpriteEnemy:
 							enemydamage = 5;
+						break;
 						case SpriteThunder:
 							enemydamage = 8;
+						break;
 						case SpriteRat:
 						case SpriteBird:
 							enemydamage = 10;

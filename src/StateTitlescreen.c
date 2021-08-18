@@ -1,4 +1,4 @@
-#include "Banks/SetBank3.h"
+#include "Banks/SetBank7.h"
 
 #include "../res/src/tilestitlescreen.h"
 #include "../res/src/maptitlescreen.h"
@@ -23,7 +23,8 @@
 #include "custom_datas.h"
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
-const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
+const UINT16 bg_palette_titlescreen[] = 
+{PALETTE_FROM_HEADER(tilestitlescreen)};
 
 UINT8 wait_titlescreen = 255U;
 

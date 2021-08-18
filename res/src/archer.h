@@ -2,8 +2,8 @@
 #define TILES_archer_H
 #define archerCGBPal0c0 6076
 #define archerCGBPal0c1 20318
-#define archerCGBPal0c2 435
-#define archerCGBPal0c3 2078
+#define archerCGBPal0c2 832
+#define archerCGBPal0c3 8641
 
 #define archerCGBPal1c0 6076
 #define archerCGBPal1c1 20318

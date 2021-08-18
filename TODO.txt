@@ -3,7 +3,6 @@
 		- bear
 		- tusk
 		- cattivone con frusta
-		- tile che converte il tipo di freccia
 		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
 
 LIV 0 ZOO -> Wolf -> tool per uscita
@@ -20,6 +19,7 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
+
 
 
 - riscrivere/controllare e centrare i testi
@@ -55,6 +55,7 @@ polish:
 	- effetto di camera tramble che potrebbe essere utile da usare come effetto
 	- schermata di fine livello - direi con pergamena descrittiva
 	- polish della titlescreen
+
 	
 
 
@@ -86,6 +87,7 @@ SHOULD I.. ?
 - capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
 - fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
 - comparsa del testo lettera per lettera
+- diag della tile che converte e ridireziona il tipo di freccia
 
 
 

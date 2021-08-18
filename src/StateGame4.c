@@ -509,8 +509,6 @@ void Update_StateGame4() {
 		}
 	}
 	
-	//MOVING BACKGROUND TILES
-	
 	//MOVING BACKGROUND TILES	
 	if (current_level == 3u){
 		updatecounter++;
@@ -606,7 +604,7 @@ void UpdateHUD4(){
 	}else if (hp >= 100){ // archer_data->hp >= 100 &&
 		Printf("99");	
 	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
-		Printf("0%d", hp);
+		Printf("%d", hp);
 	}
 	//write tool
 	if (archer_data->tool == level_tool){
