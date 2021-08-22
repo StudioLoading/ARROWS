@@ -249,10 +249,10 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 									diagf = 21u;		
 								}				
 							}else{//qualsiasi altro slave in piedi in gabbia							
-								memcpy(d1, "WHAT'VE WE DONE! ", 18);
-								memcpy(d2, "                 ", 18);
-								memcpy(d3, "                 ", 18);
-								memcpy(d4, "                 ", 18);
+								memcpy(d1, " WHAT'VE WE DONE! ", 18);
+								memcpy(d2, "                  ", 18);
+								memcpy(d3, "                  ", 18);
+								memcpy(d4, "                  ", 18);
 								diagf = 4u;
 							}
 						}

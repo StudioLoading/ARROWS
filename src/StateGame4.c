@@ -598,8 +598,8 @@ void UpdateHUD4(){
 	if(hp < 0){
 		Printf("XX");
 	}else if (hp < 10){ // archer_data->hp < 10 &&
-		Printf("00");
-		PRINT_POS(9, 0);
+		Printf("0");
+		PRINT_POS(8, 0);
 		Printf("%d", hp);
 	}else if (hp >= 100){ // archer_data->hp >= 100 &&
 		Printf("99");	
@@ -622,7 +622,7 @@ void UpdateHUD4(){
 	//write ups
 	PRINT_POS(2, 0); //up
 	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
-	else{Printf("0%d", archer_data->ups);}
+	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
 }
 
 void LCD_isr4() NONBANKED {

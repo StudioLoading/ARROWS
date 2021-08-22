@@ -21,7 +21,6 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
 
-
 - riscrivere/controllare e centrare i testi
 
 - sonoro trionfale quando sollevo amulet
@@ -35,6 +34,10 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolare da far dire a quello di mezzo ?
 
 - il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
+
+- nella titlescreen del gameOver ci starebbe una freccia spezzata ?
+
+- colorare tutto
 
 SOUND BACKGROUND PER OGNI LIVELLO
 

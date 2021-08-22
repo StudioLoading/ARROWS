@@ -152,7 +152,7 @@ void Start_StateDiag() {
 	INIT_CONSOLE(font, 3, 4);
 	
 	//WINDOW
-	WX_REG = 7;
+	WX_REG = 0;
 	WY_REG = 144 - 40; //40
 	InitWindow(0, 0, &diagnew);
 	SHOW_WIN;

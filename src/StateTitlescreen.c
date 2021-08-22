@@ -23,8 +23,7 @@
 #include "custom_datas.h"
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
-const UINT16 bg_palette_titlescreen[] = 
-{PALETTE_FROM_HEADER(tilestitlescreen)};
+const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
 
 UINT8 wait_titlescreen = 255U;
 
@@ -43,8 +42,8 @@ const UINT16 sprites_palette_titlescreen[] = {
 
 void Start_StateTitlescreen() {
 
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_titlescreen, 2);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2); //end with the bank of where I have the palette/tileset
+	SetPalette(BG_PALETTE, 0, 8, bg_palette_titlescreen, 7);//end with the bank of where I have the palette/tileset
 	
 	SPRITES_8x16;
 	SHOW_SPRITES;
