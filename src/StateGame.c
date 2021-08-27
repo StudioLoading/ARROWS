@@ -200,7 +200,7 @@ void Start_StateGame() {
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
+	INIT_CONSOLE(font, 3, 4);
 	ShowWindow();
 	
 	//SET LEVEL TOOL
@@ -308,10 +308,11 @@ void ShowWindow(){
 }
 
 void ShowWindowDiag(){
-	if (showing_diag == 0){	
+	if (showing_diag == 0){
+		set_window_y(144 - 32);
 		HIDE_WIN;
 		//WINDOW
-		WX_REG = 7;
+		WX_REG = 0;
 		WY_REG = 144 - 32; //40
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;

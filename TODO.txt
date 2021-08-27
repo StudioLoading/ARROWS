@@ -23,6 +23,17 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 - riscrivere/controllare e centrare i testi
 
+- cambiare la paletta SNES a seconda del livello in cui mi trovo. Tipo, cominciare dalla paletta chiamata "B", poi nel sewer mettere la "E"
+ci sono 4 gruppi di palette con ciascun gruppo 8 palette !! Come coi pokèmon che cambiava la palette quando si cambiavano zone di mappa, fare uguale con gli stage. Tipo il 4B è ideale per la caverna di ghiaccio
+
+- cambiare paletta per i diag !!
+
+- nel wolf cave quando il wolf accusa c'è una "A" dei font... ho aggiunto troppi sprite :D 
+
+- controllare se posso fare il gator più grande come il wolf
+
+- ho crashato nello spawn degli enemies fra uccelli e serpenti nel livello 3 :) dc
+
 - sonoro trionfale quando sollevo amulet
 
 - state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
@@ -130,35 +141,9 @@ scale 	è la width da ridimensionare, la height viene calcolata automaticamente
 DISCORD MARKDOWN: ```c ```
 
 ```c
-if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_START) || wait_credit == 0u){
-		updatecounter = 0u;
-		wait_credit = 250u;
-		credit_step += 1u;
-		FadeIn();
-		DISPLAY_OFF;
-		//HIDE_BKG;
-		switch (credit_step){
-			case 1u:
-				InitScroll(&mapcredits2, collision_tiles_credits, 0);
-			break;
-			case 2u:
-				InitScroll(&mapcredits4, collision_tiles_credits, 0);
-			break;
-			case 3u:
-				InitScroll(&mapcredits3, collision_tiles_credits, 0);
-			break;
-			case 4u:
-				InitScroll(&mapcredits1, collision_tiles_credits, 0);
-			break;
-			case 5u:
-				SetState(StateGame); // TitleScreen !
-			break;
-		}
-		//SHOW_BKG;
-		DISPLAY_ON;
-		FadeOut();
-		return;
-	}	
+#include <gb/cgb.h>
+...
+const unsigned char packet[] = {(SGB_PAL_01 << 3) | 1, RGB(0-31, 0-31, 0-31), 00h };
 ```
 
 

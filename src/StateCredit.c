@@ -9,6 +9,8 @@
 #include "../res/src/archer.h"
 
 #include <gb/gb.h>
+#include <gb/cgb.h>
+
 
 #include "ZGBMain.h"
 #include "Keys.h"
@@ -38,6 +40,9 @@ const UINT16 sprites_palette_credits[] = {
 	PALETTE_INDEX(archer, 6),
 	PALETTE_INDEX(archer, 7),
 };
+
+const unsigned char packet[] = {(SGB_PAL_01 << 3) | 1, RGB(10, 20, 31)};
+
 
 void Start_StateCredit() {
 
@@ -75,8 +80,10 @@ void Update_StateCredit() {
 		}
 		
 	}
-	
-	if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_START) || wait_credit == 0u){
+	if(KEY_TICKED(J_START)){
+		SetState(StateTitlescreen);
+		return;
+	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_credit == 0u){
 		updatecounter = 0u;
 		wait_credit = 250u;
 		credit_step += 1u;
@@ -89,6 +96,9 @@ void Update_StateCredit() {
 		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
 		switch (credit_step){
 			case 1u:
+				if(sgb_check()){
+					sgb_transfer(packet);
+				}
 				InitScroll(&mapcredits2, collision_tiles_credits, 0);
 			break;
 			case 2u:
