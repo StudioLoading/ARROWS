@@ -73,10 +73,10 @@ struct Sprite* scrigno_coin = 0;
 struct Sprite* scrigno_dcoin = 0;
 struct Sprite* scrigno_shield = 0;
 struct Sprite* scrigno_up = 0;
-unsigned char d1[18];
-unsigned char d2[18];
-unsigned char d3[18];
-unsigned char d4[18];
+unsigned char d1[20];
+unsigned char d2[20];
+unsigned char d3[20];
+unsigned char d4[20];
 
 const struct MapInfo* const level_1[] = {
 	&map,
@@ -298,7 +298,7 @@ void ShowWindow(){
 	show_diag = -1;
 	HIDE_WIN;
 	//WINDOW
-	WX_REG = 7;
+	WX_REG = 4;
 	WY_REG = 144 - 8;
 	InitWindow(0, 0, &window);
 	SHOW_WIN;
@@ -309,14 +309,26 @@ void ShowWindow(){
 
 void ShowWindowDiag(){
 	if (showing_diag == 0){
-		set_window_y(144 - 32);
 		HIDE_WIN;
-		//WINDOW
+		set_window_y(144 - 32);
 		WX_REG = 0;
 		WY_REG = 144 - 32; //40
 		InitWindow(0, 0, &diagnew);
 		SHOW_WIN;
+		
+		PRINT_POS(1,0);
+		Printf(d1);
+		PRINT_POS(1,1);
+		Printf(d2);
+		PRINT_POS(1,2);
+		Printf(d3);
+		PRINT_POS(1,3);
+		Printf(d4);
+		
+		showing_diag = 1;
+
 	}
+	/*
 	PRINT_POS(1,0);
 	Printf(d1);
 	PRINT_POS(1,1);
@@ -329,7 +341,7 @@ void ShowWindowDiag(){
 	if (showing_diag == 0){
 		showing_diag = 1;
 	}
-	
+	*/
 }
 
 void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){

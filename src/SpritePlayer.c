@@ -121,6 +121,9 @@ void Update_SpritePlayer() {
 			show_diag = 0;
 			archer_state = STATE_NORMAL;
 		}else{
+			if(show_diag == 0){
+				SetSpriteAnim(THIS, anim_idle, 33u);
+			}
 			if (KEY_TICKED(J_B) || KEY_TICKED(J_A)){ //show_diag < max_diag
 				SetSpriteAnim(THIS, anim_idle, 33u);
 				show_diag += 1;

@@ -28,6 +28,8 @@ ci sono 4 gruppi di palette con ciascun gruppo 8 palette !! Come coi pokèmon ch
 
 - cambiare paletta per i diag !!
 
+- colori per gbc
+
 - nel wolf cave quando il wolf accusa c'è una "A" dei font... ho aggiunto troppi sprite :D 
 
 - controllare se posso fare il gator più grande come il wolf
@@ -188,3 +190,5 @@ struct Sprite* spawn_enemy4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, 
 	return enem_new;
 }
 ```
+
+FLYING ARROWS 2 come Predator 2 per Sega Master System. Mi piace molto quella prospettiva lì. Ho notato che su Sega Master System tutti i giochi USGold sono disegnati molto bene. Se ce ne sfosse uno con un po' di profondità...
