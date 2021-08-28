@@ -326,22 +326,7 @@ void ShowWindowDiag(){
 		Printf(d4);
 		
 		showing_diag = 1;
-
 	}
-	/*
-	PRINT_POS(1,0);
-	Printf(d1);
-	PRINT_POS(1,1);
-	Printf(d2);
-	PRINT_POS(1,2);
-	Printf(d3);
-	PRINT_POS(1,3);
-	Printf(d4);
-	
-	if (showing_diag == 0){
-		showing_diag = 1;
-	}
-	*/
 }
 
 void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
@@ -439,16 +424,9 @@ void Update_StateGame() {
 		switch(current_level){
 			case 0:
 				switch(current_map){
-					case 0:
-						if (scroll_target->x == (UINT16) 9u << 3 & scroll_target->y > (UINT16) 36u  << 3){
-							spawn_enemy(SpriteEnemy, 18u, 39u);
-							spawn_enemy(SpriteEnemy, 22u, 39u);
-						}
-					break;
 					case 1:
 						if (scroll_target->x == (UINT16) 10u << 3){
 							spawn_enemy(SpriteEnemy, 22u, 7u);
-							spawn_enemy(SpriteEnemy, 28u, 6u);
 						}
 						if (scroll_target->x == (UINT16) 30u << 3 ){
 							spawn_enemy(SpritePlatform, 38u, 8u);

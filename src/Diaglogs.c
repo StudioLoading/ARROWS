@@ -126,7 +126,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 				case 2u:				
 					memcpy(d1, " AS LONG AS I FLY   ", 20);
 					memcpy(d2, " THE SKY IS MINE!   ", 20);
-					memcpy(d3, "HOPE YOU DON'T MIND " 20);
+					memcpy(d3, "HOPE YOU DON'T MIND ", 20);
 					memcpy(d4, "IN MY CLAWS YOU DIE!", 20);
 					current_camera_state = 3u;
 					diagf = 53u;

@@ -12,8 +12,8 @@ const UINT8 item_hp[] = {1, 3}; //The first number indicates the number of frame
 const UINT8 item_up[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 item_scrigno[] = {1, 4}; //The first number indicates the number of frames
 const UINT8 item_scrignoaperto[] = {1, 5}; //The first number indicates the number of frames
-const UINT8 item_wrench[] = {1, 6};
-const UINT8 item_dcoin[] = {1, 7}; //The first number indicates the number of frames
+//const UINT8 item_wrench[] = {1, 6};
+const UINT8 item_dcoin[] = {1, 6}; //The first number indicates the number of frames
 
 
 void Start_SpriteItem() {
@@ -85,9 +85,9 @@ void Update_SpriteItem() {
 					case 3: //up
 						SetSpriteAnim(THIS, item_up, 8u);
 					break;
-					case 6: //wrench
+					/*case 6: //wrench
 						SetSpriteAnim(THIS, item_wrench, 8u);
-					break;
+					break;*/
 					case 7: //dcoin
 						SetSpriteAnim(THIS, item_dcoin, 8u);
 						THIS->coll_y = 8;

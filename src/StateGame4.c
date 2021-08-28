@@ -152,25 +152,25 @@ void ShowWindow4(){
 }
 
 void ShowWindowDiag4(){
-	if (showing_diag == 0){	
+	if (showing_diag == 0){
 		HIDE_WIN;
-		//WINDOW
-		WX_REG = 7;
+		set_window_y4(144 - 32);
+		WX_REG = 0;
 		WY_REG = 144 - 32; //40
 		InitWindow(0, 0, &diagnew4);
 		SHOW_WIN;
-	}
-	PRINT_POS(1,0);
-	Printf(d1);
-	PRINT_POS(1,1);
-	Printf(d2);
-	PRINT_POS(1,2);
-	Printf(d3);
-	PRINT_POS(1,3);
-	Printf(d4);
-	
-	if (showing_diag == 0){
+		
+		PRINT_POS(1,0);
+		Printf(d1);
+		PRINT_POS(1,1);
+		Printf(d2);
+		PRINT_POS(1,2);
+		Printf(d3);
+		PRINT_POS(1,3);
+		Printf(d4);
+		
 		showing_diag = 1;
+
 	}
 	
 }

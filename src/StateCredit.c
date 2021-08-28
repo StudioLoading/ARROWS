@@ -9,8 +9,7 @@
 #include "../res/src/archer.h"
 
 #include <gb/gb.h>
-#include <gb/cgb.h>
-
+//#include <gb/cgb.h>
 
 #include "ZGBMain.h"
 #include "Keys.h"
@@ -23,25 +22,15 @@
 #include "Fade.h"
 #include "gbt_player.h"
 
+#include "sgb_palette.h"
+
+
 UINT8 wait_credit = 250u;
 const UINT8 collision_tiles_credits[] = {1,0};
 const UINT16 bg_palette_credits[] = {PALETTE_FROM_HEADER(tilescredit)};
 UINT8 updatecounter = 20u;
 extern UINT8* credits_mod_Data[];
 UINT8 credit_step = 0u;
-
-const UINT16 sprites_palette_credits[] = {
-	PALETTE_INDEX(archer, 0),
-	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
-	PALETTE_INDEX(archer, 3),
-	PALETTE_INDEX(archer, 4),
-	PALETTE_INDEX(archer, 5),
-	PALETTE_INDEX(archer, 6),
-	PALETTE_INDEX(archer, 7),
-};
-
-const unsigned char packet[] = {(SGB_PAL_01 << 3) | 1, RGB(10, 20, 31)};
 
 
 void Start_StateCredit() {
@@ -96,15 +85,15 @@ void Update_StateCredit() {
 		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
 		switch (credit_step){
 			case 1u:
-				if(sgb_check()){
-					sgb_transfer(packet);
-				}
 				InitScroll(&mapcredits2, collision_tiles_credits, 0);
 			break;
 			case 2u:
 				InitScroll(&mapcredits4, collision_tiles_credits, 0);
 			break;
 			case 3u:
+				if(sgb_check()){
+					sgb_transfer((void *)&snes_default);
+				}
 				InitScroll(&mapcredits3, collision_tiles_credits, 0);
 			break;
 			case 4u:

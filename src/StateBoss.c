@@ -95,7 +95,7 @@ void Start_StateBoss() {
 	SpriteManagerLoad(SpriteCamerafocus);
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
-	SpriteManagerLoad(SpritePuff);
+	//SpriteManagerLoad(SpritePuff);
 	switch(current_level_b){
 		case 0u:
 			level_tool=7;

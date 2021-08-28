@@ -21,18 +21,14 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
 
-- riscrivere/controllare e centrare i testi
-
-- cambiare la paletta SNES a seconda del livello in cui mi trovo. Tipo, cominciare dalla paletta chiamata "B", poi nel sewer mettere la "E"
+- cambiare la paletta SNES a seconda del livello in cui mi trovo. Tipo, cominciare dalla paletta chiamata "1B", poi nel sewer mettere la "1E"
 ci sono 4 gruppi di palette con ciascun gruppo 8 palette !! Come coi pokèmon che cambiava la palette quando si cambiavano zone di mappa, fare uguale con gli stage. Tipo il 4B è ideale per la caverna di ghiaccio
 
 - cambiare paletta per i diag !!
 
 - colori per gbc
 
-- nel wolf cave quando il wolf accusa c'è una "A" dei font... ho aggiunto troppi sprite :D 
-
-- controllare se posso fare il gator più grande come il wolf
+- ibex più grande come il wolf
 
 - ho crashato nello spawn degli enemies fra uccelli e serpenti nel livello 3 :) dc
 
@@ -153,20 +149,61 @@ const unsigned char packet[] = {(SGB_PAL_01 << 3) | 1, RGB(0-31, 0-31, 0-31), 00
 where :
 - tiles is 
 ```c
-struct TilesInfo tiles = {
-	3, //bank
-	&tiles_internal, //data
-};```
+const struct {
+	unsigned char first_byte;
+	UINT16 palette_0_color_0;
+	UINT16 palette_0_color_1;
+	UINT16 palette_0_color_2;
+	UINT16 palette_0_color_3;
+	UINT16 palette_1_color_1;
+	UINT16 palette_1_color_2;
+	UINT16 palette_1_color_3;
+	unsigned char last_byte;
+} packet = {(SGB_PAL_01 << 3) | 1,
+RGB(255 >> 3, 232 >> 3, 207 >> 3),
+RGB(223 >> 3, 144 >> 3, 79 >> 3),
+RGB(175 >> 3, 40 >> 3, 32 >> 3),
+RGB(48 >> 3, 24 >> 3, 80 >> 3), 
+RGB(255 >> 3, 232 >> 3, 207 >> 3),
+RGB(223 >> 3, 144 >> 3, 79 >> 3), 
+RGB(175 >> 3, 40 >> 3, 32 >> 3),
+0};
+```
 
-tiles_internal is 
+Created a new header sgb_palettes.h
+
 ```c
-const struct TilesInfoInternal tiles_internal = {
-	8, //width
-	8, //height
-	128, //num_tiles
-	tiles_tiles, //tiles
-	tilesCGB, //CGB palette
-};```
+struct SGB_PACKET{
+	unsigned char first_byte;
+	UINT16 palette_0_color_0;
+	UINT16 palette_0_color_1;
+	UINT16 palette_0_color_2;
+	UINT16 palette_0_color_3;
+	UINT16 palette_1_color_1;
+	UINT16 palette_1_color_2;
+	UINT16 palette_1_color_3;
+	unsigned char last_byte;
+};
+
+const struct SGB_PACKET snes_default = {(SGB_PAL_01 << 3) | 1,
+RGB(255 >> 3, 232 >> 3, 207 >> 3),
+RGB(223 >> 3, 144 >> 3, 79 >> 3),
+RGB(175 >> 3, 40 >> 3, 32 >> 3),
+RGB(48 >> 3, 24 >> 3, 80 >> 3), 
+RGB(255 >> 3, 232 >> 3, 207 >> 3),
+RGB(223 >> 3, 144 >> 3, 79 >> 3), 
+RGB(175 >> 3, 40 >> 3, 32 >> 3),
+0};
+```
+Then I invoke the sgb function like:
+
+
+```c
+# include sgb_palettes.h
+...
+	sgb_transfer((void *)&snes_default);
+```
+
 and finally tiles_tiles is
 
 ```c
