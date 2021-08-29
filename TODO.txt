@@ -1,3 +1,9 @@
+ALESSIA DI VITTORIO
+	- mostrarle il logo Comuneko nei crediti su SGB e chiedere quale palette vuole fra 1A-4H
+	
+LEANDRO MACRINI
+	- dobbiamo scrivere la sua canzone su spartito
+
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
 		- bear
@@ -21,12 +27,7 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
 
-- cambiare la paletta SNES a seconda del livello in cui mi trovo. Tipo, cominciare dalla paletta chiamata "1B", poi nel sewer mettere la "1E"
-ci sono 4 gruppi di palette con ciascun gruppo 8 palette !! Come coi pokèmon che cambiava la palette quando si cambiavano zone di mappa, fare uguale con gli stage. Tipo il 4B è ideale per la caverna di ghiaccio
-
-- cambiare paletta per i diag !!
-
-- colori per gbc
+- cambiare la paletta SNES a seconda del livello/dialogo/gameOver/crediti/titlescreen/bonusStage in cui mi trovo. Tipo il 4B è ideale per la caverna di ghiaccio
 
 - ibex più grande come il wolf
 
@@ -44,9 +45,8 @@ l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolar
 
 - il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
 
-- nella titlescreen del gameOver ci starebbe una freccia spezzata ?
+- nella titlescreen del gameOver ci starebbe una freccia spezzata ? alternativa è lo scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 
-- colorare tutto
 
 SOUND BACKGROUND PER OGNI LIVELLO
 
@@ -87,7 +87,6 @@ Cheat in titleScreen KonamiCode
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
-COLORI
 
 RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
 
@@ -139,9 +138,9 @@ scale 	è la width da ridimensionare, la height viene calcolata automaticamente
 DISCORD MARKDOWN: ```c ```
 
 ```c
-#include <gb/cgb.h>
-...
-const unsigned char packet[] = {(SGB_PAL_01 << 3) | 1, RGB(0-31, 0-31, 0-31), 00h };
+if(sgb_check()){
+	set_sgb_palette01_1B();
+}
 ```
 
 

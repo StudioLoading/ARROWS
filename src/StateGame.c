@@ -27,6 +27,7 @@
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
+#include "sgb_palette.h"
 
 
 const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
@@ -137,17 +138,26 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteScorpion);
 			SpriteManagerLoad(SpritePorcupine);
+			if(sgb_check()){
+				set_sgb_palette01_1B();
+			}
 		break;
 		case 1u:
 			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteRat);
 			SpriteManagerLoad(SpriteSpider);
+			if(sgb_check()){
+				set_sgb_palette01_1E();
+			}
 		break;
 		case 2u:
 			SpriteManagerLoad(SpriteSpider);
 			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteBird);
+			if(sgb_check()){
+				set_sgb_palette01_1D();
+			}
 		break;		
 	}
 	SHOW_SPRITES;

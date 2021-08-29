@@ -1,24 +1,69 @@
-struct SGB_PACKET{
-	unsigned char first_byte;
-	UINT16 palette_0_color_0;
-	UINT16 palette_0_color_1;
-	UINT16 palette_0_color_2;
-	UINT16 palette_0_color_3;
-	UINT16 palette_1_color_1;
-	UINT16 palette_1_color_2;
-	UINT16 palette_1_color_3;
-	unsigned char last_byte;
-};
+#include <gb/gb.h>
 
-const struct SGB_PACKET snes_default = {(SGB_PAL_01 << 3) | 1,
-RGB(255 >> 3, 232 >> 3, 207 >> 3),
-RGB(223 >> 3, 144 >> 3, 79 >> 3),
-RGB(175 >> 3, 40 >> 3, 32 >> 3),
-RGB(48 >> 3, 24 >> 3, 80 >> 3), 
-RGB(255 >> 3, 232 >> 3, 207 >> 3),
-RGB(223 >> 3, 144 >> 3, 79 >> 3), 
-RGB(175 >> 3, 40 >> 3, 32 >> 3),
-0};
+#define RGB8(r, g, b) (((UINT16)((b) >> 3) << 10) | ((UINT16)((g) >> 3) << 5) | ((UINT16)((r) >> 3) << 0))
+
+#define SGB_PAL1A_LIGHTER 	RGB8(255, 232, 207)
+#define SGB_PAL1A_LIGHT 	RGB8(223, 144, 79)
+#define SGB_PAL1A_DARK		RGB8(175, 40, 32)
+#define SGB_PAL1A_DARKER 	RGB8(48, 24, 80)
+
+#define SGB_PAL1B_LIGHTER 	RGB8(223, 216, 192)
+#define SGB_PAL1B_LIGHT 	RGB8(207, 176, 112)
+#define SGB_PAL1B_DARK		RGB8(176, 80, 16)
+#define SGB_PAL1B_DARKER 	RGB8(0, 0, 0)
+
+#define SGB_PAL1D_LIGHTER 	RGB8(255, 248, 175)
+#define SGB_PAL1D_LIGHT 	RGB8(192, 128, 79)
+#define SGB_PAL1D_DARK		RGB8(255, 0, 0)
+#define SGB_PAL1D_DARKER 	RGB8(80, 24, 0)
+
+#define SGB_PAL1E_LIGHTER 	RGB8(255, 248, 175)
+#define SGB_PAL1E_LIGHT 	RGB8(127, 192, 127)
+#define SGB_PAL1E_DARK		RGB8(111, 136, 64)
+#define SGB_PAL1E_DARKER 	RGB8(95, 56, 32)
+
+#define SGB_PAL1G_LIGHTER 	RGB8(255, 248, 95)
+#define SGB_PAL1G_LIGHT 	RGB8(127, 120, 0)
+#define SGB_PAL1G_DARK		RGB8(0, 160, 239)
+#define SGB_PAL1G_DARKER 	RGB8(0, 0, 80)
+
+#define SGB_PAL1F_LIGHTER 	RGB8(223, 232, 255)
+#define SGB_PAL1F_LIGHT 	RGB8(224, 136, 80)
+#define SGB_PAL1F_DARK		RGB8(175, 0, 0)
+#define SGB_PAL1F_DARKER 	RGB8(0, 64, 16)
+
+#define SGB_PAL2B_LIGHTER 	RGB8(255, 248, 255)
+#define SGB_PAL2B_LIGHT 	RGB8(191, 184, 191)
+#define SGB_PAL2B_DARK		RGB8(112, 112, 112)
+#define SGB_PAL2B_DARKER 	RGB8(0, 0, 0)
+ 
+#define SGB_PAL2H_LIGHTER 	RGB8(255, 248, 255)
+#define SGB_PAL2H_LIGHT 	RGB8(191, 184, 191)
+#define SGB_PAL2H_DARK		RGB8(112, 112, 112)
+#define SGB_PAL2H_DARKER 	RGB8(0, 0, 0)
+ 
+#define SGB_PAL3C_LIGHTER 	RGB8(224, 168, 207)
+#define SGB_PAL3C_LIGHT 	RGB8(255, 248, 127)
+#define SGB_PAL3C_DARK		RGB8(0, 184, 255)
+#define SGB_PAL3C_DARKER 	RGB8(32, 32, 95)
+
+#define SGB_PAL4B_LIGHTER 	RGB8(240, 232, 240)
+#define SGB_PAL4B_LIGHT 	RGB8(239, 160, 96)
+#define SGB_PAL4B_DARK		RGB8(0, 184, 255)
+#define SGB_PAL4B_DARKER 	RGB8(32, 32, 95)
+
+		
+void set_sgb_palette01_1A() __banked;	
+void set_sgb_palette01_1B() __banked;
+void set_sgb_palette01_1D() __banked;
+void set_sgb_palette01_1E() __banked;
+void set_sgb_palette01_1G() __banked;
+void set_sgb_palette01_1F() __banked;
+void set_sgb_palette01_2B() __banked;
+void set_sgb_palette01_2H() __banked;
+void set_sgb_palette01_3C() __banked;
+void set_sgb_palette01_4B() __banked;
+
 
 /*
 Color Palette 1-A
@@ -140,80 +185,124 @@ Color Palette 2-H
  
 
 Color Palette 3-A
-7207-2072-0720
+255 208 159
+      112 192 192
+      255  96  47
+       48  72  96
 
  
 
 Color Palette 3-B
-7217-2172-1721
+223 216 192
+      224 128  32
+        0  80   0
+        0  16  16
 
  
 
 Color Palette 3-C
-7227-2272-2722
+224 168 207
+      255 248 127
+        0 184 255
+       32  32  95
 
  
 
 Color Palette 3-D
-7237-2372-3723
+ 240 248 191
+      224 168 127
+       15 200   0
+        0   0   0
 
  
 
 Color Palette 3-E
-7247-2472-4724
+255 248 191
+      224 176 111
+      176 120  32
+       80  72 112
+
 
  
 
 Color Palette 3-F
-7257-2572-5725
+ 127 120 207
+      255 104 255
+      255 208   0
+       64  64  64
 
  
 
 Color Palette 3-G
-7267-2672-6726
+  96 216  80
+      255 248 255
+      207  48  63
+       63   0   0
 
  
 
 Color Palette 3-H
-7277-2772-7727
+ 224 248 160
+      127 200  63
+       79 136  31
+       15  24   0
 
  
 
 Color Palette 4-A
-7287-2872-8728
-
+ 240 168 111
+      127 168 255
+      208   0 208
+        0   0 127
  
 
 Color Palette 4-B
-7297-2972-9729
-
+240 232 240
+      239 160  96
+       64 120  63
+       31   8  15
  
 
 Color Palette 4-C
-7307-3073-0730
+ 255 224 224
+      223 160 208
+      159 160 224
+       15   0   0
 
  
 
 Color Palette 4-D
-7317-3173-1731
-
+255 248 191
+      144 200 207
+       79 104 127
+       15  32  79	
  
 
 Color Palette 4-E
-7327-3273-2732
-
+ 255 248 191
+      144 200 207
+       79 104 124
+       15  32  79
  
 
 Color Palette 4-F
-7337-3373-3733
-
+ 191 208 208
+      223 128 223
+      128   0 160
+       63   0   0
  
 
 Color Palette 4-G
-7347-3473-4734
-
+ 176 224  31
+      191  32  95
+       47  16   0
+        0 128  96
  
 
 Color Palette 4-H
-7357-3573-5735
-*/
+255 248 207
+      191 192  95
+      128 136  64
+       64  80  47
+	  
+	  */

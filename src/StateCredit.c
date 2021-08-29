@@ -9,7 +9,6 @@
 #include "../res/src/archer.h"
 
 #include <gb/gb.h>
-//#include <gb/cgb.h>
 
 #include "ZGBMain.h"
 #include "Keys.h"
@@ -85,19 +84,25 @@ void Update_StateCredit() {
 		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
 		switch (credit_step){
 			case 1u:
-				InitScroll(&mapcredits2, collision_tiles_credits, 0);
+				InitScroll(&mapcredits2, collision_tiles_credits, 0); // music of the Misty Hills
 			break;
 			case 2u:
-				InitScroll(&mapcredits4, collision_tiles_credits, 0);
+				if(sgb_check()){
+					set_sgb_palette01_3C();
+				}
+				InitScroll(&mapcredits4, collision_tiles_credits, 0); // comuneko
 			break;
 			case 3u:
 				if(sgb_check()){
-					sgb_transfer((void *)&snes_default);
+					set_sgb_palette01_2H();
 				}
-				InitScroll(&mapcredits3, collision_tiles_credits, 0);
+				InitScroll(&mapcredits3, collision_tiles_credits, 0); // powered by ZGB
 			break;
 			case 4u:
-				InitScroll(&mapcredits1, collision_tiles_credits, 0);
+				if(sgb_check()){
+					set_sgb_palette01_1A();
+				}
+				InitScroll(&mapcredits1, collision_tiles_credits, 0); //special thanks
 			break;
 		}
 		DISPLAY_ON;

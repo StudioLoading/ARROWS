@@ -19,6 +19,7 @@
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
+#include "sgb_palette.h"
 
 
 extern UINT8 collision_tiles[];
@@ -101,6 +102,9 @@ void Start_StateBoss() {
 			level_tool=7;
 			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteWolf);
+			if(sgb_check()){
+				set_sgb_palette01_2H();
+			}
 		break;
 		case 1u:
 			level_tool=0;
@@ -113,6 +117,9 @@ void Start_StateBoss() {
 			level_tool=6;
 			SpriteManagerLoad(SpriteEagle);
 			SpriteManagerLoad(SpriteKey);
+			if(sgb_check()){
+				set_sgb_palette01_1F();
+			}			
 		break;
 		case 3u:
 			level_tool=0;

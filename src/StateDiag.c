@@ -53,6 +53,7 @@
 
 #include "custom_datas.h"
 #include "Dialogs.h"
+#include "sgb_palette.h"
 
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
@@ -108,33 +109,60 @@ void Start_StateDiag() {
 			InitScroll(&mapdiagslave3, collision_dtiles, 0);
 		break;
 		case 19u:
+			if(sgb_check()){
+				set_sgb_palette01_2H();
+			}
 			InitScroll(&mapdiagcave, collision_dtiles, 0);
 		break;
 		case 20u:
+			if(sgb_check()){
+				set_sgb_palette01_2H();
+			}
 			InitScroll(&mapdiagwrench, collision_dtiles, 0);
 		break;
 		case 21u:
+			if(sgb_check()){
+				set_sgb_palette01_1A();
+			}
 			InitScroll(&mapdiagkey, collision_dtiles, 0);
 		break;
 		case 30u:
+			if(sgb_check()){
+				set_sgb_palette01_2H();
+			}
 			InitScroll(&mapdiagamuletstone, collision_dtiles, 0);
 		break;
 		case 31u:
+			if(sgb_check()){
+				set_sgb_palette01_1D();
+			}
 			InitScroll(&mapdiagamuletthunder, collision_dtiles, 0);
 		break;
 		case 32u:
+			if(sgb_check()){
+				set_sgb_palette01_1G();
+			}
 			InitScroll(&mapdiagamuletice, collision_dtiles, 0);
 		break;
 		case 33u:
 			InitScroll(&mapdiagamuletfire, collision_dtiles, 0);
 		break;
 		case 51u:
+			if(sgb_check()){
+				set_sgb_palette01_2H();
+			}			
 			InitScroll(&mapdiagwolf, collision_dtiles, 0);
 		break;
 		case 52u:
+			if(sgb_check()){
+				set_sgb_palette01_1E();
+			}
 			InitScroll(&mapdiaggator, collision_dtiles, 0);
 		break;
 		case 53u:
+			if(sgb_check()){
+				set_sgb_palette01_1F();
+			}			
 			InitScroll(&mapdiageagle, collision_dtiles, 0);
 		break;
 		case 54u:
