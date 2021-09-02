@@ -32,11 +32,21 @@
 #define SGB_PAL1F_DARK		RGB8(175, 0, 0)
 #define SGB_PAL1F_DARKER 	RGB8(0, 64, 16)
 
+#define SGB_PAL2A_LIGHTER 	RGB8(240, 200, 160)
+#define SGB_PAL2A_LIGHT 	RGB8(192, 136, 79)
+#define SGB_PAL2A_DARK		RGB8(47, 120, 0)
+#define SGB_PAL2A_DARKER 	RGB8(0, 0, 0)
+
 #define SGB_PAL2B_LIGHTER 	RGB8(255, 248, 255)
 #define SGB_PAL2B_LIGHT 	RGB8(191, 184, 191)
 #define SGB_PAL2B_DARK		RGB8(112, 112, 112)
 #define SGB_PAL2B_DARKER 	RGB8(0, 0, 0)
- 
+
+#define SGB_PAL2E_LIGHTER 	RGB8(255, 248, 128)
+#define SGB_PAL2E_LIGHT 	RGB8(144, 176, 224)
+#define SGB_PAL2E_DARK		RGB8(47, 16, 96)
+#define SGB_PAL2E_DARKER 	RGB8(16, 8, 16)
+
 #define SGB_PAL2H_LIGHTER 	RGB8(255, 248, 255)
 #define SGB_PAL2H_LIGHT 	RGB8(191, 184, 191)
 #define SGB_PAL2H_DARK		RGB8(112, 112, 112)
@@ -49,9 +59,11 @@
 
 #define SGB_PAL4B_LIGHTER 	RGB8(240, 232, 240)
 #define SGB_PAL4B_LIGHT 	RGB8(239, 160, 96)
-#define SGB_PAL4B_DARK		RGB8(0, 184, 255)
-#define SGB_PAL4B_DARKER 	RGB8(32, 32, 95)
+#define SGB_PAL4B_DARK		RGB8(64, 120, 63)
+#define SGB_PAL4B_DARKER 	RGB8(31, 8, 15)
 
+void set_sgb_palette01_WOLF() __banked;
+void set_sgb_palette01_TITLEINVERTED() __banked;
 		
 void set_sgb_palette01_1A() __banked;	
 void set_sgb_palette01_1B() __banked;
@@ -59,7 +71,9 @@ void set_sgb_palette01_1D() __banked;
 void set_sgb_palette01_1E() __banked;
 void set_sgb_palette01_1G() __banked;
 void set_sgb_palette01_1F() __banked;
+void set_sgb_palette01_2A() __banked;
 void set_sgb_palette01_2B() __banked;
+void set_sgb_palette01_2E() __banked;
 void set_sgb_palette01_2H() __banked;
 void set_sgb_palette01_3C() __banked;
 void set_sgb_palette01_4B() __banked;

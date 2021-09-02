@@ -20,6 +20,12 @@ void set_sgb_palette(UINT16 c0, UINT16 c1, UINT16 c2, UINT16 c3) __banked {
     sgb_transfer((void *)&SGB_PALETTE_PACKET);
 }
 
+void set_sgb_palette01_WOLF() __banked{
+	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARKER, SGB_PAL2H_DARK);
+}
+void set_sgb_palette01_TITLEINVERTED() __banked{
+	set_sgb_palette(SGB_PAL2A_LIGHTER, SGB_PAL2A_DARK, SGB_PAL2A_LIGHT, SGB_PAL2A_DARKER);
+}
 
 void set_sgb_palette01_1A() __banked {
 	set_sgb_palette(SGB_PAL1A_LIGHTER, SGB_PAL1A_LIGHT, SGB_PAL1A_DARK, SGB_PAL1A_DARKER);
@@ -45,8 +51,16 @@ void set_sgb_palette01_1F() __banked {
 	set_sgb_palette(SGB_PAL1F_LIGHTER, SGB_PAL1F_LIGHT, SGB_PAL1F_DARK, SGB_PAL1F_DARKER);
 }
 
+void set_sgb_palette01_2A() __banked {
+	set_sgb_palette(SGB_PAL2A_LIGHTER, SGB_PAL2A_LIGHT, SGB_PAL2A_DARK, SGB_PAL2A_DARKER);
+}
+
 void set_sgb_palette01_2B() __banked {
 	set_sgb_palette(SGB_PAL2B_LIGHTER, SGB_PAL2B_LIGHT, SGB_PAL2B_DARK, SGB_PAL2B_DARKER);
+}
+
+void set_sgb_palette01_2E() __banked {
+	set_sgb_palette(SGB_PAL2E_LIGHTER, SGB_PAL2E_LIGHT, SGB_PAL2E_DARK, SGB_PAL2E_DARKER);
 }
 
 void set_sgb_palette01_2H() __banked {

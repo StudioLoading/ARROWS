@@ -97,20 +97,32 @@ void Start_StateDiag() {
 		case 1u:
 		case 2u:
 		case 3u:
+			if(sgb_check()){
+				set_sgb_palette01_TITLEINVERTED();
+			}
 			InitScroll(&mapdiagarcher1, collision_dtiles, 0);
 		break;
 		case 4u:
+			if(sgb_check()){
+				set_sgb_palette01_1D();
+			}
 			InitScroll(&mapdiagslave1, collision_dtiles, 0);
 		break;
 		case 5u:
+			if(sgb_check()){
+				set_sgb_palette01_1D();
+			}
 			InitScroll(&mapdiagslave2, collision_dtiles, 0);
 		break;
 		case 6u:
+			if(sgb_check()){
+				set_sgb_palette01_1D();
+			}
 			InitScroll(&mapdiagslave3, collision_dtiles, 0);
 		break;
 		case 19u:
 			if(sgb_check()){
-				set_sgb_palette01_2H();
+				set_sgb_palette01_2E();
 			}
 			InitScroll(&mapdiagcave, collision_dtiles, 0);
 		break;
@@ -122,7 +134,7 @@ void Start_StateDiag() {
 		break;
 		case 21u:
 			if(sgb_check()){
-				set_sgb_palette01_1A();
+				set_sgb_palette01_2H();
 			}
 			InitScroll(&mapdiagkey, collision_dtiles, 0);
 		break;
@@ -145,17 +157,20 @@ void Start_StateDiag() {
 			InitScroll(&mapdiagamuletice, collision_dtiles, 0);
 		break;
 		case 33u:
+			if(sgb_check()){
+				set_sgb_palette01_1B();
+			}
 			InitScroll(&mapdiagamuletfire, collision_dtiles, 0);
 		break;
 		case 51u:
 			if(sgb_check()){
-				set_sgb_palette01_2H();
+				set_sgb_palette01_WOLF();
 			}			
 			InitScroll(&mapdiagwolf, collision_dtiles, 0);
 		break;
 		case 52u:
 			if(sgb_check()){
-				set_sgb_palette01_1E();
+				set_sgb_palette01_TITLEINVERTED();
 			}
 			InitScroll(&mapdiaggator, collision_dtiles, 0);
 		break;

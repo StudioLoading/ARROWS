@@ -54,6 +54,7 @@ UINT8 current_camera_counter = 0u;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
+UINT8 quiver = 0b0000000001; //little endian, rightest are the less important
 
 void Die();
 void Shoot();
@@ -140,11 +141,23 @@ void Update_SpritePlayer() {
 	}
 	
 	if (KEY_RELEASED(J_SELECT)){
+		UINT8 or_ = 0u;
+		while(or_ == 0u){			
+			archer_data->amulet += 1u;
+			archer_data->amulet %= 6u;
+			if(archer_data->amulet == 0u){
+				archer_data->amulet = 1u;
+			}
+			or_ = quiver >> (archer_data->amulet - 1u); // del risultato di questa operazione devo prendere solo il bit meno significativo, più a dx
+			or_ = or_ & 1u;
+		}
+		/*
 		archer_data->amulet += 1u;
 		archer_data->amulet %= 6u;
 		if(archer_data->amulet == 0u){
 			archer_data->amulet = 1u;
 		}
+		*/
 	}
 	
 	switch(archer_state) {
@@ -341,14 +354,18 @@ void Update_SpritePlayer() {
 					switch(dataamulet->type){
 						case 1:
 							archer_state = STATE_AMULET_STONE;
+							quiver = quiver | 0b0000000010; 
 						break;
 						case 2:
 							archer_state = STATE_AMULET_ICE;
+							quiver = quiver | 0b0000001000;
 						break;
 						case 3:
 							archer_state = STATE_AMULET_THUNDER;
+							quiver = quiver | 0b0000000100;
 						break;
 						case 4:
+							quiver = quiver | 0b00000010000;
 							archer_state = STATE_AMULET_FIRE;
 						break;
 					}

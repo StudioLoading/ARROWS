@@ -112,6 +112,9 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
 			SpriteManagerLoad(SpriteItem);
+			if(sgb_check()){
+				set_sgb_palette01_1E();
+			}
 		break;
 		case 2u:
 			level_tool=6;
@@ -386,8 +389,8 @@ void SpawnReward(){
 	struct Sprite* key_s = 0;
 	switch (current_level_b){
 		case 0u:// wolf -> wrench
-			boss->x = (UINT16) 24u;
-			boss->y = (UINT16) 12u;
+			boss->x = (UINT16) 24u << 3;
+			boss->y = (UINT16) 12u << 3;
 			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
 			datak = (struct ItemInfo*)reward->custom_data;
 			datak->type = 2;

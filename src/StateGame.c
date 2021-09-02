@@ -139,7 +139,7 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteScorpion);
 			SpriteManagerLoad(SpritePorcupine);
 			if(sgb_check()){
-				set_sgb_palette01_1B();
+				set_sgb_palette01_4B();
 			}
 		break;
 		case 1u:

@@ -153,10 +153,10 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
 				switch(current_level_b){
 					case 0u:
-						memcpy(d1, "         I...       ", 20);
-						memcpy(d2, "   JUST NEEDED THE  ", 20);
-						memcpy(d3, "   WRENCH TO GO ON  ", 20);
-						memcpy(d4, "    SORRY BLACKIE!  ", 20);
+						memcpy(d1, "        I...        ", 20);
+						memcpy(d2, "  JUST NEEDED THE   ", 20);
+						memcpy(d3, "  WRENCH TO GO ON   ", 20);
+						memcpy(d4, "   SORRY BLACKIE!   ", 20);
 						diagf = 99u;
 					break;
 					case 1u:

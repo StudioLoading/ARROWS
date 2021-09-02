@@ -26,12 +26,25 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
+SUPER PALETTE
+2A					titlescreen
+2A coi 2 colori in mezzo invertiti per il diag archer, e probabilmente anche il diag gator
+4B o 2D	 			zoo
+2H					diag key, diag wrench, diag stone calice
+4D					diag slave pp, slave seduto in gabbia
+!! sistemare perchè sembra tutto di fuoco 1D					diag slave chained, forest
+2E 					diag cave
+1E					sewer
 
-- cambiare la paletta SNES a seconda del livello/dialogo/gameOver/crediti/titlescreen/bonusStage in cui mi trovo. Tipo il 4B è ideale per la caverna di ghiaccio
+
+
+- non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 
 - ibex più grande come il wolf
 
 - ho crashato nello spawn degli enemies fra uccelli e serpenti nel livello 3 :) dc
+
+- border ok cielo ma luna gigante al centro (con qualche nuvoletta?)
 
 - sonoro trionfale quando sollevo amulet
 
@@ -43,7 +56,9 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolare da far dire a quello di mezzo ?
 
-- il gioco inizia con una sola freccia, quella normale. poi se e solo se ho gli amuleti, abilito la corrispondente freccia
+- testare che ottenuto l' amuleto del calice mi si attivi la stone nel quiver
+
+- dovrei fare uno state dedicato, con un quiver grande, con gli amuleti che si incastonano, e dopo il dialogo di ottenimento, vedo l' amuleto posarsi sulla posizione giusta.
 
 - nella titlescreen del gameOver ci starebbe una freccia spezzata ? alternativa è lo scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 
@@ -138,9 +153,16 @@ scale 	è la width da ridimensionare, la height viene calcolata automaticamente
 DISCORD MARKDOWN: ```c ```
 
 ```c
-if(sgb_check()){
-	set_sgb_palette01_1B();
-}
+if (KEY_RELEASED(J_SELECT)){
+		UINT8 or_ = 0u;
+		while(or_ == 0u){			
+			archer_data->amulet += 1u;
+			archer_data->amulet %= 6u;
+			if(archer_data->amulet == 0u){
+				archer_data->amulet = 1u;
+			}
+			or_ = (archer_data->amulet | 1u) && quiver;
+		}
 ```
 
 
