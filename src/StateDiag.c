@@ -5,6 +5,7 @@
 #include "../res/src/font.h"
 #include "../res/src/diagnew.h"
 
+#include "../res/src/mapdiagarcher.h"
 #include "../res/src/mapdiagarcher1.h"
 #include "../res/src/mapdiagslave1.h"
 #include "../res/src/mapdiagslave2.h"
@@ -100,7 +101,7 @@ void Start_StateDiag() {
 			if(sgb_check()){
 				set_sgb_palette01_TITLEINVERTED();
 			}
-			InitScroll(&mapdiagarcher1, collision_dtiles, 0);
+			InitScroll(&mapdiagarcher, collision_dtiles, 0);
 		break;
 		case 4u:
 			if(sgb_check()){

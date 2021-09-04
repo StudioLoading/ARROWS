@@ -9,7 +9,7 @@ LEANDRO MACRINI
 		- bear
 		- tusk
 		- cattivone con frusta
-		- amuleto pietra, acqua, elettrico, fuoco a partire dalle tileset della status bar
+
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -32,11 +32,13 @@ SUPER PALETTE
 4B o 2D	 			zoo
 2H					diag key, diag wrench, diag stone calice
 4D					diag slave pp, slave seduto in gabbia
-!! sistemare perchè sembra tutto di fuoco 1D					diag slave chained, forest
 2E 					diag cave
 1E					sewer
+!! sistemare perchè sembra tutto di fuoco 1D					diag slave chained, forest
+					diag bear
 
 
+- colorare la bar con colori statici su paletta diversa dalla 0.
 
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 

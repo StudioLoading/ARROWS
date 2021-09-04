@@ -129,11 +129,17 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteIbex);
 			SpriteManagerLoad(SpriteAmulet);
 			SpriteManagerLoad(SpriteGate);
+			if(sgb_check()){
+				set_sgb_palette01_1B();
+			}
 		break;
 		case 4u:
 			level_tool=7;
 			SpriteManagerLoad(SpriteBear);
 			SpriteManagerLoad(SpriteKey);
+			if(sgb_check()){
+				set_sgb_palette01_1E();
+			}
 		break;
 	}
 	
