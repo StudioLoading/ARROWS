@@ -201,6 +201,7 @@ void Update_SpritePlayer() {
 		case STATE_NORMAL:
 		case STATE_NORMAL_PLATFORM:
 			MoveArcher();
+			jump_power = 0;
 			CheckCollisionTile();
 			if(shoot_cooldown) {
 				SetSpriteAnim(THIS, anim_shoot, 12u);
@@ -310,7 +311,7 @@ void Update_SpritePlayer() {
 		}
 		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
 		if(tile_collision == 0 & delta_time != 0 & archer_accel_y < 24) { //Do another iteration if there is no collision
-			archer_accel_y += 2;
+			archer_accel_y += 1;
 			tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
 		}
 		if(tile_collision) {

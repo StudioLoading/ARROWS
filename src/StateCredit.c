@@ -84,6 +84,9 @@ void Update_StateCredit() {
 		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
 		switch (credit_step){
 			case 1u:
+				if(sgb_check()){
+					set_sgb_palette01_WOLF();
+				}
 				InitScroll(&mapcredits2, collision_tiles_credits, 0); // music of the Misty Hills
 			break;
 			case 2u:

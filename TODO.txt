@@ -34,7 +34,7 @@ SUPER PALETTE
 4D					diag slave pp, slave seduto in gabbia
 2E 					diag cave
 1E					sewer
-!! sistemare perchè sembra tutto di fuoco 1D					diag slave chained, forest
+!! sistemare perchè sembra tutto di fuoco 1D	diag slave x3, forest
 					diag bear
 
 
