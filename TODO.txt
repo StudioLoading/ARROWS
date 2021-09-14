@@ -155,16 +155,35 @@ scale 	è la width da ridimensionare, la height viene calcolata automaticamente
 DISCORD MARKDOWN: ```c ```
 
 ```c
-if (KEY_RELEASED(J_SELECT)){
-		UINT8 or_ = 0u;
-		while(or_ == 0u){			
-			archer_data->amulet += 1u;
-			archer_data->amulet %= 6u;
-			if(archer_data->amulet == 0u){
-				archer_data->amulet = 1u;
-			}
-			or_ = (archer_data->amulet | 1u) && quiver;
-		}
+	struct {
+        UINT8 command;
+        UINT16 pal2[4];
+        UINT16 pal3[3];
+        UINT8 padding;
+    } SGB_PALETTE3_PACKET = {
+        .command = (SGB_PAL_23 << 3) | 1,
+        .pal2 = {c0, c3, c2, c1},//SGB_PAL1D_DARK, SGB_PAL1D_LIGHT, SGB_PAL1D_DARKER},
+        .pal3 = {0, 0, 0},
+        .padding = 0 
+    };
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_STATUS_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 136u,
+        .ndata = 5u,
+		.style = 0,
+		.ds = {0b00000010,0b00000010,0b00000010,0b00000010,0b00000010,0,0,0,0,0},
+    };
+    sgb_transfer((void *)&SGB_PALETTE_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE3_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);
 ```
 
 

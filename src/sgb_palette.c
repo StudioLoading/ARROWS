@@ -17,7 +17,35 @@ void set_sgb_palette(UINT16 c0, UINT16 c1, UINT16 c2, UINT16 c3) __banked {
         .pal1 = {0, 0, 0},
         .padding = 0 
     };
+	struct {
+        UINT8 command;
+        UINT16 pal2[4];
+        UINT16 pal3[3];
+        UINT8 padding;
+    } SGB_PALETTE3_PACKET = {
+        .command = (SGB_PAL_23 << 3) | 1,
+        .pal2 = {c0, c3, c2, c1},//SGB_PAL1D_DARK, SGB_PAL1D_LIGHT, SGB_PAL1D_DARKER},
+        .pal3 = {0, 0, 0},
+        .padding = 0 
+    };
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_STATUS_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 136u,
+        .ndata = 5u,
+		.style = 0,
+		.ds = {0b00000010,0b00000010,0b00000010,0b00000010,0b00000010,0,0,0,0,0},
+    };
     sgb_transfer((void *)&SGB_PALETTE_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE3_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);
 }
 
 void set_sgb_palette01_WOLF() __banked{
