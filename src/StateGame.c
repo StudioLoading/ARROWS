@@ -140,6 +140,7 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpritePorcupine);
 			if(sgb_check()){
 				set_sgb_palette01_4B();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 1u:
@@ -149,6 +150,7 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteSpider);
 			if(sgb_check()){
 				set_sgb_palette01_1E();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 2u:
@@ -157,6 +159,7 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteBird);
 			if(sgb_check()){
 				set_sgb_palette01_1D();
+				set_sgb_palette_statusbar();
 			}
 		break;		
 	}

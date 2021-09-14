@@ -203,6 +203,7 @@ void Start_StateGame4() {
 			SpriteManagerLoad(SpriteHurricane);
 			if(sgb_check()){
 				set_sgb_palette01_1B();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 4u:
@@ -217,11 +218,13 @@ void Start_StateGame4() {
 			}
 			if(sgb_check()){
 				set_sgb_palette01_1E();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 5u:
 			if(sgb_check()){
 				set_sgb_palette01_2E();
+				set_sgb_palette_statusbar();
 			}
 		break;		
 	}		

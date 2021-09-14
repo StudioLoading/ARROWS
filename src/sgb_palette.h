@@ -62,6 +62,7 @@
 #define SGB_PAL4B_DARK		RGB8(64, 120, 63)
 #define SGB_PAL4B_DARKER 	RGB8(31, 8, 15)
 
+void set_sgb_palette_statusbar() __banked;
 void set_sgb_palette01_WOLF() __banked;
 void set_sgb_palette01_TITLEINVERTED() __banked;
 		

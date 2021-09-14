@@ -5,18 +5,7 @@
 
 #include "sgb_palette.h"
 
-void set_sgb_palette(UINT16 c0, UINT16 c1, UINT16 c2, UINT16 c3) __banked {
-    struct {
-        UINT8 command;
-        UINT16 pal0[4];
-        UINT16 pal1[3];
-        UINT8 padding;
-    } SGB_PALETTE_PACKET = {
-        .command = (SGB_PAL_01 << 3) | 1,
-        .pal0 = {c0, c1, c2, c3},
-        .pal1 = {0, 0, 0},
-        .padding = 0 
-    };
+void set_sgb_palette_statusbar() __banked {	
 	struct {
         UINT8 command;
         UINT16 pal2[4];
@@ -24,7 +13,7 @@ void set_sgb_palette(UINT16 c0, UINT16 c1, UINT16 c2, UINT16 c3) __banked {
         UINT8 padding;
     } SGB_PALETTE3_PACKET = {
         .command = (SGB_PAL_23 << 3) | 1,
-        .pal2 = {c0, c3, c2, c1},//SGB_PAL1D_DARK, SGB_PAL1D_LIGHT, SGB_PAL1D_DARKER},
+        .pal2 = {SGB_PAL1D_LIGHTER, SGB_PAL1D_LIGHT, SGB_PAL1D_DARK, SGB_PAL1D_DARKER},
         .pal3 = {0, 0, 0},
         .padding = 0 
     };
@@ -38,14 +27,28 @@ void set_sgb_palette(UINT16 c0, UINT16 c1, UINT16 c2, UINT16 c3) __banked {
     } SGB_PALETTE_STATUS_PACKET = {
         .command = (SGB_ATTR_CHR << 3) | 1,
         .xcoo = 0,
-        .ycoo = 136u,
-        .ndata = 5u,
+        .ycoo = 17u,
+        .ndata = 20u,
 		.style = 0,
-		.ds = {0b00000010,0b00000010,0b00000010,0b00000010,0b00000010,0,0,0,0,0},
+		.ds = {0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010},
     };
-    sgb_transfer((void *)&SGB_PALETTE_PACKET);
     sgb_transfer((void *)&SGB_PALETTE3_PACKET);
     sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);
+}
+
+void set_sgb_palette(UINT16 c0, UINT16 c1, UINT16 c2, UINT16 c3) __banked {
+    struct {
+        UINT8 command;
+        UINT16 pal0[4];
+        UINT16 pal1[3];
+        UINT8 padding;
+    } SGB_PALETTE_PACKET = {
+        .command = (SGB_PAL_01 << 3) | 1,
+        .pal0 = {c0, c1, c2, c3},
+        .pal1 = {0, 0, 0},
+        .padding = 0 
+    };
+    sgb_transfer((void *)&SGB_PALETTE_PACKET);
 }
 
 void set_sgb_palette01_WOLF() __banked{

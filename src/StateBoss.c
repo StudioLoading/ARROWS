@@ -114,6 +114,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteItem);
 			if(sgb_check()){
 				set_sgb_palette01_1E();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 2u:
@@ -122,6 +123,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_1F();
+				set_sgb_palette_statusbar();
 			}			
 		break;
 		case 3u:
@@ -131,6 +133,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteGate);
 			if(sgb_check()){
 				set_sgb_palette01_1B();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 4u:
@@ -139,6 +142,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_1E();
+				set_sgb_palette_statusbar();
 			}
 		break;
 	}
