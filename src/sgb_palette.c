@@ -13,8 +13,19 @@ void set_sgb_palette_statusbar() __banked {
         UINT8 padding;
     } SGB_PALETTE3_PACKET = {
         .command = (SGB_PAL_23 << 3) | 1,
-        .pal2 = {SGB_PAL1D_LIGHTER, SGB_PAL1D_LIGHT, SGB_PAL1D_DARK, SGB_PAL1D_DARKER},
-        .pal3 = {0, 0, 0},
+        .pal2 = {SGB_PAL1D_LIGHTER, SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_DARKER},
+        .pal3 = {SGB_PAL1D_LIGHTER, SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_DARKER},
+        .padding = 0 
+    };
+	struct {
+        UINT8 command;
+        UINT16 pal1[4];
+        UINT16 pal2[3];
+        UINT8 padding;
+    } SGB_PALETTE2_PACKET = {
+        .command = (SGB_PAL_12 << 3) | 1,
+        .pal1 = {SGB_PAL1D_LIGHTER, SGB_PAL1D_LIGHT, SGB_PAL1D_LIGHTER, SGB_STATUS_RED},
+        .pal2 = {SGB_PAL1D_LIGHTER, SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_DARKER},
         .padding = 0 
     };
 	struct {
@@ -28,10 +39,11 @@ void set_sgb_palette_statusbar() __banked {
         .command = (SGB_ATTR_CHR << 3) | 1,
         .xcoo = 0,
         .ycoo = 17u,
-        .ndata = 20u,
+        .ndata = 10u,
 		.style = 0,
-		.ds = {0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010},
+		.ds = {0b10011010,0b10101010,0b10101111,0b11111111,0b11111111,0b11111111,0b11111111,0b11111111,0b11111111,0b11111111},
     };
+    sgb_transfer((void *)&SGB_PALETTE2_PACKET);
     sgb_transfer((void *)&SGB_PALETTE3_PACKET);
     sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);
 }
