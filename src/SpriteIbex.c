@@ -9,8 +9,8 @@
 #include "custom_datas.h"
 
 //IBEX
-const UINT8 ibex_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 ibex_walk[] = {5, 0,1,0,2,0};
+const UINT8 ibex_idle[] = {1, 2}; //The first number indicates the number of frames
+const UINT8 ibex_walk[] = {3, 0,1,2};
 const UINT8 ibex_hit[] = {2, 0, 1};
 const UINT8 ibex_dead[] = {1, 0};
 const UINT8 ibex_jump_up[] = {1, 4};
@@ -25,12 +25,12 @@ void IBTurn();
 
 void Start_SpriteIbex() {
 	THIS->coll_x = 2;
-	THIS->coll_y = 2;
-	THIS->coll_w = 12;
-	THIS->coll_h = 14;
+	THIS->coll_y = 15;
+	THIS->coll_w = 28;
+	THIS->coll_h = 17;
 	THIS->lim_x = 160u;
 	THIS->lim_y = 160u;
-	SetSpriteAnim(THIS, ibex_walk, 10u);
+	SetSpriteAnim(THIS, ibex_idle, 4u);
 	ibex_data = (struct EnemyInfo*)THIS->custom_data;
 	ibex_data->enemy_accel_y = 24;
 	ibex_data->vx = 1;
@@ -46,22 +46,16 @@ void Update_SpriteIbex() {
 	}
 	
 	if (ibex_data->enemy_state == ENEMY_STATE_DEAD){
-		if(ibex_data->tile_e_collision==0){
-			ibex_data->tile_e_collision = TranslateSprite(THIS, 0, 1);	
-		}
-		ibex_data->hp = 0;
 		return;
 	}
 	
 	if (ibex_data->enemy_state == ENEMY_STATE_JUMPING){
 		jump_i += 1;
-		if(ibex_data->enemy_accel_y > 0){
-			if (ibex_data->enemy_accel_y < 3){
-				SetSpriteAnim(THIS, ibex_jump_down, 8u);
-			}
+		if(ibex_data->enemy_accel_y > 0 && ibex_data->enemy_accel_y < 3){
+			SetSpriteAnim(THIS, ibex_jump_down, 8u);
 		}
-		if (jump_i == 64){
-			SetSpriteAnim(THIS, ibex_walk, 8u);
+		if (jump_i == 160){ //64
+			SetSpriteAnim(THIS, ibex_walk, 12u);
 			ibex_data->enemy_state = ENEMY_STATE_NORMAL;
 			jump_i = 0;
 			ibex_data->enemy_accel_y = 24;
@@ -70,7 +64,7 @@ void Update_SpriteIbex() {
 	if (ibex_data->wait > 0u){
 		ibex_data->wait -= 1u;
 		if (ibex_data->wait == 0u){
-			SetSpriteAnim(THIS, ibex_walk, 8u);
+			SetSpriteAnim(THIS, ibex_walk, 12u);
 		}
 	}else{
 		if(ibex_data->enemy_accel_y < 24) {
@@ -91,7 +85,7 @@ void Update_SpriteIbex() {
 		if(ibex_data->tile_e_collision) {
 			if(ibex_data->enemy_state == ENEMY_STATE_JUMPING & ibex_data->enemy_accel_y > 0) {
 				ibex_data->enemy_state = ENEMY_STATE_NORMAL;
-				SetSpriteAnim(THIS, ibex_walk, 8u);
+				SetSpriteAnim(THIS, ibex_walk, 12u);
 			}else{
 				ibex_data->enemy_accel_y = 0;	
 			}
@@ -99,13 +93,12 @@ void Update_SpriteIbex() {
 		}
 		
 		if(ibex_data->vx < 0){
-			if(ibex_data->enemy_state != ENEMY_STATE_JUMPING){			
-				if(THIS->x == (UINT16) 25u << 3 || (THIS->x == (UINT16) 21u << 3 & ibex_data->hp < 20)){
+			if(ibex_data->enemy_state != ENEMY_STATE_JUMPING){
+				if(!SPRITE_GET_VMIRROR(THIS) && THIS->x == (UINT16) 24u << 3 ){
 					ibex_data->vx = -1;
-					SetSpriteAnim(THIS, ibex_walk, 8u);
 					ibex_data->enemy_state = ENEMY_STATE_JUMPING;
 					SetSpriteAnim(THIS, ibex_jump_up, 8u);
-					ibex_data->enemy_accel_y = -24;
+					ibex_data->enemy_accel_y = -32;
 				}	
 			}
 		}
@@ -139,9 +132,10 @@ void Update_SpriteIbex() {
 				if (ibex_data->hp <= 0){
 					ibex_data->enemy_state = ENEMY_STATE_DEAD;
 					ibex_data->hp = 0;
+					SPRITE_SET_VMIRROR(THIS);
 					THIS->x = (UINT16) 24u << 3;
-					THIS->y = (UINT16) 14u << 3;
-					SetSpriteAnim(THIS, ibex_dead, 16u);
+					THIS->y = (UINT16) 12u << 3;
+					SetSpriteAnim(THIS, ibex_idle, 4u);
 				}
 			}
 		}
@@ -182,7 +176,7 @@ void IBTurn(){
 	}
 	SetSpriteAnim(THIS, ibex_walk, 8u);
 	if (ibex_data->vx == 1){
-		ibex_data->vx = -2;
+		ibex_data->vx = -1;
 	}else{
 		ibex_data->vx = 1;
 	}

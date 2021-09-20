@@ -93,6 +93,8 @@ void Start_StateDiag() {
 	SPRITES_8x16;
 	SHOW_SPRITES;	
 	
+	reset_sgb_palette_statusbar();
+	
 	switch(diag_found){
 		case 0u:
 		case 1u:
@@ -147,7 +149,7 @@ void Start_StateDiag() {
 		break;
 		case 31u:
 			if(sgb_check()){
-				set_sgb_palette01_1D();
+				set_sgb_palette01_AMULET_THUNDER();
 			}
 			InitScroll(&mapdiagamuletthunder, collision_dtiles, 0);
 		break;
@@ -185,6 +187,9 @@ void Start_StateDiag() {
 			InitScroll(&mapdiagibex, collision_dtiles, 0);
 		break;
 		case 55u:
+			if(sgb_check()){
+				set_sgb_palette01_BEAR();
+			}
 			InitScroll(&mapdiagbear, collision_dtiles, 0);
 		break;
 	}

@@ -91,7 +91,7 @@ void Update_StateCredit() {
 			break;
 			case 2u:
 				if(sgb_check()){
-					set_sgb_palette01_3C();
+					set_sgb_palette01_COMUNEKO();
 				}
 				InitScroll(&mapcredits4, collision_tiles_credits, 0); // comuneko
 			break;

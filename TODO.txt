@@ -1,6 +1,4 @@
-ALESSIA DI VITTORIO
-	- mostrarle il logo Comuneko nei crediti su SGB e chiedere quale palette vuole fra 1A-4H
-	
+
 LEANDRO MACRINI
 	- dobbiamo scrivere la sua canzone su spartito
 
@@ -37,8 +35,7 @@ SUPER PALETTE
 !! sistemare perchè sembra tutto di fuoco 1D	diag slave x3, forest
 					diag bear
 
-
-- colorare la bar con colori statici su paletta diversa dalla 0.
+- sul drive di checco.1809 cartella ARROWS c'è il video della suonata di Leonardo per audio. Da mettere su GuitarPro o addirittura subito su Audacity come midi.
 
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 
@@ -157,13 +154,13 @@ DISCORD MARKDOWN: ```c ```
 ```c
 	struct {
         UINT8 command;
-        UINT16 pal2[4];
-        UINT16 pal3[3];
+        UINT16 pal1[4];
+        UINT16 pal2[3];
         UINT8 padding;
-    } SGB_PALETTE3_PACKET = {
-        .command = (SGB_PAL_23 << 3) | 1,
-        .pal2 = {c0, c3, c2, c1},//SGB_PAL1D_DARK, SGB_PAL1D_LIGHT, SGB_PAL1D_DARKER},
-        .pal3 = {0, 0, 0},
+    } SGB_PALETTE2_PACKET = {
+        .command = (SGB_PAL_12 << 3) | 1,
+        .pal1 = {SGB_PAL1D_LIGHTER, SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_RED},
+        .pal2 = {SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_DARKER},
         .padding = 0 
     };
 	struct {
@@ -176,13 +173,12 @@ DISCORD MARKDOWN: ```c ```
     } SGB_PALETTE_STATUS_PACKET = {
         .command = (SGB_ATTR_CHR << 3) | 1,
         .xcoo = 0,
-        .ycoo = 136u,
-        .ndata = 5u,
+        .ycoo = 17u,
+        .ndata = 10u,
 		.style = 0,
-		.ds = {0b00000010,0b00000010,0b00000010,0b00000010,0b00000010,0,0,0,0,0},
+		.ds = {0b01011010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010}
     };
-    sgb_transfer((void *)&SGB_PALETTE_PACKET);
-    sgb_transfer((void *)&SGB_PALETTE3_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE2_PACKET);
     sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);
 ```
 

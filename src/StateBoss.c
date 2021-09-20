@@ -141,7 +141,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteBear);
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
-				set_sgb_palette01_1E();
+				set_sgb_palette01_TREES();
 				set_sgb_palette_statusbar();
 			}
 		break;
@@ -217,7 +217,7 @@ void Start_StateBoss() {
 			break;
 			case 3u:
 				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 14u << 3);
+					boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
 					boss_data_b = (struct EnemyInfo*)boss->custom_data;
 					boss_hp = boss_data_b->hp;
 				}
@@ -419,8 +419,8 @@ void SpawnReward(){
 			datak->setup = 1u;
 		break;
 		case 3u: // ibex -> amulet thunder
-			key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
-			datak = (struct ItemInfo*)key_s->custom_data;
+			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
+			datak = (struct ItemInfo*)reward->custom_data;
 			datak->type = 3;
 			datak->setup = 1;	
 		break;

@@ -60,6 +60,10 @@ extern struct Sprite* enemies_0;
 extern struct Sprite* enemies_1;
 extern struct Sprite* enemies_2;
 extern struct Sprite* enemies_3;
+extern struct Sprite* scrigno_coin;
+extern struct Sprite* scrigno_dcoin;
+extern struct Sprite* scrigno_shield;
+extern struct Sprite* scrigno_up;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -69,11 +73,6 @@ extern UINT8 updatecounter;
 extern INT8 platform_vx;
 extern bool LCD_Installed;
 
-struct Sprite* scrigno0 = 0;
-struct Sprite* scrigno1 = 0;
-struct ItemInfo* datascrigno0 = 0;
-struct ItemInfo* datascrigno1 = 0;
-
 void UpdateHUD4();
 void ShowWindow4();
 void ShowWindowDiag4();
@@ -81,7 +80,7 @@ void set_window_y4(UBYTE y);
 void LCD_isr4();
 void ENpop4();
 void spawn_enemy4(UINT8 spriteType, UINT16 posx, UINT16 posy);
-void spawn_item4(UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
+void spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
 //Maps
 const struct MapInfo* const map_4[] = {
@@ -122,19 +121,20 @@ struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 po
 	return enem;
 }
 
-void spawn_item4(UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
-	scrigno1=SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
-	datascrigno1 = (struct ItemInfo*)scrigno1->custom_data;
-	datascrigno1->setup = 1u;
+void spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
+	SpriteManagerRemoveSprite(itemin);
+	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
+	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;
+	datascrigno->setup = 1u;
 	if(scrigno){
 		//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
 		if(content_type == 2 && archer_data->hp == 100){
 			content_type = 7;
 		}
-		datascrigno1->content_type = content_type;
-		datascrigno1->type = 10;
+		datascrigno->content_type = content_type;
+		datascrigno->type = 10;
 	}else{
-		datascrigno1->type = content_type;
+		datascrigno->type = content_type;
 	}
 }
 
@@ -217,7 +217,7 @@ void Start_StateGame4() {
 				SpriteManagerLoad(SpriteBird);
 			}
 			if(sgb_check()){
-				set_sgb_palette01_1E();
+				set_sgb_palette01_TREES();
 				set_sgb_palette_statusbar();
 			}
 		break;
@@ -306,14 +306,14 @@ void Start_StateGame4() {
 			case 3u:
 				switch(current_map){
 					case 1u:
-						spawn_item4(10u, 9u, 3, 1);
+						spawn_item4(scrigno_up, 10u, 9u, 3, 1);
 					break;
 				}
 			break;
 			case 4u:
 				switch(current_map){
 					case 1u:
-						spawn_item4(9u, 2u, 2, 1);
+						spawn_item4(scrigno_shield, 9u, 2u, 2, 1);
 					break;
 				}
 			break;
@@ -414,7 +414,7 @@ void Update_StateGame4() {
 					case 0u:
 						if (scroll_target->x > (UINT16) 93u << 3){
 							if (scroll_target->x == (UINT16) 120u << 3){
-								spawn_item4(133u, 9u, 2, 1);
+								spawn_item4(scrigno_shield, 133u, 9u, 2, 1);
 							}
 							switch(thunder_delay){
 								case 60u:
@@ -453,13 +453,13 @@ void Update_StateGame4() {
 							break;
 							default:
 								if (scroll_target->x == (UINT16) 30u << 3){
-									spawn_item4(39u, 4u, 2, 1);
+									spawn_item4(scrigno_shield, 39u, 4u, 2, 1);
 								}
 								if(scroll_target->x == (UINT16) 140u << 3){
-									spawn_item4(156u, 5u, 2, 1);							
+									spawn_item4(scrigno_shield, 156u, 5u, 2, 1);							
 								}					
 								if(scroll_target->x == (UINT16) 175u << 3){
-									spawn_item4(185u, 4u, 2, 1);
+									spawn_item4(scrigno_shield, 185u, 4u, 2, 1);
 								}
 							break;
 						}
@@ -471,7 +471,7 @@ void Update_StateGame4() {
 				switch(current_map){
 					case 0u:
 						if(scroll_target->x == (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3){
-							spawn_item4(31u, 17u, 2, 1);
+							spawn_item4(scrigno_shield, 31u, 17u, 2, 1);
 							//snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
 						}
 						if(scroll_target->x == (UINT16) 26u << 3 && 
@@ -501,7 +501,7 @@ void Update_StateGame4() {
 					break;
 					case 1u:
 						if(scroll_target->x == (UINT16) 31u << 3 && scroll_target->y < (UINT16) 10u << 3){
-							spawn_item4(34u, 2u, 1, 0);
+							spawn_item4(scrigno_dcoin, 34u, 2u, 7, 0);
 						}
 						if(scroll_target->x == (UINT16) 23u << 3 && 
 							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3){
@@ -514,7 +514,7 @@ void Update_StateGame4() {
 						}
 						if(scroll_target->x == (UINT16) 34u << 3 && 
 							scroll_target->y < (UINT16) 39u << 3 && scroll_target->y > (UINT16) 36u << 3){
-							spawn_item4(43u, 41u, 2, 1);
+							spawn_item4(scrigno_shield, 43u, 41u, 2, 1);
 						}
 					break;
 				}
