@@ -80,6 +80,7 @@ const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 1
 void WriteBBOSSHP();
 void populate_boss0();
 void SpawnReward();
+void SpawnBoss(INT8 hp_default);
 
 void Start_StateBoss() {
 
@@ -104,6 +105,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteWolf);
 			if(sgb_check()){
 				set_sgb_palette01_2H();
+				set_sgb_palette_statusbar();
 			}
 		break;
 		case 1u:
@@ -113,7 +115,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteGate);
 			SpriteManagerLoad(SpriteItem);
 			if(sgb_check()){
-				set_sgb_palette01_1E();
+				set_sgb_palette01_SEWER();
 				set_sgb_palette_statusbar();
 			}
 		break;
@@ -122,7 +124,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteEagle);
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
-				set_sgb_palette01_1F();
+				set_sgb_palette01_FOREST();
 				set_sgb_palette_statusbar();
 			}			
 		break;
@@ -182,57 +184,13 @@ void Start_StateBoss() {
 	
 	SHOW_BKG;
 	
-	//INIT BOSS
-		struct Sprite* scrigno_sprite_boss = 0;
-		struct Sprite* gate_sprite = 0;
-		struct EnemyInfo* gatedata = 0;
-		switch(current_level_b){
-			case 0u:
-				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 12u << 3); //34, 12
-					boss_data_b = (struct EnemyInfo*)boss->custom_data;
-					boss_hp = boss_data_b->hp;
-				}
-			break;
-			case 1u:
-				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, (UINT16) 14u << 3);
-					boss_data_b = (struct EnemyInfo*)boss->custom_data;
-					boss_hp = boss_data_b->hp;
-				}
-				gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
-				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
-				gatedata->vx = 2;
-				scrigno_sprite_boss = SpriteManagerAdd(SpriteItem, (UINT16) 32u << 3, (UINT16) 2u << 3);
-				struct ItemInfo* datascrigno2 = (struct ItemInfo*)scrigno_sprite_boss->custom_data;
-				datascrigno2->type = 2;
-				datascrigno2->setup = 1u;
-			break;
-			case 2u:
-				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteEagle, (UINT16) 28u << 3, (UINT16) 14u << 3);
-					boss_data_b = (struct EnemyInfo*)boss->custom_data;
-					boss_hp = boss_data_b->hp;
-				}
-			break;
-			case 3u:
-				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
-					boss_data_b = (struct EnemyInfo*)boss->custom_data;
-					boss_hp = boss_data_b->hp;
-				}
-				gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
-				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
-				gatedata->vx = 3;
-			break;
-			case 4u:
-				if (is_on_boss < 2){
-					boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 12u << 3);
-					boss_data_b = (struct EnemyInfo*)boss->custom_data;
-					boss_hp = boss_data_b->hp;
-				}
-			break;
-		}
+	
+	if (is_on_boss == 2){
+		SpawnReward();
+		SpawnBoss(0);
+	}else{
+		SpawnBoss(-1);
+	}
 		
 	//INTRO
 	if (current_camera_state < 3u){
@@ -240,6 +198,9 @@ void Start_StateBoss() {
 		return;
 	}else{
 		boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
+		if(is_on_boss == 2){
+			boss_data_b->enemy_state = ENEMY_STATE_DEAD;	
+		}
 	}
 		
 	
@@ -392,6 +353,48 @@ void Update_StateBoss() {
 	}
 	
 	
+}
+
+void SpawnBoss(INT8 hp_default){
+		struct Sprite* gate_sprite = 0;
+		struct EnemyInfo* gatedata = 0;
+		switch(current_level_b){
+			case 0u:
+				boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 12u << 3); //34, 12
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
+			break;
+			case 1u:
+				boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, (UINT16) 14u << 3);
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
+				gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
+				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+				gatedata->vx = 2;
+			break;
+			case 2u:
+				boss = SpriteManagerAdd(SpriteEagle, (UINT16) 28u << 3, (UINT16) 14u << 3);
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
+			break;
+			case 3u:
+				boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
+				gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 40u << 3,  (UINT16) 13u << 3);
+				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+				gatedata->vx = 3;
+			break;
+			case 4u:
+				boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 12u << 3);
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
+			break;
+		}
+		
+		if(hp_default == 0){
+			boss_hp = 0;
+		}
 }
 
 void SpawnReward(){

@@ -7,6 +7,7 @@
 #include "custom_datas.h"
 
 const UINT8 platform_normal[] = {1, 0}; //The first number indicates the number of frames
+extern INT8 spawning_triggered;
 
 void Start_SpritePlatform() {
 	THIS->coll_x = 0;
@@ -60,4 +61,5 @@ void Update_SpritePlatform() {
 }
 
 void Destroy_SpritePlatform() {
+	spawning_triggered--;
 }

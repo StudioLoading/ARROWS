@@ -140,9 +140,9 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					diagf = 54u;
 				break;
 				case 4u:				
-					memcpy(d1, "                    ", 20);
+					memcpy(d1, "        GRRR!       ", 20);
 					memcpy(d2, "                    ", 20);
-					memcpy(d3, "                    ", 20);
+					memcpy(d3, "    ROOOOOOOAAAR!   ", 20);
 					memcpy(d4, "                    ", 20);
 					current_camera_state = 3u;
 					diagf = 55u;

@@ -23,14 +23,12 @@
 
 #include "sgb_palette.h"
 
-
-UINT8 wait_credit = 250u;
 const UINT8 collision_tiles_credits[] = {1,0};
 const UINT16 bg_palette_credits[] = {PALETTE_FROM_HEADER(tilescredit)};
 UINT8 updatecounter = 20u;
 extern UINT8* credits_mod_Data[];
 UINT8 credit_step = 0u;
-
+UINT8 wait_time = 0u;
 
 void Start_StateCredit() {
 
@@ -49,7 +47,7 @@ void Start_StateCredit() {
 }
 
 void Update_StateCredit() {
-	
+	wait_time += 1u;
 	if(credit_step == 0u){
 		updatecounter++;
 		if (updatecounter < 20u) {
@@ -71,9 +69,9 @@ void Update_StateCredit() {
 	if(KEY_TICKED(J_START)){
 		SetState(StateTitlescreen);
 		return;
-	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_credit == 0u){
+	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_time == 120u){
+		wait_time = 0u;
 		updatecounter = 0u;
-		wait_credit = 250u;
 		credit_step += 1u;
 		if(credit_step == 5u){
 			SetState(StateTitlescreen);
@@ -112,7 +110,5 @@ void Update_StateCredit() {
 		FadeOut();
 		return;
 	}
-	
-	wait_credit--;
-	
+		
 }

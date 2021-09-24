@@ -71,7 +71,7 @@ void reset_sgb_palette_statusbar() __banked{
 }
 
 void set_sgb_palette01_WOLF() __banked{
-	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARKER, SGB_PAL2H_DARK);
+	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARK, SGB_PAL2H_DARKER);
 }
 void set_sgb_palette01_TITLEINVERTED() __banked{
 	set_sgb_palette(SGB_PAL2A_LIGHTER, SGB_PAL2A_DARK, SGB_PAL2A_LIGHT, SGB_PAL2A_DARKER);
@@ -81,6 +81,15 @@ void set_sgb_palette01_COMUNEKO() __banked{
 }
 void set_sgb_palette01_AMULET_THUNDER() __banked{
 	set_sgb_palette(SGB_PAL1B_LIGHTER, RGB8(255, 187, 17), RGB8(198, 132, 74), SGB_PAL1B_DARKER);
+}
+void set_sgb_palette01_SEWER() __banked {
+	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL1E_LIGHT, RGB8(0, 136, 136), SGB_PAL1E_DARKER);
+}
+void set_sgb_palette01_FOREST() __banked {
+	set_sgb_palette(SGB_PAL1D_LIGHTER, SGB_PAL1D_LIGHT, RGB8(82, 24, 0), RGB8(0, 0, 0));
+}
+void set_sgb_palette01_EAGLE() __banked {
+	set_sgb_palette(SGB_PAL1F_LIGHTER, SGB_PAL1F_LIGHT, RGB8(172, 124, 0), RGB8(0, 0, 0));
 }
 void set_sgb_palette01_TREES() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, RGB8(252, 160, 68), RGB8(168, 16, 0), RGB8(90, 57, 33));

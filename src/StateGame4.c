@@ -68,6 +68,7 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
+extern INT8 spawning_triggered;
 
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
@@ -99,6 +100,7 @@ UINT8 thunder_delay = 16u;
 
 
 void spawn_enemy4(UINT8 spriteType, UINT16 posx, UINT16 posy){
+	spawning_triggered++;
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
@@ -114,6 +116,7 @@ void spawn_enemy4(UINT8 spriteType, UINT16 posx, UINT16 posy){
 }
 
 struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
+	spawning_triggered++;
 	SpriteManagerRemoveSprite(enem);
 	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)enem->custom_data;
@@ -475,27 +478,26 @@ void Update_StateGame4() {
 							//snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
 						}
 						if(scroll_target->x == (UINT16) 26u << 3 && 
-							scroll_target->y == (UINT16) 38u << 3 ){
+							scroll_target->y == (UINT16) 38u << 3 && spawning_triggered == 0){
 							enemies_0 = spawn_vplatform4(enemies_2, SpritePlatform, 37u, 43u);
 							enemies_1 = spawn_vplatform4(enemies_3, SpritePlatform, 42u, 51u);
 						}
-						if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y == (UINT16) 60u << 3 ){
+						if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y == (UINT16) 60u << 3 && spawning_triggered <= 1 ){
 							spawn_enemy4(SpriteRat, (scroll_target->x >> 3) -8u, (scroll_target->y >> 3) - 4u);
 							spawn_enemy4(SpriteSpider, 20u, 58u);
 						}
-						if(scroll_target->x == (UINT16) 23u << 3 && scroll_target->y == (UINT16) 60u << 3 ){
+						if(scroll_target->x == (UINT16) 23u << 3 && scroll_target->y == (UINT16) 60u << 3 && spawning_triggered <= 2){
 							spawn_enemy4(SpriteRat, (scroll_target->x >> 3) + 6u, (scroll_target->y >> 3) -4u);
 							spawn_enemy4(SpriteRat, (scroll_target->x >> 3) - 8u, (scroll_target->y >> 3) -4u);
 						}
-						if(scroll_target->x == (UINT16) 11u << 3 && scroll_target->y == (UINT16) 64u << 3 ){
+						if(scroll_target->x == (UINT16) 11u << 3 && scroll_target->y == (UINT16) 64u << 3 && spawning_triggered <= 3){
 							spawn_enemy4(SpriteSpider, 24u, 63u);
 							spawn_enemy4(SpriteSpider, 20u, 64u);
 						}
-						if(scroll_target->x == (UINT16) 25u << 3 && scroll_target->y == (UINT16) 64u << 3 ){
+						if(scroll_target->x == (UINT16) 25u << 3 && scroll_target->y == (UINT16) 64u << 3 && spawning_triggered <= 4){
 							spawn_enemy4(SpriteRat, 20u, 63u);
-						}
-						
-						if(scroll_target->x == (UINT16) 34u << 3 && scroll_target->y == (UINT16) 64u << 3 ){
+						}						
+						if(scroll_target->x == (UINT16) 34u << 3 && scroll_target->y == (UINT16) 64u << 3 && spawning_triggered <= 5){
 							spawn_enemy4(SpriteRat, 30u, 63u);
 						}
 					break;
@@ -504,16 +506,16 @@ void Update_StateGame4() {
 							spawn_item4(scrigno_dcoin, 34u, 2u, 7, 0);
 						}
 						if(scroll_target->x == (UINT16) 23u << 3 && 
-							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3){
+							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_triggered == 0){
 							spawn_enemy4(SpriteRat, 17u, 28u);
 						}
 						if(scroll_target->x == (UINT16) 30u << 3 && 
-							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3){
+							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_triggered <= 1){
 							spawn_enemy4(SpriteRat, 30u, 28u);
 							spawn_enemy4(SpriteSpider, 23u, 27u);
 						}
 						if(scroll_target->x == (UINT16) 34u << 3 && 
-							scroll_target->y < (UINT16) 39u << 3 && scroll_target->y > (UINT16) 36u << 3){
+							scroll_target->y < (UINT16) 39u << 3 && scroll_target->y > (UINT16) 36u << 3 && spawning_triggered <= 2){
 							spawn_item4(scrigno_shield, 43u, 41u, 2, 1);
 						}
 					break;

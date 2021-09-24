@@ -49,6 +49,7 @@ void Update_SpriteAlligator() {
 	}
 	
 	if (alligator_data->enemy_state == ENEMY_STATE_DEAD){
+		SetSpriteAnim(THIS, alligator_dead, 4u);
 		alligator_data->hp = 0;
 		return;
 	}

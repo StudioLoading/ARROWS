@@ -73,10 +73,23 @@ void ShowCounter(){
 			Printf("      CONTINUE ? 0%d     ", countdown);	
 		}
 	}else if (countdown == -2){
+		GameOver();
 		SetState(StateTitlescreen);
 	}
 }
 
+void GameOver(){
+	load_next_b = 0;
+	is_on_boss = -1;
+	current_level = 0u;
+	current_map = 0u;
+	current_level_b = current_level -1u;
+	archer_tool = 0;
+	level_tool= -1;
+	countdown = 10;
+	one_second = 0;
+	
+}
 
 void ResetConfig(){
 	load_next_b = 0;

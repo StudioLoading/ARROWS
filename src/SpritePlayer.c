@@ -371,6 +371,7 @@ void Update_SpritePlayer() {
 						break;
 					}
 					SetSpriteAnim(THIS, anim_jump, 8u);
+					is_on_boss = 3;
 					//Build_Next_Dialog();
 				}
 			}
@@ -623,7 +624,7 @@ void Shoot() {
 			arrow_data->arrowdir = 1;
 		}
 	}
-	shoot_cooldown = 3;//8
+	shoot_cooldown = 12;
 }
 
 void Jump() {

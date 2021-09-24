@@ -46,8 +46,8 @@ void Start_SpriteArrow() {
 	THIS->coll_y = 6;
 	THIS->coll_w = 3;
 	THIS->coll_h = 3;
-	THIS->lim_x = 80u;
-	THIS->lim_y = 80u;
+	THIS->lim_x = 60u;
+	THIS->lim_y = 60u;
 	
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	data->type = 0;
@@ -59,7 +59,7 @@ void Start_SpriteArrow() {
 }
 
 void FApush(){
-	if (falen <= 3 && falen > 0){
+	if (falen <= 4 && falen > 0){
 		ids[falen-1] = THIS;
 	}else{
 		FApop();

@@ -23,10 +23,14 @@
 #include "custom_datas.h"
 #include "sgb_palette.h"
 
+extern UINT8* titlescreen_mod_Data[];
+extern UINT8 quiver;// = 0b0000000001;
+
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
 
 UINT8 wait_titlescreen = 255U;
+INT8 loading_code = 0;
 
 void ShowPushStart();
 
@@ -56,12 +60,12 @@ void Start_StateTitlescreen() {
 	//WINDOW	
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowPushStart();
+	ShowPushStart();     
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	//PlayMusic(credits_mod_Data, 11, 1);
+	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop
 	
 	InitScroll(&maptitlescreen, collision_tiles_titlescreen, 0);	
 	SHOW_BKG;
@@ -69,7 +73,63 @@ void Start_StateTitlescreen() {
 }
 
 void Update_StateTitlescreen() {	
-			
+
+	switch(loading_code){
+		case 6:
+			if(KEY_TICKED(J_START)){
+				quiver = 0b0000011111;
+				loading_code = 7;
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT) || KEY_TICKED(J_UP)){
+				loading_code = 0;
+			}	
+		break;
+		case 5:
+			if(KEY_TICKED(J_UP)){
+				loading_code = 6;
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+				loading_code = 0;
+			}	
+		break;
+		case 4:
+			if(KEY_TICKED(J_LEFT)){
+				loading_code = 5;
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT)){
+				loading_code = 0;
+			}	
+		break;
+		case 3:
+			if(KEY_TICKED(J_DOWN)){
+				loading_code = 4;
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+				loading_code = 0;
+			}	
+		break;
+		case 2:
+			if(KEY_TICKED(J_RIGHT)){
+				loading_code = 3;
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_LEFT)){
+				loading_code = 0;
+			}		
+		break;
+		case 1:
+			if(KEY_TICKED(J_A)){
+				loading_code = 2;
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+				loading_code = 0;
+			}
+		break;
+		case 0:
+			if(KEY_TICKED(J_B)){
+				loading_code = 1;
+			}else if (KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+				loading_code = 0;
+			}
+		break;
+	}
+	if(KEY_TICKED(J_START)){
+		SetState(StateGame);	
+	}	
+	
 	if(KEY_TICKED(J_START)){
 		SetState(StateGame);	
 	}

@@ -1,10 +1,12 @@
 
-LEANDRO MACRINI
-	- dobbiamo scrivere la sua canzone su spartito
+RIDISEGNARE IL PASSO DEL BEAR
+
+GLI ENEMY COMUNI HANNO UN FRAME DI MORTE CHE DURA POCHISSIMO PERCHè POI C'è L' ESPLOSIONE. POTREI UTILIZZARLO PER DARE LORO MAGGIORE FLUIDITà DI MOVIMENTO, OPPURE SEMPLICEMENTE TOGLIERE QUEL FRAME E RISPARMIARE VRAM
+
+LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
-		- bear
 		- tusk
 		- cattivone con frusta
 
@@ -15,35 +17,22 @@ LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
-		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
+		- concentrerei questo livello sulle abilità di arrow surfing
 		- stalattiti che cadono dall' alto traballando
+		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
 		- piattaforma cadente quando ci atterro sopra
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
 
-LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
-
-SUPER PALETTE
-2A					titlescreen
-2A coi 2 colori in mezzo invertiti per il diag archer, e probabilmente anche il diag gator
-4B o 2D	 			zoo
-2H					diag key, diag wrench, diag stone calice
-4D					diag slave pp, slave seduto in gabbia
-2E 					diag cave
-1E					sewer
-!! sistemare perchè sembra tutto di fuoco 1D	diag slave x3, forest
-					diag bear
-
 - sul drive di checco.1809 cartella ARROWS c'è il video della suonata di Leonardo per audio. Da mettere su GuitarPro o addirittura subito su Audacity come midi.
 
+- sound sull' intro //PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop
+
+KNOWN ISSUE:
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
-
-- ibex più grande come il wolf
-
 - ho crashato nello spawn degli enemies fra uccelli e serpenti nel livello 3 :) dc
-
-- border ok cielo ma luna gigante al centro (con qualche nuvoletta?)
+- ho crashato nelle fogne sparando frecce :( 
 
 - sonoro trionfale quando sollevo amulet
 
@@ -51,13 +40,9 @@ SUPER PALETTE
 
 - schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 
-- intro iniziale con poesia su una pergamena di carta ! audio da Leandro ? me ne accennò, di un suo pezzo, allo svilupparty 2021...
+- intro iniziale con poesia su una pergamena di carta ! audio da Leandro ? 
 
-l0m1 ci sono tre prigionieri incatenati, si può aggiungere una frase particolare da far dire a quello di mezzo ?
-
-- testare che ottenuto l' amuleto del calice mi si attivi la stone nel quiver
-
-- dovrei fare uno state dedicato, con un quiver grande, con gli amuleti che si incastonano, e dopo il dialogo di ottenimento, vedo l' amuleto posarsi sulla posizione giusta.
+- Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
 
 - nella titlescreen del gameOver ci starebbe una freccia spezzata ? alternativa è lo scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 
@@ -85,21 +70,22 @@ polish:
 	
 
 
-bisogna pensare ad un maggior replay value:
+replay value:
 start screen è selezione del livello. Si può scegliere ultimo livello del castello, ma verrà inquadrato un cancello attorno al quale depositare gli amuleti. solo coi 4 amuleti ottenuti il cancello si aprirà.
 in questo modo chi ricomincia può andare a scegliere solo i livelli con gli amuleti e arrivare al castello.
 dopo i boss senza amuleti si accede ad un livello bonus, se lo si supera, il boss del livello entra "in gioco" nello scontro finale col boss finale e lo picchia - buttandogli giù della vita.
 
 
-
 CONTROLLO di tutti i suggerimenti/dialoghi
 
-Cheat in titleScreen KonamiCode
+Cheat in titleScreen  tipo KonamiCode   AB>v<^ 
 	99 lives
 	tutti gli amuleti
 
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
+
+Controllare che le stanze di secret siano più a sinistra delle frecce di respawn su livello
 
 
 RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
@@ -129,10 +115,6 @@ png 160x144
 
 BORDO sgb 
 C:\GB\ZGBNEW\tools\border\
-
-
-- il dialogo l0m0 "what've we done" ha delle bande bianche ai lati. incomprensibile! Ho anche rifatto la tile e map con un nuovo png ma niente da fare
-E' comunque un problema della mappa, Diags.c -> Build_Next_Dialog_Banked() -> diaf = 4u;
 
 POTREI EVITARE DI USARE LA PRINT PER MOSTRARE GLI AMULETI
 IN CAMBIO METTERE  tile sulla window:

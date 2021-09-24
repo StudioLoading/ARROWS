@@ -26,21 +26,13 @@ void Start_SpriteAmulet() {
 	THIS->coll_y = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 16;
-	THIS->lim_x = 160u;
-	THIS->lim_y = 160u;
-
+	THIS->lim_x = 255u;
+	THIS->lim_y = 255u;
 }
 
 void Update_SpriteAmulet() {
-	if(datak->setup){ // !
-		/*THIS->coll_x = 0;
-		THIS->coll_y = 0;
-		THIS->coll_w = 0;
-		THIS->coll_h = 0;*/
+	if(datak->setup){ 
 		switch(datak->type){
-			/*case 0:
-				SetSpriteAnim(THIS, amulet_normal, 8u);
-			break;*/
 			case 1:
 				SetSpriteAnim(THIS, amulet_earth, 16u);
 			break;
@@ -54,13 +46,7 @@ void Update_SpriteAmulet() {
 				SetSpriteAnim(THIS, amulet_fire, 16u);
 			break;
 		}
-		datak->setup = 1;
-	}else if (datak->counter > 0){
-		datak->counter--;
-		//TranslateSprite(THIS, 0, 1);
-		if (datak->counter==0){
-			//SpriteManagerRemoveSprite(THIS);
-		}
+		datak->setup = 1u;
 	}
 }
 

@@ -107,13 +107,13 @@ void Start_StateDiag() {
 		break;
 		case 4u:
 			if(sgb_check()){
-				set_sgb_palette01_1D();
+				set_sgb_palette01_EAGLE();
 			}
 			InitScroll(&mapdiagslave1, collision_dtiles, 0);
 		break;
 		case 5u:
 			if(sgb_check()){
-				set_sgb_palette01_1D();
+				set_sgb_palette01_TITLEINVERTED();
 			}
 			InitScroll(&mapdiagslave2, collision_dtiles, 0);
 		break;
@@ -179,7 +179,7 @@ void Start_StateDiag() {
 		break;
 		case 53u:
 			if(sgb_check()){
-				set_sgb_palette01_1F();
+				set_sgb_palette01_EAGLE();
 			}			
 			InitScroll(&mapdiageagle, collision_dtiles, 0);
 		break;
