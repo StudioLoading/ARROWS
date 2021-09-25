@@ -63,7 +63,7 @@ void Start_StateTitlescreen() {
 	ShowPushStart();     
 	
 	//SOUND
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR52_REG = 0x50; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop
 	

@@ -525,24 +525,46 @@ void Update_StateGame4() {
 	}
 	
 	//MOVING BACKGROUND TILES	
-	if (current_level == 3u){
-		updatecounter++;
-		if (updatecounter < 120) {
-			switch(updatecounter){
-				case 1:
-				case 16:
-				case 48:
-					AnimClouds0();
-				break;
-				case 4:
-				case 24:
-				case 42:
-					AnimClouds1();
-				break;
-			}
-		}else{
-			updatecounter = 0;
+	updatecounter++;
+	if (updatecounter < 120) {
+		switch(updatecounter){
+			case 1:
+			case 40:
+			case 80:
+				AnimRain0();
+			break;
+			case 20:
+			case 60:
+			case 100:
+				AnimRain1();
+			break;
 		}
+		switch(updatecounter){
+			case 1:
+			case 16:
+			case 48:
+				AnimClouds0();
+			break;
+			case 4:
+			case 24:
+			case 42:
+				AnimClouds1();
+			break;
+		}
+		switch(updatecounter){
+			case 1:
+			case 60:
+				AnimWaters0();
+				AnimSpuncioni0();
+			break;
+			case 30:
+			case 90:
+				AnimWaters1();
+				AnimSpuncioni1();
+			break;
+		}
+	}else{
+		updatecounter = 0;
 	}
 	
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 

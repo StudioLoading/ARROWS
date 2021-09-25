@@ -594,13 +594,15 @@ void Update_StateGame() {
 	
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 21) {
+	if (updatecounter < 60) {
 		switch(updatecounter){
 			case 1:
 				AnimWaters0();
+				AnimSpuncioni0();
 			break;
-			case 10:
+			case 30:
 				AnimWaters1();
+				AnimSpuncioni1();
 			break;
 		}			
 	}else{

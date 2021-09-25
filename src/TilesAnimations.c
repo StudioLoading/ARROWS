@@ -62,3 +62,27 @@ void AnimClouds1() __banked{
 	set_bkg_data(100u, 1u, tiles4.data->data+1600u);///+ 16u * 100 tile index
 	set_bkg_data(101u, 1u, tiles4.data->data+1616u);// + 16u * 101 tile index	
 }
+
+void AnimRain0() __banked{
+	set_bkg_data(36u, 1u, tiles4.data->data+576u);
+	set_bkg_data(37u, 1u, tiles4.data->data+592u);
+}
+
+void AnimRain1() __banked{
+	set_bkg_data(36u, 1u, tilesanims.data->data+576u);
+	set_bkg_data(37u, 1u, tilesanims.data->data+592u);
+}
+
+void AnimSpuncioni0() __banked{
+	set_bkg_data(2u, 1u, tiles4.data->data+32u);
+	set_bkg_data(20u, 1u, tiles4.data->data+320u);
+	set_bkg_data(23u, 1u, tiles4.data->data+368u);
+	set_bkg_data(29u, 1u, tiles4.data->data+464u);
+}
+
+void AnimSpuncioni1() __banked{
+	set_bkg_data(2u, 1u, tilesanims.data->data+32u);
+	set_bkg_data(20u, 1u, tilesanims.data->data+320u);
+	set_bkg_data(23u, 1u, tilesanims.data->data+368u);
+	set_bkg_data(29u, 1u, tilesanims.data->data+464u);
+}

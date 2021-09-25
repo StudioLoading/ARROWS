@@ -12,11 +12,11 @@ extern UINT8 current_camera_state;
 
 
 //BEAR
-const UINT8 bear_idle[] = {1, 3}; //The first number indicates the number of frames
-const UINT8 bear_walk[] = {4, 0, 1, 0, 2};//{4, 0, 1, 2, 1};
+const UINT8 bear_idle[] = {1, 2}; //The first number indicates the number of frames
+const UINT8 bear_walk[] = {4, 0, 1, 2, 3};
 const UINT8 bear_hit[] = {2, 0, 1};
-const UINT8 bear_dead[] = {1, 1};
-const UINT8 bear_attack[] = {3, 3, 4, 5};
+const UINT8 bear_dead[] = {1, 2};
+const UINT8 bear_attack[] = {4, 5, 4, 5, 5};
 
 struct EnemyInfo* bear_data ;
 
@@ -27,7 +27,7 @@ void ToNormalState();
 void Start_SpriteBear() {
 	THIS->lim_x = 160u;
 	THIS->lim_y = 160u;
-	SetSpriteAnim(THIS, bear_idle, 10u);
+	SetSpriteAnim(THIS, bear_idle, 4u);
 	bear_data = (struct EnemyInfo*)THIS->custom_data;
 	bear_data->enemy_accel_y = 24;
 	bear_data->vx = -1;
@@ -185,7 +185,7 @@ void BETurn(){
 
 void ToNormalState(){
 	bear_data->enemy_state = ENEMY_STATE_NORMAL;
-	SetSpriteAnim(THIS, bear_walk, 8u);
+	SetSpriteAnim(THIS, bear_walk, 13u);
 	THIS->coll_x = 4;
 	THIS->coll_y = 12;
 	THIS->coll_w = 24;

@@ -150,6 +150,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			}	
 		break;
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
+		case 3:
 			if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
 				switch(current_level_b){
 					case 0u:
