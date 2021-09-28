@@ -65,7 +65,7 @@ void Start_StateTitlescreen() {
 	//SOUND
 	NR52_REG = 0x50; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop
+	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop
 	
 	InitScroll(&maptitlescreen, collision_tiles_titlescreen, 0);	
 	SHOW_BKG;
