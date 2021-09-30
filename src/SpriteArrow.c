@@ -257,12 +257,20 @@ void CheckCollisionArrowTile(UINT8 ta) {
 	switch(ta) {
 		case 11u: //da DX a GIU
 			data->arrowdir = 4;
-			THIS->x -= 2;
+			if(SPRITE_GET_VMIRROR(THIS)){
+				THIS->x -= 2;
+			}else{
+				THIS->x += 2;
+			}			
 			THIS->y += 4;
 		break;
 		case 13u: // da DX a SU
 			data->arrowdir = 3;
-			THIS->x -= 4;
+			if(SPRITE_GET_VMIRROR(THIS)){
+				THIS->x -= 4;
+			}else{
+				THIS->x += 4;
+			}
 		break;
 		case 16u://da GIU a DX
 			SPRITE_UNSET_VMIRROR(THIS);
@@ -278,13 +286,21 @@ void CheckCollisionArrowTile(UINT8 ta) {
 		break;
 		case 89u: //STONE generator da DX a GIU
 			data->arrowdir = 4;
-			THIS->x -= 2;
+			if(SPRITE_GET_VMIRROR(THIS)){
+				THIS->x -= 4;
+			}else{
+				THIS->x += 4;
+			}			
 			THIS->y += 4;
 			data->original_type = 2; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		case 90u: //thunder generator da DX a GIU
 			data->arrowdir = 4;
-			THIS->x -= 2;
+			if(SPRITE_GET_VMIRROR(THIS)){
+				THIS->x -= 4;
+			}else{
+				THIS->x += 4;
+			}		
 			THIS->y += 4;
 			data->original_type = 3; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;

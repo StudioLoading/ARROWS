@@ -51,7 +51,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 1u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -338,13 +338,13 @@ void Update_StateBoss() {
 	//MOVING BACKGROUND TILES	
 	if (current_level_b != 3u){ // ibex has not to be animated with water
 		updatecounter++;
-		if (updatecounter < 41) {
+		if (updatecounter < 60) {
 			switch(updatecounter){
 				case 1:
-					AnimWaters0();
+					AnimSpuncioni0();
 				break;
-				case 20:
-					AnimWaters1();
+				case 30:
+					AnimSpuncioni1();
 				break;
 			}			
 		}else{

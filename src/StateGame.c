@@ -55,8 +55,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -138,7 +138,7 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteScorpion);
-			SpriteManagerLoad(SpritePorcupine);
+			//SpriteManagerLoad(SpritePorcupine);
 			if(sgb_check()){
 				set_sgb_palette01_4B();
 				set_sgb_palette_statusbar();
@@ -438,7 +438,7 @@ void Update_StateGame() {
 	//SPAWNING	
 	if(!SPRITE_GET_VMIRROR(scroll_target) && archer_state != STATE_HIT && platform_vx == 0u){
 		switch(current_level){
-			case 0:
+			case 0u:
 				switch(current_map){
 					case 1:
 						if (scroll_target->x == (UINT16) 10u << 3 && spawning_triggered == 0){
@@ -455,49 +455,49 @@ void Update_StateGame() {
 						}
 						if (scroll_target->x == (UINT16) 95u << 3 && spawning_triggered <= 4){
 							spawn_enemy(SpriteScorpion, 107u, 8u);
-						}
+						}/*
 						if (scroll_target->x == (UINT16) 146u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpritePorcupine, 155u, 8u);
-						}
+						}*/
 						if (scroll_target->x == (UINT16) 150u << 3){
 							spawn_item(scrigno_shield, 155u, 2u, 2, 1);
 						}
 					break;
 				}
 			break;
-			case 1:
+			case 1u:
 				switch(current_map){
 					case 0:
-						if (scroll_target->x == (UINT16) 15u << 3 && spawning_triggered == 0){
+						if (scroll_target->x == (UINT16) 15u << 3 && spawning_triggered <= 2){ //perchè allo Start ci sono degli init spawn
 							spawn_enemy(SpriteSpider, 21u, 4u);
 							spawn_item(scrigno_up, 26u, 5u, 3, 1);
 							spawn_enemy(SpritePlatform, 35u, 6u);
 						}
-						if (scroll_target->x == (UINT16) 48u << 3 && spawning_triggered <= 1){
+						if (scroll_target->x == (UINT16) 48u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpriteRat, 58u, 6u);
 							spawn_enemy(SpriteEnemy, 61u, 6u);
 						}
-						if (scroll_target->x == (UINT16) 80u << 3 && scroll_target->y > (UINT16) 14u << 3 && spawning_triggered <= 2){
+						if (scroll_target->x == (UINT16) 80u << 3 && scroll_target->y > (UINT16) 14u << 3){
 							spawn_item(scrigno_shield, 93u, 18u, 2, 1);
 						}
-						if (scroll_target->x == (UINT16) 67u << 3 && spawning_triggered <= 3){
+						if (scroll_target->x == (UINT16) 67u << 3 && spawning_triggered <= 6){
 							spawn_enemy(SpriteRat, 81u, 3u);
 							spawn_enemy(SpriteEnemy, 88u, 3u);
 							spawn_enemy(SpriteSpider, 85u, 5u);
 							spawn_item(scrigno_dcoin, 85u, 5u, 7, 1);
 						}
-						if ((scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3) && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 4 ){
+						if ((scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3) && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 9 ){
 							scroll_target->x++;
 							spawn_enemy(SpriteSpider, (scroll_target->x >> 3) + 3u, 3u);
 							spawn_enemy(SpriteSpider, (scroll_target->x >> 3) - 3u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 177u << 3){
+						if (scroll_target->x == (UINT16) 177u << 3 && spawning_triggered <= 12){
 							spawn_item(scrigno_dcoin, 192u, 7u, 7, 1);
 						}
 						
 					break;
 					case 1:
-						if (scroll_target->x == (UINT16) 29u << 3 && spawning_triggered == 0){
+						if (scroll_target->x == (UINT16) 29u << 3 && spawning_triggered <= 2){
 							spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
 						}
 						if (scroll_target->x == (UINT16) 38u << 3 && spawning_triggered <= 1){
@@ -516,14 +516,14 @@ void Update_StateGame() {
 							spawn_enemy(SpriteSpider, 149u, 5u);
 							spawn_enemy(SpriteSpider, 150u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 && spawning_triggered <= 5){
+						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 && spawning_triggered <= 6){
 							spawn_enemy(SpriteRat, 143u, 13u);
 						}
 						
 					break;
 				}
 			break;
-			case 2:
+			case 2u:
 				switch(current_map){
 					case 0:
 						if (scroll_target->x == (UINT16) 37u << 3){
@@ -533,32 +533,32 @@ void Update_StateGame() {
 							spawn_enemy(SpriteSpider, 51u, 9u);
 							spawn_enemy(SpriteEnemy, 56u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 84u << 3 && spawning_triggered <= 1){
+						if (scroll_target->x == (UINT16) 84u << 3 && spawning_triggered <= 2){
 							spawn_enemy(SpriteBird, 90u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 104u << 3 && spawning_triggered <= 2){
+						if (scroll_target->x == (UINT16) 104u << 3 && spawning_triggered <= 3){
 							spawn_enemy(SpriteEnemy, 115u, 10u);
 							spawn_enemy(SpriteBird, 90u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 119u << 3 && spawning_triggered <= 3){
+						if (scroll_target->x == (UINT16) 119u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpritePlatform, 131u, 10u);
 							spawn_enemy(SpriteBird, 140u, 3u);
 							//spawn_enemy(SpriteBird, 114u, 4u);
 						}
-						if (scroll_target->x == (UINT16) 143u << 3 && spawning_triggered <= 4){
+						if (scroll_target->x == (UINT16) 143u << 3 && spawning_triggered <= 7){
 							spawn_enemy(SpriteBird, 155u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 5){
+						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 8){
 							//spawn_enemy(SpriteSpider, 162u, 9u);
 							spawn_enemy(SpriteEnemy, 165u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 151u << 3 && spawning_triggered <= 6){
+						if (scroll_target->x == (UINT16) 151u << 3 && spawning_triggered <= 9){
 							spawn_enemy(SpriteBird, 140u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 7){
+						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 10){
 							spawn_enemy(SpriteBird, 160u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 167u << 3 && spawning_triggered <= 8){
+						if (scroll_target->x == (UINT16) 167u << 3 && spawning_triggered <= 11){
 							spawn_enemy(SpriteBird, 178u, 3u);
 						}
 						if (scroll_target->x == (UINT16) 170u << 3){
@@ -574,16 +574,16 @@ void Update_StateGame() {
 							spawn_enemy(SpriteSpider, 135u, 10u);
 							//spawn_enemy(SpriteSpider, 136u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 141u << 3 && spawning_triggered <= 2){
+						if (scroll_target->x == (UINT16) 141u << 3 && spawning_triggered <= 3){
 							spawn_enemy(SpriteBird, 130u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 152u << 3 && spawning_triggered <= 3){
+						if (scroll_target->x == (UINT16) 152u << 3 && spawning_triggered <= 4){
 							spawn_enemy(SpriteBird, 165u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 4){
+						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpriteBird, 175u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 168u << 3 && spawning_triggered <= 5){
+						if (scroll_target->x == (UINT16) 168u << 3 && spawning_triggered <= 6){
 							spawn_enemy(SpriteBird, 182u, 5u);
 						}		
 					break;

@@ -30,12 +30,12 @@ extern INT8 level_tool;
 extern INT8 archer_tool;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 anim_jump[] = {1, 10};
-const UINT8 anim_jump_up[] = {1, 11};
-const UINT8 anim_dead[] = {1, 15};
+const UINT8 anim_jump[] = {1, 15};
+const UINT8 anim_jump_up[] = {1, 6};
+const UINT8 anim_dead[] = {1, 9};
 const UINT8 anim_walk[] = {4, 7, 6, 5, 4};
 const UINT8 anim_shield[] = {1, 3};
-const UINT8 anim_hit[] = {2, 8, 9};
+const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13 ,14 , 13};
 
@@ -764,8 +764,11 @@ void Hit() {
 	if (archer_state != STATE_DEAD){
 		archer_state = STATE_HIT;
 		platform_vx = 1;
+		if (SPRITE_GET_VMIRROR(THIS)){
+			platform_vx = -1;
+		}
 		tile_collision = TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
-		SetSpriteAnim(THIS, anim_hit, 32u);
+		SetSpriteAnim(THIS, anim_hit, 24u);
 		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
 	}
 }

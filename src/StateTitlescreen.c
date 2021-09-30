@@ -1,4 +1,4 @@
-#include "Banks/SetBank7.h"
+#include "Banks/SetBank6.h"
 
 #include "../res/src/tilestitlescreen.h"
 #include "../res/src/maptitlescreen.h"
@@ -25,6 +25,8 @@
 
 extern UINT8* titlescreen_mod_Data[];
 extern UINT8 quiver;// = 0b0000000001;
+extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+extern UINT8 current_camera_counter;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
@@ -47,6 +49,9 @@ const UINT16 sprites_palette_titlescreen[] = {
 
 void Start_StateTitlescreen() {	
 	
+	current_camera_state = 0u;
+	current_camera_counter = 0u;
+	
 	if(sgb_check()){
 		set_sgb_palette01_2A();
 	}
@@ -54,7 +59,8 @@ void Start_StateTitlescreen() {
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2); //end with the bank of where I have the palette/tileset
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_titlescreen, 7);//end with the bank of where I have the palette/tileset
 	
-	SPRITES_8x16;
+	SPRITES_8x16;	
+	SpriteManagerLoad(SpriteCamerafocus);
 	SHOW_SPRITES;
 	
 	//WINDOW	
@@ -65,9 +71,10 @@ void Start_StateTitlescreen() {
 	//SOUND
 	NR52_REG = 0x50; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop
-	
+	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
+
 	InitScroll(&maptitlescreen, collision_tiles_titlescreen, 0);	
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 10u << 3, 8u << 3);
 	SHOW_BKG;
 	
 }
@@ -126,55 +133,59 @@ void Update_StateTitlescreen() {
 			}
 		break;
 	}
-	if(KEY_TICKED(J_START)){
-		SetState(StateGame);	
-	}	
+	
+	switch(current_camera_state){
+		case 0u:
+			current_camera_counter += 1u;
+			scroll_target->x += 8;
+			if(current_camera_counter == 180u){
+				current_camera_state++;
+			}	
+		break;
+		case 1u:
+			current_camera_counter += 1u;
+			scroll_target->x += 8;
+			if(current_camera_counter == 180u){
+				current_camera_state++;
+			}	
+		break;
+		case 2u:
+			current_camera_counter += 1u;
+			scroll_target->x += 8;
+			if(current_camera_counter == 180u){
+				current_camera_state++;
+			}	
+		break;
+	}
+	
+	if(KEY_TICKED(J_SELECT)){
+		SetState(StateTitlescreen);	
+	}
 	
 	if(KEY_TICKED(J_START)){
 		SetState(StateGame);	
 	}
 	
-	if(wait_titlescreen > 252u){
-		wait_titlescreen -= 1u;
-	}else{
-		if (wait_titlescreen > 60u){
-			wait_titlescreen = 50u;
+	if(current_camera_state == 3u){
+		if(wait_titlescreen > 252u){
+			wait_titlescreen -= 1u;
+		}else{
+			if (wait_titlescreen > 60u){
+				wait_titlescreen = 50u;
+			}
+			//loop wait_titlescreen up to 120
+			wait_titlescreen -= 1u;
+			if (wait_titlescreen == 0u){
+				wait_titlescreen = 60u;
+				return;
+			}
+			if(wait_titlescreen == 30u){
+				HIDE_WIN;
+			}else if(wait_titlescreen == 59u){
+				SHOW_WIN;
+			}				
 		}
-		//loop wait_titlescreen up to 120
-		wait_titlescreen -= 1u;
-		if (wait_titlescreen == 0u){
-			wait_titlescreen = 60u;
-			return;
-		}
-		if(wait_titlescreen == 30u){
-			HIDE_WIN;
-		}else if(wait_titlescreen == 59u){
-			SHOW_WIN;
-		}	
-		
 	}
-	/*
-		FadeIn();
-		DISPLAY_OFF;
-		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
-		switch (credit_step){
-			case 1u:
-				InitScroll(&mapcredits2, collision_tiles_titlescreen, 0);
-			break;
-			case 2u:
-				InitScroll(&mapcredits4, collision_tiles_titlescreen, 0);
-			break;
-			case 3u:
-				InitScroll(&mapcredits3, collision_tiles_titlescreen, 0);
-			break;
-			case 4u:
-				InitScroll(&mapcredits1, collision_tiles_titlescreen, 0);
-			break;
-		}
-		DISPLAY_ON;
-		FadeOut();
-		return;
-	}*/
 	
 }
 

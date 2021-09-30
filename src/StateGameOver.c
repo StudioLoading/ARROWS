@@ -43,14 +43,20 @@ void Start_StateGameOver() {
 	INIT_CONSOLE(font, 10, 2);
 	ShowContinue();
 	
-	ResetConfig();
+	if(is_on_boss < 0){
+		ResetConfig();
+	}
 	
 }
 
 void Update_StateGameOver() {
 	one_second++;
-	if(KEY_TICKED(J_START) | KEY_TICKED(J_A) | KEY_TICKED(J_B)) {
-		SetState(StateGame);
+	if(KEY_TICKED(J_START) || KEY_TICKED(J_A) || KEY_TICKED(J_B)) {
+		if(is_on_boss > 0){
+			SetState(StateBoss);
+		}else{
+			SetState(StateGame);
+		}
 	}else if (one_second >= 70){
 		one_second = 0;
 		ShowContinue();
