@@ -539,29 +539,32 @@ void Update_StateGame4() {
 				AnimRain1();
 			break;
 		}
-		switch(updatecounter){
-			case 1:
-			case 16:
-			case 48:
-				AnimClouds0();
-			break;
-			case 4:
-			case 24:
-			case 42:
-				AnimClouds1();
-			break;
-		}
-		switch(updatecounter){
-			case 1:
-			case 60:
-				AnimWaters0();
-				AnimSpuncioni0();
-			break;
-			case 30:
-			case 90:
-				AnimWaters1();
-				AnimSpuncioni1();
-			break;
+		if(current_level == 4u){
+			switch(updatecounter){
+				case 1:
+				case 16:
+				case 48:
+					AnimClouds0();
+				break;
+				case 4:
+				case 24:
+				case 42:
+					AnimClouds1();
+				break;
+			}
+		}else{		
+			switch(updatecounter){
+				case 1:
+				case 60:
+					AnimWaters0();
+					AnimSpuncioni0();
+				break;
+				case 30:
+				case 90:
+					AnimWaters1();
+					AnimSpuncioni1();
+				break;
+			}
 		}
 	}else{
 		updatecounter = 0;

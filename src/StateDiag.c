@@ -173,7 +173,7 @@ void Start_StateDiag() {
 		break;
 		case 52u:
 			if(sgb_check()){
-				set_sgb_palette01_TITLEINVERTED();
+				set_sgb_palette01_GATOR();
 			}
 			InitScroll(&mapdiaggator, collision_dtiles, 0);
 		break;

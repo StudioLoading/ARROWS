@@ -17,6 +17,7 @@ const UINT8 attack_wait = 32u;
 
 void CheckCollisionETile();
 void ETurn();
+void EDie();
 
 void Start_SpriteEnemy() {
 	
@@ -110,20 +111,26 @@ void Update_SpriteEnemy() {
 				}
 				SpriteManagerRemoveSprite(iespr);
 				if (edata->hp <= 0){
-					NR50_REG = 0x55; //Max volume		
-					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-					edata->enemy_state = ENEMY_STATE_DEAD;
-					SetSpriteAnim(THIS, enemy_dead, 16u);
-					edata->wait = 8u;
-					THIS->lim_x = 8u;
-					THIS->lim_y = 16u;
-					THIS->coll_h = 0;
-					THIS->coll_w = 0;
+					EDie();
 				}
 			}
 		}
 	}
 	
+}
+
+void EDie(){
+	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
+	edata->hp = -1;
+	NR50_REG = 0x55; //Max volume		
+	PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+	edata->enemy_state = ENEMY_STATE_DEAD;
+	SetSpriteAnim(THIS, enemy_dead, 16u);
+	edata->wait = 8u;
+	THIS->lim_x = 8u;
+	THIS->lim_y = 16u;
+	THIS->coll_h = 0;
+	THIS->coll_w = 0;
 }
 
 void CheckCollisionETile() {
@@ -146,6 +153,9 @@ void CheckCollisionETile() {
 		case 74u:
 		case 81u:
 			ETurn();
+		break;
+		case 40u://skull of death
+			EDie();
 		break;
 	}
 }

@@ -51,7 +51,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 1u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -185,9 +185,10 @@ void Start_StateBoss() {
 	SHOW_BKG;
 	
 	
-	if (is_on_boss == 2){
-		SpawnReward();
+	if (is_on_boss >= 2){
+		//SpawnReward(); // controllare
 		SpawnBoss(0);
+		archer_state = STATE_JUMPING;
 	}else{
 		SpawnBoss(-1);
 	}
@@ -198,7 +199,7 @@ void Start_StateBoss() {
 		return;
 	}else{
 		boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
-		if(is_on_boss == 2){
+		if(is_on_boss >= 2){
 			boss_data_b->enemy_state = ENEMY_STATE_DEAD;	
 		}
 	}
@@ -279,16 +280,16 @@ void Update_StateBoss() {
 				current_camera_counter += 1u;
 				if(current_camera_counter == 40u){
 					diag_found = Build_Next_Dialog_Banked(scroll_target);
-					//current_camera_state += 1u;
+					current_camera_state += 1u;
 					current_camera_counter = 0u;
 					SetState(StateDiag);
 				}	
 			break;
 		}	
-		PRINT_POS(10, 0);
+		/*PRINT_POS(10, 0);
 		Printf("%d", current_camera_counter);
 		PRINT_POS(13, 0);
-		Printf("%d", current_camera_state);	
+		Printf("%d", current_camera_state);	*/
 	}
 	//INTRO END
 	
@@ -319,7 +320,7 @@ void Update_StateBoss() {
 		UpdateHUD();
 	}
 
-	if (boss_hp != boss_data_b->hp && is_on_boss != 2){
+	if (boss_hp != boss_data_b->hp && is_on_boss < 2){
 		boss_hp = boss_data_b->hp;
 		WriteBBOSSHP();
 		if (boss_hp <= 0){
@@ -346,7 +347,19 @@ void Update_StateBoss() {
 				case 30:
 					AnimSpuncioni1();
 				break;
-			}			
+			}
+			if(current_level_b > 0u){
+				switch(updatecounter){
+					case 1:
+					case 30:
+						AnimWaters0();
+					break;
+					case 15:
+					case 45:
+						AnimWaters1();
+					break;
+				}
+			}
 		}else{
 			updatecounter = 0;
 		}
@@ -443,6 +456,8 @@ void SpawnReward(){
 }
 
 void WriteBBOSSHP(){
+	PRINT_POS(9, 0);
+	Printf("%d", is_on_boss);
 	PRINT_POS(10, 0);
 	if(boss_hp>0){
 		if(boss_hp > 9){

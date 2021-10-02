@@ -49,7 +49,7 @@ INT8 platform_vx = 0;
 INT8 platform_vy = 0;
 INT8 is_on_boss = -1;
 UINT8 diag_found = 0u;
-UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 UINT8 current_camera_counter = 0u;
 struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
@@ -106,6 +106,10 @@ void Update_SpritePlayer() {
 
 	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
+	}
+	
+	if (KEY_PRESSED(J_START) && KEY_PRESSED(J_SELECT)){
+		SetState(StateGameOver);
 	}
 	
 	if(archer_state == STATE_AMULET_STONE || archer_state == STATE_AMULET_ICE 

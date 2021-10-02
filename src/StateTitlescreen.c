@@ -25,13 +25,13 @@
 
 extern UINT8* titlescreen_mod_Data[];
 extern UINT8 quiver;// = 0b0000000001;
-extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 extern UINT8 current_camera_counter;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
 
-UINT8 wait_titlescreen = 255U;
+UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+UINT8 wait_titlescreen = 0u;
 INT8 loading_code = 0;
 
 void ShowPushStart();
@@ -61,6 +61,7 @@ void Start_StateTitlescreen() {
 	
 	SPRITES_8x16;	
 	SpriteManagerLoad(SpriteCamerafocus);
+	SpriteManagerLoad(SpriteArrowtitle);
 	SHOW_SPRITES;
 	
 	//WINDOW	
@@ -74,7 +75,7 @@ void Start_StateTitlescreen() {
 	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
 
 	InitScroll(&maptitlescreen, collision_tiles_titlescreen, 0);	
-	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 10u << 3, 8u << 3);
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
 	
 }
@@ -138,22 +139,8 @@ void Update_StateTitlescreen() {
 		case 0u:
 			current_camera_counter += 1u;
 			scroll_target->x += 8;
-			if(current_camera_counter == 180u){
-				current_camera_state++;
-			}	
-		break;
-		case 1u:
-			current_camera_counter += 1u;
-			scroll_target->x += 8;
-			if(current_camera_counter == 180u){
-				current_camera_state++;
-			}	
-		break;
-		case 2u:
-			current_camera_counter += 1u;
-			scroll_target->x += 8;
-			if(current_camera_counter == 180u){
-				current_camera_state++;
+			if(current_camera_counter == 62u){
+				current_camera_state = 2u;
 			}	
 		break;
 	}
@@ -166,24 +153,43 @@ void Update_StateTitlescreen() {
 		SetState(StateGame);	
 	}
 	
-	if(current_camera_state == 3u){
-		if(wait_titlescreen > 252u){
-			wait_titlescreen -= 1u;
-		}else{
-			if (wait_titlescreen > 60u){
-				wait_titlescreen = 50u;
-			}
-			//loop wait_titlescreen up to 120
-			wait_titlescreen -= 1u;
-			if (wait_titlescreen == 0u){
-				wait_titlescreen = 60u;
-				return;
-			}
-			if(wait_titlescreen == 30u){
-				HIDE_WIN;
-			}else if(wait_titlescreen == 59u){
+	if(current_camera_state >= 2u){
+		//loop wait_titlescreen up to 120
+		wait_titlescreen -= 1u;
+		switch (wait_titlescreen){
+			case 0u:
+			case 60u:
+			case 120u:
+			case 180u:
 				SHOW_WIN;
-			}				
+			break;
+			case 30u:
+			case 90u:
+			case 160u:
+			case 210u:
+				HIDE_WIN;
+			break;
+		}
+		current_camera_counter += 1u;
+		if(current_camera_state <= 4u){
+			if (current_camera_counter == 120u){
+				current_camera_state++;
+			}
+		}else{		
+			switch(current_camera_counter){
+				case 80u:
+					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 70 << 3, (UINT16) 0 << 3);
+				break;
+				case 160u:
+					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 80 << 3, (UINT16) 6 << 3);
+				break;
+				case 200u:
+					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 70 << 3, (UINT16) 6 << 3);
+				break;
+				case 240u:
+					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 75 << 3, (UINT16) 10 << 3);
+				break;
+			}	
 		}
 	}
 	

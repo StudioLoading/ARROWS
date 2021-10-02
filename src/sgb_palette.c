@@ -85,6 +85,9 @@ void set_sgb_palette01_AMULET_THUNDER() __banked{
 void set_sgb_palette01_SEWER() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL1E_LIGHT, RGB8(0, 136, 136), SGB_PAL1E_DARKER);
 }
+void set_sgb_palette01_GATOR() __banked {
+	set_sgb_palette(SGB_PAL2A_LIGHTER, SGB_PAL2A_DARK, SGB_PAL2A_DARK, SGB_PAL2A_DARKER);
+}
 void set_sgb_palette01_FOREST() __banked {
 	set_sgb_palette(SGB_PAL1D_LIGHTER, SGB_PAL1D_LIGHT, RGB8(82, 24, 0), RGB8(0, 0, 0));
 }

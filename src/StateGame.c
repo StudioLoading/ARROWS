@@ -55,8 +55,8 @@ INT8 level_tool = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 3u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -359,6 +359,7 @@ void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
 }
 
 void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
+	spawning_triggered++;
 	SpriteManagerRemoveSprite(itemin);
 	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;
@@ -477,16 +478,17 @@ void Update_StateGame() {
 							spawn_enemy(SpriteRat, 58u, 6u);
 							spawn_enemy(SpriteEnemy, 61u, 6u);
 						}
-						if (scroll_target->x == (UINT16) 80u << 3 && scroll_target->y > (UINT16) 14u << 3){
+						if (scroll_target->x == (UINT16) 80u << 3 && scroll_target->y > (UINT16) 14u << 3 && spawning_triggered <= 6){
 							spawn_item(scrigno_shield, 93u, 18u, 2, 1);
+							spawn_enemy(SpriteEnemy, 56u, 8u);
 						}
-						if (scroll_target->x == (UINT16) 67u << 3 && spawning_triggered <= 6){
+						if (scroll_target->x == (UINT16) 67u << 3 && spawning_triggered <= 7){
 							spawn_enemy(SpriteRat, 81u, 3u);
 							spawn_enemy(SpriteEnemy, 88u, 3u);
 							spawn_enemy(SpriteSpider, 85u, 5u);
 							spawn_item(scrigno_dcoin, 85u, 5u, 7, 1);
 						}
-						if ((scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3) && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 9 ){
+						if ((scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3) && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 10 ){
 							scroll_target->x++;
 							spawn_enemy(SpriteSpider, (scroll_target->x >> 3) + 3u, 3u);
 							spawn_enemy(SpriteSpider, (scroll_target->x >> 3) - 3u, 3u);

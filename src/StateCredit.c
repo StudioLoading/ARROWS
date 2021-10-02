@@ -42,7 +42,8 @@ void Start_StateCredit() {
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	
+	PlayMusic(credits_mod_Data, 11, 1);
+
 	SHOW_BKG;
 	
 }
@@ -86,7 +87,6 @@ void Update_StateCredit() {
 				if(sgb_check()){
 					set_sgb_palette01_WOLF();
 				}
-				PlayMusic(credits_drumbass_mod_Data, 11, 1);
 				InitScroll(&mapcredits2, collision_tiles_credits, 0); // music of the Misty Hills
 			break;
 			case 2u:
@@ -99,7 +99,6 @@ void Update_StateCredit() {
 				if(sgb_check()){
 					set_sgb_palette01_2H();
 				}
-				PlayMusic(credits_mod_Data, 11, 1);
 				InitScroll(&mapcredits3, collision_tiles_credits, 0); // powered by ZGB
 			break;
 			case 4u:
