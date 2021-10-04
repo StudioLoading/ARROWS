@@ -1,7 +1,7 @@
 
 ANCHE CON LIAM HO REPLICATO IL SALTO ALL' INFINITO E IL BLOCCO DEL GIOCO SUGLI UCCELLI
 
-INTRO in bella copia
+INTRO in bella copia, testo, icone ("ti lascio un arco e uno scudo"... "ti aspetto al castello") , pulsanti e audio
 
 BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
 
@@ -10,6 +10,8 @@ SE DOPO 5 SECONDI NON FACCIO NIENTE, SETTARE L' ANIMAZIONE COL MANTELLO CHE SVOL
 COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
 
 l' ultimo scrigno nel LIVELLO DEI FULMINI SPAWNA PIù VOLTE
+
+SISTEMA DI INTERAZIONE. SE SONO IN UN CERTO PUNTO SULLA MAPPA, FACCIO COMPARIRE UNA CERTA SPRITE IN UNA CERTA POSIZIONE, SOTTO LA QUALE SE SI METTE IL PG E PREME GIù+FIRE, C'E' UN DIALOGO
 
 
 
@@ -47,9 +49,7 @@ KNOWN ISSUE:
 
 - schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 
-- intro iniziale con poesia su una pergamena di carta ! audio da Leandro ? 
-
-- Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
+- Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
 
 - nella titlescreen del gameOver ci starebbe una freccia spezzata ? alternativa è lo scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 

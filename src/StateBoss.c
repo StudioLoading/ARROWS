@@ -458,8 +458,8 @@ void SpawnReward(){
 }
 
 void WriteBBOSSHP(){
-	PRINT_POS(9, 0);
-	Printf("%d", is_on_boss);
+	//PRINT_POS(9, 0);
+	//Printf("%d", is_on_boss);
 	PRINT_POS(10, 0);
 	if(boss_hp>0){
 		if(boss_hp > 9){
