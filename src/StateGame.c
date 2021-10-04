@@ -56,7 +56,7 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 3u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -288,7 +288,6 @@ void Start_StateGame() {
 	}
 	
 	archer_state = STATE_JUMPING;
-
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -502,90 +501,89 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 29u << 3 && spawning_triggered <= 2){
 							spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
 						}
-						if (scroll_target->x == (UINT16) 38u << 3 && spawning_triggered <= 1){
+						if (scroll_target->x == (UINT16) 38u << 3 && spawning_triggered <= 3){
 							spawn_enemy(SpriteSpider, 50u, 7u);
 						}
-						if (scroll_target->x == (UINT16) 51u << 3 && spawning_triggered <= 2){
+						if (scroll_target->x == (UINT16) 51u << 3 && spawning_triggered <= 4){
 							spawn_enemy(SpritePlatform, 63u, 8u);
 						}
-						if (scroll_target->x == (UINT16) 89u << 3 && spawning_triggered <= 3){
+						if (scroll_target->x == (UINT16) 89u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpriteSpider, 94u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 105u << 3){
+						if (scroll_target->x == (UINT16) 105u << 6){
 							spawn_item(scrigno_dcoin, 122u, 0u, 7, 0);
 						}
-						if (scroll_target->x == (UINT16) 126u << 3 && spawning_triggered <= 4){
+						if (scroll_target->x == (UINT16) 126u << 3 && spawning_triggered <= 7){
 							spawn_enemy(SpriteSpider, 149u, 5u);
 							spawn_enemy(SpriteSpider, 150u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 && spawning_triggered <= 6){
+						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 && spawning_triggered <= 9){
 							spawn_enemy(SpriteRat, 143u, 13u);
-						}
-						
+						}						
 					break;
 				}
 			break;
 			case 2u:
 				switch(current_map){
 					case 0:
-						if (scroll_target->x == (UINT16) 37u << 3){
+						if (scroll_target->x == (UINT16) 37u << 3 && spawning_triggered <= 3){
 							spawn_item(scrigno_up, 46u, 0u, 3, 1);
 						}
-						if (scroll_target->x == (UINT16) 43u << 3 && spawning_triggered == 0){
+						if (scroll_target->x == (UINT16) 43u << 3 && spawning_triggered <= 4){
 							spawn_enemy(SpriteSpider, 51u, 9u);
 							spawn_enemy(SpriteEnemy, 56u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 84u << 3 && spawning_triggered <= 2){
+						if (scroll_target->x == (UINT16) 84u << 3 && spawning_triggered <= 6){
 							spawn_enemy(SpriteBird, 90u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 104u << 3 && spawning_triggered <= 3){
+						if (scroll_target->x == (UINT16) 104u << 3 && spawning_triggered <= 7){
 							spawn_enemy(SpriteEnemy, 115u, 10u);
 							spawn_enemy(SpriteBird, 90u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 119u << 3 && spawning_triggered <= 5){
+						if (scroll_target->x == (UINT16) 119u << 3 && spawning_triggered <= 8){
 							spawn_enemy(SpritePlatform, 131u, 10u);
 							spawn_enemy(SpriteBird, 140u, 3u);
 							//spawn_enemy(SpriteBird, 114u, 4u);
 						}
-						if (scroll_target->x == (UINT16) 143u << 3 && spawning_triggered <= 7){
+						if (scroll_target->x == (UINT16) 143u << 3 && spawning_triggered <= 10){
 							spawn_enemy(SpriteBird, 155u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 8){
+						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 11){
 							//spawn_enemy(SpriteSpider, 162u, 9u);
 							spawn_enemy(SpriteEnemy, 165u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 151u << 3 && spawning_triggered <= 9){
+						if (scroll_target->x == (UINT16) 151u << 3 && spawning_triggered <= 12){
 							spawn_enemy(SpriteBird, 140u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 10){
+						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 12){
 							spawn_enemy(SpriteBird, 160u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 167u << 3 && spawning_triggered <= 11){
+						if (scroll_target->x == (UINT16) 167u << 3 && spawning_triggered <= 14){
 							spawn_enemy(SpriteBird, 178u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 170u << 3){
+						if (scroll_target->x == (UINT16) 170u << 3 && spawning_triggered <= 15){
 							spawn_item(scrigno_shield, 183u, 6u, 2, 1);
 						}
 					break;
 					case 1:
-						if (scroll_target->x == (UINT16) 123u << 3 && spawning_triggered == 0){
+						if (scroll_target->x == (UINT16) 123u << 3 && spawning_triggered <= 2){
 							spawn_enemy(SpriteBird, 135u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 128u << 3 && spawning_triggered <= 1){
+						if (scroll_target->x == (UINT16) 128u << 3 && spawning_triggered <= 3){
 							spawn_enemy(SpriteBird, 116u, 5u);
 							spawn_enemy(SpriteSpider, 135u, 10u);
 							//spawn_enemy(SpriteSpider, 136u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 141u << 3 && spawning_triggered <= 3){
+						if (scroll_target->x == (UINT16) 141u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpriteBird, 130u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 152u << 3 && spawning_triggered <= 4){
+						if (scroll_target->x == (UINT16) 152u << 3 && spawning_triggered <= 6){
 							spawn_enemy(SpriteBird, 165u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 5){
+						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 7){
 							spawn_enemy(SpriteBird, 175u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 168u << 3 && spawning_triggered <= 6){
+						if (scroll_target->x == (UINT16) 168u << 3 && spawning_triggered <= 8){
 							spawn_enemy(SpriteBird, 182u, 5u);
 						}		
 					break;

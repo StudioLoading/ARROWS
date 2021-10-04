@@ -125,6 +125,7 @@ struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 po
 }
 
 void spawn_item4(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
+	spawning_triggered++;
 	SpriteManagerRemoveSprite(itemin);
 	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;
@@ -415,7 +416,7 @@ void Update_StateGame4() {
 			case 3u: // Sky -> Ibex
 				switch(current_map){
 					case 0u:
-						if (scroll_target->x > (UINT16) 93u << 3){
+						if (scroll_target->x > (UINT16) 93u << 3 && spawning_triggered <= 1){
 							if (scroll_target->x == (UINT16) 120u << 3){
 								spawn_item4(scrigno_shield, 133u, 9u, 2, 1);
 							}
@@ -526,19 +527,7 @@ void Update_StateGame4() {
 	
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 120) {
-		switch(updatecounter){
-			case 1:
-			case 40:
-			case 80:
-				AnimRain0();
-			break;
-			case 20:
-			case 60:
-			case 100:
-				AnimRain1();
-			break;
-		}
+	if (updatecounter < 120) {		
 		if(current_level == 4u){
 			switch(updatecounter){
 				case 1:
@@ -552,7 +541,7 @@ void Update_StateGame4() {
 					AnimClouds1();
 				break;
 			}
-		}else{		
+		}else if (current_level != 3u){		
 			switch(updatecounter){
 				case 1:
 				case 60:
@@ -565,6 +554,20 @@ void Update_StateGame4() {
 					AnimSpuncioni1();
 				break;
 			}
+		}else{ //cioè liv3 sky
+			switch(updatecounter){
+				case 1:
+				case 40:
+				case 80:
+					AnimRain0();
+				break;
+				case 20:
+				case 60:
+				case 100:
+					AnimRain1();
+				break;
+			}
+		
 		}
 	}else{
 		updatecounter = 0;

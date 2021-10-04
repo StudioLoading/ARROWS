@@ -1,14 +1,7 @@
-SCRIGNO RESPAWNA AL TERZO LIVELLO MAPPA 0
-
-L' ENEMY DEVE GIRARSI QUANTO TOCCA LE PARETI LATERALI DELLA VASCA, COSì DA CADERE SUI TESCHI
 
 ANCHE CON LIAM HO REPLICATO IL SALTO ALL' INFINITO E IL BLOCCO DEL GIOCO SUGLI UCCELLI
 
-CONTROLLARE CHE QUANDO MUOIO A BOSS SCONFITTO, IL REWARD TORNI INSIEME AL BOSS MORTO
-
-DOPO AVER PRESO IL CALICE LO STATEBOSS SI IMPAPPINA
-
-INTRO con SPIEGA DEI TASTI
+INTRO in bella copia
 
 BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
 
@@ -16,9 +9,9 @@ SE DOPO 5 SECONDI NON FACCIO NIENTE, SETTARE L' ANIMAZIONE COL MANTELLO CHE SVOL
 
 COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
 
-l' ultimo scriogno nel LIVELLO DEI FULMINI SPAWNA PIù VOLTE
+l' ultimo scrigno nel LIVELLO DEI FULMINI SPAWNA PIù VOLTE
 
-L' ANIMAZIONE SUL LIVELLO DEI FULMINI FA COMPARIRE CANDELE AL LIVELLO DEL PG
+
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
@@ -142,16 +135,18 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 
 DISCORD MARKDOWN: ```c ```
 
-```c	
-	#include "gbt_player.h"
-	...
-	extern UINT8* titlescreen_mod_Data[];
-	...
-	//SOUND
-	NR52_REG = 0x50; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
-	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop
-	...	
+````c	
+C:\GB\ZGBNEW\ZGB-template-master\src>C:\GB\ZGBNEW\common\..\env\make-3.81-bin\bin\make run
+compiling StateIntro.c
+StateIntro.c:27: error 20: Undefined identifier 'tilesintroCGBPal0c0'
+StateIntro.c:27: error 20: Undefined identifier 'tilesintroCGBPal0c1'
+StateIntro.c:27: error 20: Undefined identifier 'tilesintroCGBPal0c2'
+StateIntro.c:27: error 20: Undefined identifier 'tilesintroCGBPal0c3'
+StateIntro.c:27: error 20: Undefined identifier 'tilesintroCGBPal1c0'
+...
+StateIntro.c:27: error 20: Undefined identifier 'tilesintroCGBPal7c3'
+StateIntro.c:27: error 2: Initializer element is not a constant expression
+make: *** [../Release/StateIntro.o] Error 1
 ```
 
 

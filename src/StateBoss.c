@@ -186,7 +186,9 @@ void Start_StateBoss() {
 	
 	
 	if (is_on_boss >= 2){
-		//SpawnReward(); // controllare
+		if(is_on_boss == 4){//lo setto a 4 solo quando si muore dopo aver sconfitto il boss ma prima di essere usciti, come dei coglioni
+			SpawnReward();
+		}
 		SpawnBoss(0);
 		archer_state = STATE_JUMPING;
 	}else{

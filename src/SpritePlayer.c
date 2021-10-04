@@ -189,6 +189,7 @@ void Update_SpritePlayer() {
 					}else{
 						if (is_on_boss != -1){
 							current_camera_state = 3u;
+							is_on_boss = 4;
 							SetState(StateBoss);							
 						}else{						
 							if(current_level < 3){

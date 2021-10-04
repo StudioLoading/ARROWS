@@ -4,9 +4,9 @@
 
 #include "../res/src/font.h"
 #include "../res/src/diagnew.h"
+#include "../res/src/diagarcher.h"
 
 #include "../res/src/mapdiagarcher.h"
-#include "../res/src/mapdiagarcher1.h"
 #include "../res/src/mapdiagslave1.h"
 #include "../res/src/mapdiagslave2.h"
 #include "../res/src/mapdiagslave3.h"
@@ -24,7 +24,6 @@
 #include "../res/src/mapdiagamuletice.h"
 #include "../res/src/mapdiagamuletfire.h"
 
-#include "../res/src/diagarcher1.h"
 #include "../res/src/diagslave1.h"
 #include "../res/src/diagslave2.h"
 #include "../res/src/diagslave3.h"
@@ -81,7 +80,7 @@ extern unsigned char d4[];
 
 extern UINT8 diag_found;
 
-const UINT16 bg_paletted[] = {PALETTE_FROM_HEADER(diagarcher1)};
+const UINT16 bg_paletted[] = {PALETTE_FROM_HEADER(diagarcher)};
 const UINT8 const collision_dtiles[] = {0,0};
 
 

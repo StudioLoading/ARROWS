@@ -150,7 +150,7 @@ void Update_StateTitlescreen() {
 	}
 	
 	if(KEY_TICKED(J_START)){
-		SetState(StateGame);	
+		SetState(StateIntro);	
 	}
 	
 	if(current_camera_state >= 2u){
