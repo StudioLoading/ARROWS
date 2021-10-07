@@ -209,14 +209,14 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d1, "  STALAGMITE NECK   ", 20);
 						memcpy(d2, "                    ", 20);
 						memcpy(d3, "  NOW I CAN THROW   ", 20);
-						memcpy(d4, "  ICE ARROWS  + ]   ", 20);
+						memcpy(d4, "  ICE ARROWS     +] ", 20);
 						diagf = 32u;					
 					break;
 					case STATE_AMULET_FIRE:
 						memcpy(d1, "  VULKAN PYRAMID    ", 20);
 						memcpy(d2, "                    ", 20);
 						memcpy(d3, "  NOW I CAN THROW   ", 20);
-						memcpy(d4, "  FIRE ARROWS   +]  ", 20);
+						memcpy(d4, "  FIRE ARROWS    +@ ", 20);
 						diagf = 33u;					
 					break;
 				}

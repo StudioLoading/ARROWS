@@ -14,6 +14,37 @@ l' ultimo scrigno nel LIVELLO DEI FULMINI SPAWNA PIù VOLTE
 SISTEMA DI INTERAZIONE. SE SONO IN UN CERTO PUNTO SULLA MAPPA, FACCIO COMPARIRE UNA CERTA SPRITE IN UNA CERTA POSIZIONE, SOTTO LA QUALE SE SI METTE IL PG E PREME GIù+FIRE, C'E' UN DIALOGO
 
 
+TRAILER:
+schermo nero, audio di click di accensione gameBoy
+accensione di GameBoy con rettangolo nero
+bli-bling e schermo bloccato
+audio di click di spegnimento
+annerimento schermo
+audio di soffio
+click di accensione
+video di StudioLoading che scende, bli-bling, pg che scende, tutto scende
+audio rock con video di gameplay a palette di gameBoy, quindi tutti i colori di verde
+frequenza di scene aumenta un po'
+click di spegnimento
+schermo nero
+audio di estrazione cartuccia
+audio di inserzione superGameBoy su SNES
+audio di accensione SNES
+mostro a video esattamente questo: https://www.youtube.com/watch?v=-kHFfqx75FQ
+torno su audio rock, scene di gamePlay a colori
+frequenza di gamePlay che aumenta, audio che si fa più heavy
+dissolvenza audio, schermo nero
+audio sibilo di freccia
+passa una freccia
+audio sibilo + frecce che passano, così tante da coprire lo schermo, mentre passano aumento audio rock
+tutte passate mostrano logo del titolo di gioco con musica pesantissima
+dissolvenza audio
+dissolvenza video
+risata del cattivo
+colpo di frusta
+2 secondi di silenzio
+
+
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 
