@@ -47,7 +47,7 @@ void Start_StateIntro() {
 	current_camera_counter = 0u;
 	
 	if(sgb_check()){
-		set_sgb_palette01_2A();
+		set_sgb_palette01_intro();
 	}
 
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2); //end with the bank of where I have the palette/tileset
@@ -64,7 +64,7 @@ void Start_StateIntro() {
 	//SOUND
 	NR52_REG = 0x50; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	//PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop	
+	PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop	
 
 	InitScroll(&mapintro, collision_tiles_intro, 14);//map pointer, collision array, tile bank
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, (UINT16) 10u << 3, (UINT16) 12u << 3);	

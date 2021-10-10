@@ -70,7 +70,7 @@ void Start_StateTitlescreen() {
 	ShowPushStart();     
 	
 	//SOUND
-	NR52_REG = 0x50; //Enables sound, you should always setup this first
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
 
@@ -83,17 +83,13 @@ void Start_StateTitlescreen() {
 void Update_StateTitlescreen() {	
 
 	switch(loading_code){
-		case 6:
-			if(KEY_TICKED(J_START)){
-				quiver = 0b0000011111;
-				loading_code = 7;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT) || KEY_TICKED(J_UP)){
-				loading_code = 0;
-			}	
-		break;
 		case 5:
 			if(KEY_TICKED(J_UP)){
-				loading_code = 6;
+				quiver = 0b0000011111;
+				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				loading_code = 7;
 			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}	

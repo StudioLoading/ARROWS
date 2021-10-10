@@ -70,6 +70,9 @@ void reset_sgb_palette_statusbar() __banked{
     sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);	
 }
 
+void set_sgb_palette01_intro() __banked{
+	set_sgb_palette(SGB_PAL1B_LIGHTER, RGB8(255, 187, 17), RGB8(0, 0, 0), SGB_PAL1B_DARKER);
+}
 void set_sgb_palette01_WOLF() __banked{
 	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARK, SGB_PAL2H_DARKER);
 }

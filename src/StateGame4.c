@@ -456,13 +456,13 @@ void Update_StateGame4() {
 								thunder_delay = 160u;
 							break;
 							default:
-								if (scroll_target->x == (UINT16) 30u << 3){
+								if (scroll_target->x == (UINT16) 30u << 3 && spawning_triggered <= 1){
 									spawn_item4(scrigno_shield, 39u, 4u, 2, 1);
 								}
-								if(scroll_target->x == (UINT16) 140u << 3){
+								if(scroll_target->x == (UINT16) 140u << 3 && spawning_triggered <= 2){
 									spawn_item4(scrigno_shield, 156u, 5u, 2, 1);							
 								}					
-								if(scroll_target->x == (UINT16) 175u << 3){
+								if(scroll_target->x == (UINT16) 175u << 3 && spawning_triggered <= 3){
 									spawn_item4(scrigno_shield, 185u, 4u, 2, 1);
 								}
 							break;
@@ -503,20 +503,17 @@ void Update_StateGame4() {
 						}
 					break;
 					case 1u:
-						if(scroll_target->x == (UINT16) 31u << 3 && scroll_target->y < (UINT16) 10u << 3){
+						if(scroll_target->x == (UINT16) 31u << 3 && scroll_target->y < (UINT16) 10u << 3 && spawning_triggered <= 1){
 							spawn_item4(scrigno_dcoin, 34u, 2u, 7, 0);
 						}
-						if(scroll_target->x == (UINT16) 23u << 3 && 
-							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_triggered == 0){
+						if(scroll_target->x == (UINT16) 23u << 3 && scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_triggered <= 2){
 							spawn_enemy4(SpriteRat, 17u, 28u);
 						}
-						if(scroll_target->x == (UINT16) 30u << 3 && 
-							scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_triggered <= 3){
+						if(scroll_target->x == (UINT16) 30u << 3 && scroll_target->y < (UINT16) 28u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_triggered <= 3){
 							spawn_enemy4(SpriteRat, 30u, 28u);
 							spawn_enemy4(SpriteSpider, 23u, 27u);
 						}
-						if(scroll_target->x == (UINT16) 34u << 3 && 
-							scroll_target->y < (UINT16) 39u << 3 && scroll_target->y > (UINT16) 36u << 3 && spawning_triggered <= 5){
+						if(scroll_target->x == (UINT16) 34u << 3 && scroll_target->y < (UINT16) 39u << 3 && scroll_target->y > (UINT16) 36u << 3 && spawning_triggered <= 5){
 							spawn_item4(scrigno_shield, 43u, 41u, 2, 1);
 						}
 					break;
@@ -557,12 +554,24 @@ void Update_StateGame4() {
 		}else{ //cioè liv3 sky
 			switch(updatecounter){
 				case 1:
+					AnimClouds0();
+					AnimRain0();
+				break;
 				case 40:
+					AnimClouds1();
+					AnimRain0();
+				break;
 				case 80:
 					AnimRain0();
 				break;
 				case 20:
+					AnimClouds0();
+					AnimRain1();
+				break;
 				case 60:
+					AnimClouds1();
+					AnimRain1();
+				break;
 				case 100:
 					AnimRain1();
 				break;

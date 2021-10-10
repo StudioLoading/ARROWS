@@ -1,49 +1,6 @@
-
-ANCHE CON LIAM HO REPLICATO IL SALTO ALL' INFINITO E IL BLOCCO DEL GIOCO SUGLI UCCELLI
-
-INTRO in bella copia, testo, icone ("ti lascio un arco e uno scudo"... "ti aspetto al castello") , pulsanti e audio
-
-BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
-
-SE DOPO 5 SECONDI NON FACCIO NIENTE, SETTARE L' ANIMAZIONE COL MANTELLO CHE SVOLAZZA
-
 COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
 
-l' ultimo scrigno nel LIVELLO DEI FULMINI SPAWNA PIù VOLTE
-
-SISTEMA DI INTERAZIONE. SE SONO IN UN CERTO PUNTO SULLA MAPPA, FACCIO COMPARIRE UNA CERTA SPRITE IN UNA CERTA POSIZIONE, SOTTO LA QUALE SE SI METTE IL PG E PREME GIù+FIRE, C'E' UN DIALOGO
-
-
-TRAILER:
-schermo nero, audio di click di accensione gameBoy
-accensione di GameBoy con rettangolo nero
-bli-bling e schermo bloccato
-audio di click di spegnimento
-annerimento schermo
-audio di soffio
-click di accensione
-video di StudioLoading che scende, bli-bling, pg che scende, tutto scende
-audio rock con video di gameplay a palette di gameBoy, quindi tutti i colori di verde
-frequenza di scene aumenta un po'
-click di spegnimento
-schermo nero
-audio di estrazione cartuccia
-audio di inserzione superGameBoy su SNES
-audio di accensione SNES
-mostro a video esattamente questo: https://www.youtube.com/watch?v=-kHFfqx75FQ
-torno su audio rock, scene di gamePlay a colori
-frequenza di gamePlay che aumenta, audio che si fa più heavy
-dissolvenza audio, schermo nero
-audio sibilo di freccia
-passa una freccia
-audio sibilo + frecce che passano, così tante da coprire lo schermo, mentre passano aumento audio rock
-tutte passate mostrano logo del titolo di gioco con musica pesantissima
-dissolvenza audio
-dissolvenza video
-risata del cattivo
-colpo di frusta
-2 secondi di silenzio
-
+SISTEMA DI INTERAZIONE. DECISO DI FARLO SENZA SPRITE MA CON SEMPLICE ANIMAZIONE BG che tanto ho tiles e poco codice da fare
 
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
@@ -75,9 +32,9 @@ LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 KNOWN ISSUE:
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 - sonoro trionfale quando sollevo amulet
-
+- BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
 - state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
-
+- ANCHE CON LIAM HO REPLICATO IL SALTO ALL' INFINITO E IL BLOCCO DEL GIOCO SUGLI UCCELLI
 - schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 
 - Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
@@ -106,7 +63,7 @@ polish:
 	- effetto di camera tramble che potrebbe essere utile da usare come effetto
 	- schermata di fine livello - direi con pergamena descrittiva
 	- polish della titlescreen
-
+	- SE DOPO 5 SECONDI NON FACCIO NIENTE, SETTARE L' ANIMAZIONE COL MANTELLO CHE SVOLAZZA
 	
 
 

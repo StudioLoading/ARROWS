@@ -56,8 +56,8 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 4u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 1u; // 0u default
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -487,12 +487,12 @@ void Update_StateGame() {
 							spawn_enemy(SpriteSpider, 85u, 5u);
 							spawn_item(scrigno_dcoin, 85u, 5u, 7, 1);
 						}
-						if ((scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3) && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 10 ){
+						if ((scroll_target->x == (UINT16) 97u << 3 | scroll_target->x == (UINT16) 101u << 3 | scroll_target->x == (UINT16) 108u << 3) && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 11 ){
 							scroll_target->x++;
 							spawn_enemy(SpriteSpider, (scroll_target->x >> 3) + 3u, 3u);
 							spawn_enemy(SpriteSpider, (scroll_target->x >> 3) - 3u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 177u << 3 && spawning_triggered <= 12){
+						if (scroll_target->x == (UINT16) 177u << 3 && spawning_triggered <= 13){
 							spawn_item(scrigno_dcoin, 192u, 7u, 7, 1);
 						}
 						
@@ -510,7 +510,7 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 89u << 3 && spawning_triggered <= 5){
 							spawn_enemy(SpriteSpider, 94u, 5u);
 						}
-						if (scroll_target->x == (UINT16) 105u << 6){
+						if (scroll_target->x == (UINT16) 105u << 6 && spawning_triggered <= 6){
 							spawn_item(scrigno_dcoin, 122u, 0u, 7, 0);
 						}
 						if (scroll_target->x == (UINT16) 126u << 3 && spawning_triggered <= 7){
@@ -540,28 +540,28 @@ void Update_StateGame() {
 							spawn_enemy(SpriteEnemy, 115u, 10u);
 							spawn_enemy(SpriteBird, 90u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 119u << 3 && spawning_triggered <= 8){
+						if (scroll_target->x == (UINT16) 119u << 3 && spawning_triggered <= 9){
 							spawn_enemy(SpritePlatform, 131u, 10u);
 							spawn_enemy(SpriteBird, 140u, 3u);
 							//spawn_enemy(SpriteBird, 114u, 4u);
 						}
-						if (scroll_target->x == (UINT16) 143u << 3 && spawning_triggered <= 10){
+						if (scroll_target->x == (UINT16) 143u << 3 && spawning_triggered <= 11){
 							spawn_enemy(SpriteBird, 155u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 11){
+						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 12){
 							//spawn_enemy(SpriteSpider, 162u, 9u);
 							spawn_enemy(SpriteEnemy, 165u, 9u);
 						}
-						if (scroll_target->x == (UINT16) 151u << 3 && spawning_triggered <= 12){
+						if (scroll_target->x == (UINT16) 151u << 3 && spawning_triggered <= 13){
 							spawn_enemy(SpriteBird, 140u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 12){
+						if (scroll_target->x == (UINT16) 163u << 3 && spawning_triggered <= 14){
 							spawn_enemy(SpriteBird, 160u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 167u << 3 && spawning_triggered <= 14){
+						if (scroll_target->x == (UINT16) 167u << 3 && spawning_triggered <= 15){
 							spawn_enemy(SpriteBird, 178u, 3u);
 						}
-						if (scroll_target->x == (UINT16) 170u << 3 && spawning_triggered <= 15){
+						if (scroll_target->x == (UINT16) 170u << 3 && spawning_triggered <= 16){
 							spawn_item(scrigno_shield, 183u, 6u, 2, 1);
 						}
 					break;
@@ -597,12 +597,24 @@ void Update_StateGame() {
 	if (updatecounter < 60) {
 		switch(updatecounter){
 			case 1:
-				AnimWaters0();
 				AnimSpuncioni0();
+				AnimSky0();
+			break;
+			case 20:			
+				AnimWaters0();
+				if(archer_tool == 0 && current_level == 0u && current_map == 0u){
+					AnimPrisoner00();
+				}
 			break;
 			case 30:
-				AnimWaters1();
 				AnimSpuncioni1();
+			break;
+			case 40:
+				AnimWaters1();
+				AnimSky1();
+				if(archer_tool == 0 && current_level == 0u && current_map == 0u){
+					AnimPrisoner01();
+				}
 			break;
 		}			
 	}else{
