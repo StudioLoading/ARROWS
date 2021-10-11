@@ -1,16 +1,3 @@
-COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
-
-SISTEMA DI INTERAZIONE. DECISO DI FARLO SENZA SPRITE MA CON SEMPLICE ANIMAZIONE BG che tanto ho tiles e poco codice da fare
-
-
-LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
-
-- disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
-	- immagini grosse di
-		- tusk
-		- cattivone con frusta
-
-
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
@@ -25,9 +12,19 @@ LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
 
-- sul drive di checco.1809 cartella ARROWS c'è il video della suonata di Leonardo per audio. Da mettere su GuitarPro o addirittura subito su Audacity come midi.
+LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
+	- WOLF siamo al cimitero, il lupo ha una vx che aumenta, scopo è catturare 10 topi, al massimo si può saltare, e i topi sono o per terra o sopra una lapide. quando wolf arriva al cancello del castello, il livello è finito. se ha catturato 10 topi partecipa allo scontro contro il boss
+	- EAGLE stesso processo, i topi sono o per terra o sopra gli alberi. l' aquila resta in volo e con "salto" va in picchiata
+	- BEAR boh, uguale al wolf ma magari più lento, e ne deve beccare di più ?
 
-- sound sull' intro //PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop
+- sul drive di checco.1809 cartella ARROWS c'è il video di tutti i giri di Leonardo alla tastiera. Ho già messo in midi solo il primo. Mettere anche gli altri o salvarsi il video.
+
+- sound: fare i midi di tutti i loop che voglio, il Twitter Cesc Mozota mi da il preventivo quando gli do i midi.
+
+- disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
+	- immagini grosse di
+		- tusk
+		- cattivone con frusta
 
 KNOWN ISSUE:
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
@@ -75,15 +72,12 @@ dopo i boss senza amuleti si accede ad un livello bonus, se lo si supera, il bos
 
 CONTROLLO di tutti i suggerimenti/dialoghi
 
-Cheat in titleScreen  tipo KonamiCode   AB>v<^ 
-	99 lives
-	tutti gli amuleti
-
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
 Controllare che le stanze di secret siano più a sinistra delle frecce di respawn su livello
 
+Controllare movimenti di tutti i bird, l' ho modificato l' 11 /ott sostituendo i THIS->x++ col TranslateSprite
 
 RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
 
@@ -96,6 +90,8 @@ SHOULD I.. ?
 - fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
 - comparsa del testo lettera per lettera
 - diag della tile che converte e ridireziona il tipo di freccia
+- COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
+
 
 
 

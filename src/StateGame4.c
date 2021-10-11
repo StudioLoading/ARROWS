@@ -44,6 +44,7 @@ extern INT8 level_tool;
 extern UINT8 current_level;
 extern UINT8 current_map;
 extern INT8 is_on_boss;
+extern INT8 is_on_secret;
 extern INT8 archer_tool;
 extern UINT8 current_camera_state;
 extern UINT8 current_camera_counter;
@@ -396,6 +397,7 @@ void Update_StateGame4() {
 	
 	if(load_next_s == 1){
 		load_next_s = 0;
+		is_on_secret = 1;
 		SetState(StateSecret);
 	}
 	

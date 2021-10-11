@@ -20,6 +20,7 @@ const UINT8 bird_time_normal = 81u;
 
 extern void CheckCollisionETile();
 extern void ETurn();
+extern void EDie();
 
 
 void Start_SpriteBird() {
@@ -93,12 +94,20 @@ void Update_SpriteBird() {
 	}
 	
 	if(data->enemy_state == ENEMY_STATE_NORMAL){
-		THIS->x += data->vx;
-		THIS->y += data->enemy_accel_y;	
+		//THIS->x += data->vx;
+		data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, data->enemy_accel_y << delta_time);
+		if(data->tile_e_collision == 40u){//skull of death
+			EDie();
+		}
+		//THIS->y += data->enemy_accel_y;	
 	}else{		
 		if(data->wait << 2){
-			THIS->x += data->vx;
-			THIS->y += data->enemy_accel_y;	
+			data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, data->enemy_accel_y << delta_time);
+			if(data->tile_e_collision == 40u){//skull of death
+				EDie();
+			}
+			//THIS->x += data->vx;
+			//THIS->y += data->enemy_accel_y;
 		}
 	}
 	
@@ -149,8 +158,6 @@ void Update_SpriteBird() {
 	}
 	
 }
-
-
 
 void Destroy_SpriteBird() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;

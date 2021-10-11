@@ -48,6 +48,7 @@ INT8 shoot_cooldown = 0;
 INT8 platform_vx = 0;
 INT8 platform_vy = 0;
 INT8 is_on_boss = -1;
+INT8 is_on_secret = -1;
 UINT8 diag_found = 0u;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 UINT8 current_camera_counter = 0u;
@@ -219,7 +220,7 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL && is_on_boss != 1){		
+				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL && is_on_boss != 1 && is_on_secret == -1){
 					Build_Next_Dialog();
 					return;
 				}else if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){

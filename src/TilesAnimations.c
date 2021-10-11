@@ -103,3 +103,15 @@ void AnimPrisoner00() __banked{
 void AnimPrisoner01() __banked{
 	set_bkg_data(4u, 1u, tilesanims.data->data+64u);
 }
+void AnimPrisoner10() __banked{
+	set_bkg_data(30u, 1u, tiles.data->data+480u);
+}
+void AnimPrisoner11() __banked{
+	set_bkg_data(30u, 1u, tilesanims.data->data+480u);
+}
+void AnimPrisoner20() __banked{
+	set_bkg_data(58u, 1u, tiles.data->data+928u);
+}
+void AnimPrisoner21() __banked{
+	set_bkg_data(58u, 1u, tilesanims.data->data+928u);
+}

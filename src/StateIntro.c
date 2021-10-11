@@ -74,7 +74,7 @@ void Start_StateIntro() {
 
 void Update_StateIntro() {	
 
-	if(scroll_target-> y < ((UINT16) 195u << 3) && scroll_target-> y > ((UINT16) 5u << 3)){
+	if(scroll_target-> y < ((UINT16) 111u << 3) && scroll_target-> y > ((UINT16) 5u << 3)){
 		current_camera_counter++;	
 		switch(current_camera_counter){
 			case 0u:

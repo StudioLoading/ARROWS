@@ -28,6 +28,7 @@ extern INT8 load_next_s;
 extern INT8 level_tool;
 extern UINT8 current_level;
 extern UINT8 current_map;
+extern INT8 is_on_secret;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
 extern ARCHER_STATE archer_state;
@@ -135,6 +136,7 @@ void Update_StateSecret() {
 	if(load_next_s){
 		switch(load_next_s){
 			case -1: //torno dalla secret a game
+				is_on_secret = -1;
 				if(current_level < 3){
 					SetState(StateGame);	
 				}else if (current_level < 6){

@@ -56,8 +56,8 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+UINT8 current_level = 2u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -97,6 +97,7 @@ const struct MapInfo** const levels[] = {level_1, level_2, level_3};
 extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
 extern INT8 is_on_boss;
+extern INT8 is_on_secret;
 extern UINT8 current_level_b;
 extern UINT8 current_map_b;
 extern INT8 platform_vx;
@@ -419,6 +420,7 @@ void Update_StateGame() {
 	
 	if(load_next_s == 1){
 		load_next_s = 0;
+		is_on_secret = 1;
 		SetState(StateSecret);
 	}
 	
@@ -602,8 +604,18 @@ void Update_StateGame() {
 			break;
 			case 20:			
 				AnimWaters0();
-				if(archer_tool == 0 && current_level == 0u && current_map == 0u){
+				if(archer_tool == 0){
+					if(current_level == 0u && current_map == 0u){
+						AnimPrisoner00();
+						AnimPrisoner10();
+					}
+					if(current_level == 1u && current_map == 1u){
+						AnimPrisoner20();
+					}
+				}else{
 					AnimPrisoner00();
+					AnimPrisoner10();
+					AnimPrisoner20();					
 				}
 			break;
 			case 30:
@@ -612,8 +624,18 @@ void Update_StateGame() {
 			case 40:
 				AnimWaters1();
 				AnimSky1();
-				if(archer_tool == 0 && current_level == 0u && current_map == 0u){
-					AnimPrisoner01();
+				if(archer_tool == 0){
+					if(current_level == 0u && current_map == 0u){
+						AnimPrisoner01();
+						AnimPrisoner11();
+					}
+					if(current_level == 1u && current_map == 1u){
+						AnimPrisoner21();
+					}
+				}else{
+					AnimPrisoner00();
+					AnimPrisoner10();
+					AnimPrisoner20();
 				}
 			break;
 		}			

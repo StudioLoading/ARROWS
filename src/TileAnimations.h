@@ -10,3 +10,7 @@ void AnimSpuncioni0() __banked;
 void AnimSpuncioni1() __banked;
 void AnimPrisoner00() __banked;
 void AnimPrisoner01() __banked;
+void AnimPrisoner10() __banked;
+void AnimPrisoner11() __banked;
+void AnimPrisoner20() __banked;
+void AnimPrisoner21() __banked;
