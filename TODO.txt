@@ -1,13 +1,15 @@
+Aggiungere cancello all' entrata della stanza del boss, che si apre con la pietra convertitrice. Così quando si entra dal boss e si rivede quella pietra, si capisce cosa bisogna fare.
+
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
-		- concentrerei questo livello sulle abilità di arrow surfing
 		- stalattiti che cadono dall' alto traballando
 		- goccia che cade e fa crescere una stalagmite
-		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
+		- goccia seguita da cancello + suggerimento giusto, per far capire al giocatore che la goccia è un convertitore
+		- nemico bomba: frecciata ghiacciata -> blink -> esplode in verticale
 		- piattaforma cadente quando ci atterro sopra
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire

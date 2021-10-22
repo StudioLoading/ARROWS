@@ -11,14 +11,12 @@
 //STALAGMITE
 const UINT8 stalag_drop[] = {1, 5}; //The first number indicates the number of frames
 const UINT8 stalag_drop_big[] = {1, 4}; //The first number indicates the number of frames
-const UINT8 stalag_walk[] = {4, 0, 5, 1, 5}; //The first number indicates the number of frames
-const UINT8 stalag_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
-const UINT8 stalag_dead[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 stalag_low[] = {1, 3}; //The first number indicates the number of frames
+const UINT8 stalag_mid[] = {1, 2}; //The first number indicates the number of frames
+const UINT8 stalag_hl[] = {1, 1}; //The first number indicates the number of frames
+const UINT8 stalag_hh[] = {1, 0}; //The first number indicates the number of frames
 
-extern void CheckCollisionETile();
-extern void ETurn();
-
-void CheckCollisionStalagTile(UINT8 ta);
+void CheckCollisionStalagTile(struct EnemyInfo* stalag_data);
 
 void Start_SpriteStalagmite() {
 	
@@ -34,7 +32,16 @@ void Start_SpriteStalagmite() {
 	rdata->vx = 0;
 	rdata->wait = 20u;
 	rdata->hp = 24u;
-	rdata->enemy_state = ENEMY_STATE_WAIT;
+	rdata->enemy_state = STALAG_STATE_WAIT;
+	/*
+	
+	STALAG_STATE_WAIT,
+	STALAG_STATE_DROP,
+	STALAG_STATE_LOW,
+	STALAG_STATE_MED,
+	STALAG_STATE_HIGH
+	
+	*/
 }
 
 void Update_SpriteStalagmite() {
@@ -44,21 +51,21 @@ void Update_SpriteStalagmite() {
 		rdata->wait -= 1u;
 		return;
 	}
-	if(rdata->enemy_state == ENEMY_STATE_WAIT){
-		SetSpriteAnim(THIS, stalag_drop, 4u);
-		rdata->enemy_state = ENEMY_STATE_NORMAL;
-		return;
-	}else if(rdata->enemy_state == ENEMY_STATE_NORMAL){
-		rdata->tile_e_collision = TranslateSprite(THIS, rdata->vx << delta_time, (rdata->enemy_accel_y >> 4)<< delta_time);
-		if(rdata->tile_e_collision) {
-			if(rdata->enemy_accel_y > 0) {
-				rdata->enemy_state = ENEMY_STATE_NORMAL;
-			}else{
-				rdata->enemy_accel_y = 0;	
-			}
-			CheckCollisionStalagTile(rdata->tile_e_collision);
-		}
+	switch(rdata->enemy_state){
+		case STALAG_STATE_WAIT:
+			SetSpriteAnim(THIS, stalag_drop, 4u);
+			rdata->enemy_state = STALAG_STATE_DROP;
+			return;
+		break;
+		case STALAG_STATE_DROP:
+			rdata->tile_e_collision = TranslateSprite(THIS, 0, (rdata->enemy_accel_y >> 4)<< delta_time);
+			if(rdata->tile_e_collision) {
+				CheckCollisionStalagTile(rdata);
+			}		
+		break;
+		case STALAG_STATE_LOW:
 		
+		break;
 	}
 	
 	UINT8 scroll_st_tile;
@@ -68,11 +75,34 @@ void Update_SpriteStalagmite() {
 	SPRITEMANAGER_ITERATE(scroll_st_tile, istspr) {
 		if(istspr->type == SpritePlayer || istspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, istspr)) {
-				CheckCollisionStalagTile(12u);
+				if(rdata->enemy_state == STALAG_STATE_DROP){
+					SpriteManagerRemoveSprite(THIS);
+				}//altrimenti capiamo che freccia è prima di romperci
 			}
 		}
 		if(istspr->type == SpriteStalagmite) {
-			if(CheckCollision(THIS, istspr)) {
+			if(CheckCollision(THIS, istspr) && istspr != THIS) {
+				SpriteManagerRemoveSprite(THIS);
+				struct EnemyInfo* sdata = (struct EnemyInfo*)istspr->custom_data;
+				switch (sdata->enemy_state){
+					case STALAG_STATE_LOW:
+						istspr->y -= 6u;
+						SetSpriteAnim(istspr, stalag_mid, 4u);
+						sdata->enemy_state = STALAG_STATE_MED;
+						istspr->coll_x = 1;
+						istspr->coll_y = 1;
+						istspr->coll_w = 6;
+						istspr->coll_h = 14;
+					break;
+					case STALAG_STATE_MED:
+						SetSpriteAnim(istspr, stalag_hl, 4u);
+						struct Sprite* upper_stalag = SpriteManagerAdd(SpriteStalagmite, istspr->x, istspr->y - 16u);
+						struct EnemyInfo* supper_stalag_data = (struct EnemyInfo*)upper_stalag->custom_data;				
+						supper_stalag_data->enemy_state = STALAG_STATE_HIGH;
+						SetSpriteAnim(upper_stalag, stalag_hh, 4u);
+						sdata->enemy_state = STALAG_STATE_HIGH;
+					break;
+				}
 				//THIS->y += 1u;
 				//fai crescere quella a terra, istspr deve crescere,
 			}
@@ -81,10 +111,12 @@ void Update_SpriteStalagmite() {
 	
 }
 
-void CheckCollisionStalagTile(UINT8 ta){
-	switch(ta){
+void CheckCollisionStalagTile(struct EnemyInfo* stalag_data){
+	switch(stalag_data->tile_e_collision){
 		case 12u:
-			SpriteManagerRemoveSprite(THIS); // elimino me stesso
+			SetSpriteAnim(THIS, stalag_low, 4u);
+			stalag_data->enemy_state = STALAG_STATE_LOW;
+			//SpriteManagerRemoveSprite(THIS); // elimino me stesso
 		break;
 	}
 }
