@@ -62,7 +62,7 @@ void Shoot();
 void Jump();
 void MoveArcher();
 void CheckCollisionTile();
-void Hit();
+void Hit(INT8 damage);
 void Build_Next_Dialog();
 
 
@@ -95,7 +95,7 @@ void Start_SpritePlayer() {
 	THIS->coll_w = 6;
 	THIS->coll_h = 13;
 	
-	
+	death_cooldown = 1;
 	hit_cooldown = 24;
 	
 	NR50_REG = 0x55; //Max volume
@@ -156,13 +156,6 @@ void Update_SpritePlayer() {
 			or_ = quiver >> (archer_data->amulet - 1u); // del risultato di questa operazione devo prendere solo il bit meno significativo, più a dx
 			or_ = or_ & 1u;
 		}
-		/*
-		archer_data->amulet += 1u;
-		archer_data->amulet %= 6u;
-		if(archer_data->amulet == 0u){
-			archer_data->amulet = 1u;
-		}
-		*/
 	}
 	
 	switch(archer_state) {
@@ -171,17 +164,19 @@ void Update_SpritePlayer() {
 			THIS->y--;
 		break;
 		case STATE_DEAD:
-			death_cooldown ++;
+			if(death_cooldown > 0){
+				death_cooldown ++;				
+			}
 			if(death_cooldown == 6){
 				SetSpriteAnim(THIS, anim_dead, 12u);
 				archer_data->ups -= 1;
 			}
 			if (death_cooldown < 12){
 				TranslateSprite(THIS, 0, -2 );
-			}else{
-				if (death_cooldown < 120){
-					TranslateSprite(THIS, 0, 1);
-				}else{
+			}else if (death_cooldown != 0){
+				if (death_cooldown < 80){
+					tile_collision = TranslateSprite(THIS, 0, 1);
+				}else if (death_cooldown == 80){
 					death_cooldown = 0;
 					archer_data->hp = 100;
 					if (archer_data->ups == -1){
@@ -196,7 +191,9 @@ void Update_SpritePlayer() {
 							if(current_level < 3){
 								SetState(StateGame);
 							}else if (current_level < 6){
-								SetState(StateGame4);
+								SetState(StateGame3);
+							}else if (current_level > 5){
+								SetState(StateGame6);
 							}
 						}
 					}
@@ -532,17 +529,11 @@ void Update_SpritePlayer() {
 							TranslateSprite(THIS, 0, -1);
 						break;
 					}
-					archer_data->hp -= enemydamage;
-					if (archer_data->hp <= 0){
-						archer_data->hp = 0;
-						Die();
+					Hit(enemydamage);
+					if (ispr->x < THIS->x){
+						platform_vx = 1;
 					}else{
-						Hit();
-						if (ispr->x < THIS->x){
-							platform_vx = 1;
-						}else{
-							platform_vx = -1;
-						}		
+						platform_vx = -1;
 					}
 				}
 			}
@@ -558,19 +549,14 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ispr)) {
-				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ispr->custom_data;
+				/*struct ArrowInfo* arrowdata = (struct ArrowInfo*)ispr->custom_data;
 				if (arrowdata->type == 6u){ //spine from porcupine
 					if(!KEY_PRESSED(J_DOWN)){
-						archer_data->hp -=  arrowdata->arrowdamage;
-						if (archer_data->hp <= 0){
-							archer_data->hp = 0;
-							Die();
-						}
-						Hit();
+						Hit(arrowdata->arrowdamage);
 					}
 					SpriteManagerRemoveSprite(ispr);
 					return;
-				}
+				}*/
 				struct ArrowInfo* datap = (struct ArrowInfo*)ispr->custom_data;
 				if (datap->arrowdir != 1){return;}//guardo solo se è orizzontale
 				if (archer_accel_y > 0 & THIS->y < (ispr->y-4)){//se sono in salita non collido !
@@ -672,17 +658,14 @@ void MoveArcher() {
 void CheckCollisionTile() {
 	switch(tile_collision) {
 		case 2u:
+		case 10u:
+			if(current_level != 6u){
+				return;
+			}
 		case 20u:
 		case 23u:
 		case 29u:
-			if (archer_state != STATE_HIT){
-				archer_data->hp -=  5;
-				if (archer_data->hp <= 0){
-					archer_data->hp = 0;
-					archer_state = STATE_DEAD;
-				}
-				Hit();
-			}
+			Hit(5);
 		break;
 		case 7u: //fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
@@ -719,26 +702,24 @@ void CheckCollisionTile() {
 			load_next_b = 0;
 			current_level += 1u;
 			current_map = 0;
-			if(current_level_b < 4u){
+			if(current_level_b < 3){
 				SetState(StateGame);	
+			}else if (current_level_b < 6){
+				SetState(StateGame3);
 			}else{
-				SetState(StateGame4);
+				SetState(StateGame6);
 			}
 		break;
 		case 19u: //exit secret room
 			load_next_s = -1;
 		break;
-		case 40u: //skull of death
-			//archer_data->hp = 0;
-			//Die();
-			if (archer_state != STATE_HIT){
-				archer_data->hp -=  8;
-				if (archer_data->hp <= 0){
-					archer_data->hp = 0;
-					archer_state = STATE_DEAD;
-				}
-				Hit();
+		case 38u:
+		case 39u:
+			if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
+				Hit(5);				
 			}
+		case 40u: //skull of death
+			Hit(8);
 		break;
 		case 41u: //next map
 			load_next = 1;
@@ -766,16 +747,26 @@ void CheckCollisionTile() {
 	}
 }
 
-void Hit() {
+void Hit(INT8 damage) {
 	if (archer_state != STATE_DEAD){
-		archer_state = STATE_HIT;
-		platform_vx = 1;
-		if (SPRITE_GET_VMIRROR(THIS)){
-			platform_vx = -1;
+		if(archer_state != STATE_HIT){	
+			archer_data->hp -=  damage;
 		}
-		tile_collision = TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
-		SetSpriteAnim(THIS, anim_hit, 24u);
-		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
+		if(archer_state != STATE_HIT){
+			archer_state = STATE_HIT;
+			platform_vx = 1;
+			if (SPRITE_GET_VMIRROR(THIS)){
+				platform_vx = -1;
+			}
+			TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
+			SetSpriteAnim(THIS, anim_hit, 24u);
+			PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);			
+		}
+		if (archer_data->hp <= 0){
+			archer_data->hp = 0;
+			Die();
+			return;
+		}
 	}
 }
 

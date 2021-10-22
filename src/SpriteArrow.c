@@ -119,6 +119,11 @@ void Update_SpriteArrow() {
 				}
 			}
 		}
+		if(iaspr->type == SpriteStalagmite){
+			if(CheckCollision(THIS, iaspr)) {
+				CheckCollisionArrowTile(200u);
+			}
+		}
 	}
 	
 }
@@ -276,7 +281,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 			SPRITE_UNSET_VMIRROR(THIS);
 			data->arrowdir = 1;
 			THIS->x += 4;
-			THIS->y -= 1;
+			THIS->y -= 4;
 		break;
 		case 17u: //da GIU a SX
 			SPRITE_SET_VMIRROR(THIS);
@@ -303,6 +308,9 @@ void CheckCollisionArrowTile(UINT8 ta) {
 			}		
 			THIS->y += 4;
 			data->original_type = 3; //questo dovrebbe triggerare il Setup al prossimo frame
+		break;
+		case 200u://numero per indicare la goccia che cade da stalattite
+			data->original_type = 4; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		default:
 			data->arrowdamage = 100;

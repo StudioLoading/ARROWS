@@ -6,7 +6,8 @@ _STATE(StateCredit)\
 _STATE(StateTitlescreen)\
 _STATE(StateIntro)\
 _STATE(StateGame)\
-_STATE(StateGame4)\
+_STATE(StateGame3)\
+_STATE(StateGame6)\
 _STATE(StateSecret)\
 _STATE(StateBoss)\
 _STATE(StateDiag)\
@@ -29,6 +30,7 @@ _SPRITE_DMG(SpriteHurricane, hurricane)\
 _SPRITE_DMG(SpriteWolf, wolf_new)\
 _SPRITE_DMG(SpriteRat, rat)\
 _SPRITE_DMG(SpriteSpider, spider)\
+_SPRITE_DMG(SpriteStalagmite, stalagmite)\
 _SPRITE_DMG(SpriteAlligator, alligator)\
 _SPRITE_DMG(SpriteBird, bird)\
 _SPRITE_DMG(SpriteGate, gate)\

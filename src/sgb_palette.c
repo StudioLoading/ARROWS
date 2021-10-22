@@ -103,6 +103,9 @@ void set_sgb_palette01_TREES() __banked {
 void set_sgb_palette01_BEAR() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, RGB8(228, 92, 16), RGB8(80, 48, 0), RGB8(90, 57, 33));
 }
+void set_sgb_palette01_ICE() __banked {
+	set_sgb_palette(RGB8(255, 255, 255), RGB8(164, 228, 252), RGB8(29, 176, 249), RGB8(0, 0, 0));
+}
 
 void set_sgb_palette01_1A() __banked {
 	set_sgb_palette(SGB_PAL1A_LIGHTER, SGB_PAL1A_LIGHT, SGB_PAL1A_DARK, SGB_PAL1A_DARKER);

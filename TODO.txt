@@ -6,6 +6,7 @@ LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 		- concentrerei questo livello sulle abilità di arrow surfing
 		- stalattiti che cadono dall' alto traballando
+		- goccia che cade e fa crescere una stalagmite
 		- nemico bomba: frecciata/tocco -> blink -> esplode in verticale
 		- piattaforma cadente quando ci atterro sopra
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
@@ -27,6 +28,7 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
+- hit anche durante hit
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 - sonoro trionfale quando sollevo amulet
 - BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN

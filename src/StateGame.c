@@ -56,8 +56,8 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 2u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 1u; // 0u default
+UINT8 current_level = 6u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -120,12 +120,14 @@ void Start_StateGame() {
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	
-	if (current_level > 2u){
-		SetState(StateGame4);
+	if (current_level > 5u){
+		SetState(StateGame6);
+	}else if (current_level > 2u){
+		SetState(StateGame3);
 	}
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7); //last param is the current bank we are in
+	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7); //last param is the current bank we are in
 
 	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
@@ -413,7 +415,7 @@ void Update_StateGame() {
 			case 5:
 			case 6:
 			case 7:
-				SetState(StateGame4);
+				SetState(StateGame3);
 			break;
 		} 
 	}
