@@ -112,6 +112,7 @@ void Start_StateGame6() {
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteStalagmite);
+	SpriteManagerLoad(SpriteStalattite);
 	SpriteManagerLoad(SpritePuff);
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
@@ -242,6 +243,7 @@ void Update_StateGame6() {
 	if(thunder_delay <= 0u){
 		//droppa stalagmite
 		SpriteManagerAdd(SpriteStalagmite, (UINT16) 3u << 3, (UINT16) 4u << 3);
+		SpriteManagerAdd(SpriteStalattite, (UINT16) 16u << 3, (UINT16) 3u << 3);
 		thunder_delay = 120u;
 	}
 

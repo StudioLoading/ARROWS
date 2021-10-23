@@ -662,6 +662,7 @@ void CheckCollisionTile() {
 			if(current_level != 6u){
 				return;
 			}
+		break;
 		case 20u:
 		case 23u:
 		case 29u:
