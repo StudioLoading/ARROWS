@@ -117,7 +117,7 @@ void Start_StateGame6() {
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
 		case 6u:
-			SpriteManagerLoad(SpriteHurricane);
+			SpriteManagerLoad(SpriteGate);
 			if(sgb_check()){
 				set_sgb_palette01_ICE();
 				set_sgb_palette_statusbar();
@@ -234,16 +234,60 @@ void Start_StateGame6() {
 		}
 	    LCD_Installed = true; 
 	}	
+	
 }
 
 
 void Update_StateGame6() {
 	
 	thunder_delay -= 1u;
-	if(thunder_delay <= 0u){
-		//droppa stalagmite
-		SpriteManagerAdd(SpriteStalagmite, (UINT16) 3u << 3, (UINT16) 4u << 3);
-		SpriteManagerAdd(SpriteStalattite, (UINT16) 16u << 3, (UINT16) 3u << 3);
+	
+	// SPAWNING
+	//!SPRITE_GET_VMIRROR(scroll_target) && 
+	if(archer_state != STATE_HIT && platform_vx == 0u){
+		switch(current_level){
+			case 6u: // Ice Cave -> See King
+				switch(current_map){
+					case 0u:
+						//dropping drop
+						if (scroll_target->x > (UINT16) 14u << 3 && scroll_target->x < (UINT16) 28u << 3){
+							if(thunder_delay == 0u){
+								SpriteManagerAdd(SpriteStalagmite, (UINT16) 19u << 3, (UINT16) 6u << 3);
+							}
+						}
+						if(scroll_target->x > (UINT16) 6u << 3 && spawning_triggered <= 1){
+							spawn_enemy6(SpriteStalattite, 3u, 3u);
+						}
+						if(scroll_target->x > (UINT16) 10u << 3 && spawning_triggered <= 2){
+							spawn_enemy6(SpriteStalattite, 16u, 3u);
+						}
+						if(scroll_target->x > (UINT16) 21u << 3 && spawning_triggered <= 3){
+							spawn_enemy6(SpriteStalattite, 27u, 3u);
+						}
+						if(scroll_target->x > (UINT16) 26u << 3 && spawning_triggered <= 4){
+							spawn_enemy6(SpriteStalattite, 32u, 3u);
+						}
+						if(scroll_target->x > (UINT16) 30u << 3 && spawning_triggered <= 5){
+							spawn_enemy6(SpriteStalattite, 34u, 3u);
+						}						
+						if (scroll_target->x > (UINT16) 53u << 3 && scroll_target->x < (UINT16) 61u << 3){
+							if(thunder_delay == 0u){
+								SpriteManagerAdd(SpriteStalagmite, (UINT16) 58u << 3, (UINT16) 5u << 3);
+							}
+						}
+						if(scroll_target->x > (UINT16) 54u << 3 && spawning_triggered <= 7){
+							struct Sprite* gate = SpriteManagerAdd(SpriteGate, (UINT16) 64u << 3, (UINT16) 12u << 3);
+							struct EnemyInfo* gdata = (struct EnemyInfo*)gate->custom_data;
+							gdata->vx = 4;
+							spawning_triggered++;
+						}
+					break;
+				}
+			break;
+		}
+	}
+	
+	if(thunder_delay == 0u){
 		thunder_delay = 120u;
 	}
 

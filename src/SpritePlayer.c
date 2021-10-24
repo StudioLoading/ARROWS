@@ -455,7 +455,8 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
-			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder || ispr->type == SpriteIbex
+			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
+			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				archer_state = STATE_HIT;
@@ -506,8 +507,10 @@ void Update_SpritePlayer() {
 					INT8 enemydamage = 0;
 					switch(ispr->type){
 						case SpriteEnemy:
+						case SpriteStalattite:
 							enemydamage = 5;
 						break;
+						case SpriteStalagmite:
 						case SpriteThunder:
 							enemydamage = 8;
 						break;

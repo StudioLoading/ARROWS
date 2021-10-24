@@ -24,8 +24,8 @@ void Start_SpriteStalagmite() {
 	THIS->coll_y = 4;
 	THIS->coll_w = 6;
 	THIS->coll_h = 4;
-	THIS->lim_x = 200u;
-	THIS->lim_y = 80u;
+	THIS->lim_x = 80u;
+	THIS->lim_y = 40u;
 	SetSpriteAnim(THIS, stalag_drop_big, 4u);
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;	
 	rdata->enemy_accel_y = 20;
@@ -66,6 +66,9 @@ void Update_SpriteStalagmite() {
 		case STALAG_STATE_LOW:
 		
 		break;
+		case STALAG_STATE_HIGH:
+			//rdata->tile_e_collision = TranslateSprite(THIS, 0, 1);
+		break;
 	}
 	
 	UINT8 scroll_st_tile;
@@ -77,7 +80,17 @@ void Update_SpriteStalagmite() {
 			if(CheckCollision(THIS, istspr)) {
 				if(rdata->enemy_state == STALAG_STATE_DROP){
 					SpriteManagerRemoveSprite(THIS);
-				}//altrimenti capiamo che freccia è prima di romperci
+				}else{//altrimenti capiamo che freccia è prima di romperci
+					if(istspr->type == SpriteArrow){
+						if(rdata->enemy_state == STALAG_STATE_HIGH){						
+							//struct ArrowInfo* arrowdata = (struct ArrowInfo*)istspr->custom_data;
+							//if(arrowdata->original_type == 4){
+							SpriteManagerRemoveSprite(THIS);								
+							//}
+						}
+						SpriteManagerRemoveSprite(istspr);
+					}
+				}
 			}
 		}
 		if(istspr->type == SpriteStalagmite) {
@@ -98,9 +111,11 @@ void Update_SpriteStalagmite() {
 						SetSpriteAnim(istspr, stalag_hl, 4u);
 						struct Sprite* upper_stalag = SpriteManagerAdd(SpriteStalagmite, istspr->x, istspr->y - 16u);
 						struct EnemyInfo* supper_stalag_data = (struct EnemyInfo*)upper_stalag->custom_data;				
+						upper_stalag->coll_y = 2;
+						upper_stalag->coll_h = 14;
 						supper_stalag_data->enemy_state = STALAG_STATE_HIGH;
 						SetSpriteAnim(upper_stalag, stalag_hh, 4u);
-						sdata->enemy_state = STALAG_STATE_HIGH;
+						sdata->enemy_state = STALAG_STATE_MED;
 					break;
 				}
 				//THIS->y += 1u;
@@ -117,6 +132,9 @@ void CheckCollisionStalagTile(struct EnemyInfo* stalag_data){
 			SetSpriteAnim(THIS, stalag_low, 4u);
 			stalag_data->enemy_state = STALAG_STATE_LOW;
 			//SpriteManagerRemoveSprite(THIS); // elimino me stesso
+		break;
+		case 20u:
+			SpriteManagerRemoveSprite(THIS);
 		break;
 	}
 }

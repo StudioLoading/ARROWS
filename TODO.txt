@@ -30,6 +30,7 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
+- porta (anche nera) di inizio livello, per indicare il "vengo da qui", magari subito sotto la freccia di spawn
 - hit anche durante hit
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 - sonoro trionfale quando sollevo amulet

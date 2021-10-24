@@ -121,7 +121,10 @@ void Update_SpriteArrow() {
 		}
 		if(iaspr->type == SpriteStalagmite){
 			if(CheckCollision(THIS, iaspr)) {
-				CheckCollisionArrowTile(200u);
+				struct EnemyInfo* stala_sprite = (struct EnemyInfo*)iaspr->custom_data;
+				if(stala_sprite->enemy_state == STALAG_STATE_DROP){
+					CheckCollisionArrowTile(200u);					
+				}
 			}
 		}
 	}
@@ -194,7 +197,7 @@ void SetupArrow(){
 			}						
 			data->type = 0;
 		break;
-		case 4:// WATER
+		case 4:// ICE
 			data->arrowdamage = 10u;
 			switch(data->arrowdir){
 				case 1:
