@@ -220,7 +220,7 @@ void Update_SpritePlayer() {
 				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL && is_on_boss != 1 && is_on_secret == -1){
 					Build_Next_Dialog();
 					return;
-				}else if (!KEY_PRESSED(J_RIGHT) & !KEY_PRESSED(J_LEFT)){
+				}else if (!KEY_PRESSED(J_RIGHT) && !KEY_PRESSED(J_LEFT)){
 					SetSpriteAnim(THIS, anim_shield, 8u);
 					if (archer_state == STATE_NORMAL_PLATFORM){
 						//THIS->coll_x = 3;
@@ -248,7 +248,7 @@ void Update_SpritePlayer() {
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
 			} else {
-				if(KEY_TICKED(J_B) & (!KEY_PRESSED(J_DOWN) | (KEY_PRESSED(J_DOWN) & archer_state == STATE_JUMPING))) {
+				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) | (KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING))) {
 					Shoot();
 				}
 			}
@@ -294,37 +294,37 @@ void Update_SpritePlayer() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
-			if(KEY_PRESSED(J_A)) {
+			if(KEY_PRESSED(J_A) && hit_cooldown < 8) {
 				Jump();
 			}
-			MoveArcher();
-			if (hit_cooldown == 0){
+			if (hit_cooldown <= 0){
+				jump_power = 0;
+				archer_accel_y += 10;
+				MoveArcher();
 				platform_vx = 0;
 				platform_vy = 0;
 				hit_cooldown = 24;
 				archer_state = STATE_NORMAL;
 			}
+			return;
 		break;
 	}//end switch archer_state	
 	
-	if(princess_parent == 0 & archer_state != STATE_LADDER & archer_state != STATE_HIT & archer_state != STATE_DEAD) {
+	if(princess_parent == 0 && archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD) {
 		//Simple gravity physics 
 		if(archer_accel_y < 24) {
 			archer_accel_y += 1;
 		}
 		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
-		if(tile_collision == 0 & delta_time != 0 & archer_accel_y < 24) { //Do another iteration if there is no collision
+		/*if(tile_collision == 0 && delta_time != 0 && archer_accel_y < 24) { //Do another iteration if there is no collision
 			archer_accel_y += 1;
 			tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
-		}
+		}*/
 		if(tile_collision) {
-			if(archer_state == STATE_JUMPING & archer_accel_y > 0) {
+			if(archer_state == STATE_JUMPING && archer_accel_y > 0) {
 				archer_state = STATE_NORMAL;
-				archer_accel_y = 0;
-				//TODO PLAY ATTERRAGGIO EFFEXT
-			}else{
-				archer_accel_y = 0;	
 			}
+			archer_accel_y = 0;	
 			CheckCollisionTile();
 		}
 	}
@@ -333,7 +333,7 @@ void Update_SpritePlayer() {
 		archer_state = STATE_NORMAL;
 	}
 	
-	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 99u){
+	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
 		archer_accel_y = -2;
 		archer_state = STATE_ASCENDING;
 	}else if (archer_state == STATE_ASCENDING){
@@ -459,11 +459,11 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
-				archer_state = STATE_HIT;
+				//archer_state = STATE_HIT;
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
 					case 0:
-						if(ispr->type == SpriteEagle & dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+						if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
 							return;
 						}
 					break;
@@ -492,18 +492,18 @@ void Update_SpritePlayer() {
 						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider){
 						if (ispr->x < THIS->x){
 							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene
-								TranslateSprite(ispr, -10u << delta_time, -2u << delta_time);
+								TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
 								being_hit = 0u;
 							}
 						}else{
 							if (!SPRITE_GET_VMIRROR(THIS)){
-								TranslateSprite(ispr, 10u << delta_time, -2u << delta_time);
+								TranslateSprite(ispr, 16u << delta_time, -2u << delta_time);
 								being_hit = 0u;
 							}
 						}					
 					}
 				}
-				if (being_hit == 1u & archer_state != STATE_DEAD){
+				if (being_hit == 1u && archer_state != STATE_DEAD){
 					INT8 enemydamage = 0;
 					switch(ispr->type){
 						case SpriteEnemy:
@@ -532,17 +532,17 @@ void Update_SpritePlayer() {
 							TranslateSprite(THIS, 0, -1);
 						break;
 					}
-					Hit(enemydamage);
 					if (ispr->x < THIS->x){
 						platform_vx = 1;
 					}else{
 						platform_vx = -1;
 					}
+					Hit(enemydamage);
 				}
 			}
 		}
 		if(ispr->type == SpriteHurricane) {
-			if(CheckCollision(THIS, ispr) & archer_state != STATE_HIT) {	
+			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {	
 				if (archer_state == STATE_JUMPING | archer_state == STATE_ASCENDING){
 					TranslateSprite(THIS, -2u, -2u);
 				}else{
@@ -562,7 +562,7 @@ void Update_SpritePlayer() {
 				}*/
 				struct ArrowInfo* datap = (struct ArrowInfo*)ispr->custom_data;
 				if (datap->arrowdir != 1){return;}//guardo solo se è orizzontale
-				if (archer_accel_y > 0 & THIS->y < (ispr->y-4)){//se sono in salita non collido !
+				if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
 					//archer_accel_y = 0;
 					ispr->coll_x = 0;
 					ispr->coll_y = 2;
@@ -572,7 +572,7 @@ void Update_SpritePlayer() {
 					}else{
 						platform_vx = datap->vx;	
 					}					
-					if(archer_state != STATE_NORMAL & archer_state != STATE_NORMAL_PLATFORM){
+					if(archer_state != STATE_NORMAL && archer_state != STATE_NORMAL_PLATFORM){
 						archer_state = STATE_NORMAL_PLATFORM;
 						THIS->y = ispr->y - 12;
 					}
@@ -637,7 +637,7 @@ void MoveArcher() {
 		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
 	}
 	if(KEY_PRESSED(J_LEFT)) {
-		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
+		if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
 			
 		}else{
 			if (SPRITE_GET_VMIRROR(THIS)){
@@ -647,7 +647,7 @@ void MoveArcher() {
 		SPRITE_SET_VMIRROR(THIS);
 	}
 	else if(KEY_PRESSED(J_RIGHT)) {
-		if(KEY_PRESSED(J_DOWN) & archer_state != STATE_JUMPING){
+		if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
 			
 		}else{
 			if(!SPRITE_GET_VMIRROR(THIS)){
@@ -660,13 +660,17 @@ void MoveArcher() {
 
 void CheckCollisionTile() {
 	switch(tile_collision) {
-		case 2u:
 		case 10u:
 			if(current_level != 6u){
 				return;
 			}
-		break;
+		case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
+			TranslateSprite(THIS, 0, 2 << delta_time);
 		case 20u:
+			if(current_level == 6u){
+				Hit(10);
+				return;
+			}
 		case 23u:
 		case 29u:
 			Hit(5);
@@ -752,25 +756,21 @@ void CheckCollisionTile() {
 }
 
 void Hit(INT8 damage) {
-	if (archer_state != STATE_DEAD){
-		if(archer_state != STATE_HIT){	
-			archer_data->hp -=  damage;
-		}
-		if(archer_state != STATE_HIT){
-			archer_state = STATE_HIT;
-			platform_vx = 1;
-			if (SPRITE_GET_VMIRROR(THIS)){
-				platform_vx = -1;
-			}
-			TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
-			SetSpriteAnim(THIS, anim_hit, 24u);
-			PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);			
-		}
+	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){
+		archer_state = STATE_HIT;
+		archer_data->hp -=  damage;
 		if (archer_data->hp <= 0){
 			archer_data->hp = 0;
 			Die();
 			return;
 		}
+		platform_vx = 1;
+		if (SPRITE_GET_VMIRROR(THIS)){
+			platform_vx = -1;
+		}
+		TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
+		SetSpriteAnim(THIS, anim_hit, 24u);
+		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);			
 	}
 }
 

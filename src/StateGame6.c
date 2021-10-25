@@ -24,7 +24,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {4, 10, 11, 12, 13, 16, 17, 14, 15, 36, 37, 38, 39, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 36, 37, 38, 39, 0};//numero delle tile di collisione seguito da zero finale
 
 
 extern UINT16 bg_palette[];
