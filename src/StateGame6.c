@@ -99,7 +99,7 @@ void Start_StateGame6() {
 	
 	if (current_level < 3u){
 		SetState(StateGame);
-	}else if (current_level < 6u){
+	}else if (current_level < 5u){
 		SetState(StateGame3);
 	}
 	
@@ -116,7 +116,7 @@ void Start_StateGame6() {
 	SpriteManagerLoad(SpritePuff);
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
-		case 6u:
+		case 5u:
 			SpriteManagerLoad(SpriteGate);
 			if(sgb_check()){
 				set_sgb_palette01_ICE();
@@ -130,7 +130,7 @@ void Start_StateGame6() {
 	//if (current_level == 2u & current_map == 0u)
 	scroll_bottom_movement_limit = 62;
 
-	const struct MapInfo** lvls6 = maps6[current_level-6u];
+	const struct MapInfo** lvls6 = maps6[current_level-5u];
 	UINT8 map_w6;
 	UINT8 map_h6;
 	GetMapSize(lvls6[current_map], &map_w6, &map_h6);
@@ -246,7 +246,7 @@ void Update_StateGame6() {
 	//!SPRITE_GET_VMIRROR(scroll_target) && 
 	if(archer_state != STATE_HIT && platform_vx == 0u){
 		switch(current_level){
-			case 6u: // Ice Cave -> See King
+			case 5u: // Ice Cave -> See King
 				switch(current_map){
 					case 0u:
 						//dropping drop

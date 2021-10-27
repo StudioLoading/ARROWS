@@ -1,16 +1,14 @@
-Aggiungere cancello all' entrata della stanza del boss, che si apre con la pietra convertitrice. Così quando si entra dal boss e si rivede quella pietra, si capisce cosa bisogna fare.
-
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
-		- stalattiti che cadono dall' alto traballando
-		- goccia che cade e fa crescere una stalagmite
-		- goccia seguita da cancello + suggerimento giusto, per far capire al giocatore che la goccia è un convertitore
-		- nemico bomba: frecciata ghiacciata -> blink -> esplode in verticale
-		- piattaforma cadente quando ci atterro sopra
+		- mappa 1 con stalattiti, stalagmiti, cancelli e spuncioni
+			- finire il design e scrivere il suggerimento giusto
+		- mappa 2 con 
+			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
+			- piattaforma cadente quando ci atterro sopra
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
@@ -41,7 +39,7 @@ KNOWN ISSUE:
 
 - Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
 
-- nella titlescreen del gameOver ci starebbe una freccia spezzata ? alternativa è lo scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
+- gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 
 Andy dice che su GameBoyColor nella stanza secret si blocca tutto se prendo il secondo treasure. Controllare -> quindi controllare il gioco su gameBoyColor e sugli emulatori gbc !!
 

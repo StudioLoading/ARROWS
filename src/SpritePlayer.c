@@ -297,6 +297,7 @@ void Update_SpritePlayer() {
 			if(KEY_PRESSED(J_A) && hit_cooldown < 8) {
 				Jump();
 			}
+			MoveArcher();
 			if (hit_cooldown <= 0){
 				jump_power = 0;
 				archer_accel_y += 10;
@@ -633,6 +634,13 @@ void Jump() {
 }
 
 void MoveArcher() {
+	if(archer_state == STATE_HIT){
+		if(SPRITE_GET_VMIRROR(THIS)){
+			platform_vx=-1;
+		}else{
+			platform_vx=1;
+		}			
+	}
 	if(platform_vx || platform_vy){
 		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
 	}
@@ -665,7 +673,7 @@ void CheckCollisionTile() {
 				return;
 			}
 		case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
-			TranslateSprite(THIS, 0, 2 << delta_time);
+			THIS->y += 4u;
 		case 20u:
 			if(current_level == 6u){
 				Hit(10);

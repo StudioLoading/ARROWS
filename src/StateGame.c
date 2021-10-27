@@ -56,7 +56,7 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 6u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
+UINT8 current_level = 5u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -152,6 +152,7 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteRat);
 			SpriteManagerLoad(SpriteSpider);
+			SpriteManagerLoad(SpriteGate);
 			if(sgb_check()){
 				set_sgb_palette01_SEWER();
 				set_sgb_palette_statusbar();
@@ -498,8 +499,10 @@ void Update_StateGame() {
 						}
 						if (scroll_target->x == (UINT16) 177u << 3 && spawning_triggered <= 13){
 							spawn_item(scrigno_dcoin, 192u, 7u, 7, 1);
-						}
-						
+							struct Sprite* gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 193u << 3, (UINT16) 18u << 3);
+							struct EnemyInfo* gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+							gatedata->vx = 2;
+						}	
 					break;
 					case 1:
 						if (scroll_target->x == (UINT16) 29u << 3 && spawning_triggered <= 2){
@@ -523,7 +526,7 @@ void Update_StateGame() {
 						}
 						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 && spawning_triggered <= 9){
 							spawn_enemy(SpriteRat, 143u, 13u);
-						}						
+						}					
 					break;
 				}
 			break;
