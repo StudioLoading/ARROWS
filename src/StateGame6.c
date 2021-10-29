@@ -24,7 +24,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 36, 37, 38, 39, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 35, 36, 37, 38, 39, 43, 44, 0};//numero delle tile di collisione seguito da zero finale
 
 
 extern UINT16 bg_palette[];
@@ -202,7 +202,7 @@ void Start_StateGame6() {
 			case 6u:
 				switch(current_map){
 					case 0u:
-						spawn_item6(scrigno_up, 8u, 8u, 3, 1);
+						//spawn_item6(scrigno_up, 8u, 8u, 3, 1);
 					break;
 				}
 			break;
@@ -252,27 +252,28 @@ void Update_StateGame6() {
 						//dropping drop
 						if (scroll_target->x > (UINT16) 14u << 3 && scroll_target->x < (UINT16) 28u << 3){
 							if(thunder_delay == 0u){
-								SpriteManagerAdd(SpriteStalagmite, (UINT16) 19u << 3, (UINT16) 6u << 3);
+								SpriteManagerAdd(SpriteStalagmite, (UINT16) 18u << 3, (UINT16) 7u << 3);
 							}
 						}
-						if(scroll_target->x > (UINT16) 6u << 3 && spawning_triggered <= 1){
-							spawn_enemy6(SpriteStalattite, 3u, 3u);
+						if(scroll_target->x > (UINT16) 1u << 3 && scroll_target->x > (UINT16) 10u << 3 && spawning_triggered <= 1){
+							spawn_item6(scrigno_up, 8u, 8u, 3, 1);
+							spawn_enemy6(SpriteStalattite, 4u, 5u);
 						}
-						if(scroll_target->x > (UINT16) 10u << 3 && spawning_triggered <= 2){
-							spawn_enemy6(SpriteStalattite, 16u, 3u);
+						if(scroll_target->x < (UINT16) 24u << 3 && spawning_triggered <= 3){
+							spawn_enemy6(SpriteStalattite, 18u, 5u);
 						}
-						if(scroll_target->x > (UINT16) 21u << 3 && spawning_triggered <= 3){
-							spawn_enemy6(SpriteStalattite, 27u, 3u);
+						if(scroll_target->x > (UINT16) 23u << 3 && spawning_triggered <= 4){
+							spawn_enemy6(SpriteStalattite, 27u, 5u);
 						}
-						if(scroll_target->x > (UINT16) 26u << 3 && spawning_triggered <= 4){
-							spawn_enemy6(SpriteStalattite, 32u, 3u);
+						if(scroll_target->x > (UINT16) 29u << 3 && spawning_triggered <= 5){
+							spawn_enemy6(SpriteStalattite, 33u, 5u);
 						}
-						if(scroll_target->x > (UINT16) 30u << 3 && spawning_triggered <= 5){
-							spawn_enemy6(SpriteStalattite, 34u, 3u);
+						if(scroll_target->x > (UINT16) 30u << 3 && spawning_triggered <= 6){
+							spawn_enemy6(SpriteStalattite, 34u, 5u);
 						}						
 						if (scroll_target->x > (UINT16) 53u << 3 && scroll_target->x < (UINT16) 61u << 3){
 							if(thunder_delay == 0u){
-								SpriteManagerAdd(SpriteStalagmite, (UINT16) 58u << 3, (UINT16) 5u << 3);
+								SpriteManagerAdd(SpriteStalagmite, (UINT16) 58u << 3, (UINT16) 8u << 3);
 							}
 						}
 						if(scroll_target->x > (UINT16) 54u << 3 && spawning_triggered <= 7){
@@ -281,6 +282,9 @@ void Update_StateGame6() {
 							gdata->vx = 4;
 							spawning_triggered++;
 						}
+						if(scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 8){
+							spawn_enemy6(SpriteStalattite, 77u, 5u);
+						}					
 					break;
 				}
 			break;

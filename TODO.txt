@@ -1,3 +1,7 @@
+- feedback audio di "wrong" + eliminazione quando la freccia colpisce cancello senza romperlo
+- feedback audio "bling" quando freccia colpisce convertitore
+- feedback audio quando freccia colpisce ridirezione
+
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
@@ -9,6 +13,7 @@ LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 		- mappa 2 con 
 			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
 			- piattaforma cadente quando ci atterro sopra
+			- piattaforma di ghiaccio se faccio atterrare verticali frecce di ghiaccio
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
