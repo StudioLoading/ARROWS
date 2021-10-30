@@ -24,7 +24,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 35, 36, 37, 38, 39, 43, 44, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 0};//numero delle tile di collisione seguito da zero finale
 
 
 extern UINT16 bg_palette[];
@@ -256,7 +256,7 @@ void Update_StateGame6() {
 							}
 						}
 						if(scroll_target->x > (UINT16) 1u << 3 && scroll_target->x > (UINT16) 10u << 3 && spawning_triggered <= 1){
-							spawn_item6(scrigno_up, 8u, 8u, 3, 1);
+							spawn_item6(scrigno_up, 8u, 8u, 7, 1);//1coin 2hp 3up 7dcoin
 							spawn_enemy6(SpriteStalattite, 4u, 5u);
 						}
 						if(scroll_target->x < (UINT16) 24u << 3 && spawning_triggered <= 3){
@@ -282,9 +282,28 @@ void Update_StateGame6() {
 							gdata->vx = 4;
 							spawning_triggered++;
 						}
-						if(scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 8){
+						if(scroll_target->x > (UINT16) 63u << 3 && spawning_triggered <= 9){
+							spawn_item6(scrigno_coin, 73u, 11u, 1, 1); //1coin 2hp 3up 7dcoin
+					
+						}
+						if(scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 10){
 							spawn_enemy6(SpriteStalattite, 77u, 5u);
+						}		
+						if(scroll_target->x > (UINT16) 112u << 3 && spawning_triggered <= 11){
+							spawn_item6(scrigno_dcoin, 120u, 3u, 3, 1);//1coin 2hp 3up 7dcoin
+							spawn_item6(scrigno_coin, 127u, 12u, 1, 1);//1coin 2hp 3up 7dcoin
+						}
+						if(scroll_target->x > (UINT16) 138u << 3 && spawning_triggered <= 12){
+							spawn_item6(scrigno_up, 142u, 8u, 3, 0);//1coin 2hp 3up 7dcoin
 						}					
+						if (scroll_target->x > (UINT16) 166u << 3){
+							if(thunder_delay == 0u){
+								SpriteManagerAdd(SpriteStalagmite, (UINT16) 174u << 3, (UINT16) 6u << 3);
+							}
+						}
+						if(scroll_target->x > (UINT16) 168u << 3 && spawning_triggered <= 13){
+							spawn_item6(scrigno_dcoin, 176u, 6u, 7, 1);//1coin 2hp 3up 7dcoin
+						}
 					break;
 				}
 			break;

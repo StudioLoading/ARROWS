@@ -1,6 +1,4 @@
-- feedback audio di "wrong" + eliminazione quando la freccia colpisce cancello senza romperlo
-- feedback audio "bling" quando freccia colpisce convertitore
-- feedback audio quando freccia colpisce ridirezione
+
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -9,7 +7,7 @@ LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 		- mappa 1 con stalattiti, stalagmiti, cancelli e spuncioni
-			- finire il design e scrivere il suggerimento giusto
+			- scrivere il suggerimento giusto
 		- mappa 2 con 
 			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
 			- piattaforma cadente quando ci atterro sopra
@@ -41,7 +39,9 @@ KNOWN ISSUE:
 - state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
 - ANCHE CON LIAM HO REPLICATO IL SALTO ALL' INFINITO E IL BLOCCO DEL GIOCO SUGLI UCCELLI
 - schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
-
+- feedback audio di "wrong" + eliminazione quando la freccia colpisce cancello senza romperlo
+- feedback audio "bling" quando freccia colpisce convertitore
+- feedback audio quando freccia colpisce ridirezione
 - Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
 
 - gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
