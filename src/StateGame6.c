@@ -7,6 +7,7 @@
 #include "../res/src/font.h"
 #include "../res/src/tiles6.h"
 #include "../res/src/map60.h"
+#include "../res/src/map61.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -67,15 +68,15 @@ extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
 extern INT8 spawning_triggered;
-
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
 extern bool LCD_Installed;
 extern UINT8 thunder_delay;
+extern INT8 update_hud;
 
 //Maps
 const struct MapInfo* const map_6[] = {
-	&map60
+	&map60, &map61
 };
 
 const struct MapInfo** const maps6[] = {map_6};
@@ -93,7 +94,7 @@ void spawn_item6(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_t
 void Start_StateGame6() {
 	
 	is_on_boss = -1;
-	thunder_delay = 120u;
+	thunder_delay = 80u;
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	
@@ -118,6 +119,7 @@ void Start_StateGame6() {
 	switch (current_level){
 		case 5u:
 			SpriteManagerLoad(SpriteGate);
+			SpriteManagerLoad(SpriteIceplat);
 			if(sgb_check()){
 				set_sgb_palette01_ICE();
 				set_sgb_palette_statusbar();
@@ -237,13 +239,74 @@ void Start_StateGame6() {
 	
 }
 
-
 void Update_StateGame6() {
 	
 	thunder_delay -= 1u;
 	
+	if(load_next_d){
+		switch(load_next_d){
+			case 1: //vado allo StateDiag
+				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				load_next_d = 2;
+				SetState(StateDiag);
+			break;
+			case 2:
+				load_next_d = 0;
+				if(is_on_boss == 0){
+					load_next_b = 1;
+				}
+			break;
+		}		
+	}
+	
+	if(load_next) {
+		switch(load_next){
+			case 1: //stage
+			case -1:
+				current_map += load_next;
+			break;
+		}
+		load_next = 0;
+		switch(current_level){
+			case 0:
+			case 1:
+			case 2:
+				SetState(StateGame);	
+			break;
+			case 3:
+			case 4:
+				SetState(StateGame3);
+			break;
+			case 5:
+			case 6:
+				SetState(StateGame6);
+			break;
+			case 7:
+			break;
+		} 
+	}
+	
+	if(load_next_s == 1){
+		load_next_s = 0;
+		is_on_secret = 1;
+		SetState(StateSecret);
+	}
+	
+	if(load_next_b){
+		switch(load_next_b){
+			case 1: //vado allo StateBoss
+				if(archer_state != STATE_DIAG){
+					load_next_b = 0;
+					SetState(StateBoss);//StateBoss
+				}
+			break;
+			/*case 2: // provengo dal boss, vado al next level
+			break;*/
+		}
+	}	
+	
 	// SPAWNING
-	//!SPRITE_GET_VMIRROR(scroll_target) && 
+	// !SPRITE_GET_VMIRROR(scroll_target) && 
 	if(archer_state != STATE_HIT && platform_vx == 0u){
 		switch(current_level){
 			case 5u: // Ice Cave -> See King
@@ -293,7 +356,7 @@ void Update_StateGame6() {
 							spawn_item6(scrigno_dcoin, 120u, 3u, 3, 1);//1coin 2hp 3up 7dcoin
 							spawn_item6(scrigno_coin, 127u, 12u, 1, 1);//1coin 2hp 3up 7dcoin
 						}
-						if(scroll_target->x > (UINT16) 138u << 3 && spawning_triggered <= 12){
+						if(scroll_target->x > (UINT16) 138u << 3 && spawning_triggered <= 13){
 							spawn_item6(scrigno_up, 142u, 8u, 3, 0);//1coin 2hp 3up 7dcoin
 						}					
 						if (scroll_target->x > (UINT16) 166u << 3){
@@ -301,45 +364,46 @@ void Update_StateGame6() {
 								SpriteManagerAdd(SpriteStalagmite, (UINT16) 174u << 3, (UINT16) 6u << 3);
 							}
 						}
-						if(scroll_target->x > (UINT16) 168u << 3 && spawning_triggered <= 13){
+						if(scroll_target->x > (UINT16) 168u << 3 && spawning_triggered <= 14){
 							spawn_item6(scrigno_dcoin, 176u, 6u, 7, 1);//1coin 2hp 3up 7dcoin
 						}
 					break;
+					case 1u:
+						if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered <= 1){
+							spawn_enemy6(SpriteIceplat, 33u, 13u);
+							spawn_enemy6(SpriteIceplat, 28u, 12u);
+						}
 				}
 			break;
 		}
 	}
 	
 	if(thunder_delay == 0u){
-		thunder_delay = 120u;
+		thunder_delay = 104u;
+	}
+	
+	//DIAG MANAGEMENT
+	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+		ShowWindow6();
+		return;
+	}	
+	if(archer_state == STATE_DIAG){
+		if(show_diag > 0 ){
+			ShowWindowDiag6();
+			return;
+		}
 	}
 
-	if (amulet != archer_data->amulet){
+	//HUD MANAGEMENT
+	if (update_hud != 0){
+		update_hud = 0;
+		hp = archer_data->hp;
 		amulet = archer_data->amulet;
-		UpdateHUD6();
-	}
-	if (coins != archer_data->coins){
 		coins = archer_data->coins;
-		UpdateHUD6();
-	}
-	if (hp != archer_data->hp && archer_data->hp >= 0){
-		if(archer_data->hp < hp){
-			hp--;
-		}else{
-			hp++;
-		}
-		//hp = archer_data->hp;
-		UpdateHUD6();
-	}
-	if (ups != archer_data->ups){
 		ups = archer_data->ups;
-		UpdateHUD6();
-	}	
-	if(archer_data->tool == level_tool){
 		UpdateHUD6();
 	}
 }
-
 
 void UpdateHUD6(){
 	//write amulet
@@ -398,7 +462,6 @@ void UpdateHUD6(){
 	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
 }
 
-
 void ShowWindow6(){
 	set_window_y6(144 - 8);
 	showing_diag = 0;
@@ -412,7 +475,6 @@ void ShowWindow6(){
 	
 	UpdateHUD6();
 }
-
 
 void ShowWindowDiag6(){
 	if (showing_diag == 0){
@@ -436,7 +498,6 @@ void ShowWindowDiag6(){
 	}	
 }
 
-
 void LCD_isr6() NONBANKED {
     if (LYC_REG == 0) {
         if (WY_REG == 0) HIDE_SPRITES; else SHOW_SPRITES; 
@@ -447,13 +508,11 @@ void LCD_isr6() NONBANKED {
     }
 }
 
-
 void set_window_y6(UBYTE y) {
     WX_REG = 7u;
     LYC_REG = WY_REG = y;
     if (y < 144u) SHOW_WIN; else { HIDE_WIN; LYC_REG = 160u; } 
 }
-
 
 void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy){
 	spawning_triggered++;
@@ -468,7 +527,6 @@ void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy){
 		enemies_0 = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 	}
 }
-
 
 void spawn_item6(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
 	spawning_triggered++;

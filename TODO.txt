@@ -6,8 +6,6 @@ LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
-		- mappa 1 con stalattiti, stalagmiti, cancelli e spuncioni
-			- scrivere il suggerimento giusto
 		- mappa 2 con 
 			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
 			- piattaforma cadente quando ci atterro sopra

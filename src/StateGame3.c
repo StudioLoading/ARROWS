@@ -74,6 +74,7 @@ extern INT8 spawning_triggered;
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
 extern bool LCD_Installed;
+extern INT8 update_hud;
 
 void UpdateHUD3();
 void ShowWindow3();
@@ -378,14 +379,17 @@ void Update_StateGame3() {
 			case 0:
 			case 1:
 			case 2:
-			case 3:
 				SetState(StateGame);	
 			break;
+			case 3:
 			case 4:
+				SetState(StateGame3);
+			break;
 			case 5:
 			case 6:
+				SetState(StateGame6);
+			break;
 			case 7:
-				SetState(StateGame3);
 			break;
 		} 
 	}
@@ -404,6 +408,8 @@ void Update_StateGame3() {
 					SetState(StateBoss);//StateBoss
 				}
 			break;
+			/*case 2: // provengo dal boss, vado al next level
+			break;*/
 		}
 	}	
 	
@@ -584,39 +590,26 @@ void Update_StateGame3() {
 		updatecounter = 0;
 	}
 	
+	
+	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 		ShowWindow3();
 		return;
-	}
-	
+	}	
 	if(archer_state == STATE_DIAG){
 		if(show_diag > 0 ){
 			ShowWindowDiag3();
 			return;
 		}
 	}
-	if (amulet != archer_data->amulet){
+	
+	//HUD MANAGEMENT
+	if (update_hud != 0){
+		update_hud = 0;
+		hp = archer_data->hp;
 		amulet = archer_data->amulet;
-		UpdateHUD3();
-	}
-	if (coins != archer_data->coins){
 		coins = archer_data->coins;
-		UpdateHUD3();
-	}
-	if (hp != archer_data->hp && archer_data->hp >= 0){
-		if(archer_data->hp < hp){
-			hp--;
-		}else{
-			hp++;
-		}
-		//hp = archer_data->hp;
-		UpdateHUD3();
-	}
-	if (ups != archer_data->ups){
 		ups = archer_data->ups;
-		UpdateHUD3();
-	}	
-	if(archer_data->tool == level_tool){
 		UpdateHUD3();
 	}
 	

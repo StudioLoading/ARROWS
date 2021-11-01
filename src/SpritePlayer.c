@@ -28,6 +28,7 @@ extern UINT16 drop_player_x;
 extern UINT16 drop_player_y;
 extern INT8 level_tool;
 extern INT8 archer_tool;
+extern INT8 update_hud;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 15};
@@ -156,6 +157,7 @@ void Update_SpritePlayer() {
 			or_ = quiver >> (archer_data->amulet - 1u); // del risultato di questa operazione devo prendere solo il bit meno significativo, più a dx
 			or_ = or_ & 1u;
 		}
+		update_hud = 1;
 	}
 	
 	switch(archer_state) {
@@ -179,6 +181,7 @@ void Update_SpritePlayer() {
 				}else if (death_cooldown == 80){
 					death_cooldown = 0;
 					archer_data->hp = 100;
+					update_hud = 1;
 					if (archer_data->ups == -1){
 						current_map = 0;
 						SetState(StateGameOver);
@@ -352,7 +355,7 @@ void Update_SpritePlayer() {
 					dataamulet->counter = 60;
 					dataamulet->setup = 0;
 					ispr->y -= 12u;
-					archer_data->hp = 100u;
+					archer_data->hp = 100;
 					death_cooldown = 127;
 					THIS->x = ispr->x-3u;
 					THIS->y = ispr->y+15u;
@@ -375,6 +378,7 @@ void Update_SpritePlayer() {
 						break;
 					}
 					SetSpriteAnim(THIS, anim_jump, 8u);
+					update_hud = 1;
 					is_on_boss = 3;
 					//Build_Next_Dialog();
 				}
@@ -391,7 +395,7 @@ void Update_SpritePlayer() {
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 2u: //hp
-							archer_data->hp = 100u;
+							archer_data->hp = 100;
 							PlayFx(CHANNEL_1, 3, 0x54, 0x80, 0x74, 0x83, 0x86);
 							SpriteManagerRemoveSprite(ispr);
 						break;
@@ -410,6 +414,7 @@ void Update_SpritePlayer() {
 							SpriteManagerRemoveSprite(ispr);
 						break;
 					}
+					update_hud = 1;
 				}
 			}			
 		}
@@ -427,12 +432,14 @@ void Update_SpritePlayer() {
 							archer_data->coins -= 20u;
 						}
 						archer_data->tool = 6;
+						update_hud = 1;
 						SpriteManagerRemoveSprite(ispr);
 						return;
 					break;
 					case 2: //wrench
 						SetSpriteAnim(THIS, anim_idle, 12u);
 						archer_data->tool = 7;
+						update_hud = 1;
 						SpriteManagerRemoveSprite(ispr);
 						return;
 					break;
@@ -452,6 +459,14 @@ void Update_SpritePlayer() {
 				platform_vx = datap->vx;
 				platform_vy = datap->vy;
 				THIS->y = ispr->y-3;
+			}
+		}
+		if(ispr->type == SpriteIceplat){
+			if(CheckCollision(THIS, ispr) && archer_state != STATE_NORMAL_PLATFORM) {
+				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
+				datap->type = 1u;
+				THIS->y -= ispr->coll_h;
+				archer_state = STATE_NORMAL_PLATFORM;
 			}
 		}
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
@@ -767,6 +782,7 @@ void Hit(INT8 damage) {
 	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
+		update_hud = 1;
 		if (archer_data->hp <= 0){
 			archer_data->hp = 0;
 			Die();

@@ -56,13 +56,14 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern
-UINT8 current_map = 0u; // 0u default
+UINT8 current_level = 5u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_map = 1u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
 INT8 showing_diag = 0;
 INT8 spawning_triggered = 0;
+INT8 update_hud = 0;
 bool LCD_Installed = false;
 
 extern UINT8 updatecounter; //da StateCredit
@@ -409,14 +410,17 @@ void Update_StateGame() {
 			case 0:
 			case 1:
 			case 2:
-			case 3:
 				SetState(StateGame);	
 			break;
+			case 3:
 			case 4:
+				SetState(StateGame3);
+			break;
 			case 5:
 			case 6:
+				SetState(StateGame6);
+			break;
 			case 7:
-				SetState(StateGame3);
 			break;
 		} 
 	}
@@ -648,39 +652,25 @@ void Update_StateGame() {
 		updatecounter = 0;
 	}	
 	
+	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 		ShowWindow();
 		return;
-	}
-	
+	}	
 	if(archer_state == STATE_DIAG){
 		if(show_diag > 0 ){
 			ShowWindowDiag();
 			return;
 		}
 	}
-	if (amulet != archer_data->amulet | amulet == 0u){
+	
+	//HUD MANAGEMENT
+	if (update_hud != 0){
+		update_hud = 0;
+		hp = archer_data->hp;
 		amulet = archer_data->amulet;
-		UpdateHUD();
-	}
-	if (coins != archer_data->coins){
 		coins = archer_data->coins;
-		UpdateHUD();
-	}
-	if (hp != archer_data->hp && archer_data->hp >= 0){
-		if(archer_data->hp < hp){
-			hp--;
-		}else{
-			hp++;
-		}
-		UpdateHUD();
-	}
-	if (ups != archer_data->ups){
 		ups = archer_data->ups;
-		UpdateHUD();
-	}
-	if(archer_tool != archer_data->tool){// & archer_tool == level_tool
-		archer_tool = archer_data->tool;
 		UpdateHUD();
 	}
 	

@@ -40,6 +40,7 @@ _SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteCamerafocus, camerafocus)\
 _SPRITE_DMG(SpritePuff, puff)\
+_SPRITE_DMG(SpriteIceplat, iceplat)\
 SPRITE_DEF_END
 
 

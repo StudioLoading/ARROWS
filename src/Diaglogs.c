@@ -442,6 +442,24 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					diagf = 99u;
 				}
 			break;
+			case 5u:
+				switch(current_map){
+					case 0u:
+						memcpy(d1, "I AM FREEZING!      ", 20);
+						memcpy(d2, "STALATTITE MAKES    ", 20);
+						memcpy(d3, "STALAGMITE GROW. CAN", 20);
+						memcpy(d4, "I USE THESE DROPS ? ", 20);
+						diagf = 99u;
+					break;
+					case 1u:
+						memcpy(d1, "THIS CAVE IS COLLAP ", 20);
+						memcpy(d2, "SING! I CAN SEE  A  ", 20);
+						memcpy(d3, "LAKE STRAIGHT AHEAD.", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 99u;
+					break;
+				}
+			break;
 		}
 	}
 	return diagf;
