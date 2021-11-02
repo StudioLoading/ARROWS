@@ -97,6 +97,7 @@ void Start_StateGame6() {
 	thunder_delay = 80u;
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
+	spawning_triggered = 0;
 	
 	if (current_level < 3u){
 		SetState(StateGame);
@@ -334,7 +335,7 @@ void Update_StateGame6() {
 						if(scroll_target->x > (UINT16) 30u << 3 && spawning_triggered <= 6){
 							spawn_enemy6(SpriteStalattite, 34u, 5u);
 						}						
-						if (scroll_target->x > (UINT16) 53u << 3 && scroll_target->x < (UINT16) 61u << 3){
+						if(scroll_target->x > (UINT16) 53u << 3 && scroll_target->x < (UINT16) 61u << 3){
 							if(thunder_delay == 0u){
 								SpriteManagerAdd(SpriteStalagmite, (UINT16) 58u << 3, (UINT16) 8u << 3);
 							}
@@ -359,7 +360,7 @@ void Update_StateGame6() {
 						if(scroll_target->x > (UINT16) 138u << 3 && spawning_triggered <= 13){
 							spawn_item6(scrigno_up, 142u, 8u, 3, 0);//1coin 2hp 3up 7dcoin
 						}					
-						if (scroll_target->x > (UINT16) 166u << 3){
+						if(scroll_target->x > (UINT16) 166u << 3){
 							if(thunder_delay == 0u){
 								SpriteManagerAdd(SpriteStalagmite, (UINT16) 174u << 3, (UINT16) 6u << 3);
 							}
@@ -372,7 +373,9 @@ void Update_StateGame6() {
 						if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered <= 1){
 							spawn_enemy6(SpriteIceplat, 33u, 13u);
 							spawn_enemy6(SpriteIceplat, 28u, 12u);
+							spawn_enemy6(SpritePlatform, 36u, 10u);
 						}
+					break;
 				}
 			break;
 		}

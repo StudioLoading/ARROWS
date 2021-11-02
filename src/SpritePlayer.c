@@ -446,19 +446,22 @@ void Update_SpritePlayer() {
 				}
 			}
 		}
-		if(ispr->type == SpritePlatform) {
+		if(ispr->type == SpritePlatform || ispr->type == SpriteIceplat) {
 			if(CheckCollision(THIS, ispr)) {
+				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
 				if (archer_accel_y > 0){//se sono in salita non collido !
 					archer_accel_y = 0;
 					if(archer_state != STATE_NORMAL_PLATFORM){
 						archer_state = STATE_NORMAL_PLATFORM;
 						THIS->y = ispr->y - ispr->coll_h;
+						if(ispr->type == SpriteIceplat){
+							datap->type = 1u;
+						}
 					}
 				}
-				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
 				platform_vx = datap->vx;
 				platform_vy = datap->vy;
-				THIS->y = ispr->y-3;
+				//THIS->y = ispr->y-3;				
 			}
 		}
 		if(ispr->type == SpriteIceplat){

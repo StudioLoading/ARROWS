@@ -7,8 +7,8 @@ LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
 		- mappa 2 con 
+			- posizionare le piattaforme cadente quando ci atterro sopra
 			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
-			- piattaforma cadente quando ci atterro sopra
 			- piattaforma di ghiaccio se faccio atterrare verticali frecce di ghiaccio
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire

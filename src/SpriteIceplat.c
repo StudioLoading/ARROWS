@@ -14,9 +14,9 @@ extern INT8 spawning_triggered;
 
 void Start_SpriteIceplat() {
 	THIS->coll_x = 0;
-	THIS->coll_y = 0;
+	THIS->coll_y = 11;
 	THIS->coll_w = 16;
-	THIS->coll_h = 8;
+	THIS->coll_h = 5;
 	THIS->lim_x = 160u;
 	THIS->lim_y = 160u;
 	SetSpriteAnim(THIS, iceplat_normal, 8u);
@@ -29,15 +29,15 @@ void Start_SpriteIceplat() {
 
 void Update_SpriteIceplat() {	
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
-	if(data_platform->type){ //different from 0, starts melt
+	if(data_platform->type != 0){ //different from 0, starts melt
 		data_platform->distance -= 1u;
 		switch (data_platform->distance){
-			case 40u: 	SetSpriteAnim(THIS, iceplat_melt_2, 4u); THIS->coll_y = 3; break;
-			case 20u: 	SetSpriteAnim(THIS, iceplat_melt_1, 4u); THIS->coll_y = 4; break;
+			case 40u: 	SetSpriteAnim(THIS, iceplat_melt_2, 4u); break;
+			case 20u: 	SetSpriteAnim(THIS, iceplat_melt_1, 4u); break;
+			case 10u:	SetSpriteAnim(THIS, iceplat_melt_0, 4u); break;
 			case 2u:
 			case 1u:
 			case 0u: 	
-				SetSpriteAnim(THIS, iceplat_melt_0, 4u);
 				data_platform->type = 1;
 				SpriteManagerRemoveSprite(THIS); 
 			break;		
