@@ -238,6 +238,8 @@ void Start_StateGame6() {
 	    LCD_Installed = true; 
 	}	
 	
+	scroll_x = -32;
+	
 }
 
 void Update_StateGame6() {
@@ -370,10 +372,21 @@ void Update_StateGame6() {
 						}
 					break;
 					case 1u:
-						if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered <= 1){
-							spawn_enemy6(SpriteIceplat, 33u, 13u);
-							spawn_enemy6(SpriteIceplat, 28u, 12u);
-							spawn_enemy6(SpritePlatform, 36u, 10u);
+						if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered < 1){
+							spawn_enemy6(SpriteIceplat, 33u, 15u);
+							spawn_enemy6(SpriteIceplat, 38u, 13u);
+							spawn_enemy6(SpritePlatform, 45u, 10u);
+						}
+						if (scroll_target->x > (UINT16) 45u << 3 && spawning_triggered <= 4){
+							spawn_enemy6(SpriteIceplat, 50u, 13u);
+							spawn_enemy6(SpriteIceplat, 55u, 15u);
+							spawn_enemy6(SpritePlatform, 61u, 14u);
+						}
+						if (scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 7){
+							spawn_enemy6(SpriteStalattite, 72u, 5u);
+						}
+						if (scroll_target->x > (UINT16) 72u << 3 && spawning_triggered <= 8){						
+							spawn_enemy6(SpriteStalattite, 77u, 5u);
 						}
 					break;
 				}
@@ -518,7 +531,7 @@ void set_window_y6(UBYTE y) {
 }
 
 void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy){
-	spawning_triggered++;
+	spawning_triggered+=1;
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;

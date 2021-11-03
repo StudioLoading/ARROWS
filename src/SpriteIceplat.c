@@ -30,13 +30,12 @@ void Start_SpriteIceplat() {
 void Update_SpriteIceplat() {	
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	if(data_platform->type != 0){ //different from 0, starts melt
-		data_platform->distance -= 1u;
+		data_platform->distance -= 2u;
 		switch (data_platform->distance){
 			case 40u: 	SetSpriteAnim(THIS, iceplat_melt_2, 4u); break;
 			case 20u: 	SetSpriteAnim(THIS, iceplat_melt_1, 4u); break;
 			case 10u:	SetSpriteAnim(THIS, iceplat_melt_0, 4u); break;
 			case 2u:
-			case 1u:
 			case 0u: 	
 				data_platform->type = 1;
 				SpriteManagerRemoveSprite(THIS); 
@@ -46,5 +45,5 @@ void Update_SpriteIceplat() {
 }
 
 void Destroy_SpriteIceplat() {
-	spawning_triggered--;
+
 }
