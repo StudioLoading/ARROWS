@@ -65,9 +65,7 @@ polish:
 	- You can see the player's health reset before the fadeout on death
 	- effetto di camera tramble che potrebbe essere utile da usare come effetto
 	- schermata di fine livello - direi con pergamena descrittiva
-	- polish della titlescreen
-	- SE DOPO 5 SECONDI NON FACCIO NIENTE, SETTARE L' ANIMAZIONE COL MANTELLO CHE SVOLAZZA
-	
+	- quando mi volto, sostituire lo scroll orizzontale tra i lati destro e sinistro
 
 
 replay value:

@@ -1,3 +1,5 @@
+void AnimSliders0() __banked;
+void AnimSliders1() __banked;
 void AnimWaters0() __banked;
 void AnimWaters1() __banked;
 void AnimClouds0() __banked;

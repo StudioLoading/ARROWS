@@ -6,6 +6,7 @@
 #include "../res/src/diagnew6.h"
 #include "../res/src/font.h"
 #include "../res/src/tiles6.h"
+#include "../res/src/tilesanims.h"
 #include "../res/src/map60.h"
 #include "../res/src/map61.h"
 #include "../res/src/archer.h"
@@ -25,7 +26,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {2, 4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 
 extern UINT16 bg_palette[];
@@ -202,10 +203,10 @@ void Start_StateGame6() {
 
 	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
-			case 6u:
+			case 5u:
 				switch(current_map){
-					case 0u:
-						//spawn_item6(scrigno_up, 8u, 8u, 3, 1);
+					case 1u:
+						spawn_item6(scrigno_dcoin, 3u, 16u, 7, 1);//1coin 2hp 3up 7dcoin
 					break;
 				}
 			break;
@@ -236,9 +237,7 @@ void Start_StateGame6() {
 			set_window_y6(144-8);
 		}
 	    LCD_Installed = true; 
-	}	
-	
-	scroll_x = -32;
+	}
 	
 }
 
@@ -372,20 +371,20 @@ void Update_StateGame6() {
 						}
 					break;
 					case 1u:
-						if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered < 1){
+						if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered < 2){
 							spawn_enemy6(SpriteIceplat, 33u, 15u);
 							spawn_enemy6(SpriteIceplat, 38u, 13u);
 							spawn_enemy6(SpritePlatform, 45u, 10u);
 						}
-						if (scroll_target->x > (UINT16) 45u << 3 && spawning_triggered <= 4){
+						if (scroll_target->x > (UINT16) 45u << 3 && spawning_triggered <= 5){
 							spawn_enemy6(SpriteIceplat, 50u, 13u);
 							spawn_enemy6(SpriteIceplat, 55u, 15u);
 							spawn_enemy6(SpritePlatform, 61u, 14u);
 						}
-						if (scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 7){
+						if (scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 8){
 							spawn_enemy6(SpriteStalattite, 72u, 5u);
 						}
-						if (scroll_target->x > (UINT16) 72u << 3 && spawning_triggered <= 8){						
+						if (scroll_target->x > (UINT16) 72u << 3 && spawning_triggered <= 9){						
 							spawn_enemy6(SpriteStalattite, 77u, 5u);
 						}
 					break;
@@ -397,6 +396,25 @@ void Update_StateGame6() {
 	if(thunder_delay == 0u){
 		thunder_delay = 104u;
 	}
+	
+	//MOVING BACKGROUND TILES
+	updatecounter++;
+	if (updatecounter < 60) {
+		switch(updatecounter){
+			case 20:
+			case 40:
+			case 59:
+				AnimSliders0();
+			break;
+			case 10:
+			case 30:
+			case 50:
+				AnimSliders1();
+			break;
+		}	
+	}else{
+		updatecounter = 0;
+	}	
 	
 	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
