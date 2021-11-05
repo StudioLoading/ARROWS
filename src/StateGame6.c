@@ -26,7 +26,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {2, 4, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 
 extern UINT16 bg_palette[];
@@ -386,6 +386,29 @@ void Update_StateGame6() {
 						}
 						if (scroll_target->x > (UINT16) 72u << 3 && spawning_triggered <= 9){						
 							spawn_enemy6(SpriteStalattite, 77u, 5u);
+						}
+						if (scroll_target->x > (UINT16) 88u << 3 && spawning_triggered <= 10){						
+							spawn_enemy6(SpriteIceplat, 98u, 14u);
+						}
+						if (scroll_target->x > (UINT16) 98u << 3 && spawning_triggered <= 11){						
+							spawn_enemy6(SpriteIceplat, 108u, 12u);					
+							spawn_enemy6(SpriteStalattite, 108u, 5u);
+						}
+						if (scroll_target->x > (UINT16) 125u << 3 && spawning_triggered <= 13){						
+							spawn_enemy6(SpriteIceplat, 132u, 17u);					
+							spawn_enemy6(SpriteIceplat, 136u, 14u);					
+							spawn_item6(scrigno_up, 137u, 8u, 3, 1);//1coin 2hp 3up 7dcoin
+							//spawn_item6(scrigno_up, 129u, 5u, 2, 0);//1coin 2hp 3up 7dcoin
+						}
+						if (scroll_target->x > (UINT16) 143u << 3 && spawning_triggered <= 17){						
+							spawn_enemy6(SpriteIceplat, 160u, 11u);					
+							spawn_enemy6(SpriteIceplat, 162u, 13u);					
+							spawn_enemy6(SpriteStalattite, 146u, 4u);
+						}
+						if (scroll_target->x > (UINT16) 170u << 3 && spawning_triggered <= 17){						
+							spawn_enemy6(SpriteIceplat, 175u, 15u);					
+							spawn_enemy6(SpriteIceplat, 179u, 12u);					
+							spawn_enemy6(SpriteStalattite, 171u, 4u);
 						}
 					break;
 				}

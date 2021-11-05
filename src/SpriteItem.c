@@ -110,7 +110,7 @@ void Update_SpriteItem() {
 	UINT8 scroll_i_tile;
 	struct Sprite* iispr;
 	SPRITEMANAGER_ITERATE(scroll_i_tile, iispr) {
-		if(iispr->type == SpritePlatform) {
+		if(iispr->type == SpritePlatform || iispr->type == SpriteIceplat) {
 			if(CheckCollision(THIS, iispr)) {
 				data->item_accel_y = 0;
 				struct PlatformInfo* datapl = (struct PlatformInfo*)iispr->custom_data;
