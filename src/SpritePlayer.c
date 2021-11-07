@@ -447,7 +447,7 @@ void Update_SpritePlayer() {
 			}
 		}
 		if(ispr->type == SpritePlatform || ispr->type == SpriteIceplat) {
-			if(CheckCollision(THIS, ispr)) {
+			if(CheckCollision(THIS, ispr)) {//&& (ispr->y - THIS->y) > 10
 				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
 				if (archer_accel_y > 0){//se sono in salita non collido !
 					archer_accel_y = 0;

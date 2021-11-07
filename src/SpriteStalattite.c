@@ -23,7 +23,7 @@ void Start_SpriteStalattite() {
 	THIS->lim_y = 80u;
 	SetSpriteAnim(THIS, stalat_drop, 4u);
 	struct EnemyInfo* ldata = (struct EnemyInfo*)THIS->custom_data;	
-	ldata->enemy_accel_y = 11;
+	ldata->enemy_accel_y = 12;
 	ldata->vx = 0;
 	ldata->wait = 40u;
 	ldata->hp = 24u;
