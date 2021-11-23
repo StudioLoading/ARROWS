@@ -26,7 +26,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 
 extern UINT16 bg_palette[];
@@ -148,27 +148,19 @@ void Start_StateGame6() {
 	SHOW_BKG;
 	
 	//INIT ARCHER
-	is_on_boss = -1;
-	if (archer_data->ups && archer_data->ups != ups){
-		ups = archer_data->ups;
-	}
-	if (archer_data->tool && archer_data->tool != archer_tool){
-		archer_tool = archer_data->tool;
-	}
+	is_on_boss = -1;	
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 0u;
 		archer_tool = 0;
 		hp = 50;
 	}	
+	archer_data->hp = hp;
 	archer_data->ups = ups;
-	if(archer_data->hp != 100){
-		archer_data->hp = hp;	
-	}else{
-		hp = 100;
-	}	
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
+	archer_state = STATE_JUMPING;
+	
 	UpdateHUD6();
 	
 	//WINDOW
@@ -222,8 +214,6 @@ void Start_StateGame6() {
 	if(archer_tool == level_tool){
 		UpdateHUD6();
 	}
-	archer_state = STATE_JUMPING;
-
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -488,10 +478,15 @@ void Update_StateGame6() {
 }
 
 void UpdateHUD6(){
+	hp = archer_data->hp;
+	amulet = archer_data->amulet;
+	coins = archer_data->coins;
+	ups = archer_data->ups;
+	archer_tool = archer_data->tool;
 	//write amulet
 	PRINT_POS(18,0);
 	switch (archer_data->amulet){
-		case 1: Printf("$"); break;
+		//case 1: Printf("$"); break;
 		case 2: Printf("["); break;
 		case 3: Printf("#"); break;
 		case 4: Printf("]"); break;
@@ -499,23 +494,23 @@ void UpdateHUD6(){
 		default: Printf("$"); break;
 	}
 	//write coins
-	if (is_on_boss < 0){
+	if (is_on_boss < 0){	
 		if (archer_data->coins == 100u){
 			archer_data->coins = 0u;
 			coins = 0u;
 			archer_data->ups += 1;	
 		}
 		PRINT_POS(12, 0);
-		if (archer_data->coins > 9u){
+		if (archer_data->coins > 9){
 			Printf("%d", archer_data->coins);
 		}else{
 			Printf("0%d", archer_data->coins);
-		}
+		}	
 	}
 	//write hp
 	PRINT_POS(7, 0);
 	if(hp < 0){
-		//Printf("XX");
+		Printf("XX");
 	}else if (hp < 10){ // archer_data->hp < 10 &&
 		Printf("0");
 		PRINT_POS(8, 0);
@@ -528,11 +523,11 @@ void UpdateHUD6(){
 	//write tool
 	if (archer_data->tool == level_tool){
 		switch(level_tool){
-			case 6:
+			case 6: //key
 				PRINT_POS(16, 0);
 				Printf("{");
 			break;
-			case 7:
+			case 7: //wrench
 				PRINT_POS(16, 0);
 				Printf("<");
 			break;

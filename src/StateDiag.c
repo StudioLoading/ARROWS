@@ -18,6 +18,7 @@
 #include "../res/src/mapdiageagle.h"
 #include "../res/src/mapdiagibex.h"
 #include "../res/src/mapdiagbear.h"
+#include "../res/src/mapdiagwalrus.h"
 
 #include "../res/src/mapdiagamuletstone.h"
 #include "../res/src/mapdiagamuletthunder.h"
@@ -35,6 +36,7 @@
 #include "../res/src/diageagle.h"
 #include "../res/src/diagibex.h"
 #include "../res/src/diagbear.h"
+#include "../res/src/diagwalrus.h"
 
 #include "../res/src/diagamuletstone.h"
 #include "../res/src/diagamuletthunder.h"
@@ -154,7 +156,7 @@ void Start_StateDiag() {
 		break;
 		case 32u:
 			if(sgb_check()){
-				set_sgb_palette01_1G();
+				set_sgb_palette01_AMULET_ICE();
 			}
 			InitScroll(&mapdiagamuletice, collision_dtiles, 0);
 		break;
@@ -190,6 +192,12 @@ void Start_StateDiag() {
 				set_sgb_palette01_BEAR();
 			}
 			InitScroll(&mapdiagbear, collision_dtiles, 0);
+		break;
+		case 56u:
+			if(sgb_check()){
+				set_sgb_palette01_WALRUS();
+			}
+			InitScroll(&mapdiagwalrus, collision_dtiles, 0);
 		break;
 	}
 	SHOW_BKG;

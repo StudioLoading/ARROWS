@@ -31,14 +31,14 @@ extern INT8 archer_tool;
 extern INT8 update_hud;
 
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 anim_jump[] = {1, 15};
+const UINT8 anim_jump[] = {1, 11};
 const UINT8 anim_jump_up[] = {1, 6};
 const UINT8 anim_dead[] = {1, 9};
 const UINT8 anim_walk[] = {4, 7, 6, 5, 4};
 const UINT8 anim_shield[] = {1, 3};
 const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {2,1,2};
-const UINT8 anim_flying[] = {4, 12, 13 ,14 , 13};
+const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
 
 INT8 jump_power = 0;
 INT8 death_cooldown = 0;
@@ -72,9 +72,6 @@ void Start_SpritePlayer() {
 	if(archer_data->amulet != amulet){
 		archer_data->amulet = 1u;
 	}
-	archer_data->tool = 0;
-	archer_data->ups = 0;
-	archer_data->coins = 0u;
 	
 	if(diag_found == 21u){ //spawn key
 		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
@@ -476,7 +473,7 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
 			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
-			|| ispr->type == SpriteBear) {
+			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				//archer_state = STATE_HIT;
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
@@ -507,7 +504,7 @@ void Update_SpritePlayer() {
 				}
 				UINT8 being_hit = 1u;
 				if (KEY_PRESSED(J_DOWN)){// && !dataenemy->tile_e_collision){ //se mi sto riparando e lo sono girato dove serve
-					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
+					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator && ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
 						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider){
 						if (ispr->x < THIS->x){
 							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene
@@ -532,7 +529,11 @@ void Update_SpritePlayer() {
 						case SpriteStalagmite:
 						case SpriteThunder:
 							enemydamage = 8;
-						break;
+						break;						
+						case SpriteWalrusspin:
+							/*if (dataenemy->enemy_state != WALRUS_STATE_SPIN){
+								return;
+							}*/
 						case SpriteRat:
 						case SpriteBird:
 							enemydamage = 10;
@@ -547,6 +548,7 @@ void Update_SpritePlayer() {
 						case SpriteAlligator:
 						case SpriteIbex:
 						case SpriteBear:
+						case SpriteWalrus:
 							enemydamage = 20;
 							TranslateSprite(THIS, 0, -1);
 						break;
@@ -638,7 +640,7 @@ void Shoot() {
 			arrow_data->arrowdir = 1;
 		}
 	}
-	shoot_cooldown = 12;
+	shoot_cooldown = 8;
 }
 
 void Jump() {
@@ -710,14 +712,15 @@ void CheckCollisionTile() {
 					if(archer_data->tool){
 						current_level_b = current_level;
 						is_on_boss = 0;
+						//Build_Next_Dialog();
+					}//else{
 						Build_Next_Dialog();
-					}else{
-						Build_Next_Dialog();
-					}
+					//}
 				break;
 				case 2u:
 				case 3u:
 				case 4u:
+				case 5u:
 					current_level_b = current_level;
 					is_on_boss = 0;
 					Build_Next_Dialog();
@@ -763,6 +766,11 @@ void CheckCollisionTile() {
 		break;
 		case 46u: //secret room
 			load_next_s = 1;
+		break;
+		case 64u: //skull in ice cave
+			if(current_level == 5u){
+				Hit(8);
+			}
 		break;
 		case 111u:
 			if(platform_vx != 2){

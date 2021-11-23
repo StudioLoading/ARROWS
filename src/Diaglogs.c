@@ -103,6 +103,13 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					memcpy(d4, "     LET ME PASS!   ", 20);
 					diagf = 1u;
 				break;
+				case 5u:
+					memcpy(d1, "    THE EXIT IS     ", 20);
+					memcpy(d2, "  BEYOND A WALRUS.  ", 20);
+					memcpy(d3, " I NEED HIS AMULET  ", 20);
+					memcpy(d4, "    LET'S FIGHT!    ", 20);
+					diagf = 1u;
+				break;
 			}
 		break;
 		case 1:  //is_on_boss == 1
@@ -139,7 +146,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					current_camera_state = 3u;
 					diagf = 54u;
 				break;
-				case 4u:				
+				case 4u:
 					memcpy(d1, "        GRRR!       ", 20);
 					memcpy(d2, "                    ", 20);
 					memcpy(d3, "    ROOOOOOOAAAR!   ", 20);
@@ -147,10 +154,18 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					current_camera_state = 3u;
 					diagf = 55u;
 				break;
+				case 5u:				
+					memcpy(d1, " YOUR ARROWS WON'T  ", 20);
+					memcpy(d2, " BEAT MY HEADBUTTS! ", 20);
+					memcpy(d3, " IS THE ICE NECKLES ", 20);
+					memcpy(d4, " PRETTY OR ISN'T IT?", 20);
+					current_camera_state = 3u;
+					diagf = 56u;
+				break;
 			}	
 		break;
 		case 2://is_on_boss == 2 significa che l'ho sconfitto
-		case 3:
+		case 3: // final tip on boss destroyed
 			if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
 				switch(current_level_b){
 					case 0u:
@@ -186,6 +201,13 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d2, " JUST NEEDED THE    ", 20);
 						memcpy(d3, " WRENCH TO GO       ", 20);
 						memcpy(d4, " ON. SORRY BEAR!    ", 20);
+						diagf = 99u;
+					break;
+					case 5u:
+						memcpy(d1, "     PRESS SELECT   ", 20);
+						memcpy(d2, "   TO THE ] SYMBOL  ", 20);
+						memcpy(d3, " AND BREAK THE GATE ", 20);
+						memcpy(d4, "                    ", 20);
 						diagf = 99u;
 					break;
 				}				
@@ -253,14 +275,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 									memcpy(d4, "    .. EH EH !      ", 20);
 									diagf = 21u;		
 								}				
-							}else{//qualsiasi altro slave in piedi in gabbia	
-								/*						
-								memcpy(d1, "    YOU CAN BET!   ", 20);
-								memcpy(d2, "   SO  REAL FAITH  ", 20);
-								memcpy(d3, "   ARE YOU GOING   ", 20);								
-								memcpy(d4, "    TO HELP ME?    ", 20);
-								diagf = 1u;
-								*/												
+							}else{										
 								memcpy(d1, "     WHAT HAVE      ", 20);
 								memcpy(d2, "      WE DONE!      ", 20);
 								memcpy(d3, "                    ", 20);

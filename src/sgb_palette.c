@@ -85,7 +85,13 @@ void set_sgb_palette01_COMUNEKO() __banked{
 void set_sgb_palette01_AMULET_THUNDER() __banked{
 	set_sgb_palette(SGB_PAL1B_LIGHTER, RGB8(255, 187, 17), RGB8(198, 132, 74), SGB_PAL1B_DARKER);
 }
+void set_sgb_palette01_AMULET_ICE() __banked{
+	set_sgb_palette(RGB8(255, 255, 173), RGB8(248, 248, 248), RGB8(60, 188, 252), SGB_PAL1B_DARKER);
+}
 void set_sgb_palette01_SEWER() __banked {
+	set_sgb_palette(SGB_PAL1E_LIGHTER, RGB8(188, 188, 188), RGB8(0, 136, 136), SGB_PAL1E_DARKER);
+}
+void set_sgb_palette01_GATORSWAMP() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL1E_LIGHT, RGB8(0, 136, 136), SGB_PAL1E_DARKER);
 }
 void set_sgb_palette01_GATOR() __banked {
@@ -105,6 +111,9 @@ void set_sgb_palette01_BEAR() __banked {
 }
 void set_sgb_palette01_ICE() __banked {
 	set_sgb_palette(RGB8(255, 255, 255), RGB8(164, 228, 252), RGB8(29, 176, 249), RGB8(0, 0, 0));
+}
+void set_sgb_palette01_WALRUS() __banked {
+	set_sgb_palette(RGB8(255, 255, 173), RGB8(164, 228, 252), RGB8(172, 124, 0), RGB8(90, 57, 33));
 }
 
 void set_sgb_palette01_1A() __banked {

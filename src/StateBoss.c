@@ -8,6 +8,7 @@
 #include "../res/src/mapboss2.h"
 #include "../res/src/mapboss3.h"
 #include "../res/src/mapboss4.h"
+#include "../res/src/mapboss5.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -43,6 +44,7 @@ extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss
 extern UINT8 current_camera_counter;
 extern UINT8 diag_found;
 extern INT8 load_next_d;
+extern INT8 update_hud;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
@@ -51,7 +53,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 tusk
+UINT8 current_level_b = 5u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -68,7 +70,10 @@ const struct MapInfo* const boss_3[] = {
 const struct MapInfo* const boss_4[] = {
 	&mapboss4
 };
-const struct MapInfo** const bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4};
+const struct MapInfo* const boss_5[] = {
+	&mapboss5
+};
+const struct MapInfo** const bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4, boss_5};
 
 struct Sprite* boss;
 INT8 boss_hp = 0;
@@ -76,6 +81,8 @@ struct EnemyInfo* boss_data_b;
 struct Sprite* reward = 0;
 
 const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
+
+const UINT8 const collision_btiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void WriteBBOSSHP();
 void populate_boss0();
@@ -97,7 +104,6 @@ void Start_StateBoss() {
 	SpriteManagerLoad(SpriteCamerafocus);
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
-	//SpriteManagerLoad(SpritePuff);
 	switch(current_level_b){
 		case 0u:
 			level_tool=7;
@@ -115,7 +121,7 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteGate);
 			SpriteManagerLoad(SpriteItem);
 			if(sgb_check()){
-				set_sgb_palette01_SEWER();
+				set_sgb_palette01_GATORSWAMP();
 				set_sgb_palette_statusbar();
 			}
 		break;
@@ -144,6 +150,17 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_TREES();
+				set_sgb_palette_statusbar();
+			}
+		break;
+		case 5u:
+			level_tool=0;
+			SpriteManagerLoad(SpriteWalrus);
+			SpriteManagerLoad(SpriteWalrusspin);
+			SpriteManagerLoad(SpriteGate);			
+			SpriteManagerLoad(SpriteAmulet);
+			if(sgb_check()){
+				set_sgb_palette01_WALRUS();
 				set_sgb_palette_statusbar();
 			}
 		break;
@@ -177,8 +194,10 @@ void Start_StateBoss() {
 		break;
 		case 3u:
 		case 4u:
-		case 5u:
 			InitScroll(level_maps_b[0], collision_btiles4, 0);
+		break;
+		case 5u:
+			InitScroll(level_maps_b[0], collision_btiles6, 0);
 		break;
 	}
 	
@@ -188,7 +207,7 @@ void Start_StateBoss() {
 	if (is_on_boss >= 2){
 		if(is_on_boss == 4){//lo setto a 4 solo quando si muore dopo aver sconfitto il boss ma prima di essere usciti, come dei coglioni
 			SpawnReward();
-		}
+		}		
 		SpawnBoss(0);
 		archer_state = STATE_JUMPING;
 	}else{
@@ -218,11 +237,10 @@ void Start_StateBoss() {
 	archer_data->ups =ups;
 	archer_data->hp = hp;
 	archer_data->coins = coins;
-	//archer_data->tool = 0;
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
+	INIT_CONSOLE(font, 10, 0);
 	ShowWindow();
 	UpdateHUD();
 	WriteBBOSSHP();
@@ -305,23 +323,18 @@ void Update_StateBoss() {
 			return;
 		}		
 	}
-	if (amulet != archer_data->amulet){
-		amulet = archer_data->amulet;
-		UpdateHUD();
-	}
-	if (coins != archer_data->coins){
-		coins = archer_data->coins;
-		UpdateHUD();
-	}
-	if (hp != archer_data->hp){
+	
+	
+	//HUD MANAGEMENT
+	if (update_hud != 0){
+		update_hud = 0;
 		hp = archer_data->hp;
-		UpdateHUD();
-	}
-	if (ups != archer_data->ups){
+		amulet = archer_data->amulet;
+		coins = archer_data->coins;
 		ups = archer_data->ups;
 		UpdateHUD();
 	}
-
+	
 	if (boss_hp != boss_data_b->hp && is_on_boss < 2){
 		boss_hp = boss_data_b->hp;
 		WriteBBOSSHP();
@@ -350,7 +363,7 @@ void Update_StateBoss() {
 					AnimSpuncioni1();
 				break;
 			}
-			if(current_level_b > 0u){
+			if(current_level_b > 0u && current_level_b != 5u){
 				switch(updatecounter){
 					case 1:
 					case 30:
@@ -405,6 +418,14 @@ void SpawnBoss(INT8 hp_default){
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
 			break;
+			case 5u:
+				boss = SpriteManagerAdd(SpriteWalrus, (UINT16) 12u << 3, (UINT16) 15u << 3);
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
+				gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 34 << 3, (UINT16) 19 << 3);
+				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
+				gatedata->vx = 4;
+			break;
 		}
 		
 		if(hp_default == 0){
@@ -448,7 +469,9 @@ void SpawnReward(){
 			datak->type = 2;
 			datak->setup = 1u;
 		break;
-		case 5u: // tusk -> amulet water
+		case 5u: // tusk -> amulet water		
+			boss->x = (UINT16) 12u << 3;
+			boss->y = (UINT16) 15u << 3;
 			key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
 			datak = (struct ItemInfo*)key_s->custom_data;
 			datak->type = 2;

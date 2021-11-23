@@ -6,13 +6,26 @@ LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
-		- mappa 2 con 
-			- posizionare le piattaforme cadente quando ci atterro sopra
-			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
-			- piattaforma di ghiaccio se faccio atterrare verticali frecce di ghiaccio
+		- mappa 2 con
+			- diag finale per entrare nel boss
+LIV 6 CASTELLO -> 3 MAPPE
+		- mappa 0 -> giardino, con nemici Uccellini e trappole col trigger per terra, lance che vengono su da sotto terra
+			- qui infondo c'è il cancello con la mamma, ci vuole cutscene con screen multipli. Qui inserisco gli amuleti al posto, e di fatto li perdo.
+		- mappa 1 -> castello un po' labirintico, Nemici bomba, Topi, serpenti
+		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da
+		- mappa 2 pet cematery -> visito le tombe degli animali domestici delle persone (gatto, cane, lupacchiotto, orsetto, aquilotto), se visito quella del lupo, orso o aquila, questi mi aiutano nello scontro finale. Direi nessun nemico, solo tristezza.
+		- bossFight 2 -> direi, a sto punto, in una cripta o in un sotterraneo. Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. Ho a disposizione frecce normali e frecce di fuoco per demolirlo. Alla fine crolla tutto, il cattivone è seppellito.
+			cutscene dell' arcere e madre che escono dal cancello, senza più gli amuleti perchè diciamo di averceli tutti
+			titoli di coda
+			cutscene di una mano che spunta dalle macerie (da qui il gioco si può solo spegnere)
+
+---------------------------------------------------------
 LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
+			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
+
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
+---------------------------------------------------------
 
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 	- WOLF siamo al cimitero, il lupo ha una vx che aumenta, scopo è catturare 10 topi, al massimo si può saltare, e i topi sono o per terra o sopra una lapide. quando wolf arriva al cancello del castello, il livello è finito. se ha catturato 10 topi partecipa allo scontro contro il boss
@@ -29,6 +42,9 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
+- recheck del tool che perdo tra le mappe del primo livello
+- freccia normale veloce come ice,fire. freccia pietra unica lenta.
+- colori sulla statusBar del boss
 - porta (anche nera) di inizio livello, per indicare il "vengo da qui", magari subito sotto la freccia di spawn
 - hit anche durante hit
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!

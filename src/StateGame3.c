@@ -249,28 +249,19 @@ void Start_StateGame3() {
 	SHOW_BKG;
 	
 	//INIT ARCHER
-	is_on_boss = -1;
-	if (archer_data->ups && archer_data->ups != ups){
-		ups = archer_data->ups;
-	}
-	if (archer_data->tool && archer_data->tool != archer_tool){
-		archer_tool = archer_data->tool;
-	}
+	is_on_boss = -1;	
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 0u;
 		archer_tool = 0;
 		hp = 50;
 	}	
+	archer_data->hp = hp;
 	archer_data->ups = ups;
-	if(archer_data->hp != 100){
-		archer_data->hp = hp;	
-	}else{
-		hp = 100;
-	}	
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
-	UpdateHUD3();
+	archer_state = STATE_JUMPING;
+	UpdateHUD3();	
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -326,12 +317,7 @@ void Start_StateGame3() {
 	}	
 	if(load_next_s == -1){
 		load_next_s = 0;
-	}		
-	if(archer_tool == level_tool){
-		UpdateHUD3();
 	}
-	archer_state = STATE_JUMPING;
-
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -616,10 +602,15 @@ void Update_StateGame3() {
 }
 
 void UpdateHUD3(){
+	hp = archer_data->hp;
+	amulet = archer_data->amulet;
+	coins = archer_data->coins;
+	ups = archer_data->ups;
+	archer_tool = archer_data->tool;
 	//write amulet
 	PRINT_POS(18,0);
 	switch (archer_data->amulet){
-		case 1: Printf("$"); break;
+		//case 1: Printf("$"); break;
 		case 2: Printf("["); break;
 		case 3: Printf("#"); break;
 		case 4: Printf("]"); break;
@@ -627,18 +618,18 @@ void UpdateHUD3(){
 		default: Printf("$"); break;
 	}
 	//write coins
-	if (is_on_boss < 0){
+	if (is_on_boss < 0){	
 		if (archer_data->coins == 100u){
 			archer_data->coins = 0u;
 			coins = 0u;
 			archer_data->ups += 1;	
 		}
 		PRINT_POS(12, 0);
-		if (archer_data->coins > 9u){
+		if (archer_data->coins > 9){
 			Printf("%d", archer_data->coins);
 		}else{
 			Printf("0%d", archer_data->coins);
-		}
+		}	
 	}
 	//write hp
 	PRINT_POS(7, 0);
@@ -656,11 +647,11 @@ void UpdateHUD3(){
 	//write tool
 	if (archer_data->tool == level_tool){
 		switch(level_tool){
-			case 6:
+			case 6: //key
 				PRINT_POS(16, 0);
 				Printf("{");
 			break;
-			case 7:
+			case 7: //wrench
 				PRINT_POS(16, 0);
 				Printf("<");
 			break;

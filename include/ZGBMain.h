@@ -41,6 +41,8 @@ _SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteCamerafocus, camerafocus)\
 _SPRITE_DMG(SpritePuff, puff)\
 _SPRITE_DMG(SpriteIceplat, iceplat)\
+_SPRITE_DMG(SpriteWalrus, walrus)\
+_SPRITE_DMG(SpriteWalrusspin, walrusspin)\
 SPRITE_DEF_END
 
 

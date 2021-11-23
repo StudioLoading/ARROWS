@@ -27,6 +27,13 @@ extern UINT8* titlescreen_mod_Data[];
 extern UINT8 quiver;// = 0b0000000001;
 extern UINT8 current_camera_counter;
 
+extern UINT8 amulet;
+extern UINT8 coins;
+extern INT8 ups;
+extern INT8 hp;
+extern INT8 archer_tool;
+extern INT8 level_tool;
+
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
 
@@ -51,6 +58,13 @@ void Start_StateTitlescreen() {
 	
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
+	
+	amulet = 0;
+    coins = 30u;
+	ups = 1;
+	hp = 100;
+	archer_tool = 0;
+	level_tool = -1;
 	
 	if(sgb_check()){
 		set_sgb_palette01_2A();
@@ -167,25 +181,22 @@ void Update_StateTitlescreen() {
 			break;
 		}
 		current_camera_counter += 1u;
-		if(current_camera_state <= 4u){
-			if (current_camera_counter == 120u){
-				current_camera_state++;
-			}
-		}else{		
-			switch(current_camera_counter){
-				case 80u:
-					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 70 << 3, (UINT16) 0 << 3);
-				break;
-				case 160u:
-					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 80 << 3, (UINT16) 6 << 3);
-				break;
-				case 200u:
-					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 70 << 3, (UINT16) 6 << 3);
-				break;
-				case 240u:
-					SpriteManagerAdd(SpriteArrowtitle, (UINT16) 75 << 3, (UINT16) 10 << 3);
-				break;
-			}	
+		switch(current_camera_counter){
+			case 20u:
+				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 82 << 3, (UINT16) 0 << 3);
+			break;
+			case 80u:
+				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 68 << 3, (UINT16) 0 << 3);
+			break;
+			case 160u:
+				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 80 << 3, (UINT16) 6 << 3);
+			break;
+			case 200u:
+				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 70 << 3, (UINT16) 6 << 3);
+			break;
+			case 240u:
+				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 72 << 3, (UINT16) 10 << 3);
+			break;
 		}
 	}
 	

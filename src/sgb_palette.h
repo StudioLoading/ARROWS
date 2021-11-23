@@ -79,13 +79,16 @@ void set_sgb_palette01_TITLEINVERTED() __banked;
 void set_sgb_palette01_COMUNEKO() __banked;
 void reset_sgb_palette_statusbar() __banked;
 void set_sgb_palette01_SEWER() __banked;
+void set_sgb_palette01_GATORSWAMP() __banked;
 void set_sgb_palette01_GATOR() __banked;
 void set_sgb_palette01_FOREST() __banked;
 void set_sgb_palette01_EAGLE() __banked;
 void set_sgb_palette01_AMULET_THUNDER() __banked;
+void set_sgb_palette01_AMULET_ICE() __banked;
 void set_sgb_palette01_TREES() __banked;
 void set_sgb_palette01_BEAR() __banked;
 void set_sgb_palette01_ICE() __banked;
+void set_sgb_palette01_WALRUS() __banked;
 
 void set_sgb_palette01_1A() __banked;	
 void set_sgb_palette01_1B() __banked;

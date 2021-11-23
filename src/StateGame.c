@@ -46,17 +46,19 @@ const UINT16 const sprites_palette[] = {
 	PALETTE_INDEX(archer, 7),
 };
 
-UINT8 amulet = 0u;
-UINT8 coins = 30u;
-INT8 ups = 1;
-INT8 hp = 100;
-INT8 archer_tool = 0;
-INT8 level_tool = -1;
+//initialized on StateTitlescreen
+UINT8 amulet;// = 0u;
+UINT8 coins;// = 30u;
+INT8 ups;// = 1;
+INT8 hp;// = 100;
+INT8 archer_tool;// = 0;
+INT8 level_tool;// = -1;
+
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 5u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -193,29 +195,18 @@ void Start_StateGame() {
 	SHOW_BKG;
 	
 	//INIT ARCHER
-	is_on_boss = -1;
-	if (archer_data->ups && archer_data->ups != ups){
-		ups = archer_data->ups;
-	}
-	if (archer_data->tool && archer_data->tool != archer_tool){
-		archer_tool = archer_data->tool;
-	}
+	is_on_boss = -1;	
 	if (ups == -1){ //cioè vengo dal gameOver
 		ups = 3;
 		coins = 0u;
 		archer_tool = 0;
 		hp = 50;
-	}
-	
+	}	
+	archer_data->hp = hp;
 	archer_data->ups = ups;
-	if(archer_data->hp != 100){
-		archer_data->hp = hp;	
-	}else{
-		hp = 100;
-	}
-	
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
+	archer_state = STATE_JUMPING;	
 	UpdateHUD();
 	
 	//WINDOW
@@ -287,12 +278,6 @@ void Start_StateGame() {
 	if(load_next_s == -1){
 		load_next_s = 0;
 	}
-		
-	if(archer_tool == level_tool){
-		UpdateHUD();
-	}
-	
-	archer_state = STATE_JUMPING;
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -613,18 +598,10 @@ void Update_StateGame() {
 			break;
 			case 20:			
 				AnimWaters0();
-				if(archer_tool == 0){
-					if(current_level == 0u && current_map == 0u){
-						AnimPrisoner00();
-						AnimPrisoner10();
-					}
-					if(current_level == 1u && current_map == 1u){
-						AnimPrisoner20();
-					}
-				}else{
+				if(archer_tool != level_tool){
 					AnimPrisoner00();
 					AnimPrisoner10();
-					AnimPrisoner20();					
+					AnimPrisoner20();
 				}
 			break;
 			case 30:
@@ -633,7 +610,7 @@ void Update_StateGame() {
 			case 40:
 				AnimWaters1();
 				AnimSky1();
-				if(archer_tool == 0){
+				if(archer_tool != level_tool){
 					if(current_level == 0u && current_map == 0u){
 						AnimPrisoner01();
 						AnimPrisoner11();
@@ -641,10 +618,6 @@ void Update_StateGame() {
 					if(current_level == 1u && current_map == 1u){
 						AnimPrisoner21();
 					}
-				}else{
-					AnimPrisoner00();
-					AnimPrisoner10();
-					AnimPrisoner20();
 				}
 			break;
 		}			
@@ -667,20 +640,21 @@ void Update_StateGame() {
 	//HUD MANAGEMENT
 	if (update_hud != 0){
 		update_hud = 0;
-		hp = archer_data->hp;
-		amulet = archer_data->amulet;
-		coins = archer_data->coins;
-		ups = archer_data->ups;
 		UpdateHUD();
 	}
 	
 }
 
 void UpdateHUD(){
+	hp = archer_data->hp;
+	amulet = archer_data->amulet;
+	coins = archer_data->coins;
+	ups = archer_data->ups;
+	archer_tool = archer_data->tool;
 	//write amulet
 	PRINT_POS(18,0);
 	switch (archer_data->amulet){
-		case 1: Printf("$"); break;
+		//case 1: Printf("$"); break;
 		case 2: Printf("["); break;
 		case 3: Printf("#"); break;
 		case 4: Printf("]"); break;
