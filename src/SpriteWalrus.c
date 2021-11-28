@@ -27,6 +27,7 @@ UINT8 tile_wal_collision = 0u;
 struct EnemyInfo* walrus_data ;
 struct Sprite* walrus_spin;
 extern struct EnemyInfo* walrusspin_data;
+extern struct ArcherInfo* archer_data;
 
 void EnableCollision(INT8 e);
 
@@ -41,7 +42,7 @@ void Start_SpriteWalrus() {
 	walrus_data->enemy_accel_y = 24;
 	walrus_data->vx = -1;
 	walrus_data->wait = 60u;
-	walrus_data->hp = 6; //80;
+	walrus_data->hp = 80;
 	walrus_data->enemy_state = ENEMY_STATE_NORMAL;
 	SPRITE_SET_VMIRROR(THIS);
 	SetSpriteAnim(THIS, walrus_normal, 4u);
@@ -76,7 +77,7 @@ void Update_SpriteWalrus() {
 	
 	if(walrus_data->enemy_state == ENEMY_STATE_NORMAL){
 		if(walrus_data->wait == 0u){
-			walrus_data->wait = 20;
+			walrus_data->wait = 20 + (walrus_data->hp >> 2); //to change the height of the up jumping before spinning in the air
 			//walrus_data->vx = -1;
 			SetSpriteAnim(THIS, walrus_jump_up, 4u);
 			walrus_data->enemy_state = WALRUS_STATE_JUMP_UP;
@@ -127,8 +128,7 @@ void Update_SpriteWalrus() {
 				case 26:
 				case 64:
 					SetSpriteAnim(THIS, walrus_hidden, 4u);					
-					walrus_data->wait = 255u - walrus_data->hp;
-					//walrus_data->vx = 1;
+					walrus_data->wait = 255u - (walrus_data->hp << 1 - archer_data->hp << 1);
 					EnableCollision(0);
 					walrus_data->enemy_state = WALRUS_STATE_SWIMMING;			
 				break;

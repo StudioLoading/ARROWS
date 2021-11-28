@@ -183,9 +183,9 @@ void Update_SpritePlayer() {
 						current_map = 0;
 						SetState(StateGameOver);
 					}else{
-						if (is_on_boss != -1){
+						if (is_on_boss > 0){ // != -1
 							current_camera_state = 3u;
-							is_on_boss = 4;
+							//is_on_boss = 4;
 							SetState(StateBoss);							
 						}else{						
 							if(current_level < 3){
@@ -351,11 +351,11 @@ void Update_SpritePlayer() {
 				if(dataamulet->counter == -1){
 					dataamulet->counter = 60;
 					dataamulet->setup = 0;
-					ispr->y -= 12u;
+					ispr->y -= 16u;
 					archer_data->hp = 100;
 					death_cooldown = 127;
 					THIS->x = ispr->x-3u;
-					THIS->y = ispr->y+15u;
+					THIS->y = ispr->y+12u;
 					switch(dataamulet->type){
 						case 1:
 							archer_state = STATE_AMULET_STONE;
@@ -370,7 +370,7 @@ void Update_SpritePlayer() {
 							quiver = quiver | 0b0000000100;
 						break;
 						case 4:
-							quiver = quiver | 0b00000010000;
+							quiver = quiver | 0b0000010000;
 							archer_state = STATE_AMULET_FIRE;
 						break;
 					}

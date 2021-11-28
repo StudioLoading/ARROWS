@@ -519,20 +519,7 @@ void Update_StateGame3() {
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
 	if (updatecounter < 120) {		
-		if(current_level == 4u){
-			switch(updatecounter){
-				case 1:
-				case 16:
-				case 48:
-					AnimClouds0();
-				break;
-				case 4:
-				case 24:
-				case 42:
-					AnimClouds1();
-				break;
-			}
-		}else if (current_level != 3u){		
+		if (current_level != 3u){
 			switch(updatecounter){
 				case 1:
 				case 60:
@@ -556,7 +543,7 @@ void Update_StateGame3() {
 					AnimRain0();
 				break;
 				case 80:
-					AnimRain0();
+					AnimRain1();
 				break;
 				case 20:
 					AnimClouds0();

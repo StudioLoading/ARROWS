@@ -110,7 +110,7 @@ void Update_SpriteArrow() {
 				item_data->collided = 1u;
 			}
 		}
-		if(iaspr->type == SpriteArrow) {
+		/*if(iaspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, iaspr)) {
 				struct ArrowInfo* arrow_diasprata = (struct ArrowInfo*)iaspr->custom_data;
 				if (arrow_diasprata->type == 6 & data->type != 6){
@@ -118,7 +118,7 @@ void Update_SpriteArrow() {
 					SpriteManagerRemoveSprite(iaspr);
 				}
 			}
-		}
+		}*/
 		if(iaspr->type == SpriteStalagmite){
 			if(CheckCollision(THIS, iaspr)) {
 				struct EnemyInfo* stala_sprite = (struct EnemyInfo*)iaspr->custom_data;
@@ -139,7 +139,7 @@ void SetupArrow(){
 			switch(data->arrowdir){
 				case 1: //orizzontale
 					data->vy = 0;
-					data->vx = 1;
+					data->vx = 2;
 					SetSpriteAnim(THIS, arrow_normal, 18u);
 				break;
 				case 3: //verticale in su

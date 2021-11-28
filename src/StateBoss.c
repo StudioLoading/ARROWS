@@ -53,7 +53,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 5u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+UINT8 current_level_b = 4u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -472,8 +472,8 @@ void SpawnReward(){
 		case 5u: // tusk -> amulet water		
 			boss->x = (UINT16) 12u << 3;
 			boss->y = (UINT16) 15u << 3;
-			key_s = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
-			datak = (struct ItemInfo*)key_s->custom_data;
+			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 28u << 3, (UINT16) 13u << 3);
+			datak = (struct ItemInfo*)reward->custom_data;
 			datak->type = 2;
 			datak->setup = 1;
 		break;

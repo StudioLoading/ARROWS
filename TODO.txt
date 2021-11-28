@@ -5,9 +5,7 @@ LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
-LIV 5 GROTTA CON STALATITI E STALAGMITI -> tusk(?) -> water
-		- mappa 2 con
-			- diag finale per entrare nel boss
+LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CASTELLO -> 3 MAPPE
 		- mappa 0 -> giardino, con nemici Uccellini e trappole col trigger per terra, lance che vengono su da sotto terra
 			- qui infondo c'è il cancello con la mamma, ci vuole cutscene con screen multipli. Qui inserisco gli amuleti al posto, e di fatto li perdo.
@@ -38,15 +36,10 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 - disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
 	- immagini grosse di
-		- tusk
 		- cattivone con frusta
 
 KNOWN ISSUE:
-- recheck del tool che perdo tra le mappe del primo livello
-- freccia normale veloce come ice,fire. freccia pietra unica lenta.
-- colori sulla statusBar del boss
 - porta (anche nera) di inizio livello, per indicare il "vengo da qui", magari subito sotto la freccia di spawn
-- hit anche durante hit
 - non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
 - sonoro trionfale quando sollevo amulet
 - BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
@@ -60,10 +53,10 @@ KNOWN ISSUE:
 
 - gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 
-Andy dice che su GameBoyColor nella stanza secret si blocca tutto se prendo il secondo treasure. Controllare -> quindi controllare il gioco su gameBoyColor e sugli emulatori gbc !!
+Andy(Rigg's) e Stavros (GL) dice che su GameBoyColor nella stanza secret si blocca tutto se prendo il secondo treasure. Controllare -> quindi controllare il gioco su gameBoyColor e sugli emulatori gbc !!
 
 
-SOUND BACKGROUND PER OGNI LIVELLO
+SOUND BACKGROUND PER OGNI LIVELLO : mi sto sentendo con Coffee Bat sul Discord.
 
 
 polish:

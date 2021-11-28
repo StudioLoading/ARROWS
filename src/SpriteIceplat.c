@@ -13,9 +13,9 @@ const UINT8 iceplat_melt_0[] = {1, 0}; //The first number indicates the number o
 extern INT8 spawning_triggered;
 
 void Start_SpriteIceplat() {
-	THIS->coll_x = 0;
+	THIS->coll_x = 2;
 	THIS->coll_y = 11;
-	THIS->coll_w = 16;
+	THIS->coll_w = 12;
 	THIS->coll_h = 5;
 	THIS->lim_x = 160u;
 	THIS->lim_y = 160u;

@@ -26,8 +26,8 @@ void Start_SpriteAmulet() {
 	THIS->coll_y = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 16;
-	THIS->lim_x = 255u;
-	THIS->lim_y = 255u;
+	THIS->lim_x = 255;
+	THIS->lim_y = 255;
 }
 
 void Update_SpriteAmulet() {
