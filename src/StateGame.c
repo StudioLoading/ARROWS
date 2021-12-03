@@ -57,8 +57,8 @@ INT8 level_tool;// = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 4u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -273,10 +273,14 @@ void Start_StateGame() {
 	
 	if(load_next_d){
 		load_next_d = 0;
-	}
-	
-	if(load_next_s == -1){
+	}else if(load_next_s == -1){
 		load_next_s = 0;
+	}else{//copiato dallo SpritePlayer quando chiedo il tip
+		diag_found = Build_Next_Dialog_Banked(scroll_target);
+		if(diag_found){			
+			archer_state = STATE_DIAG;
+			show_diag = 1;	
+		}		
 	}
 	
 	//SOUND
@@ -449,11 +453,11 @@ void Update_StateGame() {
 						}
 						if (scroll_target->x == (UINT16) 95u << 3 && spawning_triggered <= 4){
 							spawn_enemy(SpriteScorpion, 107u, 8u);
-						}/*
+						}
 						if (scroll_target->x == (UINT16) 146u << 3 && spawning_triggered <= 5){
-							spawn_enemy(SpritePorcupine, 155u, 8u);
-						}*/
-						if (scroll_target->x == (UINT16) 150u << 3){
+							spawn_enemy(SpriteEnemy, 155u, 8u);
+						}
+						if (scroll_target->x == (UINT16) 150u << 3 && spawning_triggered <= 6){
 							spawn_item(scrigno_shield, 155u, 2u, 2, 1);
 						}
 					break;
@@ -509,11 +513,9 @@ void Update_StateGame() {
 						if (scroll_target->x == (UINT16) 105u << 6 && spawning_triggered <= 6){
 							spawn_item(scrigno_dcoin, 122u, 0u, 7, 0);
 						}
-						if (scroll_target->x == (UINT16) 126u << 3 && spawning_triggered <= 7){
+						if (scroll_target->x == (UINT16) 133u << 3 && spawning_triggered <= 9){ //&& scroll_target->y > (UINT16) 10u << 3 
 							spawn_enemy(SpriteSpider, 149u, 5u);
 							spawn_enemy(SpriteSpider, 150u, 5u);
-						}
-						if (scroll_target->x == (UINT16) 133u << 3 && scroll_target->y > (UINT16) 10u << 3 && spawning_triggered <= 9){
 							spawn_enemy(SpriteRat, 143u, 13u);
 						}					
 					break;

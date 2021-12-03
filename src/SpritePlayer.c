@@ -63,6 +63,7 @@ void Shoot();
 void Jump();
 void MoveArcher();
 void CheckCollisionTile();
+void CheckCollisionTileDoor();
 void Hit(INT8 damage);
 void Build_Next_Dialog();
 
@@ -203,8 +204,10 @@ void Update_SpritePlayer() {
 		break;
 		case STATE_NORMAL:
 		case STATE_NORMAL_PLATFORM:
-			MoveArcher();
-			jump_power = 0;
+			if(jump_power){
+				jump_power = 0;
+			}
+			MoveArcher();			
 			CheckCollisionTile();
 			if(shoot_cooldown) {
 				SetSpriteAnim(THIS, anim_shoot, 12u);
@@ -317,6 +320,9 @@ void Update_SpritePlayer() {
 			archer_accel_y += 1;
 		}
 		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
+		if(KEY_PRESSED(J_UP)){
+			CheckCollisionTileDoor();
+		}
 		/*if(tile_collision == 0 && delta_time != 0 && archer_accel_y < 24) { //Do another iteration if there is no collision
 			archer_accel_y += 1;
 			tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
@@ -351,7 +357,7 @@ void Update_SpritePlayer() {
 				if(dataamulet->counter == -1){
 					dataamulet->counter = 60;
 					dataamulet->setup = 0;
-					ispr->y -= 16u;
+					ispr->y -= 20u;
 					archer_data->hp = 100;
 					death_cooldown = 127;
 					THIS->x = ispr->x-3u;
@@ -686,23 +692,8 @@ void MoveArcher() {
 	}
 }
 
-void CheckCollisionTile() {
-	switch(tile_collision) {
-		case 10u:
-			if(current_level != 6u){
-				return;
-			}
-		case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
-			THIS->y += 4u;
-		case 20u:
-			if(current_level == 6u){
-				Hit(10);
-				return;
-			}
-		case 23u:
-		case 29u:
-			Hit(5);
-		break;
+void CheckCollisionTileDoor(){
+	switch(tile_collision){		
 		case 7u: //fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 			current_camera_counter = 0u;
@@ -748,15 +739,7 @@ void CheckCollisionTile() {
 			}
 		break;
 		case 19u: //exit secret room
-			load_next_s = -1;
-		break;
-		case 38u:
-		case 39u:
-			if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
-				Hit(5);				
-			}
-		case 40u: //skull of death
-			Hit(8);
+			load_next_s = -1;			
 		break;
 		case 41u: //next map
 			load_next = 1;
@@ -767,6 +750,34 @@ void CheckCollisionTile() {
 		case 46u: //secret room
 			load_next_s = 1;
 		break;
+	}
+}
+
+void CheckCollisionTile() {
+	switch(tile_collision) {
+		case 10u:
+			if(current_level != 6u){
+				return;
+			}
+		case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
+			THIS->y += 4u;
+		case 20u:
+			if(current_level == 6u){
+				Hit(10);
+				return;
+			}
+		case 23u:
+		case 29u:
+			Hit(5);
+		break;
+		case 38u:
+		case 39u:
+			if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
+				Hit(5);				
+			}
+		case 40u: //skull of death
+			Hit(8);
+		break;		
 		case 64u: //skull in ice cave
 			if(current_level == 5u){
 				Hit(8);
@@ -782,10 +793,6 @@ void CheckCollisionTile() {
 				platform_vx = -2;
 			}
 		break;
-		/*case 28u:
-			SET_BIT(stage_completion, current_stage);
-			SetState(StateStageSelect);
-		break;*/
 	}
 }
 

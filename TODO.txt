@@ -39,12 +39,13 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
-- porta (anche nera) di inizio livello, per indicare il "vengo da qui", magari subito sotto la freccia di spawn
-- non so come ho fatto ma saltando sopra un uccellino faccio un salto infinito verso l' alto!
+- devo fare nemici nuovi per il liv dei trees. Pensavo ad Api.
+- pensavo anche a pinguini come nemici nell' ice cave
+- mettere più scrigni di monete in giro per il gioco
+- camera in rolling per la diag del mostro
 - sonoro trionfale quando sollevo amulet
 - BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
 - state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
-- ANCHE CON LIAM HO REPLICATO IL SALTO ALL' INFINITO E IL BLOCCO DEL GIOCO SUGLI UCCELLI
 - schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 - feedback audio di "wrong" + eliminazione quando la freccia colpisce cancello senza romperlo
 - feedback audio "bling" quando freccia colpisce convertitore

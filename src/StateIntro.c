@@ -62,7 +62,7 @@ void Start_StateIntro() {
 	HIDE_WIN;
 	
 	//SOUND
-	NR52_REG = 0x50; //Enables sound, you should always setup this first
+	NR52_REG = 0x20; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop	
 
@@ -74,46 +74,49 @@ void Start_StateIntro() {
 
 void Update_StateIntro() {	
 
-	if(scroll_target-> y < ((UINT16) 111u << 3) && scroll_target-> y > ((UINT16) 5u << 3)){
-		current_camera_counter++;	
-		switch(current_camera_counter){
-			case 0u:
-			case 20u:
-			case 40u:
-			case 60u:
-			case 80u:
-			case 100u:
-			case 120u:
-			case 140u:
-			case 160u:
-			case 180u:
-			case 200u:
-			case 220u:
-			case 240u:
-				scroll_target->y += 2;
-			break;
-		}	
-		if(KEY_PRESSED(J_A)){
-			scroll_target->y++;
-		}
-		if(KEY_PRESSED(J_DOWN)){
-			scroll_target->y++;
-		}
-		if(KEY_PRESSED(J_B)){
-			scroll_target->y--;			
-		}
-		if(KEY_PRESSED(J_UP)){
-			scroll_target->y--;
-		}
+	if(scroll_target-> y < ((UINT16) 5u << 3)){
+		scroll_target-> y = (UINT16) 5u << 3;
+		return;
+	}
+	if(scroll_target-> y > ((UINT16) 111u << 3)){
+		scroll_target-> y = (UINT16) 111u << 3;
+		return;
+	}
+	current_camera_counter++;	
+	switch(current_camera_counter){
+		case 0u:
+		case 20u:
+		case 40u:
+		case 60u:
+		case 80u:
+		case 100u:
+		case 120u:
+		case 140u:
+		case 160u:
+		case 180u:
+		case 200u:
+		case 220u:
+		case 240u:
+			scroll_target->y += 2;
+		break;
+	}	
+	if(KEY_PRESSED(J_A)){
+		scroll_target->y++;
+	}
+	if(KEY_PRESSED(J_DOWN)){
+		scroll_target->y++;
+	}
+	if(KEY_PRESSED(J_B)){
+		scroll_target->y--;			
+	}
+	if(KEY_PRESSED(J_UP)){
+		scroll_target->y--;
 	}
 	if(KEY_TICKED(J_SELECT)){
 		SetState(StateIntro);
-	}
-	
+	}	
 	if(KEY_TICKED(J_START)){
 		SetState(StateGame);	
-	}
-
-	
+	}	
 }
 

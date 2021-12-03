@@ -53,7 +53,7 @@ extern void Build_Next_Dialog();
 
 
 //Boss
-UINT8 current_level_b = 4u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0

@@ -24,6 +24,7 @@ extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
+extern INT8 archer_tool;
 extern INT8 load_next_s;
 extern INT8 level_tool;
 extern UINT8 current_level;
@@ -37,6 +38,7 @@ extern struct Sprite* scrigno_coin;
 extern struct Sprite* scrigno_dcoin;
 extern struct Sprite* scrigno_shield;
 extern struct Sprite* scrigno_up;
+extern INT8 update_hud;
 
 extern void ShowWindow();
 extern void UpdateHUD();
@@ -72,18 +74,17 @@ void Start_StateSecret() {
 	SHOW_BKG;
 
 	//INIT ARCHER
-	if (archer_data->ups > 0 & archer_data->ups != ups){
-		 ups = archer_data->ups;
-	}
-	archer_data->ups =ups;
 	archer_data->hp = hp;
+	archer_data->ups = ups;
 	archer_data->coins = coins;
+	archer_data->tool = archer_tool;
+	archer_state = STATE_JUMPING;	
+	UpdateHUD();
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowWindow();
-	
+	ShowWindow();	
 	
 	scrigno_coin = 0;
 	scrigno_dcoin = 0;
@@ -113,23 +114,9 @@ void Start_StateSecret() {
 
 void Update_StateSecret() {
 	
-	if (amulet != archer_data->amulet){
-		amulet = archer_data->amulet;
-		UpdateHUD();
-	}
-	if (coins != archer_data->coins){
-		coins = archer_data->coins;
-		UpdateHUD();
-	}
-	if (hp != archer_data->hp){
-		hp = archer_data->hp;
-		UpdateHUD();
-	}
-	if (ups != archer_data->ups){
-		ups = archer_data->ups;
-		UpdateHUD();
-	}	
-	if(archer_data->tool == level_tool){
+	//HUD MANAGEMENT
+	if (update_hud != 0){
+		update_hud = 0;
 		UpdateHUD();
 	}
 	
