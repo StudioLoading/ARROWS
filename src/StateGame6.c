@@ -141,6 +141,7 @@ void Start_StateGame6() {
 	if (load_next_s == -1){ //COME FROM STATE SECRET
 		ScrollFindTile(lvls6[current_map], 45, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0){
+		spawning_triggered = 0;
 		ScrollFindTile(lvls6[current_map], 9, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
