@@ -28,8 +28,8 @@ void Start_SpriteIbex() {
 	THIS->coll_y = 15;
 	THIS->coll_w = 28;
 	THIS->coll_h = 17;
-	THIS->lim_x = 160u;
-	THIS->lim_y = 160u;
+	THIS->lim_x = 255u;
+	THIS->lim_y = 2550u;
 	SetSpriteAnim(THIS, ibex_idle, 4u);
 	ibex_data = (struct EnemyInfo*)THIS->custom_data;
 	ibex_data->enemy_accel_y = 24;

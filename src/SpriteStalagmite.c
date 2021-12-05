@@ -24,7 +24,7 @@ void Start_SpriteStalagmite() {
 	THIS->coll_y = 4;
 	THIS->coll_w = 6;
 	THIS->coll_h = 4;
-	THIS->lim_x = 80u;
+	THIS->lim_x = 240u;
 	THIS->lim_y = 40u;
 	SetSpriteAnim(THIS, stalag_drop_big, 4u);
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;	

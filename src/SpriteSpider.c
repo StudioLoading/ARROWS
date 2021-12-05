@@ -92,13 +92,11 @@ void Update_SpriteSpider() {
 				spdata->tile_e_collision = TranslateSprite(THIS, 0, -2);
 				SpriteManagerRemoveSprite(isspr);
 				if (spdata->hp <= 0){
-					spdata->enemy_state = ENEMY_STATE_DEAD;
-					SetSpriteAnim(THIS, spider_dead, 16u);
 					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+					SetSpriteAnim(THIS, spider_dead, 16u);
 					spdata->wait = 8u;
-					THIS->lim_x = 8u;
-					THIS->lim_y = 16u;
+					spdata->enemy_state = ENEMY_STATE_DEAD;
 				}else{
 					spdata->enemy_state = ENEMY_STATE_HIT;
 				}

@@ -22,8 +22,8 @@ void Start_SpriteHurricane() {
 	THIS->coll_y = 2;
 	THIS->coll_w = 7;
 	THIS->coll_h = 12;
-	THIS->lim_x = 180u;
-	THIS->lim_y = 164u;
+	THIS->lim_x = 120u;
+	THIS->lim_y = 60u;
 	SetSpriteAnim(THIS, hurricane_idle, 8u);
 	struct EnemyInfo* hcdata = (struct EnemyInfo*)THIS->custom_data;
 	hcdata->enemy_state = ENEMY_STATE_WAIT;

@@ -105,13 +105,11 @@ void Update_SpriteRat() {
 				}
 				SpriteManagerRemoveSprite(iespr);
 				if (rdata->hp <= 0){
-					rdata->enemy_state = ENEMY_STATE_DEAD;
-					SetSpriteAnim(THIS, rat_dead, 16u);
 					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+					SetSpriteAnim(THIS, rat_dead, 16u);
 					rdata->wait = 8u;
-					THIS->lim_x = 8u;
-					THIS->lim_y = 16u;
+					rdata->enemy_state = ENEMY_STATE_DEAD;
 				}
 			}
 		}

@@ -142,13 +142,11 @@ void Update_SpriteBird() {
 				SetSpriteAnim(THIS, bird_hit, 24u); 
 				data->hp -= arrowbidata->arrowdamage;
 				if (data->hp <= 0){
+					data->wait = 8u;
 					data->enemy_state = ENEMY_STATE_DEAD;
 					SetSpriteAnim(THIS, bird_dead, 16u);
 					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
-					data->wait = 8u;
-					THIS->lim_x = 8u;
-					THIS->lim_y = 16u;
 				}
 			}
 		}

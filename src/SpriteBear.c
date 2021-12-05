@@ -25,8 +25,8 @@ void BETurn();
 void ToNormalState();
 
 void Start_SpriteBear() {
-	THIS->lim_x = 160u;
-	THIS->lim_y = 160u;
+	THIS->lim_x = 255u;
+	THIS->lim_y = 255u;
 	SetSpriteAnim(THIS, bear_idle, 4u);
 	bear_data = (struct EnemyInfo*)THIS->custom_data;
 	bear_data->enemy_accel_y = 24;
