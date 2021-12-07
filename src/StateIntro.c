@@ -62,9 +62,10 @@ void Start_StateIntro() {
 	HIDE_WIN;
 	
 	//SOUND
-	NR52_REG = 0x20; //Enables sound, you should always setup this first
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop	
+	NR50_REG = 0x50;
+	//PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop	
 
 	InitScroll(&mapintro, collision_tiles_intro, 14);//map pointer, collision array, tile bank
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, (UINT16) 10u << 3, (UINT16) 12u << 3);	

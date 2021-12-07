@@ -105,6 +105,7 @@ void Update_StateCredit() {
 				if(sgb_check()){
 					set_sgb_palette01_1A();
 				}
+				NR50_REG = 0x00;
 				InitScroll(&mapcredits1, collision_tiles_credits, 0); //special thanks
 			break;
 		}

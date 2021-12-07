@@ -105,20 +105,11 @@ void Update_SpriteArrow() {
 			if(CheckCollision(THIS, iaspr)) {
 				struct ItemInfo* item_data = (struct ItemInfo*)iaspr->custom_data;
 				if (item_data->collided == 0u){
-					SpriteManagerRemove(THIS_IDX);
+					SpriteManagerRemoveSprite(THIS);
 				}
 				item_data->collided = 1u;
 			}
 		}
-		/*if(iaspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, iaspr)) {
-				struct ArrowInfo* arrow_diasprata = (struct ArrowInfo*)iaspr->custom_data;
-				if (arrow_diasprata->type == 6 & data->type != 6){
-					SpriteManagerRemove(THIS_IDX);
-					SpriteManagerRemoveSprite(iaspr);
-				}
-			}
-		}*/
 		if(iaspr->type == SpriteStalagmite){
 			if(CheckCollision(THIS, iaspr)) {
 				struct EnemyInfo* stala_sprite = (struct EnemyInfo*)iaspr->custom_data;

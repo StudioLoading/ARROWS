@@ -147,6 +147,7 @@ void CheckCollisionETile() {
 		case 22u:
 		case 23u:
 		case 29u:
+		case 69u:
 		case 70u:
 		case 74u:
 		case 75u:

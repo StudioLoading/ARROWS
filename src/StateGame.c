@@ -58,7 +58,7 @@ INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 3u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_level = 4u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -437,8 +437,7 @@ void Update_StateGame() {
 		}
 	}	
 	
-	//SPAWNING	
-	//if(archer_state != STATE_HIT){ //!SPRITE_GET_VMIRROR(scroll_target) && platform_vx == 0u){
+	//SPAWNING
 	switch(current_level){
 		case 0u:
 			switch(current_map){
@@ -593,7 +592,6 @@ void Update_StateGame() {
 			}
 		break;
 	}
-	//}
 	
 	//MOVING BACKGROUND TILES	
 	updatecounter++;

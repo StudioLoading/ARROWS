@@ -215,9 +215,11 @@ void Start_StateGame3() {
 		break;
 		case 4u:
 			SpriteManagerLoad(SpritePlatform);
+			SpriteManagerLoad(SpritePuff);
 			if(current_map == 0){
 				SpriteManagerLoad(SpriteRat);
 				SpriteManagerLoad(SpriteSpider);
+				SpriteManagerLoad(SpriteBee);
 			}else if (current_map == 1){
 				SpriteManagerLoad(SpriteRat);
 				SpriteManagerLoad(SpriteSpider);
@@ -267,28 +269,9 @@ void Start_StateGame3() {
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowWindow3();
+	ShowWindow3();	
 	
-	//SET LEVEL TOOL
-	/*switch(current_level){
-		case 0u:
-			switch(current_map){
-				case 0u:
-					level_tool = 6;
-				break;
-			}
-		break;
-		case 1:
-			switch(current_map){
-				case 1u:
-					level_tool = 7;
-				break;
-			}
-		break;
-	}*/
-	
-	//INIT SPAWNING
-	
+	//INIT SPAWNING	
 	enemies_0 = 0;
 	enemies_1 = 0;
 	enemies_2 = 0;
@@ -479,29 +462,35 @@ void Update_StateGame3() {
 					case 0u:
 						if(scroll_target->x >= (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3 && spawning_triggered < 2){
 							spawn_item3(scrigno_shield, 31u, 17u, 2, 1);
-							//snake3 = spawn_vplatform4(snake3, SpritePlatform, 5u, 19u);
+							spawn_enemy3(SpriteBee, 33u, 13u);
 						}
-						if(scroll_target->x >= (UINT16) 26u << 3 && scroll_target->y == (UINT16) 38u << 3 && spawning_triggered < 3){
+						if(scroll_target->x >= (UINT16) 42u << 3 && scroll_target->y < (UINT16) 14u << 3 && spawning_triggered < 4){
+							spawn_enemy3(SpriteBee, 37u, 18u);
+						}
+						if(scroll_target->x <= (UINT16) 16u << 3 && scroll_target->y < (UINT16) 22u << 3 
+							&& scroll_target->y > (UINT16) 13u << 3 && spawning_triggered < 5){
+							spawn_item3(scrigno_shield, 9u, 25u, 2, 1);
+							spawn_enemy3(SpriteBee, 8u, 26u);
+						}
+						if(scroll_target->x <= (UINT16) 12u << 3 && scroll_target->y < (UINT16) 36u << 3 
+							&& scroll_target->y > (UINT16) 27u << 3 && spawning_triggered < 7){
+							spawn_enemy3(SpriteBee, 8u, 39u);
+						}
+						if(scroll_target->x >= (UINT16) 15u << 3 && scroll_target->x <= (UINT16) 22u << 3 
+							&& scroll_target->y > (UINT16) 36u << 3 && scroll_target->y < (UINT16) 42u << 3 && spawning_triggered < 8){
+							spawn_item3(scrigno_dcoin, 31u, 37u, 7, 1);
+							spawn_enemy3(SpriteBee, 40u, 42u);
+							spawn_enemy3(SpriteRat, 30u, 38u);
+						}/*
+						if(scroll_target->x >= (UINT16) 28u << 3 && scroll_target->y > (UINT16) 35u << 3 && scroll_target->y < (UINT16) 46u << 3 && spawning_triggered < 11){
 							enemies_0 = spawn_vplatform4(enemies_2, SpritePlatform, 37u, 43u);
 							enemies_1 = spawn_vplatform4(enemies_3, SpritePlatform, 42u, 51u);
+						}*/
+						if(scroll_target->x >= (UINT16) 13u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_triggered < 13){
+							spawn_enemy3(SpriteRat, 18u, 62u);
 						}
-						if(scroll_target->x >= (UINT16) 30u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_triggered < 4){
-							spawn_enemy3(SpriteRat, (scroll_target->x >> 3) -8u, (scroll_target->y >> 3) - 4u);
-							spawn_enemy3(SpriteSpider, 20u, 58u);
-						}
-						if(scroll_target->x >= (UINT16) 23u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_triggered < 6){
-							spawn_enemy3(SpriteRat, (scroll_target->x >> 3) + 6u, (scroll_target->y >> 3) -4u);
-							spawn_enemy3(SpriteRat, (scroll_target->x >> 3) - 8u, (scroll_target->y >> 3) -4u);
-						}
-						if(scroll_target->x >= (UINT16) 11u << 3 && scroll_target->y > (UINT16) 64u << 3 && spawning_triggered < 8){
-							spawn_enemy3(SpriteSpider, 24u, 63u);
-							spawn_enemy3(SpriteSpider, 20u, 64u);
-						}
-						if(scroll_target->x >= (UINT16) 25u << 3 && scroll_target->y > (UINT16) 64u << 3 && spawning_triggered < 9){
-							spawn_enemy3(SpriteRat, 20u, 67u);
-						}						
-						if(scroll_target->x >= (UINT16) 34u << 3 && scroll_target->y > (UINT16) 64u << 3 && spawning_triggered < 10){
-							spawn_enemy3(SpriteRat, 30u, 67u);
+						if(scroll_target->x >= (UINT16) 21u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_triggered < 13){
+							spawn_enemy3(SpriteRat, 30u, 62u);
 						}
 					break;
 					case 1u:

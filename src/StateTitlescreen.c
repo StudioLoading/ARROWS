@@ -84,6 +84,7 @@ void Start_StateTitlescreen() {
 	ShowPushStart();     
 	
 	//SOUND
+	NR50_REG = 0x30;
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	//PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
@@ -100,6 +101,7 @@ void Update_StateTitlescreen() {
 		case 5:
 			if(KEY_TICKED(J_UP)){
 				quiver = 0b0000011111;
+				NR50_REG = 0x77;
 				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
