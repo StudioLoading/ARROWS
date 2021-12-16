@@ -111,7 +111,6 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteWolf);
 			if(sgb_check()){
 				set_sgb_palette01_2H();
-				set_sgb_palette_statusbar();
 			}
 		break;
 		case 1u:
@@ -122,7 +121,6 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteItem);
 			if(sgb_check()){
 				set_sgb_palette01_GATORSWAMP();
-				set_sgb_palette_statusbar();
 			}
 		break;
 		case 2u:
@@ -131,7 +129,6 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_FOREST();
-				set_sgb_palette_statusbar();
 			}			
 		break;
 		case 3u:
@@ -141,7 +138,6 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteGate);
 			if(sgb_check()){
 				set_sgb_palette01_1B();
-				set_sgb_palette_statusbar();
 			}
 		break;
 		case 4u:
@@ -150,7 +146,6 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_TREES();
-				set_sgb_palette_statusbar();
 			}
 		break;
 		case 5u:
@@ -161,11 +156,12 @@ void Start_StateBoss() {
 			SpriteManagerLoad(SpriteAmulet);
 			if(sgb_check()){
 				set_sgb_palette01_WALRUS();
-				set_sgb_palette_statusbar();
 			}
 		break;
-	}
-	
+	}	
+	if(sgb_check()){
+		set_sgb_palette_statusbar();
+	}	
 	SHOW_SPRITES;
 
 	//SCROLL

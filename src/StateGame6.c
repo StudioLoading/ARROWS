@@ -215,7 +215,7 @@ void Start_StateGame6() {
 		if(diag_found){			
 			archer_state = STATE_DIAG;
 			show_diag = 1;	
-		}		
+		}
 	}
 	
 	//SOUND

@@ -31,8 +31,8 @@ void Start_SpriteItem() {
 	THIS->coll_y = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 8;
-	THIS->lim_x = 255;
-	THIS->lim_y = 255;
+	THIS->lim_x = 200u;
+	THIS->lim_y = 200u;
 }
 
 void Update_SpriteItem() {

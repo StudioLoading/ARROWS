@@ -68,6 +68,7 @@ void Start_StateTitlescreen() {
 	
 	if(sgb_check()){
 		set_sgb_palette01_2A();
+		set_sgb_palette_title();
 	}
 
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2); //end with the bank of where I have the palette/tileset

@@ -40,23 +40,7 @@ void Start_SpriteBear() {
 
 void Update_SpriteBear() {
 	
-	if(bear_data->enemy_state != ENEMY_STATE_NORMAL){
-		
-		if(bear_data->enemy_state == ENEMY_STATE_HIT){
-			bear_data->wait--;
-			if(bear_data->wait > 0){			
-				if(bear_data->wait == 1  || bear_data->wait == 20 || bear_data->wait == 40 ){
-					THIS->y = (UINT16) 29u << 3;
-				}else{
-					THIS->y = (UINT16) 12u << 3;
-				}
-			}else{
-				bear_data->wait = 0;
-				THIS->y = (UINT16) 12u << 3;
-				bear_data->enemy_state = ENEMY_STATE_NORMAL;
-			}
-		}
-		
+	if(bear_data->enemy_state != ENEMY_STATE_NORMAL){		
 		if(bear_data->enemy_state == ENEMY_STATE_ATTACK){
 			bear_data->wait -= 1u;
 			switch(bear_data->wait){
@@ -71,32 +55,47 @@ void Update_SpriteBear() {
 				bear_data->wait = 0u;
 				ToNormalState();
 			}
-		}
-		
-		if(bear_data->enemy_state == ENEMY_STATE_WAIT){
-			return;
-		}
-		
-		if (bear_data->enemy_state == ENEMY_STATE_DEAD){
-			if(bear_data->tile_e_collision==0){
-				bear_data->tile_e_collision = TranslateSprite(THIS, 0, 1);	
+		}else{
+			if(bear_data->enemy_state == ENEMY_STATE_HIT){
+				bear_data->wait--;
+				if(bear_data->wait > 0){			
+					if(bear_data->wait == 1  || bear_data->wait == 20 || bear_data->wait == 40 ){
+						THIS->y = (UINT16) 29u << 3;
+					}else{
+						THIS->y = (UINT16) 12u << 3;
+					}
+				}else{
+					bear_data->wait = 0;
+					THIS->y = (UINT16) 12u << 3;
+					bear_data->enemy_state = ENEMY_STATE_NORMAL;
+				}
 			}
-			bear_data->hp = 0;
-		}
-		
-		return;
+			
+			if(bear_data->enemy_state == ENEMY_STATE_WAIT){
+				return;
+			}			
+			if (bear_data->enemy_state == ENEMY_STATE_DEAD){
+				if(bear_data->tile_e_collision==0){
+					bear_data->tile_e_collision = TranslateSprite(THIS, 0, 1);	
+				}
+				bear_data->hp = 0;
+			}			
+			return;			
+		}		
+	}else{	
+		if (bear_data->wait > 0u){
+			bear_data->wait -= 1u;
+			if (bear_data->wait <= 0u){
+				bear_data->wait = 0u;
+				ToNormalState();
+			}
+			return;
+		}		
 	}
 	
-	if (bear_data->wait > 0u){
-		bear_data->wait -= 1u;
-		if (bear_data->wait <= 0u){
-			bear_data->wait = 0u;
-			ToNormalState();
-		}
-		return;
+	if(bear_data->enemy_state == ENEMY_STATE_NORMAL){		
+		bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0);
 	}
-	
-	bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0);
 	CheckCollisionBETile();
 	if((THIS->x == (UINT16) 13u << 3 && bear_data->vx < 0) || (THIS->x == (UINT16) 22u << 3)){
 		if(bear_data->enemy_state != ENEMY_STATE_ATTACK){			
@@ -126,9 +125,13 @@ void Update_SpriteBear() {
 			}
 		}
 		if(bebspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, bebspr) & bear_data->enemy_state != ENEMY_STATE_DEAD) {
+			if(CheckCollision(THIS, bebspr) && bear_data->enemy_state != ENEMY_STATE_DEAD) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)bebspr->custom_data;
-				if(arrowdata->arrowdir == 4){
+				if(arrowdata->arrowdir == 4 || 
+					(bear_data->enemy_state == ENEMY_STATE_ATTACK)){
+					/* && ((!SPRITE_GET_VMIRROR(THIS) && bebspr->x < THIS->x) || 
+						(SPRITE_GET_VMIRROR(THIS) && bebspr->x > THIS->x))
+					)){*/
 					bear_data->wait = 60u;
 					bear_data->enemy_state = ENEMY_STATE_HIT;
 					bear_data->hp -= arrowdata->arrowdamage;

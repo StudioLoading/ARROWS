@@ -5,6 +5,86 @@
 
 #include "sgb_palette.h"
 
+
+void set_sgb_palette_title() __banked {	
+	struct {
+        UINT8 command;
+        UINT16 pal1[4];
+        UINT16 pal2[3];
+        UINT8 padding;
+    } SGB_PALETTE2_PACKET = {
+        .command = (SGB_PAL_12 << 3) | 1,
+        .pal1 = {SGB_PAL1D_LIGHTER, RGB8(88, 216, 84), RGB8(0, 168, 0),  RGB8(0, 84, 0)}, //SGB_STATUS_RED},
+        .pal2 = {SGB_STATUS_LIGHT, RGB8(247, 142, 14), RGB8(228, 92, 16)},
+        .padding = 0 
+    };
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_FIRSTLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 0u,
+        .ndata = 14u,
+		.style = 0,
+		.ds = {0b01010101,0b01010101,0b01010101,0b01010101,0b01010101,0b01010101,0b10101010,0b10101010,0b10101010,0b10101010}
+    };
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_SECONDLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 1u,
+        .ndata = 14u,
+		.style = 0,
+		.ds = {0b01010101,0b01010101,0b01010101,0b01010101,0b01010101,0b01010101,0b10101010,0b10101010,0b10101010,0b10101010}
+    };	
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_THIRDLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 2u,
+        .ndata = 13u,
+		.style = 0,
+		.ds = {0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010}
+    };	
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_FOURTHLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 3u,
+        .ndata = 13u,
+		.style = 0,
+		.ds = {0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010}
+    };	;
+    sgb_transfer((void *)&SGB_PALETTE2_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE_FIRSTLINE_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE_SECONDLINE_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE_THIRDLINE_PACKET);
+    sgb_transfer((void *)&SGB_PALETTE_FOURTHLINE_PACKET);
+}
+
 void set_sgb_palette_statusbar() __banked {	
 	struct {
         UINT8 command;
@@ -70,8 +150,77 @@ void reset_sgb_palette_statusbar() __banked{
     sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);	
 }
 
+void set_sgb_palette01_TITLESCREEN() __banked {
+	set_sgb_palette(SGB_PAL2A_LIGHTER, SGB_PAL2A_LIGHT, SGB_PAL2A_DARK, SGB_PAL2A_DARKER);
+}
 void set_sgb_palette01_intro() __banked{
+	reset_sgb_palette_statusbar();
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    }SGB_PALETTE_ZEROZEROLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 0u,
+        .ndata = 14u,
+		.style = 0,
+		.ds = {0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000}
+    };
+    sgb_transfer((void *)&SGB_PALETTE_ZEROZEROLINE_PACKET);
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_ZEROLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 1u,
+        .ndata = 14u,
+		.style = 0,
+		.ds = {0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000}
+    };
+    sgb_transfer((void *)&SGB_PALETTE_ZEROLINE_PACKET);
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_FIRSTLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 2u,
+        .ndata = 14u,
+		.style = 0,
+		.ds = {0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000}
+    };
+    sgb_transfer((void *)&SGB_PALETTE_FIRSTLINE_PACKET);
+	struct {
+        UINT8 command;
+        UINT8 xcoo;
+        UINT8 ycoo;
+		UINT16 ndata;
+		UINT8 style;
+        UINT8 ds[10];
+    } SGB_PALETTE_SECONDLINE_PACKET = {
+        .command = (SGB_ATTR_CHR << 3) | 1,
+        .xcoo = 0,
+        .ycoo = 3u,
+        .ndata = 14u,
+		.style = 0,
+		.ds = {0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000}
+    };
+    sgb_transfer((void *)&SGB_PALETTE_SECONDLINE_PACKET);
 	set_sgb_palette(SGB_PAL1B_LIGHTER, RGB8(255, 187, 17), RGB8(0, 0, 0), SGB_PAL1B_DARKER);
+
 }
 void set_sgb_palette01_WOLF() __banked{
 	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARK, SGB_PAL2H_DARKER);

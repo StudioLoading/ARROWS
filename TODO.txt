@@ -39,7 +39,6 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
-- devo fare nemici nuovi per il liv dei trees. Pensavo ad Api. il movimento circolare, o simil, lo faccio tranqui con vx e vy così posso ottenere 8x16 sfruttabili tutti per la sprite.
 - pensavo anche a pinguini come nemici nell' ice cave
 - mettere più scrigni di monete in giro per il gioco soprattutto liv 4 trees
 - camera in rolling per la diag del mostro
@@ -81,6 +80,10 @@ polish:
 	- schermata di fine livello - direi con pergamena descrittiva
 	- quando mi volto, sostituire lo scroll orizzontale tra i lati destro e sinistro
 
+nice2have:
+	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
+			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c
+			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  
 
 replay value:
 start screen è selezione del livello. Si può scegliere ultimo livello del castello, ma verrà inquadrato un cancello attorno al quale depositare gli amuleti. solo coi 4 amuleti ottenuti il cancello si aprirà.

@@ -46,8 +46,8 @@ void Start_SpriteArrow() {
 	THIS->coll_y = 6;
 	THIS->coll_w = 3;
 	THIS->coll_h = 3;
-	THIS->lim_x = 120u;
-	THIS->lim_y = 120u;
+	THIS->lim_x = 60u;
+	THIS->lim_y = 60u;
 	
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	data->type = 0;

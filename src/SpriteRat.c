@@ -24,8 +24,8 @@ void Start_SpriteRat() {
 	THIS->coll_y = 5;
 	THIS->coll_w = 8;
 	THIS->coll_h = 11;
-	THIS->lim_x = 255u;
-	THIS->lim_y = 244u;
+	THIS->lim_x = 160u;
+	THIS->lim_y = 160u;
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, rat_idle, 8u);
 	rdata->enemy_accel_y = 24;

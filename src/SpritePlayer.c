@@ -67,8 +67,8 @@ void CheckCollisionTileDoor();
 void Hit(INT8 damage);
 void Build_Next_Dialog();
 
-
 void Start_SpritePlayer() {
+		
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
 	if(archer_data->amulet != amulet){
 		archer_data->amulet = 1u;
@@ -98,7 +98,6 @@ void Start_SpritePlayer() {
 	hit_cooldown = 24;
 	
 	NR50_REG = 0x55; //Max volume
-	
 
 }
 
@@ -129,7 +128,7 @@ void Update_SpritePlayer() {
 			if(show_diag == 0){
 				SetSpriteAnim(THIS, anim_idle, 33u);
 			}
-			if (KEY_TICKED(J_B) || KEY_TICKED(J_A)){ //show_diag < max_diag
+			if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){ //show_diag < max_diag
 				SetSpriteAnim(THIS, anim_idle, 33u);
 				show_diag += 1;
 			}
@@ -220,7 +219,8 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_B) && archer_state == STATE_NORMAL && is_on_boss != 1 && is_on_secret == -1){
+				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_boss != 1 && is_on_secret == -1){
+					SetSpriteAnim(THIS, anim_shield, 8u);
 					Build_Next_Dialog();
 					return;
 				}else if (!KEY_PRESSED(J_RIGHT) && !KEY_PRESSED(J_LEFT)){
