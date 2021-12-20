@@ -39,35 +39,33 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
-- pensavo anche a pinguini come nemici nell' ice cave
-- mettere più scrigni di monete in giro per il gioco soprattutto liv 4 trees
-- camera in rolling per la diag del mostro
-- sonoro trionfale quando sollevo amulet
-- posso aumentare il framerate dell' animazione pioggia sugli stage del sky ?
-- BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
-- state di inizio ogni nuovo livello, per la presentazione dello stesso. sarà un tileset magari con una bella immagine a tutto schermo, tipo diag ma direi con del testo sopra. tanto ho scoperto come fare nuovi stati con tileset dedicato !!!!!!
-- schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 - la HUD della HP mia e del boss possono fare meglio dai.
-- feedback audio di "wrong" + eliminazione quando la freccia colpisce cancello senza romperlo
+- schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
+- Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
+- gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
+- feedback audio di "wrong" + eliminazione quando la freccia scheggia cancello senza romperlo
 - feedback audio "bling" quando freccia colpisce convertitore
 - feedback audio quando freccia colpisce ridirezione
-- Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
-
-- gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
 
 Andy(Rigg's) e Stavros (GL) dice che su GameBoyColor nella stanza secret si blocca tutto se prendo il secondo treasure. Controllare -> quindi controllare il gioco su gameBoyColor e sugli emulatori gbc !!
 
 
 LORE:Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence, disarm human weapons and take over the power on earth.  Retaliation for humans now to be imprisoned in zoo-es. Player controls the archer, a boy who has been freed by his mom. He is able to use the power of elements and convey it inside his arrows. This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, he has to defeat em to get those amulets. Amulets are also mandatory to enter into the final Castle, where his mother is waiting. The castle is where a crazy scientist makes his work.. is he finding a solution for moon approaching, or is he the responsible of that? if he is, why he did that? can it be reverted? ... more deeply, is it worth to be reverted ? were humans doing a good job on Earth itself, when they were at the most powerful position on the chain ?
 
-SOUND BACKGROUND PER OGNI LIVELLO : mi sto sentendo con Coffee Bat sul Discord.
+SOUND BACKGROUND PER OGNI LIVELLO : mi sto sentendo con Coffee Bat sul Discord, che vuole 8$ per un jingle super piccolo. 
+uno su twitter più serio si chiama Scott Semanski che vuole 250$ al minuto. potrebbe essere un buon compromesso.
 
 
 polish:
+	- sonoro di boss sconfitto - bg music loop corto e tranquillissimo/noioso perchè dura pochissimo quel che succede dopo.
+	- camera in rolling per la diag del mostro
+	- sonoro trionfale quando sollevo amulet
 	- SOUND EFFECT DI 1UP
 	- SOUND EFFECT DI SHIELD
 	- SOUND EFFECT DI EXIT SENZA TOOL
+	- BIIP ALL' INSERIMENTO DEL CHEAT CODE SULLA TITLESCREEN
 	- frame arciere di cambio di direzione - che guardi il giocatore, a spalle verso il background - potrei sacrificare il frame di discesa
+	- frame arciere quando cado dall' alto, quindi con quella custom_data _y più alta di #, aggiungere un frame di inginocchiato da tenere per 0.2 secondi
 	- bordo cornice tutto schermo del livello bonus
 	- sound del salto - ce lo ha anche superMarioLand!
 	- sound per quando corro contro una parete

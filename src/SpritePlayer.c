@@ -259,6 +259,11 @@ void Update_SpritePlayer() {
 			if((archer_accel_y >> 3) > 1 && archer_state != STATE_DIAG) {
 				archer_state = STATE_JUMPING;
 			}
+			if(is_on_boss == 2 && current_camera_state < 5u){
+				current_camera_state = 5u; //valore che uso io completamente custom per il dialogo once a boss sconfitto
+				Build_Next_Dialog();
+				return;				
+			}
 			
 		break;
 		case STATE_JUMPING:
@@ -479,7 +484,8 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
 			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
-			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin || ispr->type == SpriteBee) {
+			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin || ispr->type == SpriteBee
+			|| ispr->type == SpritePenguin) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				//archer_state = STATE_HIT;
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
@@ -532,14 +538,12 @@ void Update_SpritePlayer() {
 						case SpriteStalattite:
 							enemydamage = 5;
 						break;
-						case SpriteStalagmite:
+						//case SpriteStalagmite:
 						case SpriteThunder:
+						case SpritePenguin:
 							enemydamage = 8;
 						break;						
 						case SpriteWalrusspin:
-							/*if (dataenemy->enemy_state != WALRUS_STATE_SPIN){
-								return;
-							}*/
 						case SpriteRat:
 						case SpriteBird:
 						case SpriteBee:
@@ -564,6 +568,9 @@ void Update_SpritePlayer() {
 						platform_vx = 1;
 					}else{
 						platform_vx = -1;
+					}
+					if(dataenemy->vx){
+						platform_vx = dataenemy->vx;
 					}
 					Hit(enemydamage);
 				}

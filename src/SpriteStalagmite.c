@@ -122,8 +122,7 @@ void Update_SpriteStalagmite() {
 				//fai crescere quella a terra, istspr deve crescere,
 			}
 		}
-	}
-	
+	}	
 }
 
 void CheckCollisionStalagTile(struct EnemyInfo* stalag_data){

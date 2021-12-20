@@ -69,7 +69,6 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
-extern INT8 spawning_triggered;
 extern INT8 spawning_counter;
 
 extern UINT8 updatecounter;
@@ -102,7 +101,6 @@ UINT8 thunder_delay = 16u;
 
 
 void spawn_enemy3(UINT8 spriteType, UINT16 posx, UINT16 posy){
-	spawning_triggered++;
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
@@ -116,7 +114,6 @@ void spawn_enemy3(UINT8 spriteType, UINT16 posx, UINT16 posy){
 }
 
 struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy){
-	spawning_triggered++;
 	SpriteManagerRemoveSprite(enem);
 	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)enem->custom_data;
@@ -125,7 +122,6 @@ struct Sprite* spawn_vplatform4(struct Sprite* enem, UINT8 spriteType, UINT16 po
 }
 
 void spawn_item3(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
-	spawning_triggered++;
 	SpriteManagerRemoveSprite(itemin);
 	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;
@@ -242,7 +238,6 @@ void Start_StateGame3() {
 	if (load_next_s == -1){ //COME FROM STATE SECRET
 		ScrollFindTile(lvls4[current_map], 45, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0){
-		spawning_triggered = 0;
 		spawning_counter = 0;
 		ScrollFindTile(lvls4[current_map], 9, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
@@ -390,10 +385,10 @@ void Update_StateGame3() {
 	switch(current_level){
 		case 3u: // Sky -> Ibex
 			switch(current_map){
-				case 0u: // spawning_triggered = 0
+				case 0u:
 					if (scroll_target->x > (UINT16) 93u << 3 && scroll_target->x < (UINT16) 143u << 3 ){
 						if (scroll_target->x == (UINT16) 120u << 3){
-							scroll_target->x++; //manino perchè non posso usare il spawning_trigger
+							scroll_target->x++;
 							spawn_item3(scrigno_shield, 133u, 9u, 2, 1);
 						}
 						switch(thunder_delay){
@@ -420,7 +415,7 @@ void Update_StateGame3() {
 						gatedata->vx = 3;
 					}
 				break;
-				case 1u: // spawning_triggered = 1
+				case 1u:
 					if(!SPRITE_GET_VMIRROR(scroll_target) && archer_state != STATE_HIT){
 						switch(thunder_delay){
 							case 40u:
@@ -458,7 +453,7 @@ void Update_StateGame3() {
 		break;
 		case 4u: // Trees -> Bear
 			switch(current_map){
-				case 0u: // spawning_triggered = 0
+				case 0u:
 					if(scroll_target->x > (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3 && spawning_counter == 0){
 						spawn_item3(scrigno_shield, 31u, 17u, 2, 1);
 						spawn_enemy3(SpriteBee, 33u, 13u);
@@ -504,7 +499,7 @@ void Update_StateGame3() {
 						spawning_counter++;
 					}
 				break;
-				case 1u: // spawning_triggered = 1
+				case 1u:
 					if(scroll_target->x > (UINT16) 31u << 3 && scroll_target->y < (UINT16) 10u << 3 && spawning_counter == 0){
 						spawn_enemy3(SpriteSpider, 31u, 13u);
 						spawn_enemy3(SpriteBee, 34u, 13u);
@@ -572,6 +567,7 @@ void Update_StateGame3() {
 				case 1:
 					AnimClouds0();
 					AnimRain0();
+					AnimSliders1();
 				break;
 				case 20:
 					AnimClouds0();
@@ -584,6 +580,7 @@ void Update_StateGame3() {
 				case 60:
 					AnimClouds1();
 					AnimRain1();
+					AnimSliders0();
 				break;
 				case 80:
 					AnimRain0();

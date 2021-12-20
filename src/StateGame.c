@@ -24,6 +24,7 @@
 #include "Sound.h"
 #include "gbt_player.h"
 
+
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
@@ -35,6 +36,9 @@ const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17,
 
 const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
 
+const UINT8 SHIELD_TILE = 33;
+const UINT8 EMPTY_TILE = 0;
+	
 const UINT16 const sprites_palette[] = {
 	PALETTE_INDEX(archer, 0),
 	PALETTE_INDEX(archer, 1),
@@ -442,55 +446,67 @@ void Update_StateGame() {
 	switch(current_level){
 		case 0u:
 			switch(current_map){
-				case 1:
-					if (scroll_target->x >= (UINT16) 10u << 3 && spawning_triggered == 0){
+				case 1u:
+					if (scroll_target->x >= (UINT16) 10u << 3 && spawning_counter == 0){
 						spawn_enemy(SpriteEnemy, 22u, 7u);
+						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 30u << 3 && spawning_triggered <= 1 ){
+					if (scroll_target->x >= (UINT16) 30u << 3 && spawning_counter == 1){
 						spawn_enemy(SpritePlatform, 38u, 8u);
+						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 47u << 3 && spawning_triggered <= 2){
+					if (scroll_target->x >= (UINT16) 47u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteScorpion, 56u, 8u);
+						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 77u << 3 && spawning_triggered <= 3){
+					if (scroll_target->x >= (UINT16) 77u << 3 && spawning_counter == 3){
 						spawn_enemy(SpriteEnemy, 85u, 7u);
+						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 95u << 3 && spawning_triggered <= 4){
+					if (scroll_target->x >= (UINT16) 95u << 3 && spawning_counter == 4){
 						spawn_enemy(SpriteScorpion, 107u, 8u);
+						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 146u << 3 && spawning_triggered <= 5){
+					if (scroll_target->x >= (UINT16) 146u << 3 && spawning_counter == 5){
 						spawn_enemy(SpriteEnemy, 155u, 8u);
+						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 150u << 3 && spawning_triggered <= 6){
+					if (scroll_target->x >= (UINT16) 150u << 3 && spawning_counter == 6){
 						spawn_item(scrigno_shield, 155u, 2u, 2, 1);
+						spawning_counter++;
 					}
 				break;
 			}
 		break;
 		case 1u:
 			switch(current_map){
-				case 0:
-					if (scroll_target->x > (UINT16) 13u << 3 && spawning_triggered < 4){ //perchè allo Start ci sono degli init spawn
+				case 0u:
+					if (scroll_target->x > (UINT16) 13u << 3 && spawning_counter == 0){ //perchè allo Start ci sono degli init spawn
 						spawn_enemy(SpriteSpider, 21u, 4u);
 						spawn_item(scrigno_up, 25u, 5u, 3, 1);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 48u << 3 && spawning_triggered < 6){
+					if (scroll_target->x > (UINT16) 48u << 3 && spawning_counter == 1){
 						spawn_enemy(SpriteRat, 58u, 6u);
 						spawn_enemy(SpriteEnemy, 61u, 6u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 88u << 3 && scroll_target->y > (UINT16) 14u << 3 && spawning_triggered < 7){
+					if (scroll_target->x > (UINT16) 88u << 3 && scroll_target->y > (UINT16) 14u << 3 && spawning_counter == 2){
 						spawn_item(scrigno_shield, 93u, 18u, 2, 1);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 67u << 3 && scroll_target->y < (UINT16) 14u << 3  && spawning_triggered < 11){
+					if (scroll_target->x > (UINT16) 67u << 3 && scroll_target->y < (UINT16) 14u << 3  && spawning_counter == 3){
 						spawn_enemy(SpriteRat, 81u, 3u);
 						spawn_enemy(SpriteEnemy, 88u, 3u);
 						spawn_enemy(SpriteSpider, 85u, 5u);
 						spawn_item(scrigno_dcoin, 85u, 5u, 7, 1);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 97u << 3 && scroll_target->x < (UINT16) 112u << 3 && scroll_target->y < (UINT16) 6u << 3 && spawning_triggered <= 18 ){
+					if (scroll_target->x > (UINT16) 97u << 3 && scroll_target->x < (UINT16) 112u << 3 && scroll_target->y < (UINT16) 6u << 3 && spawning_counter == 4){
 						scroll_target->x++;
 						spawn_enemy(SpriteSpider, (scroll_target->x >> 3) + 3u, 3u);
 						spawn_enemy(SpriteSpider, (scroll_target->x >> 3) - 3u, 3u);
+						spawning_counter++;
 					}
 					if (scroll_target->x == (UINT16) 180u << 3){
 						scroll_target->x++;
@@ -500,33 +516,39 @@ void Update_StateGame() {
 						gatedata->vx = 2;
 					}	
 				break;
-				case 1:
-					if (scroll_target->x > (UINT16) 29u << 3 && spawning_triggered < 3){
+				case 1u:
+					if (scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 0){
 						spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 38u << 3 && spawning_triggered < 4){
+					if (scroll_target->x > (UINT16) 38u << 3 && spawning_counter == 1){
 						spawn_enemy(SpriteSpider, 50u, 7u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 51u << 3 && spawning_triggered < 5){
+					if (scroll_target->x > (UINT16) 51u << 3 && spawning_counter == 2){
 						spawn_enemy(SpritePlatform, 63u, 8u);
+						spawning_counter=3;
 					}
-					if (scroll_target->x > (UINT16) 89u << 3 && spawning_triggered < 6){
+					if (scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 3){
 						spawn_enemy(SpriteSpider, 94u, 5u);
+						spawning_counter=4;
 					}
-					if (scroll_target->x > (UINT16) 105u << 6 && spawning_triggered < 7){
+					if (scroll_target->x > (UINT16) 105u << 6 && spawning_counter == 4){
 						spawn_item(scrigno_dcoin, 122u, 0u, 7, 0);
+						spawning_counter=5;
 					}
-					if (scroll_target->x > (UINT16) 133u << 3 && spawning_triggered < 11){ //&& scroll_target->y > (UINT16) 10u << 3 
+					if (scroll_target->x > (UINT16) 133u << 3 && spawning_counter == 5){ //&& scroll_target->y > (UINT16) 10u << 3 
 						spawn_enemy(SpriteSpider, 149u, 5u);
 						spawn_enemy(SpriteSpider, 150u, 5u);
 						spawn_enemy(SpriteRat, 143u, 13u);
+						spawning_counter++;
 					}					
 				break;
 			}
 		break;
 		case 2u:
 			switch(current_map){
-				case 0:
+				case 0u:
 					if (scroll_target->x > (UINT16) 37u << 3 && spawning_triggered < 4){
 						spawn_item(scrigno_up, 46u, 0u, 3, 1);
 					}
@@ -680,6 +702,20 @@ void UpdateHUD(){
 		}	
 	}
 	//write hp
+	/*
+	set_win_data() and set_win_tiles()
+	*/
+		UINT8 i;
+		INT8 hp_diviso_venti = hp / 20;
+
+		for(i = 0; i != hp_diviso_venti; ++i) {
+			set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);
+		}
+		for(; i != 5; ++i) {
+			set_win_tiles(5 + i, 0, 1, 1, &EMPTY_TILE);
+		}
+	
+	/*
 	PRINT_POS(7, 0);
 	if(hp < 0){
 		Printf("XX");
@@ -692,6 +728,7 @@ void UpdateHUD(){
 	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
 		Printf("%d", hp);
 	}
+	*/
 	//write tool
 	if (archer_data->tool == level_tool){
 		switch(level_tool){

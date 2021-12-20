@@ -44,6 +44,7 @@ _SPRITE_DMG(SpriteIceplat, iceplat)\
 _SPRITE_DMG(SpriteWalrus, walrus)\
 _SPRITE_DMG(SpriteWalrusspin, walrusspin)\
 _SPRITE_DMG(SpriteBee, bee)\
+_SPRITE_DMG(SpritePenguin, penguin)\
 SPRITE_DEF_END
 
 

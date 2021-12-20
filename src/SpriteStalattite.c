@@ -59,13 +59,13 @@ void Update_SpriteStalattite() {
 				case 30u:
 				case 20u:
 				case 10u:
-					THIS->x -= 3u;
+					THIS->x -= 1u;
 				break;
 				case 35u:
 				case 25u:
 				case 15u:
 				case 5u:
-					THIS->x += 3u;
+					THIS->x += 1u;
 				break;
 				case 0u:
 					ldata->enemy_state = STALAG_STATE_DROP;

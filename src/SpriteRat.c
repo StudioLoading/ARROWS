@@ -27,7 +27,7 @@ void Start_SpriteRat() {
 	THIS->lim_x = 160u;
 	THIS->lim_y = 160u;
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;	
-	SetSpriteAnim(THIS, rat_idle, 8u);
+	SetSpriteAnim(THIS, rat_walk, 8u);
 	rdata->enemy_accel_y = 24;
 	rdata->vx = 1;
 	rdata->wait = 20u;
@@ -39,46 +39,42 @@ void Update_SpriteRat() {
 	
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;
 	
+	rdata->wait--;
+	
 	if (rdata->enemy_state == ENEMY_STATE_DEAD){
 		if (rdata->wait > 0u){
 			THIS->y--;
-			rdata->wait--;
 		}else{
-			//THIS->y++;
-			//THIS->y++;
 			SpriteManagerRemoveSprite(THIS);
 		}		
 		return;
 	}
 	
-	if (rdata->wait > 0u){
-		rdata->wait -= 1u;
-		if (rdata->wait == 0u){
-			SetSpriteAnim(THIS, rat_walk, 8u);
-		}
-	}else{
-		if(rdata->enemy_accel_y < 24) {
-				rdata->enemy_accel_y += 1;
-		}
-		rdata->tile_e_collision = TranslateSprite(THIS, rdata->vx << delta_time, (rdata->enemy_accel_y >> 4)<< delta_time);
-		//CheckCollisionETile();
-		if(!rdata->tile_e_collision && delta_time != 0 && rdata->enemy_accel_y < 24) { //Do another iteration if there is no collision
-			rdata->enemy_accel_y += 2;
-			rdata->tile_e_collision = TranslateSprite(THIS, 0, (rdata->enemy_accel_y >> 4) << delta_time);
-		}
-		if(rdata->tile_e_collision) {
-			if(rdata->enemy_state == ENEMY_STATE_JUMPING & rdata->enemy_accel_y > 0) {
-				rdata->enemy_state = ENEMY_STATE_NORMAL;
-			}else{
-				rdata->enemy_accel_y = 0;	
+	if(rdata->enemy_accel_y < 24) {
+		rdata->enemy_accel_y += 1;
+	}
+	
+	if(rdata->wait & 1){
+		if(rdata->enemy_state != ENEMY_STATE_HIT){
+			rdata->tile_e_collision = TranslateSprite(THIS, rdata->vx << delta_time, (rdata->enemy_accel_y >> 4)<< delta_time);
+			//CheckCollisionETile();
+			if(!rdata->tile_e_collision && delta_time != 0 && rdata->enemy_accel_y < 24) { //Do another iteration if there is no collision
+				rdata->enemy_accel_y += 2;
+				rdata->tile_e_collision = TranslateSprite(THIS, 0, (rdata->enemy_accel_y >> 4) << delta_time);
 			}
-			CheckCollisionETile();
+			if(rdata->tile_e_collision) {
+				if(rdata->enemy_state == ENEMY_STATE_JUMPING & rdata->enemy_accel_y > 0) {
+					rdata->enemy_state = ENEMY_STATE_NORMAL;
+				}else{
+					rdata->enemy_accel_y = 0;	
+				}
+				CheckCollisionETile();
+			}	
 		}
-	}//fine else non wait
+	}
 	
 	UINT8 scroll_e_tile;
-	struct Sprite* iespr;
-	
+	struct Sprite* iespr;	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
 		if(iespr->type == SpritePlayer) {
@@ -88,6 +84,7 @@ void Update_SpriteRat() {
 		}
 		if(iespr->type == SpriteArrow) {
 			if(CheckCollision(THIS, iespr)) {
+				rdata->enemy_state = ENEMY_STATE_HIT;
 				rdata->wait = 24u;
 				SetSpriteAnim(THIS, rat_hit, 24u); 
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)iespr->custom_data;

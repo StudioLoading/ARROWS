@@ -28,7 +28,6 @@
 
 const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
-
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -74,6 +73,7 @@ extern INT8 platform_vx;
 extern bool LCD_Installed;
 extern UINT8 thunder_delay;
 extern INT8 update_hud;
+extern INT8 spawning_counter;
 
 //Maps
 const struct MapInfo* const map_6[] = {
@@ -116,6 +116,7 @@ void Start_StateGame6() {
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteStalagmite);
 	SpriteManagerLoad(SpriteStalattite);
+	SpriteManagerLoad(SpritePenguin);
 	SpriteManagerLoad(SpritePuff);
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
@@ -142,6 +143,7 @@ void Start_StateGame6() {
 		ScrollFindTile(lvls6[current_map], 45, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0){
 		spawning_triggered = 0;
+		spawning_counter = 0;
 		ScrollFindTile(lvls6[current_map], 9, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
@@ -188,18 +190,18 @@ void Start_StateGame6() {
 	}*/
 	
 	//INIT SPAWNING
-	
 	enemies_0 = 0;
 	enemies_1 = 0;
 	enemies_2 = 0;
 	enemies_3 = 0;
-
 	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
 			case 5u:
 				switch(current_map){
 					case 1u:
 						spawn_item6(scrigno_dcoin, 3u, 16u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawn_item6(scrigno_dcoin, 15u, 10u, 2, 0);//1coin 2hp 3up 7dcoin
+						spawn_enemy6(SpritePenguin, 9u, 16u);
 					break;
 				}
 			break;
@@ -308,111 +310,153 @@ void Update_StateGame6() {
 			switch(current_map){
 				case 0u:
 					//dropping drop
-					if (scroll_target->x > (UINT16) 14u << 3 && scroll_target->x < (UINT16) 28u << 3){
+					if (scroll_target->x > (UINT16) 8u << 3 && scroll_target->x < (UINT16) 28u << 3){
 						if(thunder_delay == 0u){
 							SpriteManagerAdd(SpriteStalagmite, (UINT16) 16u << 3, (UINT16) 7u << 3);
 						}
 					}
-					if(scroll_target->x > (UINT16) 1u << 3 && scroll_target->x > (UINT16) 10u << 3 && spawning_triggered <= 1){
+					if(scroll_target->x < (UINT16) 13u << 3 && spawning_counter == 0){
 						spawn_item6(scrigno_up, 8u, 8u, 7, 1);//1coin 2hp 3up 7dcoin
 						spawn_enemy6(SpriteStalattite, 4u, 5u);
+						spawn_enemy6(SpritePenguin, 5u, 11u);
+						spawning_counter++;
 					}
-					if(scroll_target->x < (UINT16) 24u << 3 && spawning_triggered <= 3){
+					/*if(scroll_target->x < (UINT16) 24u << 3 && (spawning_counter == 0 || spawning_counter == 1)){
 						spawn_enemy6(SpriteStalattite, 18u, 5u);
-					}
-					if(scroll_target->x > (UINT16) 23u << 3 && spawning_triggered <= 4){
+						spawning_counter = 2;
+					}*/
+					if(scroll_target->x > (UINT16) 26u << 3 && spawning_counter < 3){
 						spawn_enemy6(SpriteStalattite, 27u, 5u);
+						spawning_counter = 3;
 					}
-					if(scroll_target->x > (UINT16) 29u << 3 && spawning_triggered <= 5){
+					if(scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 3){
 						spawn_enemy6(SpriteStalattite, 33u, 5u);
+						spawn_enemy6(SpritePenguin, 39u, 11u);
+						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 30u << 3 && spawning_triggered <= 6){
+					if(scroll_target->x > (UINT16) 30u << 3 && spawning_counter == 4){
 						spawn_enemy6(SpriteStalattite, 34u, 5u);
+						spawning_counter++;
 					}						
-					if(scroll_target->x > (UINT16) 53u << 3 && scroll_target->x < (UINT16) 61u << 3){
+					if(scroll_target->x > (UINT16) 49 << 3 && scroll_target->x < (UINT16) 69u << 3){
 						if(thunder_delay == 0u){
 							SpriteManagerAdd(SpriteStalagmite, (UINT16) 59u << 3, (UINT16) 10u << 3);
 						}
 					}
-					if(scroll_target->x > (UINT16) 54u << 3 && spawning_triggered <= 7){
+					if(scroll_target->x > (UINT16) 54u << 3 && spawning_counter == 5){
 						struct Sprite* gate = SpriteManagerAdd(SpriteGate, (UINT16) 64u << 3, (UINT16) 12u << 3);
 						struct EnemyInfo* gdata = (struct EnemyInfo*)gate->custom_data;
 						gdata->vx = 4;
-						spawning_triggered++;
+						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 63u << 3 && spawning_triggered <= 9){
+					if(scroll_target->x > (UINT16) 63u << 3 && spawning_counter == 6){
 						spawn_item6(scrigno_coin, 73u, 11u, 1, 1); //1coin 2hp 3up 7dcoin
-				
+						spawn_enemy6(SpritePenguin, 73u, 11u);
+						spawning_counter++;				
 					}
-					if(scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 10){
+					if(scroll_target->x > (UINT16) 70u << 3 && spawning_counter == 7){
 						spawn_enemy6(SpriteStalattite, 77u, 5u);
+						spawn_enemy6(SpritePenguin, 83u, 11u);
+						spawning_counter++;
 					}		
-					if(scroll_target->x > (UINT16) 74u << 3 && scroll_target->x < (UINT16) 85u << 3){
+					if(scroll_target->x > (UINT16) 70u << 3 && scroll_target->x < (UINT16) 90u << 3){
 						if(thunder_delay == 0u){
 							spawn_enemy6(SpriteStalagmite, 80u, 8u);
 						}
 					}
-					if(scroll_target->x > (UINT16) 112u << 3 && spawning_triggered <= 11){
+					if(scroll_target->x > (UINT16) 112u << 3 && spawning_counter == 8){
 						spawn_item6(scrigno_dcoin, 120u, 3u, 3, 1);//1coin 2hp 3up 7dcoin
 						spawn_item6(scrigno_coin, 127u, 12u, 1, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 138u << 3 && spawning_triggered <= 13){
+					if(scroll_target->x > (UINT16) 138u << 3 && spawning_counter == 9){
+						spawn_enemy6(SpritePenguin, 134u, 12u);
 						spawn_item6(scrigno_up, 142u, 8u, 3, 0);//1coin 2hp 3up 7dcoin
+						spawn_enemy6(SpritePenguin, 148u, 12u);
+						spawning_counter++;
 					}					
 					if(scroll_target->x > (UINT16) 166u << 3){
 						if(thunder_delay == 0u){
 							SpriteManagerAdd(SpriteStalagmite, (UINT16) 174u << 3, (UINT16) 6u << 3);
 						}
 					}
-					if(scroll_target->x > (UINT16) 168u << 3 && spawning_triggered <= 14){
+					if(scroll_target->x > (UINT16) 155u << 3 && spawning_counter == 10){
+						spawn_enemy6(SpritePenguin, 160u, 10u);
+						spawn_enemy6(SpritePenguin, 164u, 14u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 168u << 3 && spawning_counter == 11){
 						spawn_item6(scrigno_dcoin, 176u, 6u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
 					}
 				break;
 				case 1u:
-					if (scroll_target->x > (UINT16) 20u << 3 && spawning_triggered < 2){
+					if (scroll_target->x > (UINT16) 20u << 3 && spawning_counter == 0){
 						spawn_enemy6(SpriteIceplat, 33u, 15u);
 						spawn_enemy6(SpriteIceplat, 38u, 13u);
 						spawn_enemy6(SpritePlatform, 45u, 10u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 45u << 3 && spawning_triggered <= 5){
+					if (scroll_target->x > (UINT16) 45u << 3 && spawning_counter == 1){
 						spawn_enemy6(SpriteIceplat, 50u, 13u);
 						spawn_enemy6(SpriteIceplat, 55u, 15u);
 						spawn_enemy6(SpritePlatform, 61u, 14u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 70u << 3 && spawning_triggered <= 8){
+					if (scroll_target->x > (UINT16) 70u << 3 && spawning_counter == 2){
 						spawn_enemy6(SpriteStalattite, 72u, 5u);
+						spawn_enemy6(SpritePenguin, 80u, 12u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 72u << 3 && spawning_triggered <= 9){						
+					if (scroll_target->x > (UINT16) 72u << 3 && spawning_counter == 3){						
 						spawn_enemy6(SpriteStalattite, 77u, 5u);
+						spawn_enemy6(SpritePenguin, 84u, 12u);						
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 88u << 3 && spawning_triggered <= 10){						
+					if (scroll_target->x > (UINT16) 88u << 3 && spawning_counter == 4){
 						spawn_enemy6(SpriteIceplat, 98u, 14u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 98u << 3 && spawning_triggered <= 11){						
+					if (scroll_target->x > (UINT16) 98u << 3 && spawning_counter == 5){
 						spawn_enemy6(SpriteIceplat, 108u, 12u);					
 						spawn_enemy6(SpriteStalattite, 108u, 5u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 125u << 3 && spawning_triggered <= 13){				
+					if (scroll_target->x > (UINT16) 125u << 3 && spawning_counter == 6){
 						spawn_enemy6(SpriteIceplat, 137u, 12u);					
 						spawn_enemy6(SpriteIceplat, 134u, 14u);					
 						spawn_item6(scrigno_shield, 134u, 10u, 2, 1);//1coin 2hp 3up 7dcoin
 						//spawn_item6(scrigno_up, 129u, 5u, 2, 0);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 151u << 3 && spawning_triggered <= 17){
+					if (scroll_target->x > (UINT16) 151u << 3 && spawning_counter == 7){
 						spawn_enemy6(SpriteIceplat, 160u, 11u);					
 						spawn_enemy6(SpriteIceplat, 162u, 13u);					
 						//spawn_enemy6(SpriteStalattite, 155u, 4u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 170u << 3 && spawning_triggered <= 20){
+					if (scroll_target->x > (UINT16) 170u << 3 && spawning_counter == 8){
 						spawn_enemy6(SpriteIceplat, 175u, 15u);					
 						spawn_enemy6(SpriteIceplat, 179u, 12u);				
 						spawn_enemy6(SpriteStalattite, 171u, 4u);
+						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 190u << 3 && spawning_triggered <= 23){
-						spawn_enemy6(SpriteIceplat, 197u, 8u);					
-						spawn_enemy6(SpriteIceplat, 199u, 9u);					
-						spawn_enemy6(SpriteIceplat, 201u, 10u);	
+					if (scroll_target->x > (UINT16) 190u << 3 && spawning_counter == 9){
+						spawn_enemy6(SpriteIceplat, 197u, 8u);
+						spawn_enemy6(SpriteIceplat, 199u, 9u);						
+						spawn_item6(scrigno_shield, 194u, 5u, 2, 1);//1coin 2hp 3up 7dcoin
+						spawn_enemy6(SpriteIceplat, 201u, 10u);
+						spawning_counter++;
 					}
+					if (scroll_target->x > (UINT16) 213u << 3 && spawning_counter == 10){
+						spawn_enemy6(SpritePenguin, 221u, 12u);
+						spawning_counter++;
+					}
+					if (scroll_target->x > (UINT16) 222u << 3 && spawning_counter == 11){
+						spawn_enemy6(SpritePenguin, 229u, 12u);
+						spawn_item6(scrigno_shield, 229u, 11u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
+					}						
 					if (scroll_target->x > (UINT16) 207u << 3){							
 						switch(thunder_delay){
 							case 40u:

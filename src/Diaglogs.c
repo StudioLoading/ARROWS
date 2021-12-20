@@ -9,7 +9,6 @@
 
 #include "custom_datas.h"
 
-
 extern UINT8 current_level_b;
 extern UINT8 current_level;
 extern UINT8 current_map;

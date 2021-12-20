@@ -19,9 +19,6 @@ extern void CheckCollisionETile();
 extern void ETurn();
 extern void EDie();
 
-UINT16 init_x;
-UINT16 init_y;
-
 void Start_SpriteBee() {	
 	THIS->coll_x = 1;
 	THIS->coll_y = 2;
