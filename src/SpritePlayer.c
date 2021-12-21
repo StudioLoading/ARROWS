@@ -39,6 +39,7 @@ const UINT8 anim_shield[] = {1, 3};
 const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
+const INT8 MAX_HP = 5;
 
 INT8 jump_power = 0;
 INT8 death_cooldown = 0;
@@ -50,6 +51,7 @@ INT8 platform_vx = 0;
 INT8 platform_vy = 0;
 INT8 is_on_boss = -1;
 INT8 is_on_secret = -1;
+INT8 is_on_gameover = -1;
 UINT8 diag_found = 0u;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 UINT8 current_camera_counter = 0u;
@@ -105,10 +107,6 @@ void Update_SpritePlayer() {
 
 	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
-	}
-	
-	if (KEY_PRESSED(J_START) && KEY_PRESSED(J_SELECT)){
-		SetState(StateGameOver);
 	}
 	
 	if(archer_state == STATE_AMULET_STONE || archer_state == STATE_AMULET_ICE 
@@ -177,15 +175,13 @@ void Update_SpritePlayer() {
 					tile_collision = TranslateSprite(THIS, 0, 1);
 				}else if (death_cooldown == 80){
 					death_cooldown = 0;
-					archer_data->hp = 100;
+					archer_data->hp = MAX_HP;
 					update_hud = 1;
 					if (archer_data->ups == -1){
-						current_map = 0;
 						SetState(StateGameOver);
 					}else{
-						if (is_on_boss > 0){ // != -1
+						if (is_on_boss > 0){
 							current_camera_state = 3u;
-							//is_on_boss = 4;
 							SetState(StateBoss);							
 						}else{						
 							if(current_level < 3){
@@ -210,8 +206,8 @@ void Update_SpritePlayer() {
 			CheckCollisionTile();
 			if(shoot_cooldown) {
 				SetSpriteAnim(THIS, anim_shoot, 12u);
-			} else {
-				if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT) ) {
+			} else if(!KEY_PRESSED(J_DOWN)){
+				if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT)) {
 					SetSpriteAnim(THIS, anim_walk, 16u);
 				}else{
 					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
@@ -363,7 +359,7 @@ void Update_SpritePlayer() {
 					dataamulet->counter = 60;
 					dataamulet->setup = 0;
 					ispr->y -= 20u;
-					archer_data->hp = 100;
+					archer_data->hp = MAX_HP;
 					death_cooldown = 127;
 					THIS->x = ispr->x-3u;
 					THIS->y = ispr->y+12u;
@@ -403,7 +399,7 @@ void Update_SpritePlayer() {
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 2u: //hp
-							archer_data->hp = 100;
+							archer_data->hp = MAX_HP;
 							PlayFx(CHANNEL_1, 3, 0x54, 0x80, 0x74, 0x83, 0x86);
 							SpriteManagerRemoveSprite(ispr);
 						break;
@@ -532,35 +528,14 @@ void Update_SpritePlayer() {
 					}
 				}
 				if (being_hit == 1u && archer_state != STATE_DEAD){
-					INT8 enemydamage = 0;
+					INT8 enemydamage = 1;
 					switch(ispr->type){
-						case SpriteEnemy:
-						case SpriteStalattite:
-							enemydamage = 5;
-						break;
-						//case SpriteStalagmite:
-						case SpriteThunder:
-						case SpritePenguin:
-							enemydamage = 8;
-						break;						
-						case SpriteWalrusspin:
-						case SpriteRat:
-						case SpriteBird:
-						case SpriteBee:
-							enemydamage = 10;
-						break;
-						case SpriteScorpion:
-						case SpriteSpider:
-						case SpritePorcupine:
-						case SpriteEagle:
-							enemydamage = 15;
-						break;
 						case SpriteWolf:
 						case SpriteAlligator:
 						case SpriteIbex:
 						case SpriteBear:
 						case SpriteWalrus:
-							enemydamage = 20;
+							enemydamage = 2;
 							TranslateSprite(THIS, 0, -1);
 						break;
 					}
@@ -587,18 +562,9 @@ void Update_SpritePlayer() {
 		}
 		if(ispr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ispr)) {
-				/*struct ArrowInfo* arrowdata = (struct ArrowInfo*)ispr->custom_data;
-				if (arrowdata->type == 6u){ //spine from porcupine
-					if(!KEY_PRESSED(J_DOWN)){
-						Hit(arrowdata->arrowdamage);
-					}
-					SpriteManagerRemoveSprite(ispr);
-					return;
-				}*/
 				struct ArrowInfo* datap = (struct ArrowInfo*)ispr->custom_data;
 				if (datap->arrowdir != 1){return;}//guardo solo se è orizzontale
 				if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
-					//archer_accel_y = 0;
 					ispr->coll_x = 0;
 					ispr->coll_y = 2;
 					ispr->coll_w = 8;
@@ -769,26 +735,27 @@ void CheckCollisionTile() {
 			}
 		case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
 			THIS->y += 4u;
+			Hit(1);
 		case 20u:
 			if(current_level == 6u){
-				Hit(10);
+				Hit(1);
 				return;
 			}
 		case 23u:
 		case 29u:
-			Hit(5);
+			Hit(1);
 		break;
 		case 38u:
 		case 39u:
 			if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
-				Hit(5);				
+				Hit(1);				
 			}
 		case 40u: //skull of death
-			Hit(8);
+			Hit(1);
 		break;		
 		case 64u: //skull in ice cave
 			if(current_level == 5u){
-				Hit(8);
+				Hit(1);
 			}
 		break;
 		case 111u:

@@ -33,6 +33,7 @@ extern INT8 ups;
 extern INT8 hp;
 extern INT8 archer_tool;
 extern INT8 level_tool;
+extern INT8 MAX_HP;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
@@ -62,7 +63,7 @@ void Start_StateTitlescreen() {
 	amulet = 0;
     coins = 30u;
 	ups = 1;
-	hp = 100;
+	hp = MAX_HP;
 	archer_tool = 0;
 	level_tool = -1;
 	

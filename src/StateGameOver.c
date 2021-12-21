@@ -18,7 +18,7 @@ const UINT16 bg_palette_gameover[] = {PALETTE_FROM_HEADER(diaggameover)};
 INT8 countdown = 10;
 INT8 one_second = 0;
 
-void ResetConfig();
+void ResetConfig(INT8 gameo);
 void ShowContinue();
 void ShowCounter();
 
@@ -42,25 +42,24 @@ void Start_StateGameOver() {
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
 	ShowContinue();
-	
-	if(is_on_boss < 0){
-		ResetConfig();
-	}
+
+	ResetConfig(0);
 	
 }
 
 void Update_StateGameOver() {
 	one_second++;
+	if (one_second >= 70){
+		one_second = 0;
+		ShowContinue();
+	}
 	if(KEY_TICKED(J_START) || KEY_TICKED(J_A) || KEY_TICKED(J_B)) {
 		if(is_on_boss > 0){
 			SetState(StateBoss);
 		}else{
 			SetState(StateGame);
 		}
-	}else if (one_second >= 70){
-		one_second = 0;
-		ShowContinue();
-	}
+	}	
 }
 
 void ShowContinue(){
@@ -74,34 +73,31 @@ void ShowContinue(){
 
 void ShowCounter(){
 	if(countdown >= -1){
-		PRINT_POS(0,0);
+		PRINT_POS(1,0);
+		Printf("%d %d", current_level, current_map);
+		PRINT_POS(5,0);
 		if(countdown != -1){
-			Printf("      CONTINUE ? 0%d     ", countdown);	
+			Printf(" CONTINUE ? 0%d    ", countdown);	
 		}
 	}else if (countdown == -2){
-		GameOver();
+		ResetConfig(1);
 		SetState(StateTitlescreen);
 	}
 }
 
-void GameOver(){
+void ResetConfig(INT8 gameo){
 	load_next_b = 0;
-	is_on_boss = -1;
-	current_level = 0u;
 	current_map = 0u;
-	current_level_b = current_level -1u;
-	archer_tool = 0;
-	level_tool= -1;
-	countdown = 10;
-	one_second = 0;
-	
-}
-
-void ResetConfig(){
-	load_next_b = 0;
-	is_on_boss = -1;
-	current_map = 0u;
-	current_level_b = current_level -1u;
+	if(gameo > 0){
+		current_level = 0u;
+		is_on_boss = -1;
+	}
+	if(is_on_boss > 0){
+		current_level_b = 0u;
+		if(current_level > 0u){
+			current_level_b = current_level -1u;
+		}
+	}
 	archer_tool = 0;
 	level_tool= -1;
 	countdown = 10;

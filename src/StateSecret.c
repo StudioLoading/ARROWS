@@ -24,6 +24,9 @@ extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
+extern INT8 MAX_HP;
+extern UINT8 SHIELD_TILE;
+extern UINT8 EMPTY_TILE;
 extern INT8 archer_tool;
 extern INT8 load_next_s;
 extern INT8 level_tool;
@@ -98,7 +101,7 @@ void Start_StateSecret() {
 		scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
 	}else{
 		scrigno_coin = spawn_item(scrigno_coin, 5u, 5u, 1, 1);
-		if(archer_data->hp == 100){
+		if(archer_data->hp == MAX_HP){
 			scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
 		}else{
 			scrigno_shield = spawn_item(scrigno_shield, 11u, 11u, 2, 1);	

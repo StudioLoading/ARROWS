@@ -55,6 +55,7 @@ UINT8 amulet;// = 0u;
 UINT8 coins;// = 30u;
 INT8 ups;// = 1;
 INT8 hp;// = 100;
+extern INT8 MAX_HP;
 INT8 archer_tool;// = 0;
 INT8 level_tool;// = -1;
 
@@ -106,6 +107,7 @@ extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
 extern INT8 is_on_boss;
 extern INT8 is_on_secret;
+extern INT8 is_on_gameover;
 extern UINT8 current_level_b;
 extern UINT8 current_map_b;
 extern INT8 platform_vx;
@@ -128,7 +130,7 @@ void Start_StateGame() {
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	
-	if (current_level > 5u){
+	if (current_level > 4u){
 		SetState(StateGame6);
 	}else if (current_level > 2u){
 		SetState(StateGame3);
@@ -149,7 +151,6 @@ void Start_StateGame() {
 			SpriteManagerLoad(SpriteKey);
 			SpriteManagerLoad(SpriteEnemy);
 			SpriteManagerLoad(SpriteScorpion);
-			//SpriteManagerLoad(SpritePorcupine);
 			if(sgb_check()){
 				set_sgb_palette01_4B();
 				set_sgb_palette_statusbar();
@@ -179,34 +180,34 @@ void Start_StateGame() {
 	SHOW_SPRITES;
 
 	//SCROLL
-	if (current_level == 2u & current_map == 0u){
+	scroll_bottom_movement_limit = 62;
+	if (current_level == 2u && current_map == 0u){
 		scroll_bottom_movement_limit = 82;
-	}else{
-		scroll_bottom_movement_limit = 62;
 	}
 
-	const struct MapInfo** lvls = levels[current_level];
+	const struct MapInfo** maps = levels[current_level];
 	UINT8 map_w;
 	UINT8 map_h;
-	GetMapSize(lvls[current_map], &map_w, &map_h);
+	GetMapSize(maps[current_map], &map_w, &map_h);
 	if (load_next_s == -1){ //COME FROM STATE SECRET
-		ScrollFindTile(lvls[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else if(load_next || load_next_d == 0 || ups == -1){
-		spawning_triggered = 0;
+		ScrollFindTile(maps[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	}else if(load_next || load_next_d == 0 || is_on_gameover >= 0){
+		//spawning_triggered = 0;
 		spawning_counter = 0;
-		ScrollFindTile(lvls[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
+		ScrollFindTile(maps[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
-	InitScroll(lvls[current_map], collision_tiles, 0);
+	InitScroll(maps[current_map], collision_tiles, 0);
 	SHOW_BKG;
 	
 	//INIT ARCHER
 	is_on_boss = -1;	
-	if (ups == -1){ //cioè vengo dal gameOver
+	if (is_on_gameover >= 0){ //coming from State GameOver
+		is_on_gameover = -1;
 		ups = 3;
 		coins = 0u;
 		archer_tool = 0;
-		hp = 50;
+		hp = MAX_HP;
 	}	
 	archer_data->hp = hp;
 	archer_data->ups = ups;
@@ -246,7 +247,7 @@ void Start_StateGame() {
 					case 0u:
 						//wrench
 						if(archer_data->tool == 0){
-							spawn_item(scrigno_dcoin, 9u, 12u, 1, 1);
+							//spawn_item(scrigno_dcoin, 9u, 12u, 1, 1);
 							spawn_item(scrigno_up, 1u, 9u, 3, 0);
 						}
 					break;
@@ -347,7 +348,7 @@ void ShowWindowDiag(){
 }
 
 void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
-	spawning_triggered++;
+	//spawning_triggered++;
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
@@ -361,7 +362,7 @@ void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
 }
 
 void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
-	spawning_triggered++;
+	//spawning_triggered++;
 	SpriteManagerRemoveSprite(itemin);
 	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;
@@ -702,33 +703,13 @@ void UpdateHUD(){
 		}	
 	}
 	//write hp
-	/*
-	set_win_data() and set_win_tiles()
-	*/
-		UINT8 i;
-		INT8 hp_diviso_venti = hp / 20;
-
-		for(i = 0; i != hp_diviso_venti; ++i) {
-			set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);
-		}
-		for(; i != 5; ++i) {
-			set_win_tiles(5 + i, 0, 1, 1, &EMPTY_TILE);
-		}
-	
-	/*
-	PRINT_POS(7, 0);
-	if(hp < 0){
-		Printf("XX");
-	}else if (hp < 10){ // archer_data->hp < 10 &&
-		Printf("0");
-		PRINT_POS(8, 0);
-		Printf("%d", hp);
-	}else if (hp >= 100){ // archer_data->hp >= 100 &&
-		Printf("99");	
-	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
-		Printf("%d", hp);
+	UINT8 i;
+	for(i = 0; i != hp; ++i) {
+		set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);
 	}
-	*/
+	for(; i != 5; ++i) {
+		set_win_tiles(5 + i, 0, 1, 1, &EMPTY_TILE);
+	}	
 	//write tool
 	if (archer_data->tool == level_tool){
 		switch(level_tool){

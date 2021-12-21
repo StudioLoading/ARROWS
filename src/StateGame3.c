@@ -36,6 +36,9 @@ extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
+extern INT8 MAX_HP;
+extern UINT8 SHIELD_TILE;
+extern UINT8 EMPTY_TILE;
 extern INT8 load_next;
 extern INT8 load_next_b;
 extern INT8 load_next_s;
@@ -85,15 +88,15 @@ void spawn_enemy3(UINT8 spriteType, UINT16 posx, UINT16 posy);
 void spawn_item3(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 
 //Maps
-const struct MapInfo* const map_4[] = {
+const struct MapInfo* const level_4[] = {
 	&map41,
 	&map4
 };
-const struct MapInfo* const map_5[] = {
+const struct MapInfo* const level_5[] = {
 	&map50, &map51
 };
 //Levels
-const struct MapInfo** const maps4[] = {map_4, map_5};
+const struct MapInfo** const levels4[] = {level_4, level_5};
 
 const UINT16 bg_palette3[] = {PALETTE_FROM_HEADER(tiles4)};
 
@@ -231,18 +234,18 @@ void Start_StateGame3() {
 	//if (current_level == 2u & current_map == 0u)
 	scroll_bottom_movement_limit = 62;
 
-	const struct MapInfo** lvls4 = maps4[current_level-3u];
+	const struct MapInfo** maps4 = levels4[current_level-3u];
 	UINT8 map_w4;
 	UINT8 map_h4;
-	GetMapSize(lvls4[current_map], &map_w4, &map_h4);
+	GetMapSize(maps4[current_map], &map_w4, &map_h4);
 	if (load_next_s == -1){ //COME FROM STATE SECRET
-		ScrollFindTile(lvls4[current_map], 45, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);
+		ScrollFindTile(maps4[current_map], 45, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0){
 		spawning_counter = 0;
-		ScrollFindTile(lvls4[current_map], 9, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);		
+		ScrollFindTile(maps4[current_map], 9, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
-	InitScroll(lvls4[current_map], collision_tiles3, 0);
+	InitScroll(maps4[current_map], collision_tiles3, 0);
 	SHOW_BKG;
 	
 	//INIT ARCHER
@@ -251,7 +254,7 @@ void Start_StateGame3() {
 		ups = 3;
 		coins = 0u;
 		archer_tool = 0;
-		hp = 50;
+		hp = MAX_HP;
 	}	
 	archer_data->hp = hp;
 	archer_data->ups = ups;
@@ -650,17 +653,12 @@ void UpdateHUD3(){
 		}	
 	}
 	//write hp
-	PRINT_POS(7, 0);
-	if(hp < 0){
-		Printf("XX");
-	}else if (hp < 10){ // archer_data->hp < 10 &&
-		Printf("0");
-		PRINT_POS(8, 0);
-		Printf("%d", hp);
-	}else if (hp >= 100){ // archer_data->hp >= 100 &&
-		Printf("99");	
-	}else if (hp > 9){ // archer_data->hp > 9 && archer_data->hp < 100 && 
-		Printf("%d", hp);
+	UINT8 i;
+	for(i = 0; i != hp; ++i) {
+		set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);
+	}
+	for(; i != 5; ++i) {
+		set_win_tiles(5 + i, 0, 1, 1, &EMPTY_TILE);
 	}
 	//write tool
 	if (archer_data->tool == level_tool){
