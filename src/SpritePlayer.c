@@ -177,7 +177,7 @@ void Update_SpritePlayer() {
 					death_cooldown = 0;
 					archer_data->hp = MAX_HP;
 					update_hud = 1;
-					if (archer_data->ups == -1){
+					if (archer_data->ups <= -1){
 						SetState(StateGameOver);
 					}else{
 						if (is_on_boss > 0){
@@ -728,46 +728,48 @@ void CheckCollisionTileDoor(){
 }
 
 void CheckCollisionTile() {
-	switch(tile_collision) {
-		case 10u:
-			if(current_level != 6u){
-				return;
-			}
-		case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
-			THIS->y += 4u;
-			Hit(1);
-		case 20u:
-			if(current_level == 6u){
+	if(archer_state != STATE_HIT){
+		switch(tile_collision) {
+			case 10u:
+				if(current_level != 6u){
+					return;
+				}
+			case 2u: //2 (e 10 del liv6) sono spuncioni alti, se li scranio, cado di 2-3px no ?
+				THIS->y += 4u;
 				Hit(1);
-				return;
-			}
-		case 23u:
-		case 29u:
-			Hit(1);
-		break;
-		case 38u:
-		case 39u:
-			if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
-				Hit(1);				
-			}
-		case 40u: //skull of death
-			Hit(1);
-		break;		
-		case 64u: //skull in ice cave
-			if(current_level == 5u){
+			case 20u:
+				if(current_level == 6u){
+					Hit(1);
+					return;
+				}
+			case 23u:
+			case 29u:
 				Hit(1);
-			}
-		break;
-		case 111u:
-			if(platform_vx != 2){
-				platform_vx = 2;
-			}
-		break;
-		case 119u:
-			if(platform_vx != -2){
-				platform_vx = -2;
-			}
-		break;
+			break;
+			case 38u:
+			case 39u:
+				if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
+					Hit(1);				
+				}
+			case 40u: //skull of death
+				Hit(1);
+			break;		
+			case 64u: //skull in ice cave
+				if(current_level == 5u){
+					Hit(1);
+				}
+			break;
+			case 111u:
+				if(platform_vx != 2){
+					platform_vx = 2;
+				}
+			break;
+			case 119u:
+				if(platform_vx != -2){
+					platform_vx = -2;
+				}
+			break;
+		}
 	}
 }
 

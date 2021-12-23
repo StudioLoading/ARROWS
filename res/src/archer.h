@@ -11,9 +11,9 @@
 #define archerCGBPal1c3 32259
 
 #define archerCGBPal2c0 6076
-#define archerCGBPal2c1 8935
-#define archerCGBPal2c2 6596
-#define archerCGBPal2c3 5344
+#define archerCGBPal2c1 29596
+#define archerCGBPal2c2 21140
+#define archerCGBPal2c3 0
 
 #define archerCGBPal3c0 6076
 #define archerCGBPal3c1 8935

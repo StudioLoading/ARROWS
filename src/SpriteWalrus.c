@@ -42,7 +42,7 @@ void Start_SpriteWalrus() {
 	walrus_data->enemy_accel_y = 24;
 	walrus_data->vx = -1;
 	walrus_data->wait = 60u;
-	walrus_data->hp = 80;
+	walrus_data->hp = 4;
 	walrus_data->enemy_state = ENEMY_STATE_NORMAL;
 	SPRITE_SET_VMIRROR(THIS);
 	SetSpriteAnim(THIS, walrus_normal, 4u);
@@ -215,16 +215,13 @@ void Update_SpriteWalrus() {
 							SetSpriteAnim(THIS, walrus_hit_down, 24u);
 						break;						
 					} 
-					if(arrowdata->arrowdamage){
-						INT8 new_boss_hp = walrus_data->hp - arrowdata->arrowdamage;
-						if (new_boss_hp <= 0){
-							walrus_data->hp = 0;
-							SetSpriteAnim(THIS, walrus_dead, 16u);
-							walrus_data->enemy_state = ENEMY_STATE_DEAD;
-							THIS->x = (UINT16) 21u << 3;
-							THIS->y = (UINT16) 14u << 3;
-						}
-						walrus_data->hp = new_boss_hp;
+					walrus_data->hp -= arrowdata->original_type;
+					if (walrus_data->hp <= 0){
+						walrus_data->hp = 0;
+						SetSpriteAnim(THIS, walrus_dead, 16u);
+						walrus_data->enemy_state = ENEMY_STATE_DEAD;
+						THIS->x = (UINT16) 21u << 3;
+						THIS->y = (UINT16) 14u << 3;
 					}
 				}					
 				SpriteManagerRemoveSprite(iwspr);

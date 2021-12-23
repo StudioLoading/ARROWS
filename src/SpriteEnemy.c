@@ -125,7 +125,7 @@ void EDie(){
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	edata->hp = -1;
 	SetSpriteAnim(THIS, enemy_dead, 16u);
-	edata->wait = 8u;
+	edata->wait = 16u;
 	THIS->coll_h = 0;
 	THIS->coll_w = 0;
 	edata->enemy_state = ENEMY_STATE_DEAD;

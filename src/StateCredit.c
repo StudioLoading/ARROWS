@@ -26,6 +26,7 @@
 const UINT8 collision_tiles_credits[] = {1,0};
 const UINT16 bg_palette_credits[] = {PALETTE_FROM_HEADER(tilescredit)};
 UINT8 updatecounter = 20u;
+extern UINT16 sprites_palette[];
 extern UINT8* credits_bass_mod_Data[];
 extern UINT8* credits_drumbass_mod_Data[];
 extern UINT8* credits_mod_Data[];
@@ -34,7 +35,7 @@ UINT8 wait_time = 0u;
 
 void Start_StateCredit() {
 
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_credits, 2);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_credits, 2);
 	SPRITES_8x16;
 	SHOW_SPRITES;

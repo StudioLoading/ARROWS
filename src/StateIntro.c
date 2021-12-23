@@ -25,6 +25,7 @@
 const UINT16 bg_palette_intro[] = {PALETTE_FROM_HEADER(tilesintro)};
 const UINT8 collision_tiles_intro[] = {1,0};
 
+extern UINT16 sprites_palette_titlescreen[];
 extern UINT8* intro_mod_Data[]; 
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 extern UINT8 current_camera_counter;
@@ -50,7 +51,7 @@ void Start_StateIntro() {
 		set_sgb_palette01_intro();
 	}
 
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2); //end with the bank of where I have the palette/tileset
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 6); //end with the bank of where I have the palette/tileset
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_intro, 14);//end with the bank of where I have the palette/tileset	
 	SPRITES_8x16;	
 	SpriteManagerLoad(SpriteCamerafocus);

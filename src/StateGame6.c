@@ -70,7 +70,6 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
-extern INT8 spawning_triggered;
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
 extern bool LCD_Installed;
@@ -101,7 +100,6 @@ void Start_StateGame6() {
 	thunder_delay = 80u;
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
-	spawning_triggered = 0;
 	
 	if (current_level < 3u){
 		SetState(StateGame);
@@ -145,7 +143,6 @@ void Start_StateGame6() {
 	if (load_next_s == -1){ //COME FROM STATE SECRET
 		ScrollFindTile(maps6[current_map], 45, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0){
-		spawning_triggered = 0;
 		spawning_counter = 0;
 		ScrollFindTile(maps6[current_map], 9, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
@@ -636,7 +633,6 @@ void set_window_y6(UBYTE y) {
 }
 
 void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy){
-	spawning_triggered+=1;
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
@@ -650,7 +646,6 @@ void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy){
 }
 
 void spawn_item6(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
-	spawning_triggered++;
 	SpriteManagerRemoveSprite(itemin);
 	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;

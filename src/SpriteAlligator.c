@@ -33,7 +33,7 @@ void Start_SpriteAlligator() {
 	alligator_data->enemy_accel_y = 24;
 	alligator_data->vx = 0;
 	alligator_data->wait = 250u;
-	alligator_data->hp = 50;
+	alligator_data->hp = 3;
 	alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
 }
 
@@ -53,48 +53,43 @@ void Update_SpriteAlligator() {
 		alligator_data->hp = 0;
 		return;
 	}
-	if (alligator_data->wait > 0u){
-		alligator_data->wait -= 1u;
 	
-		if (alligator_data->wait == 100u){
-			poss++;
-			if (poss == 3u | (poss == 1u && alligator_data->hp < 20)) {
-				poss = 0u;
-				if (alligator_data->archer_posx > 60u & alligator_data->archer_posx < 224u)
-				THIS->x = alligator_data->archer_posx;
-			}else{
-				THIS->x = boss_posx[poss] << 3;
-			}
-			alligator_data->enemy_state = ENEMY_STATE_INVISIBLE;
-			THIS->coll_w = 0;
-			THIS->coll_h = 0;
-			SetSpriteAnim(THIS, alligator_invisible, 8u);
+	alligator_data->wait -= 1u;	
+	if (alligator_data->wait == 100u){
+		poss++;
+		if (poss == 3u | (poss == 1u && alligator_data->hp == 1)) {
+			poss = 0u;
+			if (alligator_data->archer_posx > 60u & alligator_data->archer_posx < 224u)
+			THIS->x = alligator_data->archer_posx;
+		}else{
+			THIS->x = boss_posx[poss] << 3;
 		}
-		if (alligator_data->wait >= 100u & alligator_data->wait <= 120u){
-			if (poss){
-				TranslateSprite(THIS, -1 << delta_time, 0);
-			}else{
-				TranslateSprite(THIS, 1 << delta_time, 0);	
-			}
+		alligator_data->enemy_state = ENEMY_STATE_INVISIBLE;
+		THIS->coll_w = 0;
+		THIS->coll_h = 0;
+		SetSpriteAnim(THIS, alligator_invisible, 8u);
+	}
+	if (alligator_data->wait >= 100u & alligator_data->wait <= 120u){
+		if (poss){
+			TranslateSprite(THIS, -1 << delta_time, 0);
+		}else{
+			TranslateSprite(THIS, 1 << delta_time, 0);	
+		}
 
-		}
-		if (alligator_data->wait == 230u){
-			alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
-			THIS->coll_w = 0;
-			THIS->coll_h = 0;
-			SetSpriteAnim(THIS, alligator_hide, 8u);
-		}else if (alligator_data->wait == 180u){
-			alligator_data->enemy_state = ENEMY_STATE_ATTACK;
-			SetSpriteAnim(THIS, alligator_bite, 10u);
-		}else if (alligator_data->wait == 120u){
-			alligator_data->enemy_state = ENEMY_STATE_NORMAL;
-			THIS->coll_w = 0;
-			THIS->coll_h = 0;
-			SetSpriteAnim(THIS, alligator_normal, 8u);			
-		}
-		if (alligator_data->wait == 0u){
-			alligator_data->wait = 250u;
-		}
+	}
+	if (alligator_data->wait == 230u){
+		alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
+		THIS->coll_w = 0;
+		THIS->coll_h = 0;
+		SetSpriteAnim(THIS, alligator_hide, 8u);
+	}else if (alligator_data->wait == 180u){
+		alligator_data->enemy_state = ENEMY_STATE_ATTACK;
+		SetSpriteAnim(THIS, alligator_bite, 10u);
+	}else if (alligator_data->wait == 120u){
+		alligator_data->enemy_state = ENEMY_STATE_NORMAL;
+		THIS->coll_w = 0;
+		THIS->coll_h = 0;
+		SetSpriteAnim(THIS, alligator_normal, 8u);			
 	}
 
 	UINT8 scroll_a_tile;
@@ -111,21 +106,17 @@ void Update_SpriteAlligator() {
 			if(CheckCollision(THIS, iaspr) & alligator_data->enemy_state != ENEMY_STATE_DEAD) {
 				if(alligator_data->enemy_state != ENEMY_STATE_INVISIBLE & alligator_data->enemy_state != ENEMY_STATE_HIDDEN){ 
 					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iaspr->custom_data;
-					if (arrowdata->arrowdir != 1 && arrowdata->original_type == 2){ //hit solo se freccia non orizzontale
-						//alligator_data->wait = 28u;
+					if (arrowdata->original_type == 2){ //hit only with stoned arrows
 						SetSpriteAnim(THIS, alligator_hit, 18u);
-						if(arrowdata->arrowdamage){
-							INT8 new_boss_hp = alligator_data->hp - arrowdata->arrowdamage;
-							if (new_boss_hp <= 0){
-								alligator_data->hp = 0;
-								SetSpriteAnim(THIS, alligator_dead, 16u);
-								alligator_data->enemy_state = ENEMY_STATE_DEAD;
-								THIS->x = (UINT16) 21u << 3;
-								THIS->y = (UINT16) 14u << 3;
-							}
-							alligator_data->hp = new_boss_hp;
-							alligator_data->wait = 121u;
+						alligator_data->hp -= 1;
+						if (alligator_data->hp <= 0){
+							alligator_data->hp = 0;
+							SetSpriteAnim(THIS, alligator_dead, 16u);
+							alligator_data->enemy_state = ENEMY_STATE_DEAD;
+							THIS->x = (UINT16) 21u << 3;
+							THIS->y = (UINT16) 14u << 3;
 						}
+						alligator_data->wait = 121u;
 					}
 				}
 				SpriteManagerRemoveSprite(iaspr);				

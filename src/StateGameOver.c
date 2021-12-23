@@ -1,4 +1,4 @@
-#include "Banks/SetBank13.h"
+#include "Banks/SetBank7.h"
 
 #include "../res/src/diaggameover.h"
 #include "../res/src/mapdiaggameover.h"
@@ -23,6 +23,7 @@ void ShowContinue();
 void ShowCounter();
 
 extern INT8 is_on_boss;
+extern INT8 is_on_gameover;
 extern UINT8 current_level_b;
 extern UINT8 current_level;
 extern UINT8 current_map;
@@ -32,7 +33,7 @@ extern INT8 load_next_b;
 
 void Start_StateGameOver() {
 
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_gameover, 13);//end with the bank of where I have the palette/tileset
+	SetPalette(BG_PALETTE, 0, 8, bg_palette_gameover, 7);//end with the bank of where I have the palette/tileset
 
 	HIDE_WIN;
 	InitScroll(&mapdiaggameover, 0, 0);
@@ -41,9 +42,9 @@ void Start_StateGameOver() {
 	//WINDOW	
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 2);
-	ShowContinue();
-
+	is_on_gameover = 1;
 	ResetConfig(0);
+	ShowContinue();
 	
 }
 

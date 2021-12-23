@@ -37,7 +37,7 @@ void Start_SpriteEagle() {
 	data->enemy_accel_y = 0;
 	data->vx = 1;
 	data->wait = eagle_time_normal;
-	data->hp = 80;
+	data->hp = 3;
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -142,11 +142,11 @@ void Update_SpriteEagle() {
 		if(ibispr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ibispr)) {
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
-				if(data->enemy_state != ENEMY_STATE_HIT){
+				if(data->enemy_state != ENEMY_STATE_HIT && arrowbidata->arrowdir == 1){ //sensibile solo alle orizzontali
 					data->enemy_state = ENEMY_STATE_HIT;
-					data->wait = 16u;
-					SetSpriteAnim(THIS, eagle_hit, 32u); 
-					data->hp -= arrowbidata->arrowdamage;
+					data->wait = 32u;
+					SetSpriteAnim(THIS, eagle_hit, 24u);
+					data->hp -= arrowbidata->original_type;
 					if (data->hp <= 0){
 						data->enemy_state = ENEMY_STATE_DEAD;
 						data->hp = 0;

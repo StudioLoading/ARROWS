@@ -45,6 +45,8 @@ extern UINT8 current_camera_counter;
 extern UINT8 diag_found;
 extern INT8 load_next_d;
 extern INT8 update_hud;
+extern UINT8 SKULL_TILE;
+extern UINT8 EMPTY_TILE;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
@@ -97,8 +99,8 @@ void Start_StateBoss() {
 		is_on_boss = 0;
 	}
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7);
 	SPRITES_8x16;
 	
 	SpriteManagerLoad(SpriteCamerafocus);
@@ -477,16 +479,11 @@ void SpawnReward(){
 }
 
 void WriteBBOSSHP(){
-	//PRINT_POS(9, 0);
-	//Printf("%d", is_on_boss);
-	PRINT_POS(10, 0);
-	if(boss_hp>0){
-		if(boss_hp > 9){
-			Printf("BOSS>%d", boss_hp);
-		}else if (boss_hp < 10){
-			Printf("BOSS>0%d", boss_hp);
-		}	
-	}else{
-		Printf("BOSS>00");
+	UINT8 i;
+	for(i = 0; i != boss_hp; ++i) {
+		set_win_tiles(11 + i, 0, 1, 1, &SKULL_TILE);
 	}
+	for(; i != 5; ++i) {
+		set_win_tiles(11 + i, 0, 1, 1, &EMPTY_TILE);
+	}	
 }

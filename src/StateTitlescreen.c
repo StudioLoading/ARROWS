@@ -72,8 +72,8 @@ void Start_StateTitlescreen() {
 		set_sgb_palette_title();
 	}
 
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 2); //end with the bank of where I have the palette/tileset
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_titlescreen, 7);//end with the bank of where I have the palette/tileset
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 6); //end with the bank of where I have the palette/tileset
+	SetPalette(BG_PALETTE, 0, 8, bg_palette_titlescreen, 6);//end with the bank of where I have the palette/tileset
 	
 	SPRITES_8x16;	
 	SpriteManagerLoad(SpriteCamerafocus);

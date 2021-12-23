@@ -33,7 +33,7 @@ void Start_SpriteWolf() {
 	wolf_data->enemy_accel_y = 25;
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
-	wolf_data->hp = 50;
+	wolf_data->hp = 1;
 	wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -118,9 +118,7 @@ void Update_SpriteWolf() {
 					if (arrowdata->arrowdir != 1){ //hit solo se freccia non orizzontale
 						wolf_data->wait = 28u;
 						SetSpriteAnim(THIS, wolf_hit, 16u);
-						if(arrowdata->arrowdamage){
-							wolf_data->hp -= arrowdata->arrowdamage;
-						}
+						wolf_data->hp -= arrowdata->original_type;
 					}
 				}
 				SpriteManagerRemoveSprite(ibspr);

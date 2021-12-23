@@ -35,7 +35,7 @@ void Start_SpriteIbex() {
 	ibex_data->enemy_accel_y = 24;
 	ibex_data->vx = 1;
 	ibex_data->wait = 0u;
-	ibex_data->hp = 80;
+	ibex_data->hp = 4;
 	ibex_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -121,21 +121,21 @@ void Update_SpriteIbex() {
 				if(arrowdata->original_type == 3){
 					ibex_data->wait = 28u;
 					SetSpriteAnim(THIS, ibex_hit, 18u);
-					ibex_data->hp -= arrowdata->arrowdamage;
+					ibex_data->hp -= 1;
 					if (ibex_data->vx < 0){
 						THIS->x++;
 					}else{
 						THIS->x--;
 					}
-				}
-				SpriteManagerRemoveSprite(ibbspr);
-				if (ibex_data->hp <= 0){
-					ibex_data->enemy_state = ENEMY_STATE_DEAD;
-					ibex_data->hp = 0;
-					SPRITE_SET_VMIRROR(THIS);
-					THIS->x = (UINT16) 24u << 3;
-					THIS->y = (UINT16) 12u << 3;
-					SetSpriteAnim(THIS, ibex_idle, 4u);
+					SpriteManagerRemoveSprite(ibbspr);
+					if (ibex_data->hp <= 0){
+						ibex_data->enemy_state = ENEMY_STATE_DEAD;
+						ibex_data->hp = 0;
+						SPRITE_SET_VMIRROR(THIS);
+						THIS->x = (UINT16) 24u << 3;
+						THIS->y = (UINT16) 12u << 3;
+						SetSpriteAnim(THIS, ibex_idle, 4u);
+					}
 				}
 			}
 		}

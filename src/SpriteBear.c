@@ -32,7 +32,7 @@ void Start_SpriteBear() {
 	bear_data->enemy_accel_y = 24;
 	bear_data->vx = -1;
 	bear_data->wait = 0u;
-	bear_data->hp = 100;
+	bear_data->hp = 5;
 	if(current_camera_state == 3u){
 		ToNormalState();		
 	}
@@ -127,19 +127,16 @@ void Update_SpriteBear() {
 		if(bebspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, bebspr) && bear_data->enemy_state != ENEMY_STATE_DEAD) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)bebspr->custom_data;
-				if(arrowdata->arrowdir == 4 || 
-					(bear_data->enemy_state == ENEMY_STATE_ATTACK)){
-					/* && ((!SPRITE_GET_VMIRROR(THIS) && bebspr->x < THIS->x) || 
-						(SPRITE_GET_VMIRROR(THIS) && bebspr->x > THIS->x))
-					)){*/
+				if(arrowdata->arrowdir == 4 || (bear_data->enemy_state == ENEMY_STATE_ATTACK)){
 					bear_data->wait = 60u;
 					bear_data->enemy_state = ENEMY_STATE_HIT;
-					bear_data->hp -= arrowdata->arrowdamage;
+					bear_data->hp -= 1;
 					if (bear_data->vx < 0){
 						THIS->x++;
 					}else{
 						THIS->x--;
 					}
+					SpriteManagerRemoveSprite(bebspr);
 				}
 				if (bear_data->hp <= 0){
 					bear_data->enemy_state = ENEMY_STATE_DEAD;
@@ -148,7 +145,6 @@ void Update_SpriteBear() {
 					THIS->y = (UINT16) 12u << 3;
 					SetSpriteAnim(THIS, bear_dead, 16u);
 				}
-				SpriteManagerRemoveSprite(bebspr);
 			}
 		}
 	}
