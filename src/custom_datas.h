@@ -90,4 +90,3 @@ struct LogoInfo{
 struct PuffInfo{
 	INT8 puff_counter;
 };
-

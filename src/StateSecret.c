@@ -24,9 +24,6 @@ extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
-extern INT8 MAX_HP;
-extern UINT8 SHIELD_TILE;
-extern UINT8 EMPTY_TILE;
 extern INT8 archer_tool;
 extern INT8 load_next_s;
 extern INT8 level_tool;
@@ -42,6 +39,11 @@ extern struct Sprite* scrigno_dcoin;
 extern struct Sprite* scrigno_shield;
 extern struct Sprite* scrigno_up;
 extern INT8 update_hud;
+
+extern const INT8 MAX_HP;
+extern const UINT8 SHIELD_TILE;
+extern const UINT8 SKULL_TILE;
+extern const UINT8 EMPTY_TILE;
 
 extern void ShowWindow();
 extern void UpdateHUD();

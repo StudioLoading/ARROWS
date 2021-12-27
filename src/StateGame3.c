@@ -36,18 +36,17 @@ extern UINT8 amulet ;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
-extern INT8 MAX_HP;
-extern UINT8 SHIELD_TILE;
-extern UINT8 EMPTY_TILE;
 extern INT8 load_next;
 extern INT8 load_next_b;
 extern INT8 load_next_s;
 extern INT8 load_next_d;
+extern INT8 load_next_gameover;
 extern INT8 level_tool;
 extern UINT8 current_level;
 extern UINT8 current_map;
 extern INT8 is_on_boss;
 extern INT8 is_on_secret;
+extern INT8 is_on_gameover;
 extern INT8 archer_tool;
 extern UINT8 current_camera_state;
 extern UINT8 current_camera_counter;
@@ -73,11 +72,15 @@ extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
 extern INT8 spawning_counter;
-
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
 extern bool LCD_Installed;
 extern INT8 update_hud;
+
+extern const INT8 MAX_HP;
+extern const UINT8 SHIELD_TILE;
+extern const UINT8 SKULL_TILE;
+extern const UINT8 EMPTY_TILE;
 
 void UpdateHUD3();
 void ShowWindow3();
@@ -131,7 +134,7 @@ void spawn_item3(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_t
 	datascrigno->setup = 1u;
 	if(scrigno){
 		//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
-		if(content_type == 2 && archer_data->hp == 100){
+		if(content_type == 2 && archer_data->hp == MAX_HP){
 			content_type = 7;
 		}
 		datascrigno->content_type = content_type;
@@ -240,7 +243,7 @@ void Start_StateGame3() {
 	GetMapSize(maps4[current_map], &map_w4, &map_h4);
 	if (load_next_s == -1){ //COME FROM STATE SECRET
 		ScrollFindTile(maps4[current_map], 45, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);
-	}else if(load_next || load_next_d == 0){
+	}else if(load_next || load_next_d == 0 || load_next_gameover){
 		spawning_counter = 0;
 		ScrollFindTile(maps4[current_map], 9, 0, 0, map_w4, map_h4, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
@@ -250,18 +253,11 @@ void Start_StateGame3() {
 	
 	//INIT ARCHER
 	is_on_boss = -1;	
-	if (ups == -1){ //cioè vengo dal gameOver
-		ups = 3;
-		coins = 0u;
-		archer_tool = 0;
-		hp = MAX_HP;
-	}	
 	archer_data->hp = hp;
 	archer_data->ups = ups;
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
 	archer_state = STATE_JUMPING;
-	UpdateHUD3();	
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -292,17 +288,17 @@ void Start_StateGame3() {
 		}
 	}
 	
-	if(load_next_d){
-		load_next_d = 0;
-	}else if(load_next_s == -1){
+	if(load_next_s == -1){
 		load_next_s = 0;
-	}else{//copiato dallo SpritePlayer quando chiedo il tip
+	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
 		diag_found = Build_Next_Dialog_Banked(scroll_target);
 		if(diag_found){			
 			archer_state = STATE_DIAG;
 			show_diag = 1;	
-		}		
+		}
 	}
+	load_next_d = 0;		
+	
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -384,6 +380,11 @@ void Update_StateGame3() {
 		}
 	}	
 	
+	if(load_next_gameover){
+		load_next_gameover = 0;
+		is_on_gameover = 1;
+		SetState(StateGameover);
+	}
 	// SPAWNING
 	switch(current_level){
 		case 3u: // Sky -> Ibex
@@ -613,10 +614,6 @@ void Update_StateGame3() {
 	//HUD MANAGEMENT
 	if (update_hud != 0){
 		update_hud = 0;
-		hp = archer_data->hp;
-		amulet = archer_data->amulet;
-		coins = archer_data->coins;
-		ups = archer_data->ups;
 		UpdateHUD3();
 	}
 	
@@ -653,13 +650,14 @@ void UpdateHUD3(){
 		}	
 	}
 	//write hp
-	UINT8 i;
+	if(hp<=0)hp=0;
+	INT8 i;
 	for(i = 0; i != hp; ++i) {
 		set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);
 	}
-	for(; i != 5; ++i) {
+	for(; i != MAX_HP; ++i) {
 		set_win_tiles(5 + i, 0, 1, 1, &EMPTY_TILE);
-	}
+	}	
 	//write tool
 	if (archer_data->tool == level_tool){
 		switch(level_tool){

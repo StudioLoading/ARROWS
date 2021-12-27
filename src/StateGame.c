@@ -29,15 +29,25 @@
 #include "sgb_palette.h"
 
 
+extern struct ArcherInfo* archer_data;
+extern ARCHER_STATE archer_state;
+extern INT8 is_on_boss;
+extern INT8 is_on_secret;
+extern INT8 is_on_gameover;
+extern UINT8 current_level_b;
+extern UINT8 current_map_b;
+extern INT8 platform_vx;
+extern UINT8 current_camera_state;
+extern UINT8 current_camera_counter;
+extern UINT8 diag_found;
+
+extern const INT8 MAX_HP;
+extern const UINT8 SHIELD_TILE;
+extern const UINT8 SKULL_TILE;
+extern const UINT8 EMPTY_TILE;
+
 const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
-
-
 const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
-
-const UINT8 SHIELD_TILE = 33;
-const UINT8 SKULL_TILE = 40;
-const UINT8 EMPTY_TILE = 0;
-	
 const UINT16 const sprites_palette[] = {
 	PALETTE_INDEX(archer, 0),
 	PALETTE_INDEX(archer, 1),
@@ -50,20 +60,20 @@ const UINT16 const sprites_palette[] = {
 };
 
 //initialized on StateTitlescreen
-UINT8 amulet;// = 0u;
-UINT8 coins;// = 30u;
-INT8 ups;// = 1;
-INT8 hp;// = MAX_HP;
-extern INT8 MAX_HP;
-INT8 archer_tool;// = 0;
-INT8 level_tool;// = -1;
+UINT8 amulet = 0;// = 0u;
+UINT8 coins = 0;// = 30u;
+INT8 ups = 0;// = 1;
+INT8 hp;
+INT8 archer_tool = 0;// = 0;
+INT8 level_tool = -1;// = -1;
 
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
-UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
-UINT8 current_map = 1u; // 0u default
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+INT8 load_next_gameover = 0;
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -101,18 +111,6 @@ const struct MapInfo* const level_3[] = {
 	&map3tree
 };
 const struct MapInfo** const levels[] = {level_1, level_2, level_3};
-
-extern struct ArcherInfo* archer_data;
-extern ARCHER_STATE archer_state;
-extern INT8 is_on_boss;
-extern INT8 is_on_secret;
-extern INT8 is_on_gameover;
-extern UINT8 current_level_b;
-extern UINT8 current_map_b;
-extern INT8 platform_vx;
-extern UINT8 current_camera_state;
-extern UINT8 current_camera_counter;
-extern UINT8 diag_found;
 
 void UpdateHUD();
 void ShowWindow();
@@ -177,6 +175,12 @@ void Start_StateGame() {
 		break;		
 	}
 	SHOW_SPRITES;
+	
+	//CLEAN DIAGS
+	memcpy(d1, "                    ", 20);
+	memcpy(d2, "                    ", 20);
+	memcpy(d3, "                    ", 20);
+	memcpy(d4, "                    ", 20);
 
 	//SCROLL
 	scroll_bottom_movement_limit = 62;
@@ -190,7 +194,7 @@ void Start_StateGame() {
 	GetMapSize(maps[current_map], &map_w, &map_h);
 	if (load_next_s == -1){ //COME FROM STATE SECRET
 		ScrollFindTile(maps[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	}else if(load_next || load_next_d == 0 || is_on_gameover >= 0){
+	}else if(load_next || load_next_d == 0 || load_next_gameover){
 		spawning_counter = 0;
 		ScrollFindTile(maps[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
@@ -199,20 +203,12 @@ void Start_StateGame() {
 	SHOW_BKG;
 	
 	//INIT ARCHER
-	is_on_boss = -1;	
-	if (is_on_gameover >= 0){ //coming from State GameOver
-		is_on_gameover = -1;
-		ups = 3;
-		coins = 0u;
-		archer_tool = 0;
-		hp = MAX_HP;
-	}	
+	is_on_boss = -1;
 	archer_data->hp = hp;
 	archer_data->ups = ups;
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
 	archer_state = STATE_JUMPING;	
-	UpdateHUD();
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -282,14 +278,15 @@ void Start_StateGame() {
 
 	if(load_next_s == -1){
 		load_next_s = 0;
-	}else if (load_next_d != 0){//copiato dallo SpritePlayer quando chiedo il tip
+	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
 		diag_found = Build_Next_Dialog_Banked(scroll_target);
 		if(diag_found){			
 			archer_state = STATE_DIAG;
 			show_diag = 1;	
-		}		
+		}
 	}
-	load_next_d = 0;
+	load_next_d = 0;		
+	
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -301,10 +298,9 @@ void Start_StateGame() {
 			set_interrupts(VBL_IFLAG | LCD_IFLAG);
 			STAT_REG |= 0x40; 
 			set_window_y(144-8);
-		}
+		};
 	    LCD_Installed = 1; 
 	}
-
 	
 }
 
@@ -365,7 +361,7 @@ void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_ty
 	datascrigno->setup = 1u;
 	if(scrigno){
 		//se la vita del player è 100% e vorrei spawnare scudo, spawno dcoin !
-		if(content_type == 2 && archer_data->hp == 100){
+		if(content_type == 2 && archer_data->hp == MAX_HP){
 			content_type = 7;
 		}
 		datascrigno->content_type = content_type;
@@ -438,6 +434,12 @@ void Update_StateGame() {
 			break;*/
 		}
 	}	
+	
+	if(load_next_gameover){
+		load_next_gameover = 0;
+		is_on_gameover = 1;
+		SetState(StateGameover);
+	}
 	
 	//SPAWNING
 	switch(current_level){
@@ -678,7 +680,7 @@ void Update_StateGame() {
 	}
 	
 	//HUD MANAGEMENT
-	if (update_hud != 0){
+	if (update_hud){
 		update_hud = 0;
 		UpdateHUD();
 	}
@@ -716,11 +718,12 @@ void UpdateHUD(){
 		}	
 	}
 	//write hp
-	UINT8 i;
+	if(hp<=0)hp=0;
+	INT8 i;
 	for(i = 0; i != hp; ++i) {
 		set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);
 	}
-	for(; i != 5; ++i) {
+	for(; i != MAX_HP; ++i) {
 		set_win_tiles(5 + i, 0, 1, 1, &EMPTY_TILE);
 	}	
 	//write tool

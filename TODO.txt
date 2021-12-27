@@ -39,8 +39,6 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- cattivone con frusta
 
 KNOWN ISSUE:
-- gameover rotto
-- sembra che subisca anche mentre sono già in HIT
 - schermata di scelta livello / mappa ! per replay value. Il livello del castello si raggiunge ma c'è il posto per i 4 amuleti in un cancellone (scimmiotto SuperMarioLand2), in cui depositare i 4 amuleti e far aprire così il portone.
 - Menù Pausa con un quiver grande, con gli amuleti incastonati A SECONda di quelli che ho sul quiver :D 
 - gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight

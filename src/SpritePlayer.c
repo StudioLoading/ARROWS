@@ -16,6 +16,7 @@ extern INT8 load_next;
 extern INT8 load_next_s;
 extern INT8 load_next_d;
 extern INT8 load_next_b;
+extern INT8 load_next_gameover;
 extern UINT8 current_level;
 extern UINT8 current_map;
 extern UINT8 current_level_b;
@@ -30,6 +31,11 @@ extern INT8 level_tool;
 extern INT8 archer_tool;
 extern INT8 update_hud;
 
+extern const INT8 MAX_HP;
+extern const UINT8 SHIELD_TILE;
+extern const UINT8 SKULL_TILE;
+extern const UINT8 EMPTY_TILE;
+
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 11};
 const UINT8 anim_jump_up[] = {1, 6};
@@ -39,7 +45,6 @@ const UINT8 anim_shield[] = {1, 3};
 const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
-const INT8 MAX_HP = 5;
 
 INT8 jump_power = 0;
 INT8 death_cooldown = 0;
@@ -100,7 +105,9 @@ void Start_SpritePlayer() {
 	hit_cooldown = 24;
 	
 	NR50_REG = 0x55; //Max volume
-
+	
+	update_hud = 1;
+	
 }
 
 void Update_SpritePlayer() {
@@ -178,7 +185,7 @@ void Update_SpritePlayer() {
 					archer_data->hp = MAX_HP;
 					update_hud = 1;
 					if (archer_data->ups <= -1){
-						SetState(StateGameOver);
+						load_next_gameover = 1;
 					}else{
 						if (is_on_boss > 0){
 							current_camera_state = 3u;
@@ -186,13 +193,14 @@ void Update_SpritePlayer() {
 						}else{						
 							if(current_level < 3){
 								SetState(StateGame);
-							}else if (current_level < 6){
+							}else if (current_level < 5){
 								SetState(StateGame3);
-							}else if (current_level > 5){
+							}else{
 								SetState(StateGame6);
 							}
 						}
 					}
+					return;
 				}
 			}
 			return;
@@ -777,12 +785,13 @@ void Hit(INT8 damage) {
 	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
-		update_hud = 1;
 		if (archer_data->hp <= 0){
-			archer_data->hp = 0;
+			//archer_data->hp = 0;
+			update_hud = 1;
 			Die();
 			return;
 		}
+		update_hud = 1;
 		platform_vx = 1;
 		if (SPRITE_GET_VMIRROR(THIS)){
 			platform_vx = -1;

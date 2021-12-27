@@ -33,7 +33,11 @@ extern INT8 ups;
 extern INT8 hp;
 extern INT8 archer_tool;
 extern INT8 level_tool;
-extern INT8 MAX_HP;
+
+extern const INT8 MAX_HP;
+extern const UINT8 SHIELD_TILE;
+extern const UINT8 SKULL_TILE;
+extern const UINT8 EMPTY_TILE;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};

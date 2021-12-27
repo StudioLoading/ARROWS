@@ -22,8 +22,6 @@ const UINT8 eagle_time_normal = 81u;
 extern void CheckCollisionETile();
 extern void ETurn();
 
-extern INT8 load_next_b;
-
 void Start_SpriteEagle() {
 	
 	THIS->coll_x = 4;

@@ -1,6 +1,7 @@
 #ifndef ZGBMAIN_H
 #define ZGBMAIN_H
 
+
 #define STATES \
 _STATE(StateCredit)\
 _STATE(StateTitlescreen)\
@@ -11,7 +12,7 @@ _STATE(StateGame6)\
 _STATE(StateSecret)\
 _STATE(StateBoss)\
 _STATE(StateDiag)\
-_STATE(StateGameOver)\
+_STATE(StateGameover)\
 STATE_DEF_END
 
 #define SPRITES \
@@ -46,7 +47,6 @@ _SPRITE_DMG(SpriteWalrusspin, walrusspin)\
 _SPRITE_DMG(SpriteBee, bee)\
 _SPRITE_DMG(SpritePenguin, penguin)\
 SPRITE_DEF_END
-
 
 #include "ZGBMain_Init.h"
 

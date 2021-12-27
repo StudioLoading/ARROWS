@@ -39,14 +39,19 @@ extern struct ArcherInfo* archer_data;
 extern INT8 show_diag;
 extern INT8 showing_diag;
 extern INT8 is_on_boss;
+extern INT8 is_on_gameover;
 extern UINT8 updatecounter;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 extern UINT8 current_camera_counter;
 extern UINT8 diag_found;
 extern INT8 load_next_d;
+extern INT8 load_next_gameover;
 extern INT8 update_hud;
-extern UINT8 SKULL_TILE;
-extern UINT8 EMPTY_TILE;
+
+extern const INT8 MAX_HP;
+extern const UINT8 SHIELD_TILE;
+extern const UINT8 SKULL_TILE;
+extern const UINT8 EMPTY_TILE;
 
 extern void ShowWindow();
 extern void ShowWindowDiag();
@@ -86,10 +91,9 @@ const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 1
 
 const UINT8 const collision_btiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
-void WriteBBOSSHP();
-void populate_boss0();
-void SpawnReward();
 void SpawnBoss(INT8 hp_default);
+void SpawnReward();
+void WriteBBOSSHP();
 
 void Start_StateBoss() {
 
@@ -222,25 +226,16 @@ void Start_StateBoss() {
 			boss_data_b->enemy_state = ENEMY_STATE_DEAD;	
 		}
 	}
-		
 	
 	//INIT ARCHER
-	if (archer_data->ups > 0 & archer_data->ups != ups){
-		ups = archer_data->ups;
-	}
-	if (ups == -1){ //cioè vengo dal gameOver
-		ups = 3;
-		coins = 99u;
-	}
-	archer_data->ups =ups;
+	archer_data->ups = ups;
 	archer_data->hp = hp;
 	archer_data->coins = coins;
-	
+
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 0);
 	ShowWindow();
-	UpdateHUD();
 	WriteBBOSSHP();
 	
 	//SOUND
@@ -271,6 +266,12 @@ void Update_StateBoss() {
 				SetState(StateGame);
 			break;
 		}
+	}
+	
+	if(load_next_gameover){
+		load_next_gameover = 0;
+		is_on_gameover = 1;
+		SetState(StateGameover);
 	}
 	
 	// INTRO START	
@@ -322,14 +323,9 @@ void Update_StateBoss() {
 		}		
 	}
 	
-	
 	//HUD MANAGEMENT
-	if (update_hud != 0){
+	if (update_hud){
 		update_hud = 0;
-		hp = archer_data->hp;
-		amulet = archer_data->amulet;
-		coins = archer_data->coins;
-		ups = archer_data->ups;
 		UpdateHUD();
 	}
 	
@@ -341,11 +337,11 @@ void Update_StateBoss() {
 			SpawnReward();
 		}
 	}
-	
+	/*
 	if(level_tool && level_tool == archer_data->tool){
 		UpdateHUD();
 	}
-	
+	*/	
 	//UPDATE ARCHER POSX IN BOSS CUSTOM_DATA
 	boss_data_b->archer_posx = scroll_target->x;
 	
@@ -376,9 +372,7 @@ void Update_StateBoss() {
 		}else{
 			updatecounter = 0;
 		}
-	}
-	
-	
+	}	
 }
 
 void SpawnBoss(INT8 hp_default){
@@ -479,11 +473,12 @@ void SpawnReward(){
 }
 
 void WriteBBOSSHP(){
-	UINT8 i;
+	if(boss_hp<=0)boss_hp=0;
+	INT8 i;
 	for(i = 0; i != boss_hp; ++i) {
 		set_win_tiles(11 + i, 0, 1, 1, &SKULL_TILE);
 	}
-	for(; i != 5; ++i) {
+	for(; i != MAX_HP; ++i) {
 		set_win_tiles(11 + i, 0, 1, 1, &EMPTY_TILE);
 	}	
 }
