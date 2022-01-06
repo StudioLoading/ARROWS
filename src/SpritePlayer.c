@@ -77,6 +77,8 @@ void Build_Next_Dialog();
 void Start_SpritePlayer() {
 		
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
+	platform_vx = 0;
+	platform_vy = 0;
 	if(archer_data->amulet != amulet){
 		archer_data->amulet = 1u;
 	}
@@ -756,9 +758,10 @@ void CheckCollisionTile() {
 			break;
 			case 38u:
 			case 39u:
-				if(current_level == 6 || (current_level_b == 6 && is_on_boss > 0)){
+				if(current_level == 5u || (current_level_b == 5u && is_on_boss > 0)){
 					Hit(1);				
 				}
+			break;
 			case 40u: //skull of death
 				Hit(1);
 			break;		

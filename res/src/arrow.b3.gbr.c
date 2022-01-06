@@ -3,6 +3,10 @@
 void empty(void) __nonbanked;
 __addressmod empty const CODE;
 
+const unsigned char arrowCGB[] = {
+	0x01,0x04,0x02,0x01,0x03,0x01,0x04,0x02,0x01,0x03,0x01,0x04,0x02,0x01,0x03
+};
+
 const unsigned char arrow_tiles[] = {
 	//Frame 0
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -101,7 +105,7 @@ const struct TilesInfoInternal arrow_internal = {
 	16, //height
 	15, //num_tiles
 	arrow_tiles, //tiles
-	0, //CGB palette
+	arrowCGB, //CGB palette
 };
 CODE struct TilesInfo arrow = {
 	3, //bank

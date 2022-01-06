@@ -1,10 +1,9 @@
 #include "Banks/SetBank8.h"
 
-#include <stdbool.h>
-
 #include "../res/src/font.h"
+#include "../res/src/tiles.h"
+#include "../res/src/archer.h"
 #include "../res/src/diagnew.h"
-#include "../res/src/diagarcher.h"
 
 #include "../res/src/mapdiagarcher.h"
 #include "../res/src/mapdiagslave1.h"
@@ -71,10 +70,6 @@ extern INT8 is_on_boss;
 extern INT8 show_diag;
 extern INT8 showing_diag;
 
-extern struct Sprite* enemies_0;
-extern struct Sprite* enemies_1;
-extern struct Sprite* enemies_2;
-extern struct Sprite* enemies_3;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -82,14 +77,14 @@ extern unsigned char d4[];
 
 extern UINT8 diag_found;
 
-const UINT16 bg_paletted[] = {PALETTE_FROM_HEADER(diagarcher)};
+const UINT16 const bg_palette_diag[] = {PALETTE_FROM_HEADER(tiles)};
 const UINT8 const collision_dtiles[] = {0,0};
 
 
 void Start_StateDiag() {
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_paletted, 2);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette_diag, 8);
 	
 	SPRITES_8x16;
 	SHOW_SPRITES;	
@@ -100,7 +95,7 @@ void Start_StateDiag() {
 		case 0u:
 		case 1u:
 		case 2u:
-		case 3u:
+		case 3u:		
 			if(sgb_check()){
 				set_sgb_palette01_TITLEINVERTED();
 			}
@@ -185,6 +180,9 @@ void Start_StateDiag() {
 			InitScroll(&mapdiageagle, collision_dtiles, 0);
 		break;
 		case 54u:
+			if(sgb_check()){
+				set_sgb_palette01_IBEX();
+			}		
 			InitScroll(&mapdiagibex, collision_dtiles, 0);
 		break;
 		case 55u:
@@ -243,8 +241,10 @@ void Update_StateDiag() {
 				break;
 				case 3u:
 				case 4u:
-				case 5u:
 					SetState(StateGame3);
+				break;
+				case 5u:
+					SetState(StateGame6);
 				break;
 			}
 		}

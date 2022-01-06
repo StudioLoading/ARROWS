@@ -252,6 +252,9 @@ void set_sgb_palette01_FOREST() __banked {
 void set_sgb_palette01_EAGLE() __banked {
 	set_sgb_palette(SGB_PAL1F_LIGHTER, SGB_PAL1F_LIGHT, RGB8(172, 124, 0), RGB8(0, 0, 0));
 }
+void set_sgb_palette01_IBEX() __banked {
+	set_sgb_palette( RGB8(224, 232, 1),  RGB8(168, 168, 88), RGB8(176, 176, 176), RGB8(0, 0, 0));
+}
 void set_sgb_palette01_TREES() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, RGB8(252, 160, 68), RGB8(168, 16, 0), RGB8(90, 57, 33));
 }

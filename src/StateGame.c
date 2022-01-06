@@ -70,7 +70,7 @@ INT8 level_tool = -1;// = -1;
 INT8 load_next = 0;
 INT8 load_next_d = 0;
 INT8 load_next_s = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
 INT8 load_next_gameover = 0;
 UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 0u; // 0u default
@@ -151,6 +151,9 @@ void Start_StateGame() {
 			if(sgb_check()){
 				set_sgb_palette01_4B();
 				set_sgb_palette_statusbar();
+			}
+			if (_cpu == CGB_TYPE) {
+				//set colors for GameBoy Color/Adv/SP
 			}
 		break;
 		case 1u:

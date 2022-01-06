@@ -30,7 +30,6 @@
 const UINT8 const collision_tiles3[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
 
-extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
 extern UINT8 coins ;
@@ -195,8 +194,8 @@ void Start_StateGame3() {
 		SetState(StateGame6);
 	}
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette3, 2);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette3, 8);
 
 	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
@@ -520,7 +519,7 @@ void Update_StateGame3() {
 						spawning_counter++;
 					}
 					if(scroll_target->x > (UINT16) 17u << 3 && scroll_target->x < (UINT16) 35u << 3 && 
-					scroll_target->y > (UINT16) 27u << 3 && scroll_target->y < (UINT16) 32u << 3 && spawning_counter == 3){
+					scroll_target->y > (UINT16) 23u << 3 && scroll_target->y < (UINT16) 32u << 3 && spawning_counter == 3){
 						spawn_enemy3(SpriteBee, 12u, 29u);
 						spawn_enemy3(SpriteSpider, 18u, 29u);
 						spawning_counter++;

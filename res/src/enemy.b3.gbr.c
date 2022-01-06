@@ -3,6 +3,10 @@
 void empty(void) __nonbanked;
 __addressmod empty const CODE;
 
+const unsigned char enemyCGB[] = {
+	0x00,0x00,0x00,0x00,0x00,0x00
+};
+
 const unsigned char enemy_tiles[] = {
 	//Frame 0
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -47,7 +51,7 @@ const struct TilesInfoInternal enemy_internal = {
 	16, //height
 	6, //num_tiles
 	enemy_tiles, //tiles
-	0, //CGB palette
+	enemyCGB, //CGB palette
 };
 CODE struct TilesInfo enemy = {
 	3, //bank

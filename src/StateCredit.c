@@ -1,6 +1,9 @@
 #include "Banks/SetBank2.h"
 
 #include "../res/src/tilescredit.h"
+#include "../res/src/tilescredits2.h"
+#include "../res/src/tilescredits3.h"
+#include "../res/src/tilescredits4.h"
 #include "../res/src/mapcredit0.h"
 #include "../res/src/mapcredits1.h"
 #include "../res/src/mapcredits2.h"
@@ -25,6 +28,9 @@
 
 const UINT8 collision_tiles_credits[] = {1,0};
 const UINT16 bg_palette_credits[] = {PALETTE_FROM_HEADER(tilescredit)};
+const UINT16 bg_palette_credits2[] = {PALETTE_FROM_HEADER(tilescredits2)};
+const UINT16 bg_palette_credits3[] = {PALETTE_FROM_HEADER(tilescredits3)};
+const UINT16 bg_palette_credits4[] = {PALETTE_FROM_HEADER(tilescredits4)};
 UINT8 updatecounter = 20u;
 extern UINT16 sprites_palette[];
 extern UINT8* credits_bass_mod_Data[];
@@ -36,7 +42,20 @@ UINT8 wait_time = 0u;
 void Start_StateCredit() {
 
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_credits, 2);
+	switch (credit_step){
+		case 1u:
+			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits2, 2);
+		break;
+		case 2u:
+			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits4, 2);
+		break;
+		case 3u:
+			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits3, 2);
+		break;
+		default:
+			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits, 2);
+	}
+		
 	SPRITES_8x16;
 	SHOW_SPRITES;
 	InitScroll(&mapcredit0, collision_tiles_credits, 0);	

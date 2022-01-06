@@ -26,7 +26,6 @@
 
 const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
-extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
 extern UINT8 coins ;
@@ -79,6 +78,8 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
+const UINT16 bg_palette6[] = {PALETTE_FROM_HEADER(tiles6)};
+
 //Maps
 const struct MapInfo* const level_6[] = {
 	&map60, &map61
@@ -109,8 +110,8 @@ void Start_StateGame6() {
 		SetState(StateGame3);
 	}
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 2);
+	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette6, 15);
 
 	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);

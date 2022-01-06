@@ -52,7 +52,7 @@ void Start_StateIntro() {
 	}
 
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 6); //end with the bank of where I have the palette/tileset
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_intro, 14);//end with the bank of where I have the palette/tileset	
+	SetPalette(BG_PALETTE, 0, 8, bg_palette_intro, 13);//end with the bank of where we are in	
 	SPRITES_8x16;	
 	SpriteManagerLoad(SpriteCamerafocus);
 	SHOW_SPRITES;

@@ -3,6 +3,10 @@
 void empty(void) __nonbanked;
 __addressmod empty const CODE;
 
+const unsigned char scorpionCGB[] = {
+	0x05,0x05,0x05,0x05,0x05,0x05
+};
+
 const unsigned char scorpion_tiles[] = {
 	//Frame 0
 	0x00,0x00,0x00,0x00,0x18,0x18,0x3c,0x3c,
@@ -47,7 +51,7 @@ const struct TilesInfoInternal scorpion_internal = {
 	16, //height
 	6, //num_tiles
 	scorpion_tiles, //tiles
-	0, //CGB palette
+	scorpionCGB, //CGB palette
 };
 CODE struct TilesInfo scorpion = {
 	3, //bank
