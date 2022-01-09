@@ -78,6 +78,9 @@ void Start_StateGameover() {
 }
 
 void Update_StateGameover() {
+	if(countdown <= 9 && scroll_target->y < (UINT16) 30u << 3){
+		scroll_target->y += 2;
+	}
 	one_second++;
 	if (one_second >= 70){
 		one_second = 0;
@@ -122,7 +125,7 @@ void ResetConfig(INT8 gameo){
 			}
 			SetState(StateBoss);	
 		}else{
-			SetState(StateGame);			
+			SetState(StateWorldmap);			
 		}
 	}		
 }

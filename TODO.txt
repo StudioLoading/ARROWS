@@ -18,8 +18,10 @@ LIV 6 CASTELLO -> 3 MAPPE
 			cutscene di una mano che spunta dalle macerie (da qui il gioco si può solo spegnere)
 
 ---------------------------------------------------------
-LIV 6 CIMITERO FUORI DAL CASTELLO -> eternal fire
+LIV 6 CIMITERO -> eternal fire
 			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
+			- teste di gatto as medusa head of castlevania
+			- lance dal basso, sottoterra, all' alto
 
 LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
 		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
@@ -40,12 +42,8 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- mamma vet per accesso al bonus level
 
 KNOWN ISSUE:
-- gameOver scroll dal basso all alto, aumentando l' altezza della mappa col solito scroll_target vuoto che ho usato nelle intro delle bossFight
-- i colori sulla mappa secret sono da sistemare perchè vanno random
-- feedback audio di "swish" quando la freccia scheggia cancello senza romperlo
-- feedback audio "bling" quando freccia colpisce convertitore
-- feedback audio quando freccia colpisce ridirezione
 - mappa single-screen di tutto il gioco. La mostro dopo l' intro e dopo ogni boss. E' solo di presentazione, nessuna interazione, se non l'iconcina del mio pg che si muove verso un certo punto, e il giocatore deve premere start per cominciare quel livello. Nel 30% in basso, ci metto il quiver coi sprite degli amuleti 16x16 eventualmente incastonati.
+- la status-bar non è colorata, prende default la paletta #0 del tileset.
 - sul gameBoy color non mi carica il boss al walrus. crasha male sul VisualBoy Advance alla fine della seconda mappa. Troppe stalattiti ? Se provo a calarle le gestisce meglio ? Probabilmente, è da provare.
 
 
@@ -56,9 +54,9 @@ uno su twitter più serio si chiama Scott Semanski che vuole 250$ al minuto. pot
 
 
 polish:
-	- sull' AdvanceSP i colori degli sprite fanno merda - ma l'ho visto su molti video anche su YouTube. Perchè PokèmonGiallo invece è perfetto ?
-		You can also build with then -Wm-yc and check cpu and if it's running on CGB compatible device set custom pallete 
-
+	- feedback audio di "swish" quando la freccia scheggia cancello senza romperlo
+	- feedback audio "bling" quando freccia colpisce convertitore
+	- feedback audio quando freccia colpisce ridirezione
 	- sonoro di boss sconfitto - bg music loop corto e tranquillissimo/noioso perchè dura pochissimo quel che succede dopo.
 	- camera in rolling per la diag del mostro
 	- sonoro trionfale quando sollevo amulet
@@ -140,26 +138,37 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 
 DISCORD MARKDOWN: ```c ```
 
-````c	
-const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
-const UINT16 const sprites_palette[] = {
-	PALETTE_INDEX(archer, 0),
-	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
-	PALETTE_INDEX(archer, 3),
-	PALETTE_INDEX(archer, 4),
-	PALETTE_INDEX(archer, 5),
-	PALETTE_INDEX(archer, 6),
-	PALETTE_INDEX(archer, 7),
-};
+```c
+#include "Banks/SetBank7.h"
+
+#include "../res/src/window.h"
+#include "../res/src/diagnew.h"
+#include "../res/src/font.h"
+#include "../res/src/tiles.h"
 ...
 void Start_State(){
-	...	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7); //last param is the current bank we are in
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7); //last param is the current bank we are in
+	...
+	//WINDOW
+	INIT_FONT(font, PRINT_WIN);
+	INIT_CONSOLE(font, 3, 4);
+	ShowWindow();
 	...
 }
 ...
+void ShowWindow(){
+	set_window_y(144 - 8);
+	showing_diag = 0;
+	show_diag = -1;
+	HIDE_WIN;
+	//WINDOW
+	WX_REG = 4;
+	WY_REG = 144 - 8;
+	InitWindow(0, 0, &window);
+	SHOW_WIN;
+	
+	UpdateHUD();
+	
+}
 ```
 
 

@@ -6,6 +6,7 @@
 _STATE(StateCredit)\
 _STATE(StateTitlescreen)\
 _STATE(StateIntro)\
+_STATE(StateWorldmap)\
 _STATE(StateGame)\
 _STATE(StateGame3)\
 _STATE(StateGame6)\

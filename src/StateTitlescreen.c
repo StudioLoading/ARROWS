@@ -66,7 +66,7 @@ void Start_StateTitlescreen() {
 	
 	amulet = 0;
     coins = 30u;
-	ups = 1;
+	ups = 0;
 	hp = MAX_HP;
 	archer_tool = 0;
 	level_tool = -1;

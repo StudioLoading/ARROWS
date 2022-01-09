@@ -118,7 +118,7 @@ void Update_StateIntro() {
 		SetState(StateIntro);
 	}	
 	if(KEY_TICKED(J_START)){
-		SetState(StateGame);	
+		SetState(StateWorldmap);	
 	}	
 }
 
