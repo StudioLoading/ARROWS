@@ -263,7 +263,7 @@ void Update_StateBoss() {
 		switch(load_next_b){
 			case 2: //esco dal boss col tool
 				is_on_boss = -1;
-				SetState(StateGame);
+				SetState(StateWorldmap);
 			break;
 		}
 	}

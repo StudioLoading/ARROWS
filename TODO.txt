@@ -1,56 +1,61 @@
-
-
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
-LIV 6 CASTELLO -> 3 MAPPE
-		- mappa 0 -> giardino, con nemici Uccellini e trappole col trigger per terra, lance che vengono su da sotto terra
-			- qui infondo c'è il cancello con la mamma, ci vuole cutscene con screen multipli. Qui inserisco gli amuleti al posto, e di fatto li perdo.
-		- mappa 1 -> castello un po' labirintico, Nemici bomba, Topi, serpenti
-		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da
-		- mappa 2 pet cematery -> visito le tombe degli animali domestici delle persone (gatto, cane, lupacchiotto, orsetto, aquilotto), se visito quella del lupo, orso o aquila, questi mi aiutano nello scontro finale. Direi nessun nemico, solo tristezza.
-		- bossFight 2 -> direi, a sto punto, in una cripta o in un sotterraneo. Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. Ho a disposizione frecce normali e frecce di fuoco per demolirlo. Alla fine crolla tutto, il cattivone è seppellito.
+LIV 6 CIMITERO -> 
+		- mappa 0 -> cripta
+						- pendolo con ascia triggerato da terra
+						- tarantole che sputano veleno in orizzontale
+						- stanza segreta in cui trovare l' amuleto di fuoco
+						- pipistrelli, ci vorrebbe movimento mezza luna a U, poi si blocca e punta verso il pg.
+						- fantasmi immortali però freezzabili
+		- mappa 1 -> esterno del cimitero verso portone castello
+						- teste di scheletro di gatto con movimento medusa-head castlevania like
+						- lance che salgono da sottoterra
+						- corvi che volano leggermente obliqui e veloci
+						- pits, buchi per terra pieni di bestie
+						- finisce con la mamma davanti al cancello
+				
+LIV 7 CASTELLO -> 3 MAPPE
+		- mappa 0 -> castello un po' labirintico, Nemici bomba, Topi, serpenti
+			- ad un certo punto devo fare una cutscene piccola di ri-chiusura del portone alle mie spalle. Il finalBoss infatti ha preso l' amuleto del fuoco e lo userà al primo scontro con me.
+		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da e dice che deve andare sopra la torre da sola per "liberare le bestie".
+		- mappa 1 torre -> vado con la mamma in cima - da sola
+				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione. Se li colpisco, mi cacciano, se ci parlo, li curo e verranno dopo in aiuto.
+				il finalboss l' attacca, la scena si sposta sull' arcere che deve rifare da solo 
+		- mappa 2 torre -> le stanze segrete sono vuote. cronometro di 60secondi, se non arrivo in tempo, mamma muore GAME OVER
+		- bossFight 2 -> in cima alla torre Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. Ho a disposizione frecce normali e frecce di fuoco per demolirlo. Alla fine arriva mamma , dice "insieme figlio!" scoccano una freccia insieme, che diventa freccia di luce e colpisce il cattivone, sparandolo lontano dalla torre.
 			cutscene dell' arcere e madre che escono dal cancello, senza più gli amuleti perchè diciamo di averceli tutti
 			titoli di coda
-			cutscene di una mano che spunta dalle macerie (da qui il gioco si può solo spegnere)
-
+			cutscene alla Gator Swamp col coccodrillo insieme al finalBoss.
+			
 ---------------------------------------------------------
-LIV 6 CIMITERO -> eternal fire
-			- nemici bomba: frecciata ghiacciata -> blink -> esplode in verticale
-			- teste di gatto as medusa head of castlevania
-			- lance dal basso, sottoterra, all' alto
-
-LIV 7 CASTELLO -> Final Boss lo colpisci con water+elettricità -> fire
-		mettere il passaggio ad una secret obbligatoria! così si è costretti a trovarla per proseguire
----------------------------------------------------------
-
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
 	- WOLF siamo al cimitero, il lupo ha una vx che aumenta, scopo è catturare 10 topi, al massimo si può saltare, e i topi sono o per terra o sopra una lapide. quando wolf arriva al cancello del castello, il livello è finito. se ha catturato 10 topi partecipa allo scontro contro il boss
 	- EAGLE stesso processo, i topi sono o per terra o sopra gli alberi. l' aquila resta in volo e con "salto" va in picchiata
 	- BEAR boh, uguale al wolf ma magari più lento, e ne deve beccare di più ?
+---------------------------------------------------------
 
-- sul drive di checco.1809 cartella ARROWS c'è il video di tutti i giri di Leonardo alla tastiera. Ho già messo in midi solo il primo. Mettere anche gli altri o salvarsi il video.
-
-- sound: fare i midi di tutti i loop che voglio, il Twitter Cesc Mozota mi da il preventivo quando gli do i midi.
-
-- disegnare lo stato di dialogo 160×144 120 tiles al massimo :) 
-	- immagini grosse di
+- disegnare lo stato di dialogo 
 		- cattivone con frusta
 		- mamma vet per accesso al bonus level
 
 KNOWN ISSUE:
-- mappa single-screen di tutto il gioco. La mostro dopo l' intro e dopo ogni boss. E' solo di presentazione, nessuna interazione, se non l'iconcina del mio pg che si muove verso un certo punto, e il giocatore deve premere start per cominciare quel livello. Nel 30% in basso, ci metto il quiver coi sprite degli amuleti 16x16 eventualmente incastonati.
-- la status-bar non è colorata, prende default la paletta #0 del tileset.
+- la status-bar non è colorata, prende default la paletta #0 del tileset (discussione su Discord con Zal0)
 - sul gameBoy color non mi carica il boss al walrus. crasha male sul VisualBoy Advance alla fine della seconda mappa. Troppe stalattiti ? Se provo a calarle le gestisce meglio ? Probabilmente, è da provare.
 
 
 LORE:Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence, disarm human weapons and take over the power on earth.  Retaliation for humans now to be imprisoned in zoo-es. Player controls the archer, a boy who has been freed by his mom. He is able to use the power of elements and convey it inside his arrows. This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, he has to defeat em to get those amulets. Amulets are also mandatory to enter into the final Castle, where his mother is waiting. The castle is where a crazy scientist makes his work.. is he finding a solution for moon approaching, or is he the responsible of that? if he is, why he did that? can it be reverted? ... more deeply, is it worth to be reverted ? were humans doing a good job on Earth itself, when they were at the most powerful position on the chain ?
 
-SOUND BACKGROUND PER OGNI LIVELLO : mi sto sentendo con Coffee Bat sul Discord, che vuole 8$ per un jingle super piccolo. 
+SOUND BACKGROUND PER OGNI LIVELLO : 
+- provare LSDJ vediamo se riesco a far da solo.
+- mi sto sentendo con Coffee Bat sul Discord, che vuole 8$ per un jingle super piccolo. 
 uno su twitter più serio si chiama Scott Semanski che vuole 250$ al minuto. potrebbe essere un buon compromesso.
+- Leandro ha un contatto con uno che fa chiptune su LSDJ, devo chiedere a Leo questo contatto
+- sul drive di checco.1809 cartella ARROWS c'è il video di tutti i giri di Leonardo alla tastiera. Ho già messo in midi solo il primo. Mettere anche gli altri o salvarsi il video.
+- sound: fare i midi di tutti i loop che voglio, il Twitter Cesc Mozota mi da il preventivo quando gli do i midi.
 
 
 polish:
@@ -139,35 +144,20 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c
-#include "Banks/SetBank7.h"
 
-#include "../res/src/window.h"
-#include "../res/src/diagnew.h"
-#include "../res/src/font.h"
-#include "../res/src/tiles.h"
-...
-void Start_State(){
-	...
-	//WINDOW
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 3, 4);
-	ShowWindow();
-	...
-}
-...
-void ShowWindow(){
-	set_window_y(144 - 8);
-	showing_diag = 0;
-	show_diag = -1;
-	HIDE_WIN;
-	//WINDOW
-	WX_REG = 4;
-	WY_REG = 144 - 8;
-	InitWindow(0, 0, &window);
-	SHOW_WIN;
+void InitWindow(UINT8 x, UINT8 y, struct MapInfo* map) {
+	PUSH_BANK(map->bank);
+	set_win_tiles(x, y, map->data->width, map->data->height, map->data->data);
 	
-	UpdateHUD();
-	
+	#ifdef CGB
+	if(map->data->attributes) {
+		VBK_REG = 1;
+			set_win_tiles(x, y, map->data->width, map->data->height, map->data->attributes);
+		VBK_REG = 0;
+	}
+	#endif
+
+	POP_BANK;
 }
 ```
 

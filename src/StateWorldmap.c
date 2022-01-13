@@ -5,6 +5,7 @@
 #include "../res/src/tilesmapworld.h"
 #include "../res/src/mapworld.h"
 
+#include "../res/src/iconpsg.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -37,17 +38,66 @@ const struct MapInfo* const mapworld_0[] = {
 const struct MapInfo** const mapworld_levels[] = {mapworld_0};
 
 UINT8 counter = 0;
+struct Sprite* siconpsg;
+struct ItemInfo* dataiconpsg;
 
 void Start_StateWorldmap() {
 		
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7); //last param is the current bank we are in
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_worldmap, 14); //last param is the current bank we are in
+	SpriteManagerLoad(SpriteIconpsg);
 
 	SPRITES_8x16;
+	
 	if(sgb_check()){
 		set_sgb_palette01_4B();
 		set_sgb_palette_statusbar();
 	}
+	switch(current_level){
+		case 0u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 9u, (UINT16) 89u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=11;
+			dataiconpsg->setup=1u;
+		break;
+		case 1u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, ((UINT16) 9u), (UINT16) 89u);	dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+		case 2u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, ((UINT16) 9u) + 23u, (UINT16) 89u);		
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+		case 3u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, ((UINT16) 9u) + 46u, (UINT16) 89u);		
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+		case 4u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, ((UINT16) 9u) + 69u, (UINT16) 89u);		
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+		case 5u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 48u, (UINT16) 128u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+		case 6u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 73u, (UINT16) 128u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+	}
+	
+
 	SHOW_SPRITES;
 	
 	//CLEAN DIAGS
@@ -64,6 +114,42 @@ void Start_StateWorldmap() {
 
 void Update_StateWorldmap(){
 	counter++;
+	switch(current_level){ // spostamento orizzontale da un punto all' altro di 25u
+		//case 0u: ho appena iniziato , non faccio niente
+		case 1u:
+			if(counter > 80u && siconpsg->x < 32u && (counter & 1)){
+				siconpsg->x++;
+			}
+		break;
+		case 2u:
+			if(counter > 80u && siconpsg->x < 57u && (counter & 1)){
+				siconpsg->x++;
+			}
+		break;
+		case 3u:
+			if(counter > 80u && siconpsg->x < 82u && (counter & 1)){
+				siconpsg->x++;
+			}
+		break;
+		case 4u:
+			if(counter > 80u && siconpsg->x > 48u && (counter & 1)){
+				siconpsg->x--;
+			}
+			if(counter > 80u && siconpsg->y < 128u && (counter & 1)){
+				siconpsg->y += 2;
+			}
+		break;
+		case 5u:
+			if(counter > 80u && siconpsg->x < 73u && (counter & 1)){
+				siconpsg->x++;
+			}
+		break;
+		case 6u:
+			if(counter > 80u && siconpsg->x < 98u && (counter & 1)){
+				siconpsg->x++;
+			}
+		break;
+	}
 	if(counter == 0){
 		if(current_level < 3){
 			SetState(StateGame);

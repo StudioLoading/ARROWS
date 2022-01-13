@@ -192,7 +192,7 @@ void Update_SpritePlayer() {
 						if (is_on_boss > 0){
 							current_camera_state = 3u;
 							SetState(StateBoss);							
-						}else{						
+						}else{ //non vado alla worldmap perchè è una rottura per il giocatore				
 							if(current_level < 3){
 								SetState(StateGame);
 							}else if (current_level < 5){
@@ -714,13 +714,14 @@ void CheckCollisionTileDoor(){
 			load_next_b = 0;
 			current_level += 1u;
 			current_map = 0;
-			if(current_level_b < 3){
+			SetState(StateWorldmap);
+			/*if(current_level_b < 3){
 				SetState(StateGame);	
 			}else if (current_level_b < 6){
 				SetState(StateGame3);
 			}else{
 				SetState(StateGame6);
-			}
+			}*/
 		break;
 		case 19u: //exit secret room
 			load_next_s = -1;			

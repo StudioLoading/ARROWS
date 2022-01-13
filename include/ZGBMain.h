@@ -17,6 +17,7 @@ _STATE(StateGameover)\
 STATE_DEF_END
 
 #define SPRITES \
+_SPRITE_DMG(SpriteIconpsg, iconpsg)\
 _SPRITE_DMG(SpritePlayer, archer)\
 _SPRITE_DMG(SpriteArrow, arrow)\
 _SPRITE_DMG(SpriteArrowtitle, arrowtitle)\
