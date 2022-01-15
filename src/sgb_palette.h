@@ -92,6 +92,7 @@ void set_sgb_palette01_TREES() __banked;
 void set_sgb_palette01_BEAR() __banked;
 void set_sgb_palette01_ICE() __banked;
 void set_sgb_palette01_WALRUS() __banked;
+void set_sgb_palette01_CEMATERYCRYPT() __banked;
 
 void set_sgb_palette01_1A() __banked;	
 void set_sgb_palette01_1B() __banked;

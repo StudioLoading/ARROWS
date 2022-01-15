@@ -110,7 +110,7 @@ void set_sgb_palette_statusbar() __banked {
         .ycoo = 17u,
         .ndata = 16u,
 		.style = 0,
-		.ds = {0b01011010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010}
+		.ds = {0b10011010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010,0b10101010}
     };
     sgb_transfer((void *)&SGB_PALETTE2_PACKET);
     sgb_transfer((void *)&SGB_PALETTE_STATUS_PACKET);
@@ -266,6 +266,9 @@ void set_sgb_palette01_ICE() __banked {
 }
 void set_sgb_palette01_WALRUS() __banked {
 	set_sgb_palette(RGB8(255, 255, 173), RGB8(164, 228, 252), RGB8(172, 124, 0), RGB8(90, 57, 33));
+}
+void set_sgb_palette01_CEMATERYCRYPT() __banked {
+	set_sgb_palette(RGB8(255, 255, 255), RGB8(184, 184, 184), RGB8(176, 62, 255), RGB8(40, 0, 136));
 }
 
 void set_sgb_palette01_1A() __banked {

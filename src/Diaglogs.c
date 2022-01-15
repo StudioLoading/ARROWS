@@ -298,12 +298,12 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						}
 						else if(diagf == 0u){//ho premuto la combo dei diag senza motivo
 							if(archer_data->tool == 0){
-								memcpy(d1, " I GOT TO FIND      ", 20);
+								memcpy(d1, " I'VE GOT TO FIND   ", 20);
 								memcpy(d2, " THE KEY TO ENTER   ", 20);
 								memcpy(d3, " THE BLACK WOLF     ", 20);
 								memcpy(d4, " CAVE.              ", 20);
 							}else{
-								memcpy(d1, " I GOT TO FIND      ", 20);
+								memcpy(d1, " I'VE GOT TO FIND   ", 20);
 								memcpy(d2, " THE BLACK WOLF     ", 20);
 								memcpy(d3, " CAVE.              ", 20);
 								memcpy(d4, "                    ", 20);								
@@ -343,9 +343,9 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								diagf = 4u;
 							}
 							if(diagf == 0u){
-								memcpy(d1, "I CAN SMELL...      ", 20);
-								memcpy(d2, "CAVE ENTRANCE       ", 20);
-								memcpy(d3, "CAN'T BE FAR.       ", 20);
+								memcpy(d1, " I CAN SMELL...     ", 20);
+								memcpy(d2, " CAVE ENTRANCE      ", 20);
+								memcpy(d3, " CAN'T BE FAR.      ", 20);
 								memcpy(d4, "                    ", 20);
 								diagf = 99u;							
 							}

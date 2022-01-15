@@ -7,6 +7,7 @@
 #include "../res/src/tilesanims.h"
 #include "../res/src/map60.h"
 #include "../res/src/map61.h"
+#include "../res/src/map70.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -24,7 +25,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 96, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -84,8 +85,11 @@ const UINT16 bg_palette6[] = {PALETTE_FROM_HEADER(tiles6)};
 const struct MapInfo* const level_6[] = {
 	&map60, &map61
 };
+const struct MapInfo* const level_7[] = {
+	&map70
+};
 
-const struct MapInfo** const levels6[] = {level_6};
+const struct MapInfo** const levels6[] = {level_6, level_7};
 
 
 void UpdateHUD6();
@@ -132,12 +136,18 @@ void Start_StateGame6() {
 				set_sgb_palette_statusbar();
 			}
 		break;		
+		case 6u:
+			if(sgb_check()){
+				set_sgb_palette01_CEMATERYCRYPT();
+				set_sgb_palette_statusbar();
+			}
+		break;		
 	}		
 	SHOW_SPRITES;
 
 	//SCROLL
 	//if (current_level == 2u & current_map == 0u)
-	scroll_bottom_movement_limit = 62;
+	scroll_bottom_movement_limit = 62u;
 
 	const struct MapInfo** maps6 = levels6[current_level-5u];
 	UINT8 map_w6;
@@ -163,7 +173,7 @@ void Start_StateGame6() {
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
+	INIT_CONSOLE(font, 0, 4);
 	ShowWindow6();
 	
 	//INIT SPAWNING

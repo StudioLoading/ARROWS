@@ -234,7 +234,7 @@ void Start_StateGame3() {
 
 	//SCROLL
 	//if (current_level == 2u & current_map == 0u)
-	scroll_bottom_movement_limit = 62;
+	scroll_bottom_movement_limit = 62u;
 
 	const struct MapInfo** maps4 = levels4[current_level-3u];
 	UINT8 map_w4;
@@ -260,7 +260,7 @@ void Start_StateGame3() {
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
+	INIT_CONSOLE(font, 0, 4);
 	ShowWindow3();	
 	
 	//INIT SPAWNING	

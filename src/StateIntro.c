@@ -50,7 +50,7 @@ void Start_StateIntro() {
 	if(sgb_check()){
 		set_sgb_palette01_intro();
 	}
-
+	scroll_bottom_movement_limit = 36u;
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 6); //end with the bank of where I have the palette/tileset
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_intro, 13);//end with the bank of where we are in	
 	SPRITES_8x16;	
@@ -67,9 +67,9 @@ void Start_StateIntro() {
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	NR50_REG = 0x50;
 	//PlayMusic(intro_mod_Data, 12, 1);//file, bank, loop	
-
 	InitScroll(&mapintro, collision_tiles_intro, 14);//map pointer, collision array, tile bank
-	scroll_target = SpriteManagerAdd(SpriteCamerafocus, (UINT16) 10u << 3, (UINT16) 12u << 3);	
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, (UINT16) 10u << 3, (UINT16) 4u << 3);
+	
 	SHOW_BKG;
 	
 }
@@ -80,8 +80,8 @@ void Update_StateIntro() {
 		scroll_target-> y = (UINT16) 5u << 3;
 		return;
 	}
-	if(scroll_target-> y > ((UINT16) 111u << 3)){
-		scroll_target-> y = (UINT16) 111u << 3;
+	if(scroll_target-> y > ((UINT16) 102u << 3)){
+		scroll_target-> y = (UINT16) 102u << 3;
 		return;
 	}
 	current_camera_counter++;	

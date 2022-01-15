@@ -69,7 +69,7 @@ void Start_StateSecret() {
 	SpriteManagerLoad(SpriteItem);
 	SHOW_SPRITES;
 	//SCROLL
-	scroll_bottom_movement_limit = 60;//customizzo altezza archer sul display
+	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display
 	const struct MapInfo** level_maps_s = secrets[0];
 	UINT8 map_w, map_h;
 	GetMapSize(level_maps_s[0], &map_w, &map_h);

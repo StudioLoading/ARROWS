@@ -72,7 +72,7 @@ INT8 load_next_d = 0;
 INT8 load_next_s = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
 INT8 load_next_gameover = 0;
-UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 0u; // 0u default
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
@@ -186,9 +186,9 @@ void Start_StateGame() {
 	memcpy(d4, "                    ", 20);
 
 	//SCROLL
-	scroll_bottom_movement_limit = 62;
+	scroll_bottom_movement_limit = 62u;
 	if (current_level == 2u && current_map == 0u){
-		scroll_bottom_movement_limit = 82;
+		scroll_bottom_movement_limit = 82u;
 	}
 
 	const struct MapInfo** maps = levels[current_level];
@@ -215,7 +215,7 @@ void Start_StateGame() {
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 3, 4);
+	INIT_CONSOLE(font, 0, 4);
 	ShowWindow();
 	
 	//SET LEVEL TOOL
@@ -313,7 +313,7 @@ void ShowWindow(){
 	show_diag = -1;
 	HIDE_WIN;
 	//WINDOW
-	WX_REG = 4;
+	WX_REG = 7;
 	WY_REG = 144 - 8;
 	InitWindow(0, 0, &window);
 	SHOW_WIN;
