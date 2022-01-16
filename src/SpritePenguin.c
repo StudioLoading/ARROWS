@@ -12,7 +12,7 @@
 //SNAKE
 const UINT8 penguin_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 penguin_walk[] = {2, 0, 1}; //The first number indicates the number of frames
-const UINT8 penguin_hit[] = {2, 1, 2}; //The first number indicates the number of frames
+const UINT8 penguin_hit[] = {2, 0, 2}; //The first number indicates the number of frames
 const UINT8 penguin_hit_low[] = {2, 3, 2}; //The first number indicates the number of frames
 const UINT8 penguin_dead[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 penguin_sliding[] = {1, 3}; 

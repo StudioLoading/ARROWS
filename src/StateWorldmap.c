@@ -1,6 +1,5 @@
 #include "Banks/SetBank14.h"
 
-#include "../res/src/window.h"
 #include "../res/src/font.h"
 #include "../res/src/tilesmapworld.h"
 #include "../res/src/mapworld.h"
@@ -42,7 +41,9 @@ struct Sprite* siconpsg;
 struct ItemInfo* dataiconpsg;
 
 void Start_StateWorldmap() {
-		
+
+	HIDE_WIN;
+	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7); //last param is the current bank we are in
 	SetPalette(BG_PALETTE, 0, 8, bg_palette_worldmap, 14); //last param is the current bank we are in
 	SpriteManagerLoad(SpriteIconpsg);

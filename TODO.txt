@@ -6,14 +6,14 @@ LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CIMITERO -> 
 		- mappa 0 -> cripta
-						- pendolo con ascia triggerato da terra
-						- tarantole che sputano veleno in orizzontale
+						- axe thrower machine
+						- formica gigante che si forma da formichine piccole, immortale
 						- stanza segreta in cui trovare l' amuleto di fuoco
-						- pipistrelli, ci vorrebbe movimento mezza luna a U, poi si blocca e punta verso il pg.
-						- fantasmi immortali però freezzabili
+						- pipistrelli, ci vorrebbe movimento mezza luna a U, poi si blocca e punta verso il pg.						
 		- mappa 1 -> esterno del cimitero verso portone castello
 						- teste di scheletro di gatto con movimento medusa-head castlevania like
 						- lance che salgono da sottoterra
+						- fantasmi immortali però freezzabili
 						- corvi che volano leggermente obliqui e veloci
 						- pits, buchi per terra pieni di bestie
 						- finisce con la mamma davanti al cancello
@@ -43,7 +43,6 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- mamma vet per accesso al bonus level
 
 KNOWN ISSUE:
-- modificare le sprite dei nemici di "hit" con un i loro contorni esatti ma interni chiari. è un blinking migliore
 - la status-bar non è colorata, prende default la paletta #0 del tileset (discussione su Discord con Zal0)
 - sul gameBoy color non mi carica il boss al walrus. crasha male sul VisualBoy Advance alla fine della seconda mappa. Troppe stalattiti ? Se provo a calarle le gestisce meglio ? Probabilmente, è da provare.
 

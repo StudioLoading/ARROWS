@@ -10,9 +10,9 @@
 
 //RAT
 const UINT8 rat_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 rat_walk[] = {4, 0, 5, 1, 5}; //The first number indicates the number of frames
-const UINT8 rat_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
-const UINT8 rat_dead[] = {1, 5}; //The first number indicates the number of frames
+const UINT8 rat_walk[] = {4, 0, 2, 1, 2}; //The first number indicates the number of frames
+const UINT8 rat_hit[] = {2, 0, 3}; //The first number indicates the number of frames
+const UINT8 rat_dead[] = {1, 2}; //The first number indicates the number of frames
 
 extern void CheckCollisionETile();
 extern void ETurn();

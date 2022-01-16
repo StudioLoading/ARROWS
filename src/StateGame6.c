@@ -25,7 +25,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 96, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -122,13 +122,13 @@ void Start_StateGame6() {
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpritePlatform);
-	SpriteManagerLoad(SpriteStalagmite);
-	SpriteManagerLoad(SpriteStalattite);
-	SpriteManagerLoad(SpritePenguin);
 	SpriteManagerLoad(SpritePuff);
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
 		case 5u:
+			SpriteManagerLoad(SpriteStalagmite);
+			SpriteManagerLoad(SpriteStalattite);
+			SpriteManagerLoad(SpritePenguin);
 			SpriteManagerLoad(SpriteGate);
 			SpriteManagerLoad(SpriteIceplat);
 			if(sgb_check()){
@@ -137,6 +137,8 @@ void Start_StateGame6() {
 			}
 		break;		
 		case 6u:
+			SpriteManagerLoad(SpriteAxethrower);
+			SpriteManagerLoad(SpriteAxe);
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 				set_sgb_palette_statusbar();
@@ -462,6 +464,21 @@ void Update_StateGame6() {
 								spawn_enemy6(SpriteStalattite, (scroll_target->x >> 3) - 1u, 5u);
 							break;
 						}
+					}
+				break;
+			}
+		break;
+		case 6u: // Cematery
+			switch(current_map){
+				case 0u:
+					if(scroll_target->x > (UINT16) 6u << 3 && spawning_counter == 0){
+						spawn_item6(scrigno_up, 13u, 16u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 1){
+						spawn_item6(scrigno_up, 8u, 8u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawn_enemy6(SpriteAxethrower, 40u, 15u);
+						spawning_counter++;
 					}
 				break;
 			}

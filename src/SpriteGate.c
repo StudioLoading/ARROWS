@@ -11,17 +11,14 @@ extern UINT8 current_level;
 
 const UINT8 anim_gate[] = {2, 0, 1}; //The first number indicates the number of frames
 
-void Start_SpriteGate() {
-	
+void Start_SpriteGate() {	
 	THIS->coll_x = 0;
 	THIS->coll_y = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 16;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 255u;
-	SetSpriteAnim(THIS, anim_gate, 16u);
-	struct EnemyInfo* gatedata = (struct EnemyInfo*)THIS->custom_data;
-	
+	SetSpriteAnim(THIS, anim_gate, 16u);	
 }
 
 void Update_SpriteGate() {

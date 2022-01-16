@@ -105,7 +105,7 @@ void Update_SpriteArrow() {
 			if(CheckCollision(THIS, iaspr)) {
 				struct ItemInfo* item_data = (struct ItemInfo*)iaspr->custom_data;
 				if (item_data->collided == 0u){
-					SpriteManagerRemoveSprite(THIS);
+					SpriteManagerRemove(THIS_IDX);
 				}
 				item_data->collided = 1u;
 			}
@@ -116,6 +116,11 @@ void Update_SpriteArrow() {
 				if(stala_sprite->enemy_state == STALAG_STATE_DROP){
 					CheckCollisionArrowTile(200u);					
 				}
+			}
+		}
+		if(iaspr->type == SpriteAxe) {
+			if(CheckCollision(THIS, iaspr)) {
+				SpriteManagerRemove(THIS_IDX);
 			}
 		}
 	}
@@ -308,7 +313,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 		break;
 		default:
 			data->arrowdamage = 100;
-			SpriteManagerRemoveSprite(THIS);
+			SpriteManagerRemove(THIS_IDX);
 			return;
 		break;
 	}

@@ -11,8 +11,8 @@
 //SNAKE
 const UINT8 enemy_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 enemy_walk[] = {2, 0, 1}; //The first number indicates the number of frames
-const UINT8 enemy_hit[] = {3, 2, 3, 4}; //The first number indicates the number of frames
-const UINT8 enemy_dead[] = {1, 0}; //The first number indicates the number of frames
+const UINT8 enemy_hit[] = {2, 0, 2}; //The first number indicates the number of frames
+const UINT8 enemy_dead[] = {1, 3}; //The first number indicates the number of frames
 const UINT8 attack_wait = 32u;
 
 void CheckCollisionETile();
@@ -34,7 +34,6 @@ void Start_SpriteEnemy() {
 	edata->enemy_accel_y = 24;
 	edata->vx = -1;
 	edata->wait = 0u;
-	edata->hp = 45;
 	SPRITE_SET_VMIRROR(THIS);
 }
 
@@ -95,7 +94,7 @@ void Update_SpriteEnemy() {
 				if (arrowdata->type == 6u){ //spine from porcupine
 					return;
 				}
-				edata->wait = 24u;
+				edata->wait = 16u;
 				SetSpriteAnim(THIS, enemy_hit, 24u); 
 				edata->hp -= arrowdata->arrowdamage;
 				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy

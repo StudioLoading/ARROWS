@@ -48,6 +48,8 @@ _SPRITE_DMG(SpriteWalrus, walrus)\
 _SPRITE_DMG(SpriteWalrusspin, walrusspin)\
 _SPRITE_DMG(SpriteBee, bee)\
 _SPRITE_DMG(SpritePenguin, penguin)\
+_SPRITE_DMG(SpriteAxethrower, axethrower)\
+_SPRITE_DMG(SpriteAxe, axe)\
 SPRITE_DEF_END
 
 #include "ZGBMain_Init.h"
