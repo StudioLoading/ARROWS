@@ -15,6 +15,9 @@
 #include "Print.h"
 
 #include "custom_datas.h"
+#include "TileAnimations.h"
+#include "Dialogs.h"
+#include "sgb_palette.h"
 
 
 extern UINT8 collision_tiles[];
@@ -55,8 +58,6 @@ const struct MapInfo* const secret_1[] = {
 };
 const struct MapInfo** const secrets[] = {secret_1};
 
-//void ShowSWindow();
-
 
 void Start_StateSecret() {
 
@@ -67,6 +68,10 @@ void Start_StateSecret() {
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
+	if(sgb_check()){
+		set_sgb_palette01_secret();
+		//set_sgb_palette_statusbar();
+	}
 	SHOW_SPRITES;
 	//SCROLL
 	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display

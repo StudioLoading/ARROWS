@@ -88,15 +88,15 @@ void Start_SpritePlayer() {
 		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 		datakey->type = 1;
 		datakey->setup = 1u;
-		diag_found = 0u;
 	}
 	if(diag_found == 20u){ //spawn wrench			
 		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 		datakey->type = 2;
 		datakey->setup = 1u;
-		diag_found = 0u;
 	}
+	
+	diag_found = 0u;
 	
 	THIS->coll_x = 5;
 	THIS->coll_y = 3;
@@ -117,30 +117,32 @@ void Update_SpritePlayer() {
 	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
 	}
-	
-	if(archer_state == STATE_AMULET_STONE || archer_state == STATE_AMULET_ICE 
-		|| archer_state == STATE_AMULET_THUNDER || archer_state == STATE_AMULET_FIRE){
-		death_cooldown--;
-		if(death_cooldown <= -100){				
-			Build_Next_Dialog();
-		}
-		return;
-	}
-
-	if(archer_state == STATE_DIAG ){
-		if (show_diag == -1){ //NON TOCCARE
-			show_diag = 0;
-			archer_state = STATE_NORMAL;
-		}else{
-			if(show_diag == 0){
-				SetSpriteAnim(THIS, anim_idle, 33u);
+	switch(archer_state){
+		case STATE_AMULET_STONE:
+		case STATE_AMULET_ICE:
+		case STATE_AMULET_THUNDER:
+		case STATE_AMULET_FIRE:
+			death_cooldown--;
+			if(death_cooldown <= -100){				
+				Build_Next_Dialog();
 			}
-			if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){ //show_diag < max_diag
-				SetSpriteAnim(THIS, anim_idle, 33u);
-				show_diag += 1;
+			return;
+		break;
+		case STATE_DIAG:
+			if (show_diag == -1){ //NON TOCCARE
+				show_diag = 0;
+				archer_state = STATE_NORMAL;
+			}else{
+				if(show_diag == 0){
+					SetSpriteAnim(THIS, anim_idle, 33u);
+				}
+				if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){ //show_diag < max_diag
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					show_diag += 1;
+				}
 			}
-		}
-		return;
+			return;
+		break;
 	}
 	
 	if(KEY_TICKED(J_START) && is_on_boss < 0){
@@ -393,8 +395,11 @@ void Update_SpritePlayer() {
 					}
 					SetSpriteAnim(THIS, anim_jump, 8u);
 					update_hud = 1;
-					is_on_boss = 3;
-					//Build_Next_Dialog();
+					if(is_on_boss >= 0){
+						is_on_boss = 3;
+					}else{
+						Build_Next_Dialog();
+					}					
 				}
 			}
 		}
@@ -491,7 +496,8 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
-			|| ispr->type == SpriteBee	|| ispr->type == SpritePenguin || ispr->type == SpriteAxe) {
+			|| ispr->type == SpriteBee	|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
+			|| ispr->type == SpriteBat) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				//archer_state = STATE_HIT;
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
@@ -682,25 +688,22 @@ void CheckCollisionTileDoor(){
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 			current_camera_counter = 0u;
 			switch(current_level){
-				case 0u:
-				case 1u:
+				case 0u: //wolf
+				case 1u: //gator
 					if(archer_data->tool){
 						current_level_b = current_level;
 						is_on_boss = 0;
-						//Build_Next_Dialog();
-					}//else{
-						Build_Next_Dialog();
-					//}
+					}
 				break;
-				case 2u:
-				case 3u:
-				case 4u:
-				case 5u:
+				case 2u: // eagle
+				case 3u: // ibex
+				case 4u: // bear 
+				case 5u: // walrus
 					current_level_b = current_level;
 					is_on_boss = 0;
-					Build_Next_Dialog();
 				break;
 			}
+			Build_Next_Dialog();
 		break;
 		case 8u: //fine boss!
 			if(current_level_b == 0u || current_level_b == 2u || current_level_b == 4u){
@@ -715,13 +718,6 @@ void CheckCollisionTileDoor(){
 			current_level += 1u;
 			current_map = 0;
 			SetState(StateWorldmap);
-			/*if(current_level_b < 3){
-				SetState(StateGame);	
-			}else if (current_level_b < 6){
-				SetState(StateGame3);
-			}else{
-				SetState(StateGame6);
-			}*/
 		break;
 		case 19u: //exit secret room
 			load_next_s = -1;			

@@ -233,13 +233,6 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d4, "  ICE ARROWS     +] ", 20);
 						diagf = 32u;					
 					break;
-					case STATE_AMULET_FIRE:
-						memcpy(d1, "  VULKAN PYRAMID    ", 20);
-						memcpy(d2, "                    ", 20);
-						memcpy(d3, "  NOW I CAN THROW   ", 20);
-						memcpy(d4, "  FIRE ARROWS    +@ ", 20);
-						diagf = 33u;					
-					break;
 				}
 			}
 			break;
@@ -471,6 +464,21 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						memcpy(d3, "LAKE STRAIGHT AHEAD.", 20);
 						memcpy(d4, "                    ", 20);
 						diagf = 99u;
+					break;
+				}
+			break;
+			case 6u:
+				switch(current_map){
+					case 0u:
+						switch(archer_state){
+							case STATE_AMULET_FIRE:
+								memcpy(d1, "  VULKAN PYRAMID    ", 20);
+								memcpy(d2, "                    ", 20);
+								memcpy(d3, "  NOW I CAN THROW   ", 20);
+								memcpy(d4, "  FIRE ARROWS    +@ ", 20);
+								diagf = 33u;					
+							break;
+						}
 					break;
 				}
 			break;

@@ -503,34 +503,24 @@ void Update_StateGame3() {
 					}
 				break;
 				case 1u:
-					if(scroll_target->x > (UINT16) 31u << 3 && scroll_target->y < (UINT16) 10u << 3 && spawning_counter == 0){
+					if(scroll_target->y > (UINT16) 10u << 3 && spawning_counter == 0){
 						spawn_enemy3(SpriteSpider, 31u, 13u);
 						spawn_enemy3(SpriteBee, 34u, 13u);
-						spawning_counter++;
-					}
-					if(scroll_target->x > (UINT16) 34u << 3 && scroll_target->y < (UINT16) 11u << 3 && spawning_counter == 1){
 						spawn_item3(scrigno_dcoin, 34u, 2u, 7, 0);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 17u << 3 && scroll_target->x < (UINT16) 32u << 3 && 
-						scroll_target->y > (UINT16) 10u << 3 && scroll_target->y < (UINT16) 19u << 3 && spawning_counter == 2){
+					if(scroll_target->y > (UINT16) 20u << 3 && spawning_counter == 1){
 						spawn_enemy3(SpriteRat, 16u, 15u);
 						spawn_enemy3(SpriteSpider, 18u, 15u);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 17u << 3 && scroll_target->x < (UINT16) 35u << 3 && 
-					scroll_target->y > (UINT16) 23u << 3 && scroll_target->y < (UINT16) 32u << 3 && spawning_counter == 3){
-						spawn_enemy3(SpriteBee, 12u, 29u);
-						spawn_enemy3(SpriteSpider, 18u, 29u);
-						spawning_counter++;
-					}
-					if(scroll_target->x > (UINT16) 30u << 3 && scroll_target->y > (UINT16) 25u << 3 && spawning_counter == 4){
+					if(scroll_target->y < (UINT16) 33u << 3 && spawning_counter == 2){
 						spawn_enemy3(SpriteRat, 30u, 28u);
 						spawn_enemy3(SpriteSpider, 23u, 27u);
-						spawn_enemy3(SpriteRat, 27u, 28u);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 34u << 3 && scroll_target->y > (UINT16) 35u << 3 && scroll_target->y < (UINT16) 42u << 3 && spawning_counter == 5){
+					if(scroll_target->y > (UINT16) 34u << 3 && spawning_counter == 3){
+						spawn_enemy3(SpriteBee, 39u, 38u);
 						spawn_item3(scrigno_shield, 43u, 41u, 2, 1);
 						spawning_counter++;
 					}

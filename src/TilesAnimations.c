@@ -6,6 +6,7 @@
 #include "../res/src/tiles4.h"
 #include "../res/src/tiles6.h"
 #include "../res/src/tilesanims.h"
+#include "../res/src/tilesanimsmapworld.h"
 
 extern UINT8 current_level;
 extern UINT8 current_map;
@@ -126,4 +127,8 @@ void AnimPrisoner20() __banked{
 }
 void AnimPrisoner21() __banked{
 	set_bkg_data(58u, 1u, tilesanims.data->data+928u);
+}
+
+void WorldmapQuiverStone() __banked{
+	set_bkg_data(53u, 1u, tilesanims.data->data+16u);// 16 * 1
 }

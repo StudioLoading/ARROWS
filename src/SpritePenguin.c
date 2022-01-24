@@ -26,7 +26,7 @@ void Start_SpritePenguin() {
 	THIS->coll_y = 1;
 	THIS->coll_w = 4;
 	THIS->coll_h = 14;
-	THIS->lim_x = 64u;
+	THIS->lim_x = 164u;
 	struct EnemyInfo* pendata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, penguin_walk, 8u);
 	pendata->enemy_state = ENEMY_STATE_NORMAL;
@@ -44,63 +44,54 @@ void Update_SpritePenguin() {
 	if(pendata->enemy_accel_y < 24) {
 		pendata->enemy_accel_y += 1;
 	}
-	if(pendata->enemy_state == ENEMY_STATE_SLIDING){
-		pendata->tile_e_collision = TranslateSprite(THIS, pendata->vx << delta_time, (pendata->enemy_accel_y >> 4)<< delta_time);
-		CheckCollisionPTile(pendata->tile_e_collision);
-		if (pendata->wait == 0){
-			PTurn();
-			pendata->wait=60u;
-			SetSpriteAnim(THIS, penguin_walk, 8u);
-			pendata->enemy_state = ENEMY_STATE_NORMAL;
-		}
-		//return;
-	}
-	
-	if (pendata->enemy_state == ENEMY_STATE_NORMAL){
-		if (pendata->wait == 10u){
-			SetSpriteAnim(THIS, penguin_sliding, 8u);
-			pendata->wait=100u;
-			pendata->enemy_accel_y = -6u;
-			pendata->enemy_state = ENEMY_STATE_SLIDING;
-			return;
-		}
-		/*if (pendata->wait == 30){
-			PTurn();
-			pendata->wait=90u;
-			return;
-		}*/
-		if(pendata->wait & 1){	
+	switch(pendata->enemy_state){
+		case ENEMY_STATE_SLIDING:
 			pendata->tile_e_collision = TranslateSprite(THIS, pendata->vx << delta_time, (pendata->enemy_accel_y >> 4)<< delta_time);
-			if(pendata->tile_e_collision == 0){
-				pendata->tile_e_collision = TranslateSprite(THIS, pendata->vx << delta_time, (pendata->enemy_accel_y >> 4)<< delta_time);
-			}
 			CheckCollisionPTile(pendata->tile_e_collision);
-		}
-	}
-	
-	if(pendata->enemy_state == ENEMY_STATE_WAIT){
-		if(pendata->wait == 0){
-			SetSpriteAnim(THIS, penguin_walk, 8u);
-			pendata->enemy_state = ENEMY_STATE_NORMAL;			
-		}
-	}
-	
-	if (pendata->enemy_state == ENEMY_STATE_DEAD){
-		if (pendata->wait > 0){
-			THIS->y--;
-			pendata->wait--;
-		}else{
-			SpriteManagerRemoveSprite(THIS);
-		}		
-		return;
-	}
-	
-	if (pendata->enemy_state == ENEMY_STATE_HIT){
-		if(pendata->wait == 0u){
-			SetSpriteAnim(THIS, penguin_walk, 8u);
-			pendata->enemy_state = ENEMY_STATE_NORMAL;			
-		}
-		return;
+			if (pendata->wait == 0){
+				pendata->wait=60u;
+				SetSpriteAnim(THIS, penguin_walk, 8u);
+				pendata->enemy_state = ENEMY_STATE_NORMAL;
+				PTurn();
+			}
+		break;
+		case ENEMY_STATE_NORMAL:
+			if (pendata->wait == 10u){
+				SetSpriteAnim(THIS, penguin_sliding, 8u);
+				pendata->wait=100u;
+				pendata->enemy_accel_y = -6u;
+				pendata->enemy_state = ENEMY_STATE_SLIDING;
+				return;
+			}
+			if(pendata->wait & 1){	
+				pendata->tile_e_collision = TranslateSprite(THIS, pendata->vx << delta_time, (pendata->enemy_accel_y >> 4)<< delta_time);
+				if(pendata->tile_e_collision == 0){
+					pendata->tile_e_collision = TranslateSprite(THIS, pendata->vx << delta_time, (pendata->enemy_accel_y >> 4)<< delta_time);
+				}
+				CheckCollisionPTile(pendata->tile_e_collision);
+			}
+		break;	
+		case ENEMY_STATE_WAIT:
+			if(pendata->wait == 0){
+				SetSpriteAnim(THIS, penguin_walk, 8u);
+				pendata->enemy_state = ENEMY_STATE_NORMAL;			
+			}
+		break;	
+		case ENEMY_STATE_DEAD:
+			if (pendata->wait != 0){
+				THIS->y--;
+			}else{
+				SpriteManagerRemoveSprite(THIS);
+			}		
+			return;
+		break;	
+		case ENEMY_STATE_HIT:
+			if(pendata->wait == 0u){
+				SetSpriteAnim(THIS, penguin_walk, 8u);
+				pendata->enemy_state = ENEMY_STATE_NORMAL;			
+			}
+			return;
+		break;
 	}
 	
 	UINT8 scroll_penguin_tile;
@@ -166,6 +157,7 @@ void PTurn(){
 void CheckCollisionPTile(UINT8 t) {
 	switch(t){
 		case 14u:
+		case 35u:
 		case 36u:
 		case 37u:
 		case 44u:

@@ -14,7 +14,7 @@ void set_sgb_palette_title() __banked {
         UINT8 padding;
     } SGB_PALETTE2_PACKET = {
         .command = (SGB_PAL_12 << 3) | 1,
-        .pal1 = {SGB_PAL1D_LIGHTER, RGB8(88, 216, 84), RGB8(0, 168, 0),  RGB8(0, 84, 0)}, //SGB_STATUS_RED},
+        .pal1 = {RGB8(255, 255, 255), RGB8(88, 216, 84), RGB8(0, 168, 0),  RGB8(0, 84, 0)}, //SGB_STATUS_RED},
         .pal2 = {SGB_STATUS_LIGHT, RGB8(247, 142, 14), RGB8(228, 92, 16)},
         .padding = 0 
     };
@@ -93,7 +93,7 @@ void set_sgb_palette_statusbar() __banked {
         UINT8 padding;
     } SGB_PALETTE2_PACKET = {
         .command = (SGB_PAL_12 << 3) | 1,
-        .pal1 = {SGB_PAL1D_LIGHTER, SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_RED},
+        .pal1 = {RGB8(255, 255, 255), SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_RED},
         .pal2 = {SGB_STATUS_LIGHT, SGB_STATUS_DARK, SGB_STATUS_DARKER},
         .padding = 0 
     };
@@ -222,6 +222,12 @@ void set_sgb_palette01_intro() __banked{
 	set_sgb_palette(SGB_PAL1B_LIGHTER, RGB8(255, 187, 17), RGB8(0, 0, 0), SGB_PAL1B_DARKER);
 
 }
+void set_sgb_palette01_secret() __banked{
+	set_sgb_palette( RGB8(0, 64, 88), SGB_PAL2H_DARK, RGB8(0, 136, 136), RGB8(0, 0, 0));
+}
+void set_sgb_palette01_worldmap() __banked{
+	set_sgb_palette(RGB8(255, 255, 255), RGB8(252, 160, 68), SGB_PAL4B_DARK, SGB_PAL4B_DARKER);
+}
 void set_sgb_palette01_WOLF() __banked{
 	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARK, SGB_PAL2H_DARKER);
 }
@@ -237,8 +243,11 @@ void set_sgb_palette01_AMULET_THUNDER() __banked{
 void set_sgb_palette01_AMULET_ICE() __banked{
 	set_sgb_palette(RGB8(255, 255, 173), RGB8(248, 248, 248), RGB8(60, 188, 252), SGB_PAL1B_DARKER);
 }
+void set_sgb_palette01_ZOO() __banked {
+	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL4B_LIGHT, SGB_PAL4B_DARK, SGB_PAL4B_DARKER);
+}
 void set_sgb_palette01_SEWER() __banked {
-	set_sgb_palette(SGB_PAL1E_LIGHTER, RGB8(188, 188, 188), RGB8(0, 136, 136), SGB_PAL1E_DARKER);
+	set_sgb_palette(RGB8(255, 255, 255), SGB_PAL4B_LIGHT, SGB_PAL4B_DARK, SGB_PAL4B_DARKER);
 }
 void set_sgb_palette01_GATORSWAMP() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL1E_LIGHT, RGB8(0, 136, 136), SGB_PAL1E_DARKER);

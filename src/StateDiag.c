@@ -244,6 +244,7 @@ void Update_StateDiag() {
 					SetState(StateGame3);
 				break;
 				case 5u:
+				case 6u:
 					SetState(StateGame6);
 				break;
 			}

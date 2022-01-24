@@ -18,8 +18,8 @@ void Start_SpriteAxethrower() {
 	THIS->coll_y = 2;
 	THIS->coll_w = 8;
 	THIS->coll_h = 14;
-	THIS->lim_x = 255u;
-	THIS->lim_y = 255u;
+	THIS->lim_x = 80u;
+	THIS->lim_y = 80u;
 	SetSpriteAnim(THIS, anim_axethrower_normal, 8u);
 	struct EnemyInfo* throwerdata = (struct EnemyInfo*)THIS->custom_data;
 	throwerdata->wait = 16u;

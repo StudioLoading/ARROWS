@@ -12,7 +12,6 @@
 const UINT8 enemy_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 enemy_walk[] = {2, 0, 1}; //The first number indicates the number of frames
 const UINT8 enemy_hit[] = {2, 0, 2}; //The first number indicates the number of frames
-const UINT8 enemy_dead[] = {1, 3}; //The first number indicates the number of frames
 const UINT8 attack_wait = 32u;
 
 void CheckCollisionETile();
@@ -41,15 +40,7 @@ void Update_SpriteEnemy() {
 	
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	
-	if (edata->enemy_state == ENEMY_STATE_DEAD){
-		if (edata->wait > 0){
-			THIS->y--;
-			edata->wait--;
-		}else{
-			SpriteManagerRemoveSprite(THIS);
-			//THIS->y++;	
-			//THIS->y++;
-		}		
+	if (edata->enemy_state == ENEMY_STATE_DEAD){				
 		return;
 	}
 	
@@ -123,11 +114,11 @@ void EDie(){
 	PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	edata->hp = -1;
-	SetSpriteAnim(THIS, enemy_dead, 16u);
 	edata->wait = 16u;
 	THIS->coll_h = 0;
 	THIS->coll_w = 0;
 	edata->enemy_state = ENEMY_STATE_DEAD;
+	SpriteManagerRemoveSprite(THIS);
 }
 
 void CheckCollisionETile() {

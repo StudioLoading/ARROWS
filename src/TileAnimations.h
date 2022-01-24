@@ -16,3 +16,4 @@ void AnimPrisoner10() __banked;
 void AnimPrisoner11() __banked;
 void AnimPrisoner20() __banked;
 void AnimPrisoner21() __banked;
+void WorldmapQuiverStone() __banked;

@@ -6,13 +6,9 @@ LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CIMITERO -> 
 		- mappa 0 -> cripta
-						- axe thrower machine
-						- formica gigante che si forma da formichine piccole, immortale
-						- stanza segreta in cui trovare l' amuleto di fuoco
-						- pipistrelli, ci vorrebbe movimento mezza luna a U, poi si blocca e punta verso il pg.						
 		- mappa 1 -> esterno del cimitero verso portone castello
 						- teste di scheletro di gatto con movimento medusa-head castlevania like
-						- lance che salgono da sottoterra
+						- formica gigante che si forma da formichine piccole, immortale
 						- fantasmi immortali però freezzabili
 						- corvi che volano leggermente obliqui e veloci
 						- pits, buchi per terra pieni di bestie
@@ -43,9 +39,8 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- mamma vet per accesso al bonus level
 
 KNOWN ISSUE:
-- la status-bar non è colorata, prende default la paletta #0 del tileset (discussione su Discord con Zal0)
-- sul gameBoy color non mi carica il boss al walrus. crasha male sul VisualBoy Advance alla fine della seconda mappa. Troppe stalattiti ? Se provo a calarle le gestisce meglio ? Probabilmente, è da provare.
-
+- mettere più scrigni a moneta singola in giro
+- quiver da riempire sulla worldmap con i tilesanims, già iniziato col primo amulet
 
 LORE:Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence, disarm human weapons and take over the power on earth.  Retaliation for humans now to be imprisoned in zoo-es. Player controls the archer, a boy who has been freed by his mom. He is able to use the power of elements and convey it inside his arrows. This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, he has to defeat em to get those amulets. Amulets are also mandatory to enter into the final Castle, where his mother is waiting. The castle is where a crazy scientist makes his work.. is he finding a solution for moon approaching, or is he the responsible of that? if he is, why he did that? can it be reverted? ... more deeply, is it worth to be reverted ? were humans doing a good job on Earth itself, when they were at the most powerful position on the chain ?
 

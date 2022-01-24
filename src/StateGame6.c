@@ -8,6 +8,7 @@
 #include "../res/src/map60.h"
 #include "../res/src/map61.h"
 #include "../res/src/map70.h"
+#include "../res/src/map71.h"
 #include "../res/src/archer.h"
 
 #include "ZGBMain.h"
@@ -78,6 +79,7 @@ extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern UINT8 quiver;
 
 const UINT16 bg_palette6[] = {PALETTE_FROM_HEADER(tiles6)};
 
@@ -86,11 +88,12 @@ const struct MapInfo* const level_6[] = {
 	&map60, &map61
 };
 const struct MapInfo* const level_7[] = {
-	&map70
+	&map70, &map71
 };
 
 const struct MapInfo** const levels6[] = {level_6, level_7};
 
+INT8 amulet_spawn;
 
 void UpdateHUD6();
 void ShowWindow6();
@@ -137,8 +140,15 @@ void Start_StateGame6() {
 			}
 		break;		
 		case 6u:
-			SpriteManagerLoad(SpriteAxethrower);
-			SpriteManagerLoad(SpriteAxe);
+			amulet_spawn = 0;
+			if(current_map == 0){
+				SpriteManagerLoad(SpriteAxethrower);
+				SpriteManagerLoad(SpriteAxe);
+				SpriteManagerLoad(SpriteAmulet);
+			}else{
+				SpriteManagerLoad(SpriteFalce);
+			}
+			SpriteManagerLoad(SpriteBat);
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 				set_sgb_palette_statusbar();
@@ -225,13 +235,14 @@ void Start_StateGame6() {
 }
 
 void Update_StateGame6() {
-	
 	thunder_delay -= 1u;
 	
 	if(load_next_d){
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
-				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				if(diag_found == 0){
+					diag_found = Build_Next_Dialog_Banked(scroll_target);
+				}
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
@@ -253,16 +264,6 @@ void Update_StateGame6() {
 		}
 		load_next = 0;
 		switch(current_level){
-			case 0:
-			case 1:
-			case 2:
-				SetState(StateGame);	
-			break;
-			case 3:
-			case 4:
-				SetState(StateGame3);
-			break;
-			case 5:
 			case 6:
 				SetState(StateGame6);
 			break;
@@ -473,11 +474,68 @@ void Update_StateGame6() {
 				case 0u:
 					if(scroll_target->x > (UINT16) 6u << 3 && spawning_counter == 0){
 						spawn_item6(scrigno_up, 13u, 16u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawn_enemy6(SpriteBat, 16u, 13u);
+						amulet_spawn = 0;
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 1){
-						spawn_item6(scrigno_up, 8u, 8u, 7, 1);//1coin 2hp 3up 7dcoin
+					if(scroll_target->x > (UINT16) 11u << 3 && spawning_counter == 1){
+						spawn_enemy6(SpriteBat, 18u, 17u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 2){
 						spawn_enemy6(SpriteAxethrower, 40u, 15u);
+						spawn_enemy6(SpriteBat, 36u, 14u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 44u << 3 && spawning_counter == 3){
+						spawn_item6(scrigno_up, 50u, 16u, 2, 1);//1coin 2hp 3up 7dcoin
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 52u << 3 && spawning_counter == 4){
+						spawn_enemy6(SpriteBat, 63u, 16u);
+						spawn_enemy6(SpriteBat, 61u, 15u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 74u << 3 && scroll_target->x < (UINT16) 80u << 3 && amulet_spawn == 0 
+						&& ((quiver & 0b00010000) == 0b00000000)){
+						struct Sprite* reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 61u << 3, (UINT16) 25u << 3);
+						struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
+						datak->type = 4;
+						datak->setup = 1;
+						amulet_spawn = 1;
+					}
+					if(scroll_target->x > (UINT16) 85u << 3 && spawning_counter == 5){
+						spawn_enemy6(SpriteAxethrower, 92u, 21u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 6){
+						spawn_enemy6(SpriteAxethrower, 95u, 21u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 106u << 3 && spawning_counter == 7){
+						spawn_enemy6(SpriteBat, 111u, 20u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+				break;
+				case 1u:
+					if(scroll_target->x > (UINT16) 6u << 3 && spawning_counter == 0){
+						spawn_enemy6(SpriteBat, 15u, 22u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 12u << 3 && spawning_counter == 1){
+						spawn_enemy6(SpriteFalce, 19u, 25u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 20u << 3 && spawning_counter == 2){
+						spawn_enemy6(SpriteBat, 25u, 22u);
+						spawn_item6(scrigno_up, 18u, 23u, 2, 1);//1coin 2hp 3up 7dcoin
 						spawning_counter++;
 					}
 				break;
@@ -585,7 +643,7 @@ void UpdateHUD6(){
 	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
 }
 
-void ShowWindow6(){
+void ShowWindow6(){	
 	set_window_y6(144 - 8);
 	showing_diag = 0;
 	show_diag = -1;
@@ -602,7 +660,7 @@ void ShowWindowDiag6(){
 	if (showing_diag == 0){
 		HIDE_WIN;
 		set_window_y6(144 - 32);
-		WX_REG = 0;
+		WX_REG = 1;
 		WY_REG = 144 - 32; //40
 		InitWindow(0, 0, &diagnew6);
 		SHOW_WIN;
