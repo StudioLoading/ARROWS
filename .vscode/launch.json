@@ -1,0 +1,64 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "SuperGameBoy Debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${env:ZGB_PATH}\\..\\env\\bgb\\bgb.exe",
+            "args": ["${workspaceFolder}/bin/FLYINGARROWS_Debug.gbc"],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "DebugColor",
+        },
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "name": "DebugColor",
+            "program": "${workspaceFolder}/bin/FLYINGARROWS_Debug.gbc",
+            "port": 58870,
+            "stopOnEntry": false,
+            "additionalSrcFolders": "${env:ZGB_PATH}",
+            "emuliciousPath": "${env:ZGB_PATH}/../env/emulicious/emulicious.exe",
+            "preLaunchTask": "DebugColor",
+        },
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/bin/FLYINGARROWS_Debug.gb",
+            "port": 58870,
+            "stopOnEntry": false,
+            "additionalSrcFolders": "${env:ZGB_PATH}",
+            "emuliciousPath": "${env:ZGB_PATH}\\..\\env\\emulicious\\emulicious.exe",
+            "preLaunchTask": "Debug",
+        },
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "name": "Release",
+            "program": "${workspaceFolder}/bin/FLYINGARROWS.gb",
+            "port": 58870,
+            "stopOnEntry": false,
+            "additionalSrcFolders": "${env:ZGB_PATH}",
+            "emuliciousPath": "${env:ZGB_PATH}/../env/emulicious/emulicious.exe",
+            "preLaunchTask": "Release",
+        },
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "name": "ReleaseColor",
+            "program": "${workspaceFolder}/bin/FLYINGARROWS.gbc",
+            "port": 58870,
+            "stopOnEntry": false,
+            "additionalSrcFolders": "${env:ZGB_PATH}",
+            "emuliciousPath": "${env:ZGB_PATH}/../env/emulicious/emulicious.exe",
+            "preLaunchTask": "ReleaseColor",
+        }
+    ]
+}

@@ -1,4 +1,4 @@
-#include "Banks/SetBank15.h"
+#include "Banks/SetBank18.h"
 
 #include "../res/src/window6.h"
 #include "../res/src/diagnew6.h"
@@ -102,7 +102,7 @@ void set_window_y6(UBYTE y);
 void LCD_isr6();
 void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy);
 void spawn_item6(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
-
+void spawn_falci(UINT16 x, UINT16 y);
 
 void Start_StateGame6() {
 	
@@ -118,7 +118,7 @@ void Start_StateGame6() {
 	}
 	
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette6, 15);
+	SetPalette(BG_PALETTE, 0, 8, bg_palette6, 18);
 
 	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
@@ -141,14 +141,16 @@ void Start_StateGame6() {
 		break;		
 		case 6u:
 			amulet_spawn = 0;
+			SpriteManagerLoad(SpriteAxethrower);
+			SpriteManagerLoad(SpriteAxe);
+			SpriteManagerLoad(SpriteBat);
 			if(current_map == 0){
-				SpriteManagerLoad(SpriteAxethrower);
-				SpriteManagerLoad(SpriteAxe);
 				SpriteManagerLoad(SpriteAmulet);
 			}else{
 				SpriteManagerLoad(SpriteFalce);
+				SpriteManagerLoad(SpriteFalcebase);
+				SpriteManagerLoad(SpriteCathead);
 			}
-			SpriteManagerLoad(SpriteBat);
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 				set_sgb_palette_statusbar();
@@ -212,8 +214,8 @@ void Start_StateGame6() {
 	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
 		diag_found = Build_Next_Dialog_Banked(scroll_target);
 		if(diag_found){			
-			archer_state = STATE_DIAG;
-			show_diag = 1;	
+			//archer_state = STATE_DIAG;
+			//show_diag = 1;	
 		}
 	}
 	load_next_d = 0;		
@@ -495,8 +497,12 @@ void Update_StateGame6() {
 						spawning_counter++;
 					}
 					if(scroll_target->x > (UINT16) 52u << 3 && spawning_counter == 4){
-						spawn_enemy6(SpriteBat, 63u, 16u);
 						spawn_enemy6(SpriteBat, 61u, 15u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 56u << 3 && spawning_counter == 5){
+						spawn_enemy6(SpriteBat, 63u, 16u);
 						amulet_spawn = 0;
 						spawning_counter++;
 					}
@@ -508,18 +514,23 @@ void Update_StateGame6() {
 						datak->setup = 1;
 						amulet_spawn = 1;
 					}
-					if(scroll_target->x > (UINT16) 85u << 3 && spawning_counter == 5){
+					if(scroll_target->x > (UINT16) 85u << 3 && spawning_counter == 6){
 						spawn_enemy6(SpriteAxethrower, 92u, 21u);
 						amulet_spawn = 0;
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 6){
+					if(scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 7){
 						spawn_enemy6(SpriteAxethrower, 95u, 21u);
 						amulet_spawn = 0;
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 106u << 3 && spawning_counter == 7){
+					if(scroll_target->x > (UINT16) 106u << 3 && spawning_counter == 8){
 						spawn_enemy6(SpriteBat, 111u, 20u);
+						spawn_enemy6(SpriteBat, 104u, 20u);
+						amulet_spawn = 0;
+						spawning_counter++;
+					}if(scroll_target->x > (UINT16) 117u << 3 && spawning_counter == 9){
+						spawn_enemy6(SpriteBat, 120u, 20u);
 						amulet_spawn = 0;
 						spawning_counter++;
 					}
@@ -530,12 +541,33 @@ void Update_StateGame6() {
 						spawning_counter++;
 					}
 					if(scroll_target->x > (UINT16) 12u << 3 && spawning_counter == 1){
-						spawn_enemy6(SpriteFalce, 19u, 25u);
-						spawning_counter++;
+						spawn_falci(19u, 25u);
+						spawning_counter++;						
 					}
 					if(scroll_target->x > (UINT16) 20u << 3 && spawning_counter == 2){
-						spawn_enemy6(SpriteBat, 25u, 22u);
 						spawn_item6(scrigno_up, 18u, 23u, 2, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 35u << 3 && spawning_counter == 3){
+						spawn_enemy6(SpriteAxethrower, 45u, 23u);
+						spawn_item6(scrigno_coin, 25u, 23u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 48u << 3 && spawning_counter == 4){
+						spawn_falci(59u, 25u);
+						spawn_enemy6(SpriteBat, 63u, 23u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 84u << 3 && spawning_counter == 5){
+						spawn_enemy6(SpriteCathead, 92u, 20u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 86u << 3 && spawning_counter == 6){
+						spawn_enemy6(SpriteCathead, 94u, 20u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 88u << 3 && spawning_counter == 7){
+						spawn_enemy6(SpriteCathead, 95u, 21u);
 						spawning_counter++;
 					}
 				break;
@@ -583,6 +615,28 @@ void Update_StateGame6() {
 		update_hud = 0;
 		UpdateHUD6();
 	}
+}
+
+void spawn_falci(UINT16 x, UINT16 y){
+	struct Sprite* sfalce1 = SpriteManagerAdd(SpriteFalce, (UINT16) x << 3, (UINT16) y << 3);
+	struct Sprite* sfalce2 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+1u) << 3, (UINT16) y << 3);
+	struct Sprite* sfalce3 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+2u) << 3, (UINT16) y << 3);
+	struct Sprite* falcebase = SpriteManagerAdd(SpriteFalcebase, (UINT16) x << 3, (UINT16) (y+2u) << 3);
+	struct Sprite* falcebase2 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+1u) << 3, (UINT16) (y+2) << 3);
+	struct Sprite* falcebase3 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+2u) << 3, (UINT16) (y+2) << 3);				
+	struct EnemyInfo * sfalce2data = (struct EnemyInfo*)sfalce2->custom_data;
+	sfalce2data->wait = 10u;
+	struct EnemyInfo * sfalcedata = (struct EnemyInfo*)sfalce1->custom_data;
+	sfalcedata->wait = 20u;
+	struct FalcebaseInfo* falcebasedata = (struct FalcebaseInfo*)falcebase->custom_data;
+	falcebasedata->falcelama = sfalce1;
+	falcebasedata->enemy_state = ENEMY_STATE_SLIDING;
+	struct FalcebaseInfo* falcebasedata2 = (struct FalcebaseInfo*)falcebase2->custom_data;
+	falcebasedata2->falcelama = sfalce2;
+	falcebasedata2->enemy_state = ENEMY_STATE_SLIDING;
+	struct FalcebaseInfo* falcebasedata3 = (struct FalcebaseInfo*)falcebase3->custom_data;
+	falcebasedata3->falcelama = sfalce3;
+	falcebasedata3->enemy_state = ENEMY_STATE_SLIDING;
 }
 
 void UpdateHUD6(){

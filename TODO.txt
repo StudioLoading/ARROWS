@@ -7,15 +7,15 @@ LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CIMITERO -> 
 		- mappa 0 -> cripta
 		- mappa 1 -> esterno del cimitero verso portone castello
-						- teste di scheletro di gatto con movimento medusa-head castlevania like
-						- formica gigante che si forma da formichine piccole, immortale
-						- fantasmi immortali però freezzabili
 						- corvi che volano leggermente obliqui e veloci
 						- pits, buchi per terra pieni di bestie
 						- finisce con la mamma davanti al cancello
+						- terminare il design
 				
 LIV 7 CASTELLO -> 3 MAPPE
-		- mappa 0 -> castello un po' labirintico, Nemici bomba, Topi, serpenti
+		- mappa 0 -> castello un po' labirintico, Nemici bomba, 
+			- formica gigante che si forma da formichine piccole, immortale
+			- fantasmi immortali però freezzabili
 			- ad un certo punto devo fare una cutscene piccola di ri-chiusura del portone alle mie spalle. Il finalBoss infatti ha preso l' amuleto del fuoco e lo userà al primo scontro con me.
 		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da e dice che deve andare sopra la torre da sola per "liberare le bestie".
 		- mappa 1 torre -> vado con la mamma in cima - da sola
@@ -40,7 +40,7 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 KNOWN ISSUE:
 - mettere più scrigni a moneta singola in giro
-- quiver da riempire sulla worldmap con i tilesanims, già iniziato col primo amulet
+
 
 LORE:Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence, disarm human weapons and take over the power on earth.  Retaliation for humans now to be imprisoned in zoo-es. Player controls the archer, a boy who has been freed by his mom. He is able to use the power of elements and convey it inside his arrows. This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, he has to defeat em to get those amulets. Amulets are also mandatory to enter into the final Castle, where his mother is waiting. The castle is where a crazy scientist makes his work.. is he finding a solution for moon approaching, or is he the responsible of that? if he is, why he did that? can it be reverted? ... more deeply, is it worth to be reverted ? were humans doing a good job on Earth itself, when they were at the most powerful position on the chain ?
 
@@ -140,20 +140,20 @@ DISCORD MARKDOWN: ```c ```
 
 ```c
 
-void InitWindow(UINT8 x, UINT8 y, struct MapInfo* map) {
-	PUSH_BANK(map->bank);
-	set_win_tiles(x, y, map->data->width, map->data->height, map->data->data);
-	
-	#ifdef CGB
-	if(map->data->attributes) {
-		VBK_REG = 1;
-			set_win_tiles(x, y, map->data->width, map->data->height, map->data->attributes);
-		VBK_REG = 0;
-	}
-	#endif
+struct FalcebaseInfo{
+	struct Sprite * falcelama;
+	ENEMY_STATE enemy_state;
+};
 
-	POP_BANK;
-}
+
+...
+
+struct Sprite* sfalce = SpriteManagerAdd(SpriteFalce, (UINT16) 19u << 3, (UINT16) 25u << 3);
+struct Sprite* falcebase = SpriteManagerAdd(SpriteFalcebase, (UINT16) 19u << 3, (UINT16) 27u << 3);						
+struct FalcebaseInfo* falcebasedata = (struct FalcebaseInfo*)falcebase->custom_data;
+falcebasedata->falcelama = sfalce;
+falcebasedata->enemy_state = ENEMY_STATE_SLIDING;
+
 ```
 
 

@@ -36,6 +36,9 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
+#define MAX_HIT_COOLDOWN 24
+#define MAX_DIAG_COOLDOWN 24
+
 const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_jump[] = {1, 11};
 const UINT8 anim_jump_up[] = {1, 6};
@@ -43,7 +46,7 @@ const UINT8 anim_dead[] = {1, 9};
 const UINT8 anim_walk[] = {4, 7, 6, 5, 4};
 const UINT8 anim_shield[] = {1, 3};
 const UINT8 anim_hit[] = {2, 8, 10};
-const UINT8 anim_shoot[] = {2,1,2};
+const UINT8 anim_shoot[] = {3,2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
 
 INT8 jump_power = 0;
@@ -64,6 +67,7 @@ struct ArcherInfo* archer_data;
 ARCHER_STATE archer_state;
 struct Sprite* princess_parent = 0;
 UINT8 quiver = 0b0000000001; //little endian, rightest are the less important
+INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
 
 void Die();
 void Shoot();
@@ -104,11 +108,13 @@ void Start_SpritePlayer() {
 	THIS->coll_h = 13;
 	
 	death_cooldown = 1;
-	hit_cooldown = 24;
+	hit_cooldown = MAX_HIT_COOLDOWN;
 	
 	NR50_REG = 0x55; //Max volume
 	
 	update_hud = 1;
+
+	archer_state = STATE_NORMAL;
 	
 }
 
@@ -129,17 +135,23 @@ void Update_SpritePlayer() {
 			return;
 		break;
 		case STATE_DIAG:
-			if (show_diag == -1){ //NON TOCCARE
-				show_diag = 0;
-				archer_state = STATE_NORMAL;
-			}else{
-				if(show_diag == 0){
-					SetSpriteAnim(THIS, anim_idle, 33u);
-				}
-				if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){ //show_diag < max_diag
-					SetSpriteAnim(THIS, anim_idle, 33u);
+			if(diag_cooldown == 0){
+				if (show_diag == -1){ //NON TOCCARE
+					show_diag = 0;
+					diag_cooldown = MAX_DIAG_COOLDOWN;
+					archer_state = STATE_NORMAL;
+					//archer_state = STATE_NORMAL;
+				}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
+					diag_cooldown = MAX_DIAG_COOLDOWN;
 					show_diag += 1;
+					//archer_state = STATE_NORMAL;
+					SetSpriteAnim(THIS, anim_idle, 33u);
+					//if(show_diag == 0){
+					//	SetSpriteAnim(THIS, anim_idle, 33u);
+					//}
 				}
+			}else{
+				diag_cooldown--;
 			}
 			return;
 		break;
@@ -259,7 +271,7 @@ void Update_SpritePlayer() {
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
 			} else {
-				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) | (KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING))) {
+				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
 					Shoot();
 				}
 			}
@@ -320,7 +332,7 @@ void Update_SpritePlayer() {
 				MoveArcher();
 				platform_vx = 0;
 				platform_vy = 0;
-				hit_cooldown = 24;
+				hit_cooldown = MAX_HIT_COOLDOWN;
 				archer_state = STATE_NORMAL;
 			}
 			return;
@@ -497,9 +509,8 @@ void Update_SpritePlayer() {
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
 			|| ispr->type == SpriteBee	|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
-			|| ispr->type == SpriteBat) {
+			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
-				//archer_state = STATE_HIT;
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
 					case 0:
@@ -607,6 +618,9 @@ void Update_SpritePlayer() {
 void Die(){
 	PlayFx(CHANNEL_1, 3, 0x7c, 0x80, 0x74, 0x83, 0x86);
 	archer_state = STATE_DEAD;
+	hit_cooldown = 0;
+	platform_vx = 0;
+	platform_vy = 0;
 	THIS->coll_x = 1;
 	THIS->coll_y = 5;
 	THIS->coll_w = 14;
@@ -652,9 +666,9 @@ void Jump() {
 void MoveArcher() {
 	if(archer_state == STATE_HIT){
 		if(SPRITE_GET_VMIRROR(THIS)){
-			platform_vx=-1;
-		}else{
 			platform_vx=1;
+		}else{
+			platform_vx=-1;
 		}			
 	}
 	if(platform_vx || platform_vy){
@@ -791,14 +805,14 @@ void Hit(INT8 damage) {
 			Die();
 			return;
 		}
+		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
 		update_hud = 1;
-		platform_vx = 1;
+		/*platform_vx = 1;
 		if (SPRITE_GET_VMIRROR(THIS)){
 			platform_vx = -1;
-		}
-		TranslateSprite(THIS, 0, -2 << delta_time);//THIS->y -= 6;
+		}*/
+		TranslateSprite(THIS, 0, -2 << delta_time);
 		SetSpriteAnim(THIS, anim_hit, 24u);
-		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);			
 	}
 }
 

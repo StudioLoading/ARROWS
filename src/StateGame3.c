@@ -292,8 +292,8 @@ void Start_StateGame3() {
 	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
 		diag_found = Build_Next_Dialog_Banked(scroll_target);
 		if(diag_found){			
-			archer_state = STATE_DIAG;
-			show_diag = 1;	
+			//archer_state = STATE_DIAG;
+			//show_diag = 1;	
 		}
 	}
 	load_next_d = 0;		
@@ -384,6 +384,7 @@ void Update_StateGame3() {
 		is_on_gameover = 1;
 		SetState(StateGameover);
 	}
+	
 	// SPAWNING
 	switch(current_level){
 		case 3u: // Sky -> Ibex

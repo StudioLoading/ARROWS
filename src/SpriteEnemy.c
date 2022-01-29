@@ -110,8 +110,6 @@ void Update_SpriteEnemy() {
 }
 
 void EDie(){
-	NR50_REG = 0x55; //Max volume		
-	PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	edata->hp = -1;
 	edata->wait = 16u;

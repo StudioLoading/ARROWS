@@ -24,6 +24,11 @@
 #include "../res/src/mapdiagamuletice.h"
 #include "../res/src/mapdiagamuletfire.h"
 
+#include "../res/src/maplevel0zoo.h"
+#include "../res/src/maplevel1sewer.h"
+#include "../res/src/maplevel2forest.h"
+#include "../res/src/maplevel3sky.h"
+
 #include "../res/src/diagslave1.h"
 #include "../res/src/diagslave2.h"
 #include "../res/src/diagslave3.h"
@@ -95,7 +100,7 @@ void Start_StateDiag() {
 		case 0u:
 		case 1u:
 		case 2u:
-		case 3u:		
+		case 3u:
 			if(sgb_check()){
 				set_sgb_palette01_TITLEINVERTED();
 			}
@@ -118,6 +123,30 @@ void Start_StateDiag() {
 				set_sgb_palette01_1D();
 			}
 			InitScroll(&mapdiagslave3, collision_dtiles, 0);
+		break;
+		case 10u:
+			if(sgb_check()){
+				set_sgb_palette01_TITLEINVERTED();
+			}
+			InitScroll(&maplevel0zoo, collision_dtiles, 0);
+		break;
+		case 11u:
+			if(sgb_check()){
+				set_sgb_palette01_SEWER();
+			}
+			InitScroll(&maplevel1sewer, collision_dtiles, 0);
+		break;
+		case 12u:
+			if(sgb_check()){
+				set_sgb_palette01_FOREST();
+			}
+			InitScroll(&maplevel2forest, collision_dtiles, 0);
+		break;
+		case 13u:
+			if(sgb_check()){
+				set_sgb_palette01_1B();
+			}
+			InitScroll(&maplevel3sky, collision_dtiles, 0);
 		break;
 		case 19u:
 			if(sgb_check()){

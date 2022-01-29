@@ -23,6 +23,7 @@ extern unsigned char d4[];
 extern struct ArcherInfo* archer_data;
 extern UINT8 tile_collision;
 extern ARCHER_STATE archer_state;
+extern INT8 on_worldmap;
 
 UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 	UINT8 diagf = 0u;	
@@ -30,6 +31,60 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 	memcpy(d2, "                    ", 20);
 	memcpy(d3, "                    ", 20);
 	memcpy(d4, "                    ", 20);
+	if(on_worldmap == 1){
+		switch(current_level){
+			case 0u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "       THE ZOO      ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 10u;
+			break;
+			case 1u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "  THROUGH THE SEWER ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 11u;
+			break;
+			case 2u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "  RUN TO THE HILLS  ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 12u;
+			break;
+			case 3u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "       THE SKY      ", 20);
+				memcpy(d3, "     IS THE LIMIT   ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 13u;
+			break;
+			case 4u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "     WELCOME TO     ", 20);
+				memcpy(d3, "     THE JUNGLE     ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 14u;
+			break;
+			case 5u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "      ICE COLD      ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 15u;
+			break;
+			case 6u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "    PET SEMATARY    ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 16u;
+			break;
+		}
+		on_worldmap = 0;
+	}
 	//diagf contains an integer corresponding to a map to show on StateDiag!
 	/*
 		1	Player
@@ -64,181 +119,183 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 		99 	Suggestion
 	
 	*/
-	switch (is_on_boss){
-		case 0:
-			switch(current_level_b){
-				case 0u:
-					memcpy(d1, "    A BLACK WOLF    ", 20);
-					memcpy(d2, "  OWNS THE WRENCH   ", 20);
-					memcpy(d3, "  I NEED TO EXIT.   ", 20);
-					memcpy(d4, "    LET'S FIGHT!    ", 20);
-					diagf = 19u;
-				break;
-				case 1u:
-					memcpy(d1, "    THE EXIT IS     ", 20);
-					memcpy(d2, "   BEYOND A GATOR   ", 20);
-					memcpy(d3, " I NEED HIS AMULET  ", 20);
-					memcpy(d4, "    LET'S FIGHT!    ", 20);
-					diagf = 1u;
-				break;
-				case 2u:
-					memcpy(d1, "    AN EAGLE OWNS   ", 20);
-					memcpy(d2, "      THE KEY I     ", 20);
-					memcpy(d3, "    NEED TO EXIT.   ", 20);
-					memcpy(d4, "     LET'S FIGHT!   ", 20);
-					diagf = 1u;
-				break;
-				case 3u:
-					memcpy(d1, "    THE EXIT IS     ", 20);
-					memcpy(d2, "   BEYOND A IBEX    ", 20);
-					memcpy(d3, " I NEED HIS AMULET  ", 20);
-					memcpy(d4, "    LET'S FIGHT!    ", 20);
-					diagf = 1u;
-				break;
-				case 4u:
-					memcpy(d1, "       HELLO        ", 20);
-					memcpy(d2, "     TEDDY BEAR !   ", 20);
-					memcpy(d3, "                    ", 20);
-					memcpy(d4, "     LET ME PASS!   ", 20);
-					diagf = 1u;
-				break;
-				case 5u:
-					memcpy(d1, "    THE EXIT IS     ", 20);
-					memcpy(d2, "  BEYOND A WALRUS.  ", 20);
-					memcpy(d3, " I NEED HIS AMULET  ", 20);
-					memcpy(d4, "    LET'S FIGHT!    ", 20);
-					diagf = 1u;
-				break;
-			}
-		break;
-		case 1:  //is_on_boss == 1
-			switch(current_level_b){
-				case 0u:
-					memcpy(d1, "   BEAST! BACK      ", 20);
-					memcpy(d2, "   TO YOUR CAGE!    ", 20);
-					memcpy(d3, "   -GRRR!           ", 20);
-					memcpy(d4, "                    ", 20);
-					current_camera_state = 3u;
-					diagf = 51u;
-				break;
-				case 1u:				
-					memcpy(d1, "   FILTHY HUMAN !!  ", 20);
-					memcpy(d2, "   I'LL MAKE A      ", 20);
-					memcpy(d3, "   BELT OUT OF      ", 20);
-					memcpy(d4, "   YOUR SKIN.       ", 20);
-					current_camera_state = 3u;
-					diagf = 52u;
-				break;
-				case 2u:				
-					memcpy(d1, " AS LONG AS I FLY   ", 20);
-					memcpy(d2, " THE SKY IS MINE!   ", 20);
-					memcpy(d3, "HOPE YOU DON'T MIND ", 20);
-					memcpy(d4, "IN MY CLAWS YOU DIE!", 20);
-					current_camera_state = 3u;
-					diagf = 53u;
-				break;
-				case 3u:				
-					memcpy(d1, "  NOBODY HAS EVER   ", 20);
-					memcpy(d2, "  GONE THROUGH MY   ", 20);
-					memcpy(d3, "  THUNDERS! NOW     ", 20);
-					memcpy(d4, "  FACE MY HORNS!    ", 20);
-					current_camera_state = 3u;
-					diagf = 54u;
-				break;
-				case 4u:
-					memcpy(d1, "        GRRR!       ", 20);
-					memcpy(d2, "                    ", 20);
-					memcpy(d3, "    ROOOOOOOAAAR!   ", 20);
-					memcpy(d4, "                    ", 20);
-					current_camera_state = 3u;
-					diagf = 55u;
-				break;
-				case 5u:				
-					memcpy(d1, " YOUR ARROWS WON'T  ", 20);
-					memcpy(d2, " BEAT MY HEADBUTTS! ", 20);
-					memcpy(d3, " IS THE ICE NECKLES ", 20);
-					memcpy(d4, " PRETTY OR ISN'T IT?", 20);
-					current_camera_state = 3u;
-					diagf = 56u;
-				break;
-			}	
-		break;
-		case 2://is_on_boss == 2 significa che l'ho sconfitto
-		case 3: // final tip on boss destroyed
-			if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
+	if(diagf == 0U){
+		switch (is_on_boss){
+			case 0:
 				switch(current_level_b){
 					case 0u:
-						memcpy(d1, "        I...        ", 20);
-						memcpy(d2, "  JUST NEEDED THE   ", 20);
-						memcpy(d3, "  WRENCH TO GO ON   ", 20);
-						memcpy(d4, "   SORRY BLACKIE!   ", 20);
-						diagf = 99u;
+						memcpy(d1, "    A BLACK WOLF    ", 20);
+						memcpy(d2, "  OWNS THE WRENCH   ", 20);
+						memcpy(d3, "  I NEED TO EXIT.   ", 20);
+						memcpy(d4, "    LET'S FIGHT!    ", 20);
+						diagf = 19u;
 					break;
 					case 1u:
-						memcpy(d1, "     PRESS SELECT   ", 20);
-						memcpy(d2, "   TO THE [ SYMBOL  ", 20);
-						memcpy(d3, " AND BREAK THE GATE ", 20);
-						memcpy(d4, "                    ", 20);
-						diagf = 99u;
+						memcpy(d1, "    THE EXIT IS     ", 20);
+						memcpy(d2, "   BEYOND A GATOR   ", 20);
+						memcpy(d3, " I NEED HIS AMULET  ", 20);
+						memcpy(d4, "    LET'S FIGHT!    ", 20);
+						diagf = 1u;
 					break;
 					case 2u:
-						memcpy(d1, "         I...       ", 20);
-						memcpy(d2, "   JUST NEEDED THE  ", 20);
-						memcpy(d3, "     KEY TO GO ON   ", 20);
-						memcpy(d4, "     SORRY EAGLE!   ", 20);
-						diagf = 99u;
+						memcpy(d1, "    AN EAGLE OWNS   ", 20);
+						memcpy(d2, "      THE KEY I     ", 20);
+						memcpy(d3, "    NEED TO EXIT.   ", 20);
+						memcpy(d4, "     LET'S FIGHT!   ", 20);
+						diagf = 1u;
 					break;
 					case 3u:
-						memcpy(d1, "     PRESS SELECT   ", 20);
-						memcpy(d2, "   TO THE # SYMBOL  ", 20);
-						memcpy(d3, " AND BREAK THE GATE ", 20);
-						memcpy(d4, "                    ", 20);
-						diagf = 99u;
+						memcpy(d1, "    THE EXIT IS     ", 20);
+						memcpy(d2, "   BEYOND A IBEX    ", 20);
+						memcpy(d3, " I NEED HIS AMULET  ", 20);
+						memcpy(d4, "    LET'S FIGHT!    ", 20);
+						diagf = 1u;
 					break;
 					case 4u:
-						memcpy(d1, " I...               ", 20);
-						memcpy(d2, " JUST NEEDED THE    ", 20);
-						memcpy(d3, " WRENCH TO GO       ", 20);
-						memcpy(d4, " ON. SORRY BEAR!    ", 20);
-						diagf = 99u;
+						memcpy(d1, "       HELLO        ", 20);
+						memcpy(d2, "     TEDDY BEAR !   ", 20);
+						memcpy(d3, "                    ", 20);
+						memcpy(d4, "     LET ME PASS!   ", 20);
+						diagf = 1u;
 					break;
 					case 5u:
-						memcpy(d1, "     PRESS SELECT   ", 20);
-						memcpy(d2, "   TO THE ] SYMBOL  ", 20);
-						memcpy(d3, " AND BREAK THE GATE ", 20);
-						memcpy(d4, "                    ", 20);
-						diagf = 99u;
-					break;
-				}				
-			}else{ // one of the amulet has been collided
-				switch(archer_state){
-					case STATE_AMULET_STONE:
-						memcpy(d1, "  THE STONE CALICE  ", 20);
-						memcpy(d2, "                   ", 20);
-						memcpy(d3, "  NOW I CAN THROW   ", 20);
-						memcpy(d4, "  STONE ARROWS   +[ ", 20);
-						diagf = 30u;					
-					break;
-					case STATE_AMULET_THUNDER:
-						memcpy(d1, "  THE THUNDER HORN  ", 20);
-						memcpy(d2, "                    ", 20);
-						memcpy(d3, "  NOW I CAN THROW   ", 20);
-						memcpy(d4, "  THUNDER ARROWS +# ", 20);
-						diagf = 31u;					
-					break;
-					case STATE_AMULET_ICE:
-						memcpy(d1, "  STALAGMITE NECK   ", 20);
-						memcpy(d2, "                    ", 20);
-						memcpy(d3, "  NOW I CAN THROW   ", 20);
-						memcpy(d4, "  ICE ARROWS     +] ", 20);
-						diagf = 32u;					
+						memcpy(d1, "    THE EXIT IS     ", 20);
+						memcpy(d2, "  BEYOND A WALRUS.  ", 20);
+						memcpy(d3, " I NEED HIS AMULET  ", 20);
+						memcpy(d4, "    LET'S FIGHT!    ", 20);
+						diagf = 1u;
 					break;
 				}
-			}
 			break;
+			case 1:  //is_on_boss == 1
+				switch(current_level_b){
+					case 0u:
+						memcpy(d1, "   BEAST! BACK      ", 20);
+						memcpy(d2, "   TO YOUR CAGE!    ", 20);
+						memcpy(d3, "   -GRRR!           ", 20);
+						memcpy(d4, "                    ", 20);
+						current_camera_state = 3u;
+						diagf = 51u;
+					break;
+					case 1u:				
+						memcpy(d1, "   FILTHY HUMAN !!  ", 20);
+						memcpy(d2, "   I'LL MAKE A      ", 20);
+						memcpy(d3, "   BELT OUT OF      ", 20);
+						memcpy(d4, "   YOUR SKIN.       ", 20);
+						current_camera_state = 3u;
+						diagf = 52u;
+					break;
+					case 2u:				
+						memcpy(d1, " AS LONG AS I FLY   ", 20);
+						memcpy(d2, " THE SKY IS MINE!   ", 20);
+						memcpy(d3, "HOPE YOU DON'T MIND ", 20);
+						memcpy(d4, "IN MY CLAWS YOU DIE!", 20);
+						current_camera_state = 3u;
+						diagf = 53u;
+					break;
+					case 3u:				
+						memcpy(d1, "  NOBODY HAS EVER   ", 20);
+						memcpy(d2, "  GONE THROUGH MY   ", 20);
+						memcpy(d3, "  THUNDERS! NOW     ", 20);
+						memcpy(d4, "  FACE MY HORNS!    ", 20);
+						current_camera_state = 3u;
+						diagf = 54u;
+					break;
+					case 4u:
+						memcpy(d1, "        GRRR!       ", 20);
+						memcpy(d2, "                    ", 20);
+						memcpy(d3, "    ROOOOOOOAAAR!   ", 20);
+						memcpy(d4, "                    ", 20);
+						current_camera_state = 3u;
+						diagf = 55u;
+					break;
+					case 5u:				
+						memcpy(d1, " YOUR ARROWS WON'T  ", 20);
+						memcpy(d2, " BEAT MY HEADBUTTS! ", 20);
+						memcpy(d3, " IS THE ICE NECKLES ", 20);
+						memcpy(d4, " PRETTY OR ISN'T IT?", 20);
+						current_camera_state = 3u;
+						diagf = 56u;
+					break;
+				}	
+			break;
+			case 2://is_on_boss == 2 significa che l'ho sconfitto
+			case 3: // final tip on boss destroyed
+				if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
+					switch(current_level_b){
+						case 0u:
+							memcpy(d1, "        I...        ", 20);
+							memcpy(d2, "  JUST NEEDED THE   ", 20);
+							memcpy(d3, "  WRENCH TO GO ON   ", 20);
+							memcpy(d4, "   SORRY BLACKIE!   ", 20);
+							diagf = 99u;
+						break;
+						case 1u:
+							memcpy(d1, "     PRESS SELECT   ", 20);
+							memcpy(d2, "   TO THE [ SYMBOL  ", 20);
+							memcpy(d3, " AND BREAK THE GATE ", 20);
+							memcpy(d4, "                    ", 20);
+							diagf = 99u;
+						break;
+						case 2u:
+							memcpy(d1, "         I...       ", 20);
+							memcpy(d2, "   JUST NEEDED THE  ", 20);
+							memcpy(d3, "     KEY TO GO ON   ", 20);
+							memcpy(d4, "     SORRY EAGLE!   ", 20);
+							diagf = 99u;
+						break;
+						case 3u:
+							memcpy(d1, "     PRESS SELECT   ", 20);
+							memcpy(d2, "   TO THE # SYMBOL  ", 20);
+							memcpy(d3, " AND BREAK THE GATE ", 20);
+							memcpy(d4, "                    ", 20);
+							diagf = 99u;
+						break;
+						case 4u:
+							memcpy(d1, " I...               ", 20);
+							memcpy(d2, " JUST NEEDED THE    ", 20);
+							memcpy(d3, " WRENCH TO GO       ", 20);
+							memcpy(d4, " ON. SORRY BEAR!    ", 20);
+							diagf = 99u;
+						break;
+						case 5u:
+							memcpy(d1, "     PRESS SELECT   ", 20);
+							memcpy(d2, "   TO THE ] SYMBOL  ", 20);
+							memcpy(d3, " AND BREAK THE GATE ", 20);
+							memcpy(d4, "                    ", 20);
+							diagf = 99u;
+						break;
+					}				
+				}else{ // one of the amulet has been collided
+					switch(archer_state){
+						case STATE_AMULET_STONE:
+							memcpy(d1, "  THE STONE CALICE  ", 20);
+							memcpy(d2, "                   ", 20);
+							memcpy(d3, "  NOW I CAN THROW   ", 20);
+							memcpy(d4, "  STONE ARROWS   +[ ", 20);
+							diagf = 30u;					
+						break;
+						case STATE_AMULET_THUNDER:
+							memcpy(d1, "  THE THUNDER HORN  ", 20);
+							memcpy(d2, "                    ", 20);
+							memcpy(d3, "  NOW I CAN THROW   ", 20);
+							memcpy(d4, "  THUNDER ARROWS +# ", 20);
+							diagf = 31u;					
+						break;
+						case STATE_AMULET_ICE:
+							memcpy(d1, "  STALAGMITE NECK   ", 20);
+							memcpy(d2, "                    ", 20);
+							memcpy(d3, "  NOW I CAN THROW   ", 20);
+							memcpy(d4, "  ICE ARROWS     +] ", 20);
+							diagf = 32u;					
+						break;
+					}
+				}
+				break;
+		}
 	}
 	
-	if (diagf == 0u){
+	if(diagf == 0u){
 		switch(current_level){
 			case 0u:
 				switch(current_map){
@@ -478,11 +535,19 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								memcpy(d4, "  FIRE ARROWS    +@ ", 20);
 								diagf = 33u;					
 							break;
+							default:
+								memcpy(d1, "   OPENED CASKETS   ", 20);
+								memcpy(d2, "   CLOSED CASKETS   ", 20);
+								memcpy(d3, "  NOW I AM SCARED.  ", 20);
+								memcpy(d4, "        MOM ?       ", 20);
+								diagf = 99u;							
+							break;
 						}
 					break;
 				}
 			break;
 		}
 	}
+	
 	return diagf;
 }

@@ -90,3 +90,8 @@ struct LogoInfo{
 struct PuffInfo{
 	INT8 puff_counter;
 };
+
+struct FalcebaseInfo{
+	struct Sprite * falcelama;
+	ENEMY_STATE enemy_state;
+};

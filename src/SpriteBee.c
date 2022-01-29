@@ -9,7 +9,7 @@
 #include "CircleMath.h"
 #include "custom_datas.h"
 
-//SNAKE
+//BEE
 const UINT8 bee_idle[] = {2, 0, 2}; //The first number indicates the number of frames
 const UINT8 bee_walk[] = {2, 0, 2}; //The first number indicates the number of frames
 const UINT8 bee_hit[] = {2, 0, 1}; //The first number indicates the number of frames

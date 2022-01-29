@@ -280,13 +280,12 @@ void Start_StateGame() {
 		load_next_s = 0;
 	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
 		diag_found = Build_Next_Dialog_Banked(scroll_target);
-		if(diag_found){			
-			archer_state = STATE_DIAG;
-			show_diag = 1;	
+		if(diag_found){
+			//archer_state = STATE_DIAG;
+			//show_diag = 1;	
 		}
 	}
-	load_next_d = 0;		
-	
+	load_next_d = 0;	
 	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -758,5 +757,5 @@ void LCD_isr() NONBANKED {
 void set_window_y(UBYTE y) {
     WX_REG = 7u;
     LYC_REG = WY_REG = y;
-    if (y < 144u) SHOW_WIN; else { HIDE_WIN; LYC_REG = 160u; } 
+    if (y < 144u) {SHOW_WIN;} else { HIDE_WIN; LYC_REG = 160u; } 
 }

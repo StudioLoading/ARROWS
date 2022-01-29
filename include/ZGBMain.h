@@ -52,6 +52,8 @@ _SPRITE_DMG(SpriteAxethrower, axethrower)\
 _SPRITE_DMG(SpriteAxe, axe)\
 _SPRITE_DMG(SpriteBat, bat)\
 _SPRITE_DMG(SpriteFalce, falce)\
+_SPRITE_DMG(SpriteFalcebase, falcebase)\
+_SPRITE_DMG(SpriteCathead, cathead)\
 SPRITE_DEF_END
 
 #include "ZGBMain_Init.h"

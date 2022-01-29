@@ -95,7 +95,8 @@ void SpawnBoss(INT8 hp_default);
 void SpawnReward();
 void WriteBBOSSHP();
 
-void Start_StateBoss() {
+void Start_StateBoss()
+{
 
 	reward = 0;
 	
@@ -312,6 +313,11 @@ void Update_StateBoss() {
 	}
 	//INTRO END
 	
+	//DIAG MANAGEMENT
+	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+		ShowWindow();
+		return;
+	}	
 	if(archer_state == STATE_DIAG){
 		if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 			ShowWindow();

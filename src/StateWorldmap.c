@@ -16,6 +16,8 @@
 #include "Sound.h"
 #include "gbt_player.h"
 
+#include "../res/src/archer.h"
+
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
@@ -27,6 +29,7 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 extern UINT8 current_level;
 extern UINT16 sprites_palette[];
+extern UINT8 diag_found;
 
 const UINT8 const collision_tiles_worldmap[] = {0, 0};
 const UINT16 const bg_palette_worldmap[] = {PALETTE_FROM_HEADER(tilesmapworld)};
@@ -38,6 +41,7 @@ const struct MapInfo** const mapworld_levels[] = {mapworld_0};
 UINT8 counter = 0;
 struct Sprite* siconpsg;
 struct ItemInfo* dataiconpsg;
+UINT8 on_worldmap = 0;
 
 void Start_StateWorldmap() {
 
@@ -110,6 +114,8 @@ void Start_StateWorldmap() {
 	const struct MapInfo** mapworlds = mapworld_levels[0];
 	InitScroll(mapworlds[0], collision_tiles_worldmap, 0);
 	SHOW_BKG;
+	
+	on_worldmap = 1;
 
 }
 
@@ -136,6 +142,9 @@ void Update_StateWorldmap(){
 			}
 		break;
 		case 4u:
+			if (counter == 10u) {
+				WorldmapQuiverStone();
+			}
 			if(counter > 80u && siconpsg->x > 48u && (counter & 1)){
 				siconpsg->x-=2;
 			}
@@ -144,23 +153,34 @@ void Update_StateWorldmap(){
 			}
 		break;
 		case 5u:
+			if (counter == 10u) {
+				WorldmapQuiverStone();
+				WorldmapQuiverThunder();
+			}
 			if(counter > 80u && siconpsg->x < 73u && (counter & 1)){
 				siconpsg->x++;
 			}
 		break;
 		case 6u:
+			if (counter == 10u) {
+				WorldmapQuiverStone();
+				WorldmapQuiverThunder();
+				WorldmapQuiverIce();
+			}
 			if(counter > 80u && siconpsg->x < 98u && (counter & 1)){
 				siconpsg->x++;
 			}
 		break;
 	}
 	if(counter == 0){
-		if(current_level < 3){
+		diag_found = Build_Next_Dialog_Banked(siconpsg);
+		SetState(StateDiag);
+		/*if(current_level < 3){
 			SetState(StateGame);
 		}else if (current_level < 5){
 			SetState(StateGame3);
 		}else{
 			SetState(StateGame6);
-		}
+		}*/
 	}
 }

@@ -12,6 +12,7 @@ extern void ETurn();
 
 const UINT8 anim_bat_normal[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 const UINT8 anim_bat_hit[] = {2, 0, 3}; //The first number indicates the number of frames
+const INT8 V_MAX = 2;
 
 void Start_SpriteBat() {	
 	THIS->coll_x = 2;
@@ -25,7 +26,7 @@ void Start_SpriteBat() {
 	batdata->enemy_state = ENEMY_STATE_NORMAL;
 	batdata->wait = 0u;
 	batdata->hp = 30;
-	batdata->vx = -1;
+	batdata->vx = -V_MAX;
 	batdata->enemy_accel_y = -20;
 	batdata->archer_posx = 127;
 	SPRITE_SET_VMIRROR(THIS);
@@ -39,6 +40,12 @@ void Update_SpriteBat(){
 		batdata->enemy_accel_y += 1;
 	}
 	switch(batdata->enemy_state){
+		case ENEMY_STATE_WAIT:
+			if(batdata->wait == 20){
+				batdata->wait = 0;
+				batdata->enemy_state = ENEMY_STATE_NORMAL;
+			}
+		break;
 		case ENEMY_STATE_NORMAL:
 			switch(batdata->wait){
 				case 20:
@@ -54,9 +61,9 @@ void Update_SpriteBat(){
 				break;
 				default:
 					if(SPRITE_GET_VMIRROR(THIS)){
-						batdata->vx = -1;						
+						batdata->vx = -V_MAX;						
 					}else{
-						batdata->vx = 1;
+						batdata->vx = V_MAX;
 					}
 			}
 			if(batdata->wait & 1){
@@ -67,13 +74,15 @@ void Update_SpriteBat(){
 				case 84u:
 				case 85u:
 					batdata->archer_posx = 0;
+					batdata->enemy_state = ENEMY_STATE_WAIT;
+					batdata->wait=0;
 				break;
 			}
 			if(batdata->archer_posx == 0u){
-				if (batdata->vx == 1){
+				if (batdata->vx == V_MAX){
 					SPRITE_SET_VMIRROR(THIS);
 				}
-				if (batdata->vx == -1){
+				if (batdata->vx == -V_MAX){
 					SPRITE_UNSET_VMIRROR(THIS);
 				}
 				batdata->vx = -batdata->vx;				

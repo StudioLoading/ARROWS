@@ -130,5 +130,14 @@ void AnimPrisoner21() __banked{
 }
 
 void WorldmapQuiverStone() __banked{
-	set_bkg_data(53u, 1u, tilesanims.data->data+16u);// 16 * 1
+	set_bkg_data(44u, 1u, tilesanims.data->data+16u);// 16 * 1
+}
+void WorldmapQuiverThunder() __banked{
+	set_bkg_data(45u, 1u, tilesanims.data->data+48u);// 16 * 3
+}
+void WorldmapQuiverIce() __banked{
+	set_bkg_data(56u, 1u, tilesanims.data->data+96u);// 16 * 6	
+}
+void WorldmapQuiverFire() __banked{
+	set_bkg_data(47u, 1u, tilesanims.data->data+160u);// 16 * 10
 }

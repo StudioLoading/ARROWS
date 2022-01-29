@@ -18,6 +18,9 @@
 #include "gbt_player.h"
 
 #include "custom_datas.h"
+#include "TileAnimations.h"
+#include "Dialogs.h"
+#include "sgb_palette.h"
 
 const UINT8 collision_tiles_gameover[] = {1,0};
 const UINT16 bg_palette_gameover[] = {PALETTE_FROM_HEADER(diaggameover)};
@@ -61,6 +64,10 @@ void Start_StateGameover() {
 		
 	SPRITES_8x16;	
 	SpriteManagerLoad(SpriteCamerafocus);
+	if(sgb_check()){
+		//set_sgb_palette01_ZOO();
+		set_sgb_palette01_2H();
+	}
 	SHOW_SPRITES;
 	
 	//WINDOW	

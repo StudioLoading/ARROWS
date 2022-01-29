@@ -1,0 +1,23 @@
+{
+    "files.exclude": {
+        "obj": true,
+        "Debug": true,
+        "DebugColor": true,
+        "Release": true,
+        "ReleaseColor": true,
+        "*.bat": true,
+        "*.log": true,
+        "*.sln": true,
+        "*.vcxproj*": true,
+        "*.db": true,
+        ".gitignore": true,
+        ".vs": true
+    },
+    "files.associations": {
+        "mapdiagamuletstone.h": "c",
+        "mapdiagamuletice.h": "c",
+        "maplevel1sewer.h": "c",
+        "maplevel0zoo.h": "c",
+        "diagnew6.h": "c"
+    }
+}
