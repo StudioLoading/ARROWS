@@ -26,7 +26,7 @@
 #include "sgb_palette.h"
 
 
-const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -298,6 +298,7 @@ void Update_StateGame6() {
 		is_on_gameover = 1;
 		SetState(StateGameover);
 	}
+	
 	// SPAWNING
 	// !SPRITE_GET_VMIRROR(scroll_target) && 
 	//if(archer_state != STATE_HIT && platform_vx == 0u){
@@ -453,7 +454,7 @@ void Update_StateGame6() {
 						spawn_item6(scrigno_shield, 229u, 11u, 7, 1);//1coin 2hp 3up 7dcoin
 						spawning_counter++;
 					}						
-					if (scroll_target->x > (UINT16) 207u << 3){							
+					if (scroll_target->x > (UINT16) 207u << 3 && scroll_target->x < (UINT16) 222u << 3){							
 						switch(thunder_delay){
 							case 40u:
 								spawn_enemy6(SpriteStalattite, (scroll_target->x >> 3) + 6u, 5u);
@@ -567,7 +568,39 @@ void Update_StateGame6() {
 						spawning_counter++;
 					}
 					if(scroll_target->x > (UINT16) 88u << 3 && spawning_counter == 7){
-						spawn_enemy6(SpriteCathead, 95u, 21u);
+						spawn_enemy6(SpriteCathead, 96u, 21u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 92u << 3 && spawning_counter == 8){
+						spawn_enemy6(SpriteAxethrower, 107u, 23u);
+						spawn_enemy6(SpriteBat, 100u, 23u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 108u << 3 && spawning_counter == 9){
+						spawn_falci(120u, 25u);
+						spawn_item6(scrigno_coin, 111u, 24u, 1, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 119u << 3 && spawning_counter == 10){
+						spawn_enemy6(SpriteCathead, 131u, 21u);
+						spawn_enemy6(SpriteCathead, 129u, 25u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 125u << 3 && spawning_counter == 11){
+						spawn_item6(scrigno_coin, 136u, 30u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawn_item6(scrigno_coin, 141u, 30u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 141u << 3 && spawning_counter == 12){
+						spawn_falci(154u, 25u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 151u << 3 && spawning_counter == 13){
+						spawn_enemy6(SpriteBat, 160u, 21u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 153u << 3 && spawning_counter == 14){
+						spawn_enemy6(SpriteBat, 161u, 23u);
 						spawning_counter++;
 					}
 				break;

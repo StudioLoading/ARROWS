@@ -24,7 +24,6 @@
 #include "sgb_palette.h"
 
 extern UINT8* titlescreen_mod_Data[];
-extern UINT8* higher_mod_Data[];
 extern UINT8 quiver;// = 0b0000000001;
 extern UINT8 current_camera_counter;
 
@@ -94,7 +93,7 @@ void Start_StateTitlescreen() {
 	NR50_REG = 0x30;
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	//PlayMusic(higher_mod_Data, 18, 1);//file, bank, loop	
+	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
 
 	InitScroll(&maptitlescreen, collision_tiles_titlescreen, 0);	
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);

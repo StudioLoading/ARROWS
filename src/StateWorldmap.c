@@ -67,7 +67,8 @@ void Start_StateWorldmap() {
 			dataiconpsg->setup=1u;
 		break;
 		case 1u:
-			siconpsg = SpriteManagerAdd(SpriteIconpsg, ((UINT16) 9u), (UINT16) 81u);	dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, ((UINT16) 9u), (UINT16) 81u);	
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
 			dataiconpsg->type=1;
 			dataiconpsg->setup=1u;
 		break;

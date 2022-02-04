@@ -41,7 +41,7 @@ void Update_SpriteCathead() {
 	}
 	catheaddata->wait++;//up to 255
 	if(catheaddata->wait & 0b100){		
-		THIS->x--;
+		THIS->x-=2;
 	}
 	if(catheaddata->wait & 1){
 		if(catheaddata->wait < 64u){

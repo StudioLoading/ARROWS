@@ -43,7 +43,7 @@ const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of fra
 const UINT8 anim_jump[] = {1, 11};
 const UINT8 anim_jump_up[] = {1, 6};
 const UINT8 anim_dead[] = {1, 9};
-const UINT8 anim_walk[] = {4, 7, 6, 5, 4};
+const UINT8 anim_walk[] = {4, 7, 4, 6, 5, 4};
 const UINT8 anim_shield[] = {1, 3};
 const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {3,2,1,2};
@@ -239,7 +239,7 @@ void Update_SpritePlayer() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_boss != 1 && is_on_secret == -1){
+				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
 					SetSpriteAnim(THIS, anim_shield, 8u);
 					Build_Next_Dialog();
 					return;
@@ -279,7 +279,7 @@ void Update_SpritePlayer() {
 			if((archer_accel_y >> 3) > 1 && archer_state != STATE_DIAG) {
 				archer_state = STATE_JUMPING;
 			}
-			if(is_on_boss == 2 && current_camera_state < 5u){
+			if(is_on_boss == 3 && current_camera_state < 5u){
 				current_camera_state = 5u; //valore che uso io completamente custom per il dialogo once a boss sconfitto
 				Build_Next_Dialog();
 				return;				

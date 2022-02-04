@@ -89,14 +89,13 @@ struct Sprite* reward = 0;
 
 const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
-const UINT8 const collision_btiles6[] = {2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_btiles6[] = {1, 2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void SpawnBoss(INT8 hp_default);
 void SpawnReward();
 void WriteBBOSSHP();
 
-void Start_StateBoss()
-{
+void Start_StateBoss(){
 
 	reward = 0;
 	
@@ -180,7 +179,8 @@ void Start_StateBoss()
 		scroll_top_movement_limit = 60;
 		scroll_target = SpriteManagerAdd(SpriteCamerafocus, drop_player_x << 3, drop_player_y << 3);
 	}else{
-		if(is_on_boss < 2){
+		if(is_on_boss <= 2){
+			is_on_boss = 2;
 			ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);	
 		}		
 		scroll_top_movement_limit = 30;
@@ -207,7 +207,7 @@ void Start_StateBoss()
 	SHOW_BKG;
 	
 	
-	if (is_on_boss >= 2){
+	if (is_on_boss > 2){
 		if(is_on_boss == 4){//lo setto a 4 solo quando si muore dopo aver sconfitto il boss ma prima di essere usciti, come dei coglioni
 			SpawnReward();
 		}		
@@ -223,7 +223,7 @@ void Start_StateBoss()
 		return;
 	}else{
 		boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
-		if(is_on_boss >= 2){
+		if(is_on_boss > 2){
 			boss_data_b->enemy_state = ENEMY_STATE_DEAD;	
 		}
 	}
@@ -335,11 +335,11 @@ void Update_StateBoss() {
 		UpdateHUD();
 	}
 	
-	if (boss_hp != boss_data_b->hp && is_on_boss < 2){
+	if (boss_hp != boss_data_b->hp && is_on_boss < 3){
 		boss_hp = boss_data_b->hp;
 		WriteBBOSSHP();
 		if (boss_hp <= 0){
-			is_on_boss = 2;
+			is_on_boss = 3;
 			SpawnReward();
 		}
 	}

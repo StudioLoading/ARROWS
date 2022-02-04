@@ -28,6 +28,9 @@
 #include "../res/src/maplevel1sewer.h"
 #include "../res/src/maplevel2forest.h"
 #include "../res/src/maplevel3sky.h"
+#include "../res/src/maplevel4jungle.h"
+#include "../res/src/maplevel5icecave.h"
+#include "../res/src/maplevel6cematery.h"
 
 #include "../res/src/diagslave1.h"
 #include "../res/src/diagslave2.h"
@@ -147,6 +150,24 @@ void Start_StateDiag() {
 				set_sgb_palette01_1B();
 			}
 			InitScroll(&maplevel3sky, collision_dtiles, 0);
+		break;
+		case 14u:
+			if(sgb_check()){
+				set_sgb_palette01_TREES();
+			}
+			InitScroll(&maplevel4jungle, collision_dtiles, 0);
+		break;
+		case 15u:
+			if(sgb_check()){
+				set_sgb_palette01_ICE();
+			}
+			InitScroll(&maplevel5icecave, collision_dtiles, 0);
+		break;
+		case 16u:
+			if(sgb_check()){
+				set_sgb_palette01_CEMATERYCRYPT();
+			}
+			InitScroll(&maplevel6cematery, collision_dtiles, 0);
 		break;
 		case 19u:
 			if(sgb_check()){

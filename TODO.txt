@@ -139,21 +139,14 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c
-
-struct FalcebaseInfo{
-	struct Sprite * falcelama;
-	ENEMY_STATE enemy_state;
-};
-
-
+extern UINT8* titlescreen_mod_Data[];
 ...
-
-struct Sprite* sfalce = SpriteManagerAdd(SpriteFalce, (UINT16) 19u << 3, (UINT16) 25u << 3);
-struct Sprite* falcebase = SpriteManagerAdd(SpriteFalcebase, (UINT16) 19u << 3, (UINT16) 27u << 3);						
-struct FalcebaseInfo* falcebasedata = (struct FalcebaseInfo*)falcebase->custom_data;
-falcebasedata->falcelama = sfalce;
-falcebasedata->enemy_state = ENEMY_STATE_SLIDING;
-
+	//SOUND
+	NR50_REG = 0x30;
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR51_REG = 0xFF; //Enables all channels (left and right)
+	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
+...
 ```
 
 

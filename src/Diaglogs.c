@@ -1,4 +1,4 @@
-#pragma bank 11
+#pragma bank 20
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -56,8 +56,8 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			break;
 			case 3u:
 				memcpy(d1, "                    ", 20);
-				memcpy(d2, "       THE SKY      ", 20);
-				memcpy(d3, "     IS THE LIMIT   ", 20);
+				memcpy(d2, "      THE SKY       ", 20);
+				memcpy(d3, "    IS THE LIMIT    ", 20);
 				memcpy(d4, "                    ", 20);
 				diagf = 13u;
 			break;
@@ -77,7 +77,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			break;
 			case 6u:
 				memcpy(d1, "                    ", 20);
-				memcpy(d2, "    PET SEMATARY    ", 20);
+				memcpy(d2, "    PET CEMATERY    ", 20);
 				memcpy(d3, "                    ", 20);
 				memcpy(d4, "                    ", 20);
 				diagf = 16u;
@@ -219,7 +219,52 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 					break;
 				}	
 			break;
-			case 2://is_on_boss == 2 significa che l'ho sconfitto
+			case 2://is_on_boss == 2 significa che lo sto combattendo			
+				switch(current_level_b){
+					case 0u:
+						memcpy(d1, " THE WOLF IS FAST   ", 20);
+						memcpy(d2, " AND STRONG.        ", 20);
+						memcpy(d3, " I SHOULD AIM TO    ", 20);
+						memcpy(d4, " HIS BELLY !        ", 20);
+						diagf = 99u;
+					break;
+					case 1u:				
+						memcpy(d1, " NORMAL ARROWS DO   ", 20);
+						memcpy(d2, " NOT WORK. I SHOULD ", 20);
+						memcpy(d3, " USE THOSE SPECIAL  ", 20);
+						memcpy(d4, " ARROW CONVERTERS.  ", 20);
+						diagf = 99u;
+					break;
+					case 2u:				
+						memcpy(d1, " VERTICAL ARROWS DO ", 20);
+						memcpy(d2, " NOT WORK. I SHOULD ", 20);
+						memcpy(d3, " STRIKE WITH        ", 20);
+						memcpy(d4, " HORIZONTALS.       ", 20);
+						diagf = 99u;
+					break;
+					case 3u:				
+						memcpy(d1, " MY ARROWS DO NOT   ", 20);
+						memcpy(d2, " WORK! I SHOULD TRY ", 20);
+						memcpy(d3, " WITH THOSE SPECIAL ", 20);
+						memcpy(d4, " ARROW CONVERTERS.   ", 20);
+						diagf = 99u;
+					break;
+					case 4u:
+						memcpy(d1, " I SHOULD USE THE   ", 20);
+						memcpy(d2, " ARROW BOUNCER TO   ", 20);
+						memcpy(d3, " STRIKE FASTER.     ", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 99u;
+					break;
+					case 5u:				
+						memcpy(d1, " ARROWS DO NOT WORK ", 20);
+						memcpy(d2, " WHILE WALRUS IS    ", 20);
+						memcpy(d3, " SPINNING. I SHOULD ", 20);
+						memcpy(d4, " GET HIM JUMPING.   ", 20);
+						diagf = 99u;
+					break;
+				}
+			break;
 			case 3: // final tip on boss destroyed
 				if(archer_state != STATE_AMULET_STONE && archer_state != STATE_AMULET_THUNDER && archer_state != STATE_AMULET_ICE && archer_state != STATE_AMULET_FIRE){
 					switch(current_level_b){
@@ -475,17 +520,17 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 			case 3u:
 				switch(current_map){
 					case 0u:
-						memcpy(d1, "BETTER NOT          ", 20);
+						memcpy(d1, "BETTER NOT TO       ", 20);
 						memcpy(d2, "FALL. CERTAIN       ", 20);
 						memcpy(d3, "DEATH FROM THIS     ", 20);
 						memcpy(d4, "HEIGHT !            ", 20);
 						diagf = 99u;
 					break;
 					case 1u:
-						memcpy(d1, "AAH-AAH             ", 20);
-						memcpy(d2, "AH-AH-AH!           ", 20);
-						memcpy(d3, "THUN-               ", 20);
-						memcpy(d4, "DERS !!             ", 20);
+						memcpy(d1, "IF I TURN MY BACK   ", 20);
+						memcpy(d2, "THE THUNDERS        ", 20);
+						memcpy(d3, "JUST STOP!          ", 20);
+						memcpy(d4, "                    ", 20);
 						diagf = 99u;
 					break;
 				}

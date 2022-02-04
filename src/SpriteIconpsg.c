@@ -33,16 +33,16 @@ void Update_SpriteIconpsg() {
 	if(datak->setup > 0u){ 
 		switch(datak->type){
 			case 1:
-				SetSpriteAnim(THIS, icon_archer, 16u);
+				SetSpriteAnim(THIS, icon_archer, 8u);
 			break;
 			case 2:
-				SetSpriteAnim(THIS, icon_mother, 16u);
+				SetSpriteAnim(THIS, icon_mother, 8u);
 			break;
 			case 11:
-				SetSpriteAnim(THIS, icon_archer_blink, 24u);
+				SetSpriteAnim(THIS, icon_archer_blink, 16u);
 			break;
 			case 12:
-				SetSpriteAnim(THIS, icon_mother_blink, 24u);
+				SetSpriteAnim(THIS, icon_mother_blink, 16u);
 			break;
 		}
 		datak->setup = 0u;
