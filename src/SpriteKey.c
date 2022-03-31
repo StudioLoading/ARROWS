@@ -1,5 +1,6 @@
-#include "Banks/SetBank3.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
+
+//#include "main.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -12,20 +13,20 @@ const UINT8 key_key[] = {1, 2}; //The first number indicates the number of frame
 
 
 
-void Start_SpriteKey() {
+void START() {
 	struct ItemInfo* keydata = (struct ItemInfo*)THIS->custom_data;
 	keydata->item_accel_y = 0;
 	keydata->type = 0;
 	keydata->setup = 0;
-	THIS->coll_x = 0;
-	THIS->coll_y = 0;
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 8;
 	THIS->lim_x = 200;
 	THIS->lim_y = 200;
 }
 
-void Update_SpriteKey() {
+void UPDATE() {
 	
 	struct ItemInfo* keydata = (struct ItemInfo*)THIS->custom_data;
 	if(keydata->setup){
@@ -50,5 +51,5 @@ void Update_SpriteKey() {
 	
 }
 
-void Destroy_SpriteKey() {
+void DESTROY() {
 }

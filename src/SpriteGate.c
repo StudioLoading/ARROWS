@@ -1,5 +1,6 @@
-#include "Banks/SetBank6.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
+
+//#include "main.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -11,9 +12,9 @@ extern UINT8 current_level;
 
 const UINT8 anim_gate[] = {2, 0, 1}; //The first number indicates the number of frames
 
-void Start_SpriteGate() {	
-	THIS->coll_x = 0;
-	THIS->coll_y = 0;
+void START() {	
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 16;
 	THIS->lim_x = 255u;
@@ -21,10 +22,10 @@ void Start_SpriteGate() {
 	SetSpriteAnim(THIS, anim_gate, 16u);	
 }
 
-void Update_SpriteGate() {
+void UPDATE() {
 	
 	UINT8 scroll_gate_tile;
-	struct Sprite* gatespr;
+	Sprite* gatespr;
 
 	SPRITEMANAGER_ITERATE(scroll_gate_tile, gatespr) {
 		if(gatespr->type == SpriteArrow){
@@ -40,6 +41,6 @@ void Update_SpriteGate() {
 }
 
 
-void Destroy_SpriteGate() {
+void DESTROY() {
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 }

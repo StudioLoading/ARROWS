@@ -1,4 +1,4 @@
-#include "Banks/SetBank9.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -18,10 +18,10 @@ const UINT8 stalag_hh[] = {1, 0}; //The first number indicates the number of fra
 
 void CheckCollisionStalagTile(struct EnemyInfo* stalag_data);
 
-void Start_SpriteStalagmite() {
+void START() {
 	
-	THIS->coll_x = 1;
-	THIS->coll_y = 4;
+	THIS->mt_sprite->dx = 1;
+	THIS->mt_sprite->dy = 4;
 	THIS->coll_w = 6;
 	THIS->coll_h = 4;
 	THIS->lim_x = 240u;
@@ -44,7 +44,7 @@ void Start_SpriteStalagmite() {
 	*/
 }
 
-void Update_SpriteStalagmite() {
+void UPDATE() {
 	
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;
 	if(rdata->wait > 5u){
@@ -72,7 +72,7 @@ void Update_SpriteStalagmite() {
 	}
 	
 	UINT8 scroll_st_tile;
-	struct Sprite* istspr;
+	Sprite* istspr;
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_st_tile, istspr) {
@@ -102,16 +102,16 @@ void Update_SpriteStalagmite() {
 						istspr->y -= 6u;
 						SetSpriteAnim(istspr, stalag_mid, 4u);
 						sdata->enemy_state = STALAG_STATE_MED;
-						istspr->coll_x = 1;
-						istspr->coll_y = 1;
+						istspr->mt_sprite->dx = 1;
+						istspr->mt_sprite->dy = 1;
 						istspr->coll_w = 6;
 						istspr->coll_h = 14;
 					break;
 					case STALAG_STATE_MED:
 						SetSpriteAnim(istspr, stalag_hl, 4u);
-						struct Sprite* upper_stalag = SpriteManagerAdd(SpriteStalagmite, istspr->x, istspr->y - 16u);
+						Sprite* upper_stalag = SpriteManagerAdd(SpriteStalagmite, istspr->x, istspr->y - 16u);
 						struct EnemyInfo* supper_stalag_data = (struct EnemyInfo*)upper_stalag->custom_data;				
-						upper_stalag->coll_y = 2;
+						upper_stalag->mt_sprite->dy = 2;
 						upper_stalag->coll_h = 14;
 						supper_stalag_data->enemy_state = STALAG_STATE_HIGH;
 						SetSpriteAnim(upper_stalag, stalag_hh, 4u);
@@ -138,6 +138,6 @@ void CheckCollisionStalagTile(struct EnemyInfo* stalag_data){
 	}
 }
 
-void Destroy_SpriteStalagmite(){
+void DESTROY(){
 	SpriteManagerAdd(SpritePuff, THIS->x, (UINT16)THIS->y-3u);
 }

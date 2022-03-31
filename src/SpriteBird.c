@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -18,15 +18,15 @@ const UINT8 bird_up[] = {1, 4}; //The first number indicates the number of frame
 const UINT8 bird_time_attack = 76u;
 const UINT8 bird_time_normal = 81u;
 
-extern void CheckCollisionETile();
-extern void ETurn();
-extern void EDie();
+extern void CheckCollisionETile() BANKED;
+extern void ETurn() BANKED;
+extern void EDie() BANKED;
 
 
-void Start_SpriteBird() {
+void START() {
 	
-	THIS->coll_x = 0;
-	THIS->coll_y = 7;
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 7;
 	THIS->coll_w = 8;
 	THIS->coll_h = 8;
 	THIS->lim_x = 255u;
@@ -40,7 +40,7 @@ void Start_SpriteBird() {
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpriteBird() {
+void UPDATE() {
 	
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -112,7 +112,7 @@ void Update_SpriteBird() {
 	}
 	
 	UINT8 scroll_bi_tile;
-	struct Sprite* ibispr;
+	Sprite* ibispr;
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_bi_tile, ibispr) {
@@ -120,10 +120,10 @@ void Update_SpriteBird() {
 			if(data->enemy_state == ENEMY_STATE_NORMAL){ //  & data->wait == 40u
 				if(THIS->x > ibispr->x & data->vx == 1 & ((THIS->x - ibispr->x) > 24u) ){
 					data->vx = -1;
-					SPRITE_SET_VMIRROR(THIS);
+					THIS->mirror = V_MIRROR; //SPRITE_SET_VMIRROR(THIS);
 				}else if (THIS->x < ibispr->x & data->vx == -1 & ((ibispr->x - THIS->x) > 24u)){
 					data->vx = 1;
-					SPRITE_UNSET_VMIRROR(THIS);
+					THIS->mirror = NO_MIRROR; //SPRITE_UNSET_VMIRROR(THIS);
 				}
 				if ((ibispr->x - THIS->x) == 33u | ((THIS->x - ibispr->x) == 33u)){
 					SetSpriteAnim(THIS, bird_attack, 8u);
@@ -145,7 +145,6 @@ void Update_SpriteBird() {
 					data->wait = 8u;
 					data->enemy_state = ENEMY_STATE_DEAD;
 					SetSpriteAnim(THIS, bird_dead, 16u);
-					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 				}
 			}
@@ -154,7 +153,7 @@ void Update_SpriteBird() {
 	
 }
 
-void Destroy_SpriteBird() {
+void DESTROY() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	data->enemy_state = ENEMY_STATE_DEAD;
 }

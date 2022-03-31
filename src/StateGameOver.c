@@ -1,12 +1,6 @@
-#include "Banks/SetBank4.h"
+#include "Banks/SetAutoBank.h"
 
-#include "../res/src/diaggameover.h"
-#include "../res/src/mapdiaggameover.h"
-#include "../res/src/font.h"
-#include "../res/src/archer.h"
-#include "../res/src/windowpushstart.h"
-
-#include "ZGBMain.h"
+#include "..\include\ZGBMain.h"
 #include "Keys.h"
 #include "Palette.h"
 #include "Scroll.h"
@@ -15,27 +9,16 @@
 #include "Print.h"
 #include "Sound.h"
 #include "Fade.h"
-#include "gbt_player.h"
 
-#include "custom_datas.h"
-#include "TileAnimations.h"
-#include "Dialogs.h"
 #include "sgb_palette.h"
 
+IMPORT_MAP(mapdiaggameover);
+
+IMPORT_TILES(font);
+
 const UINT8 collision_tiles_gameover[] = {1,0};
-const UINT16 bg_palette_gameover[] = {PALETTE_FROM_HEADER(diaggameover)};
-const UINT16 sprites_palette_gameover[] = {
-	PALETTE_INDEX(archer, 0),
-	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
-	PALETTE_INDEX(archer, 3),
-	PALETTE_INDEX(archer, 4),
-	PALETTE_INDEX(archer, 5),
-	PALETTE_INDEX(archer, 6),
-	PALETTE_INDEX(archer, 7),
-};
-INT8 countdown = 10;
-INT8 one_second = 0;
+INT8 countdown;
+INT8 one_second;
 
 void ResetConfig(INT8 gameo);
 void ShowContinue();
@@ -55,41 +38,35 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-void Start_StateGameover() {
+void START() {
 
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_gameover, 4);//end with the bank of where I have the palette/tileset
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_gameover, 4); //end with the bank of where I have the palette/tileset
-	
 	HIDE_WIN;
-		
-	SPRITES_8x16;	
+
 	SpriteManagerLoad(SpriteCamerafocus);
 	if(sgb_check()){
-		//set_sgb_palette01_ZOO();
 		set_sgb_palette01_2H();
 	}
 	SHOW_SPRITES;
 	
-	//WINDOW	
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
+	INIT_FONT(font, PRINT_BKG); 
+
 	current_map = 0u;
 	countdown = 10;
 	one_second = 0;
-	ShowContinue();
 	
-	InitScroll(&mapdiaggameover, collision_tiles_gameover, 0);	
+	InitScroll( (UINT8) BANK(mapdiaggameover), &mapdiaggameover, collision_tiles_gameover, 0);	
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
 	
 }
 
-void Update_StateGameover() {
-	if(countdown <= 9 && scroll_target->y < (UINT16) 30u << 3){
+void UPDATE() {
+	if( scroll_target->y < (UINT16) 35u << 3){ //countdown <= 9 &&
 		scroll_target->y += 2;
+		return;
 	}
 	one_second++;
-	if (one_second >= 70){
+	if (one_second >= 90){
 		one_second = 0;
 		ShowContinue();
 	}
@@ -99,19 +76,15 @@ void Update_StateGameover() {
 }
 
 void ShowContinue(){
-	WX_REG = 4u;
-	WY_REG = 136u;
 	countdown--;
-	InitWindow(0, 0, &windowpushstart);
-	if(countdown >= -1){
-		PRINT_POS(5,0);
-		if(countdown != -1){
-			Printf(" CONTINUE ? 0%d    ", countdown);	
-		}
+	if(countdown > -1){
+		PRINT(6u, 39u, "CONTINUE? 0");
+		unsigned char str[] = "0";
+		UIntToString(countdown, str);
+		PRINT(17u, 39u, str);
 	}else if (countdown == -2){
 		ResetConfig(1);
 	}
-	SHOW_WIN;
 }
 
 void ResetConfig(INT8 gameo){		

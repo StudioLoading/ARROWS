@@ -1,5 +1,4 @@
-#include "Banks/SetBank6.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -8,11 +7,6 @@
 #include "custom_datas.h"
 
 extern INT8 platform_vx;
-
-/*struct Arrows{
-	UINT8 ids[5];
-    INT8 falen;
-};*/
 
 const UINT8 arrow_normal[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 arrow_water[] = {1, 1};
@@ -32,7 +26,7 @@ const UINT8 arrow_fire_g[] = {1, 14};
 const UINT8 spine[] = {1, 15};
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
-struct Sprite * ids[4] = {0,0,0,0};
+Sprite * ids[4] = {0,0,0,0};
 INT8 falen = 0; //counts in-screen arrows 
 
 void SetupArrow();
@@ -40,12 +34,13 @@ void CheckCollisionArrowTile(UINT8 ta);
 void FApush();
 void FApop();
 
-void Start_SpriteArrow() {
-	
-	THIS->coll_x = 5;
-	THIS->coll_y = 6;
+void START() {
+	/*
+	THIS->mt_sprite->dx = 5;
+	THIS->mt_sprite->dy = 6;
 	THIS->coll_w = 3;
 	THIS->coll_h = 3;
+	*/
 	THIS->lim_x = 60u;
 	THIS->lim_y = 60u;
 	
@@ -78,7 +73,7 @@ void FApop(){
 	ids[1] = ids[0];
 }
 
-void Update_SpriteArrow() {
+void UPDATE() {
 	
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	internal_t = data->type;
@@ -87,11 +82,11 @@ void Update_SpriteArrow() {
 		data->original_type = internal_t;
 	}
 	UINT8 tile_a_collision = 0u;
-	if(SPRITE_GET_VMIRROR(THIS)) {
-		THIS->coll_x = 0;
+	if(THIS->mirror == V_MIRROR) {
+		THIS->mt_sprite->dx = 0;
 		tile_a_collision = TranslateSprite(THIS, -data->vx << delta_time, data->vy << delta_time);
 	} else {
-		THIS->coll_x = 5;
+		THIS->mt_sprite->dx = 5;
 		tile_a_collision = TranslateSprite(THIS, data->vx << delta_time, data->vy << delta_time);
 	}	
 	if(tile_a_collision){
@@ -99,7 +94,7 @@ void Update_SpriteArrow() {
 	}
 	
 	UINT8 scroll_a_tile;
-	struct Sprite* iaspr;
+	Sprite* iaspr;
 	SPRITEMANAGER_ITERATE(scroll_a_tile, iaspr) {
 		if(iaspr->type == SpriteItem) {
 			if(CheckCollision(THIS, iaspr)) {
@@ -248,9 +243,9 @@ void SetupArrow(){
 	}
 	//RELATIVE MOVEMENT ON X AXIS!
 	if(platform_vx){
-		if(platform_vx > 0 && !SPRITE_GET_VMIRROR(THIS)){
+		if(platform_vx > 0 && THIS->mirror != V_MIRROR){
 			data->vx += platform_vx;
-		}else if (platform_vx < 0 && SPRITE_GET_VMIRROR(THIS)){
+		}else if (platform_vx < 0 && THIS->mirror == V_MIRROR){
 			data->vx -= platform_vx;
 		}		
 	}
@@ -261,7 +256,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 	switch(ta) {
 		case 11u: //da DX a GIU
 			data->arrowdir = 4;
-			if(SPRITE_GET_VMIRROR(THIS)){
+			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 2;
 			}else{
 				THIS->x += 2;
@@ -270,27 +265,27 @@ void CheckCollisionArrowTile(UINT8 ta) {
 		break;
 		case 13u: // da DX a SU
 			data->arrowdir = 3;
-			if(SPRITE_GET_VMIRROR(THIS)){
+			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
 			}else{
 				THIS->x += 4;
 			}
 		break;
 		case 16u://da GIU a DX
-			SPRITE_UNSET_VMIRROR(THIS);
+			THIS->mirror = NO_MIRROR; //SPRITE_UNSET_VMIRROR(THIS);
 			data->arrowdir = 1;
 			THIS->x += 4;
 			THIS->y -= 4;
 		break;
 		case 17u: //da GIU a SX
-			SPRITE_SET_VMIRROR(THIS);
+			THIS->mirror = V_MIRROR; //SPRITE_SET_VMIRROR(THIS);
 			data->arrowdir = 1;
 			THIS->x -= 4;
 			THIS->y -= 4;
 		break;
 		case 89u: //STONE generator da DX a GIU
 			data->arrowdir = 4;
-			if(SPRITE_GET_VMIRROR(THIS)){
+			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
 			}else{
 				THIS->x += 4;
@@ -300,7 +295,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 		break;
 		case 90u: //thunder generator da DX a GIU
 			data->arrowdir = 4;
-			if(SPRITE_GET_VMIRROR(THIS)){
+			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
 			}else{
 				THIS->x += 4;
@@ -320,7 +315,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 	data->type = data->original_type;
 }
 
-void Destroy_SpriteArrow() {
+void DESTROY() {
 	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
 	if(data->arrowdamage != 100){
 		FApop();

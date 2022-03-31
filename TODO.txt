@@ -1,3 +1,10 @@
+File: FLYINGARROWS_2021_12_23.gb
+Tools: GBDK, Version: 2020.4.0.2
+Engine: ZGB, Version: 2021.0
+Music: GBT Player
+
+
+
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
 LIV 2 FOREST -> Eagle  -> tool per uscita
@@ -5,24 +12,26 @@ LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CIMITERO -> 
-		- mappa 0 -> cripta
-		- mappa 1 -> esterno del cimitero verso portone castello
-						- corvi che volano leggermente obliqui e veloci
-						- pits, buchi per terra pieni di bestie
-						- finisce con la mamma davanti al cancello
-						- terminare il design
+				- finisce con la mamma davanti al cancello
+				- terminare il design
 				
 LIV 7 CASTELLO -> 3 MAPPE
-		- mappa 0 -> castello un po' labirintico, Nemici bomba, 
+		- mappa 0 -> castello un po' labirintico, 
+			- Nemici bomba, 
 			- formica gigante che si forma da formichine piccole, immortale
 			- fantasmi immortali però freezzabili
-			- ad un certo punto devo fare una cutscene piccola di ri-chiusura del portone alle mie spalle. Il finalBoss infatti ha preso l' amuleto del fuoco e lo userà al primo scontro con me.
-		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da e dice che deve andare sopra la torre da sola per "liberare le bestie".
+			- ad un certo punto devo fare una cutscene piccola di ri-chiusura del portone alle mie spalle. 
+				Il finalBoss infatti ha preso l' amuleto del fuoco e lo userà al primo scontro con me.
+		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. 
+				che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da e dice che deve andare sopra la torre da sola per "liberare le bestie".
 		- mappa 1 torre -> vado con la mamma in cima - da sola
-				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione. Se li colpisco, mi cacciano, se ci parlo, li curo e verranno dopo in aiuto.
+				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione. 
+				Se li colpisco, mi cacciano, se ci parlo, li curo e verranno dopo in aiuto.
 				il finalboss l' attacca, la scena si sposta sull' arcere che deve rifare da solo 
 		- mappa 2 torre -> le stanze segrete sono vuote. cronometro di 60secondi, se non arrivo in tempo, mamma muore GAME OVER
-		- bossFight 2 -> in cima alla torre Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. Ho a disposizione frecce normali e frecce di fuoco per demolirlo. Alla fine arriva mamma , dice "insieme figlio!" scoccano una freccia insieme, che diventa freccia di luce e colpisce il cattivone, sparandolo lontano dalla torre.
+		- bossFight 2 -> in cima alla torre Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. 
+			Ho a disposizione frecce normali e frecce di fuoco per demolirlo. Alla fine arriva mamma , dice "insieme figlio!" 
+			scoccano una freccia insieme, che diventa freccia di luce e colpisce il cattivone, sparandolo lontano dalla torre.
 			cutscene dell' arcere e madre che escono dal cancello, senza più gli amuleti perchè diciamo di averceli tutti
 			titoli di coda
 			cutscene alla Gator Swamp col coccodrillo insieme al finalBoss.
@@ -39,6 +48,8 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 		- mamma vet per accesso al bonus level
 
 KNOWN ISSUE:
+- colori viola della schermata cematery sul color
+- annerire lo sfondo sulla schermata worldmap sul color
 - mettere più scrigni a moneta singola in giro
 
 
@@ -139,14 +150,8 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 DISCORD MARKDOWN: ```c ```
 
 ```c
-extern UINT8* titlescreen_mod_Data[];
-...
-	//SOUND
-	NR50_REG = 0x30;
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
-	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
-...
+		NR12_REG = 0b11111111;
+	PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 ```
 
 

@@ -223,7 +223,7 @@ void set_sgb_palette01_intro() __banked{
 
 }
 void set_sgb_palette01_secret() __banked{
-	set_sgb_palette( RGB8(0, 64, 88), SGB_PAL2H_DARK, RGB8(0, 136, 136), RGB8(0, 0, 0));
+	set_sgb_palette( RGB8(0, 64, 88), RGB8(0, 136, 136), SGB_PAL2H_DARK, RGB8(0, 0, 0));
 }
 void set_sgb_palette01_worldmap() __banked{
 	set_sgb_palette(RGB8(255, 255, 255), RGB8(252, 160, 68), SGB_PAL4B_DARK, SGB_PAL4B_DARKER);
@@ -247,7 +247,7 @@ void set_sgb_palette01_ZOO() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL4B_LIGHT, SGB_PAL4B_DARK, SGB_PAL4B_DARKER);
 }
 void set_sgb_palette01_SEWER() __banked {
-	set_sgb_palette(RGB8(255, 255, 255), SGB_PAL4B_LIGHT, SGB_PAL4B_DARK, SGB_PAL4B_DARKER);
+	set_sgb_palette(RGB8(188, 188, 188), RGB8(152, 120, 248), RGB8(0, 64, 88), RGB8(0, 0, 0));
 }
 void set_sgb_palette01_GATORSWAMP() __banked {
 	set_sgb_palette(SGB_PAL1E_LIGHTER, SGB_PAL1E_LIGHT, RGB8(0, 136, 136), SGB_PAL1E_DARKER);

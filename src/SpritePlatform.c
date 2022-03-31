@@ -1,5 +1,5 @@
-#include "Banks/SetBank6.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
+//#include "main.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -9,9 +9,9 @@
 const UINT8 platform_normal[] = {1, 0}; //The first number indicates the number of frames
 extern INT8 spawning_triggered;
 
-void Start_SpritePlatform() {
-	THIS->coll_x = 0;
-	THIS->coll_y = 12;
+void START() {
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 12;
 	THIS->coll_w = 16;
 	THIS->coll_h = 4;
 	THIS->lim_x = 250u;
@@ -24,7 +24,7 @@ void Start_SpritePlatform() {
 	data_platform->initx = THIS->x;
 }
 
-void Update_SpritePlatform() {
+void UPDATE() {
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	UINT8 r = 0x1;//2;
 	if (data_platform->step < 30 || data_platform->step > 170){
@@ -60,6 +60,6 @@ void Update_SpritePlatform() {
 	}
 }
 
-void Destroy_SpritePlatform() {
+void DESTROY() {
 	spawning_triggered--;
 }

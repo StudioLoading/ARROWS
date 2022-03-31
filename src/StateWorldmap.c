@@ -1,11 +1,4 @@
-#include "Banks/SetBank14.h"
-
-#include "../res/src/font.h"
-#include "../res/src/tilesmapworld.h"
-#include "../res/src/mapworld.h"
-
-#include "../res/src/iconpsg.h"
-#include "../res/src/archer.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -13,42 +6,45 @@
 #include "Palette.h"
 #include "string.h"
 #include "Print.h"
+#include "Music.h"
 #include "Sound.h"
 #include "gbt_player.h"
-
-#include "../res/src/archer.h"
 
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
+
+IMPORT_TILES(tilesmapworld);
+IMPORT_TILES(font);
+
+IMPORT_MAP(mapworld);
+
+DECLARE_MUSIC(loop0);
+
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
 extern UINT8 current_level;
-extern UINT16 sprites_palette[];
 extern UINT8 diag_found;
+extern UINT8 on_worldmap;
 
 const UINT8 const collision_tiles_worldmap[] = {0, 0};
-const UINT16 const bg_palette_worldmap[] = {PALETTE_FROM_HEADER(tilesmapworld)};
-const struct MapInfo* const mapworld_0[] = {
-	&mapworld
-};
-const struct MapInfo** const mapworld_levels[] = {mapworld_0};
 
+UINT8 diag_found = 0u;
 UINT8 counter = 0;
-struct Sprite* siconpsg;
+Sprite* siconpsg;
 struct ItemInfo* dataiconpsg;
-UINT8 on_worldmap = 0;
 
-void Start_StateWorldmap() {
+void START() {
 
 	HIDE_WIN;
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR51_REG = 0xFF; //Enables all channels (left and right)
+	//NR50_REG = 0x44; //Max volume 0x77
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7); //last param is the current bank we are in
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_worldmap, 14); //last param is the current bank we are in
 	SpriteManagerLoad(SpriteIconpsg);
 	
 	if(sgb_check()){
@@ -112,15 +108,16 @@ void Start_StateWorldmap() {
 	memcpy(d3, "                    ", 20);
 	memcpy(d4, "                    ", 20);
 
-	const struct MapInfo** mapworlds = mapworld_levels[0];
-	InitScroll(mapworlds[0], collision_tiles_worldmap, 0);
+	InitScroll(BANK(mapworld), &mapworld, collision_tiles_worldmap, 0);
 	SHOW_BKG;
 	
 	on_worldmap = 1;
 
+	PlayMusic(loop0, 1);
+	
 }
 
-void Update_StateWorldmap(){
+void UPDATE(){
 	counter++;
 	switch(current_level){ // spostamento orizzontale da un punto all' altro di 25u
 		//case 0u: ho appena iniziato , non faccio niente
@@ -176,6 +173,7 @@ void Update_StateWorldmap(){
 	if(counter == 0){
 		diag_found = Build_Next_Dialog_Banked(siconpsg);
 		SetState(StateDiag);
+		
 		/*if(current_level < 3){
 			SetState(StateGame);
 		}else if (current_level < 5){

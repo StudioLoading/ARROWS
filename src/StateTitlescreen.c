@@ -1,15 +1,6 @@
-#include "Banks/SetBank6.h"
+#include "Banks/SetAutoBank.h"
 
-#include "../res/src/tilestitlescreen.h"
-#include "../res/src/maptitlescreen.h"
-#include "../res/src/archer.h"
-#include "../res/src/font.h"
-#include "../res/src/windowpushstart.h"
-
-
-#include <gb/gb.h>
-
-#include "ZGBMain.h"
+#include "..\include\ZGBMain.h"
 #include "Keys.h"
 #include "Palette.h"
 #include "Scroll.h"
@@ -18,21 +9,24 @@
 #include "Print.h"
 #include "Sound.h"
 #include "Fade.h"
-#include "gbt_player.h"
+#include "Music.h"
 
 #include "custom_datas.h"
 #include "sgb_palette.h"
 
-extern UINT8* titlescreen_mod_Data[];
-extern UINT8 quiver;// = 0b0000000001;
-extern UINT8 current_camera_counter;
+IMPORT_TILES(font);
 
-extern UINT8 amulet;
-extern UINT8 coins;
-extern INT8 ups;
-extern INT8 hp;
-extern INT8 archer_tool;
-extern INT8 level_tool;
+IMPORT_MAP(maptitlescreen);
+
+DECLARE_MUSIC(bgm_titlescreen);
+
+UINT8 quiver = 0b0000000001;
+UINT8 amulet = 0;// = 0u;
+UINT8 coins = 0;// = 30u;
+INT8 ups = 0;// = 1;
+INT8 hp;
+INT8 level_tool = -1;
+INT8 archer_tool = 0;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -40,30 +34,17 @@ extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
-const UINT16 bg_palette_titlescreen[] = {PALETTE_FROM_HEADER(tilestitlescreen)};
 
 UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
+UINT8 current_camera_counter = 0u;
 UINT8 wait_titlescreen = 0u;
 INT8 loading_code = 0;
 
-void ShowPushStart();
+void START() {	
 
-const UINT16 sprites_palette_titlescreen[] = {
-	PALETTE_INDEX(archer, 0),
-	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
-	PALETTE_INDEX(archer, 3),
-	PALETTE_INDEX(archer, 4),
-	PALETTE_INDEX(archer, 5),
-	PALETTE_INDEX(archer, 6),
-	PALETTE_INDEX(archer, 7),
-};
-
-void Start_StateTitlescreen() {	
-	
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
-	
+	wait_titlescreen = 30u;
 	amulet = 0;
     coins = 30u;
 	ups = 1;
@@ -76,42 +57,30 @@ void Start_StateTitlescreen() {
 		set_sgb_palette_title();
 	}
 
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette_titlescreen, 6); //end with the bank of where I have the palette/tileset
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_titlescreen, 6);//end with the bank of where I have the palette/tileset
-	
-	SPRITES_8x16;	
 	SpriteManagerLoad(SpriteCamerafocus);
 	SpriteManagerLoad(SpriteArrowtitle);
 	SHOW_SPRITES;
 	
-	//WINDOW	
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
-	ShowPushStart();     
+	INIT_FONT(font, PRINT_BKG); 
 	
-	//SOUND
-	NR50_REG = 0x30;
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
-	PlayMusic(titlescreen_mod_Data, 12, 1);//file, bank, loop	
-
-	InitScroll(&maptitlescreen, collision_tiles_titlescreen, 0);	
+	InitScroll(BANK(maptitlescreen), &maptitlescreen, collision_tiles_titlescreen, 0);	
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
 	
 }
 
-void Update_StateTitlescreen() {	
+void UPDATE() {	
 
 	switch(loading_code){
 		case 5:
 			if(KEY_TICKED(J_UP)){
+				StopMusic;
 				quiver = 0b0000011111;
-				NR50_REG = 0x77;
 				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
 				loading_code = 7;
+				PlayMusic(bgm_titlescreen, 1);
 			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}	
@@ -153,11 +122,36 @@ void Update_StateTitlescreen() {
 		break;
 	}
 	
+	current_camera_counter += 1u;
+	switch(current_camera_counter){
+		case 10u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x , 0);
+		break;
+		case 80u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x - 10u, 0);
+		break;
+		case 120u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x, (UINT16) 2 << 3);
+		break;
+		case 160u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 10u, (UINT16) 6 << 3);
+		break;
+		case 200u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 20u, (UINT16) 6 << 3);
+		break;
+		case 240u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x -5u, (UINT16) 10 << 3);
+		break;
+	}
 	switch(current_camera_state){
 		case 0u:
-			current_camera_counter += 1u;
-			scroll_target->x += 8;
+			scroll_target->x += 8u;
+			if(current_camera_counter == 20u){
+				//PlayMusic(bgm_titlescreen, 1);//file, loop
+				PlayMusic(bgm_titlescreen, 1);
+			}
 			if(current_camera_counter == 62u){
+				PRINT(68u, 10u, "DEMO");	
 				current_camera_state = 2u;
 			}	
 		break;
@@ -176,45 +170,16 @@ void Update_StateTitlescreen() {
 		wait_titlescreen -= 1u;
 		switch (wait_titlescreen){
 			case 0u:
-			case 60u:
-			case 120u:
-			case 180u:
-				SHOW_WIN;
+				//PRINT(69u, 15u, "PUSH START");
+				PRINT(65u, 16u, "PUSH START");	
+				wait_titlescreen = 60u;
 			break;
 			case 30u:
-			case 90u:
-			case 160u:
-			case 210u:
-				HIDE_WIN;
-			break;
-		}
-		current_camera_counter += 1u;
-		switch(current_camera_counter){
-			case 20u:
-				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 82 << 3, (UINT16) 0 << 3);
-			break;
-			case 80u:
-				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 68 << 3, (UINT16) 0 << 3);
-			break;
-			case 160u:
-				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 80 << 3, (UINT16) 6 << 3);
-			break;
-			case 200u:
-				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 70 << 3, (UINT16) 6 << 3);
-			break;
-			case 240u:
-				SpriteManagerAdd(SpriteArrowtitle, (UINT16) 72 << 3, (UINT16) 10 << 3);
+				//PRINT(69u, 15u, "          ");	
+				PRINT(65u, 16u, "          ");	
 			break;
 		}
 	}
 	
-}
-
-void ShowPushStart(){
-	WX_REG = 4u;
-	WY_REG = 136u;
-	InitWindow(0, 0, &windowpushstart);
-	PRINT_POS(0,0);
-	Printf("      PUSH START     ");
-	SHOW_WIN;
+	
 }

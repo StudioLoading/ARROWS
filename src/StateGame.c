@@ -1,17 +1,4 @@
-#include "Banks/SetBank7.h"
-
-#include "../res/src/window.h"
-#include "../res/src/diagnew.h"
-#include "../res/src/font.h"
-#include "../res/src/tiles.h"
-#include "../res/src/map.h"
-#include "../res/src/map2.h"
-#include "../res/src/mapsewer.h"
-#include "../res/src/mapsewer2.h"
-#include "../res/src/map3.h"
-#include "../res/src/map3tree.h"
-
-#include "../res/src/archer.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -20,13 +7,26 @@
 #include "string.h"
 #include "Print.h"
 #include "Sound.h"
-#include "gbt_player.h"
-
+#include "Music.h"
 
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
+
+IMPORT_TILES(font);
+
+IMPORT_MAP(map);
+IMPORT_MAP(map2);
+IMPORT_MAP(mapsewer);
+IMPORT_MAP(mapsewer2);
+IMPORT_MAP(map3);
+IMPORT_MAP(map3tree);
+
+IMPORT_MAP(diagnew);
+IMPORT_MAP(window);
+
+DECLARE_MUSIC(bgm_level_emptych1);
 
 
 extern struct ArcherInfo* archer_data;
@@ -47,33 +47,32 @@ extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
 const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
-const UINT16 const bg_palette[] = {PALETTE_FROM_HEADER(tiles)};
-const UINT16 const sprites_palette[] = {
-	PALETTE_INDEX(archer, 0),
-	PALETTE_INDEX(archer, 1),
-	PALETTE_INDEX(archer, 2), //o PALETTE_INDEX(enemy,  2)
-	PALETTE_INDEX(archer, 3),
-	PALETTE_INDEX(archer, 4),
-	PALETTE_INDEX(archer, 5),
-	PALETTE_INDEX(archer, 6),
-	PALETTE_INDEX(archer, 7),
-};
 
 //initialized on StateTitlescreen
-UINT8 amulet = 0;// = 0u;
-UINT8 coins = 0;// = 30u;
-INT8 ups = 0;// = 1;
-INT8 hp;
-INT8 archer_tool = 0;// = 0;
-INT8 level_tool = -1;// = -1;
+extern UINT8 amulet;
+extern UINT8 coins;
+extern INT8 ups;
+extern INT8 hp;
+extern INT8 archer_tool;
+extern INT8 level_tool;
+extern INT8 load_next_d;
+extern INT8 load_next_b;
+extern UINT8 updatecounter; //da StateCredit
+extern unsigned char d1[];
+extern unsigned char d2[];
+extern unsigned char d3[];
+extern unsigned char d4[];
 
 INT8 load_next = 0;
-INT8 load_next_d = 0;
 INT8 load_next_s = 0;
+INT8 load_next_d = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
 INT8 load_next_gameover = 0;
 UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
-UINT8 current_map = 0u; // 0u default
+UINT8 current_map = 1u; // 0u default
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+UINT8 current_cutscene = 0u;
+
 UINT16 drop_player_x = 0u;
 UINT16 drop_player_y = 0u;
 INT8 show_diag = 0;
@@ -82,67 +81,50 @@ INT8 spawning_triggered = 0;
 INT8 spawning_counter = 0;
 INT8 update_hud = 0;
 INT8 LCD_Installed = 0;
+INT8 fx_cooldown = 0;
 
-extern UINT8 updatecounter; //da StateCredit
-struct Sprite* platform_sprite = 0;
-struct Sprite* enemies_0 = 0;
-struct Sprite* enemies_1 = 0 ;
-struct Sprite* enemies_2 = 0 ;
-struct Sprite* enemies_3 = 0 ;
-struct Sprite* scrigno_coin = 0;
-struct Sprite* scrigno_dcoin = 0;
-struct Sprite* scrigno_shield = 0;
-struct Sprite* scrigno_up = 0;
-unsigned char d1[20];
-unsigned char d2[20];
-unsigned char d3[20];
-unsigned char d4[20];
+Sprite* platform_sprite = 0;
+Sprite* enemies_0 = 0;
+Sprite* enemies_1 = 0 ;
+Sprite* enemies_2 = 0 ;
+Sprite* enemies_3 = 0 ;
+Sprite* scrigno_coin = 0;
+Sprite* scrigno_dcoin = 0;
+Sprite* scrigno_shield = 0;
+Sprite* scrigno_up = 0;
 
-const struct MapInfo* const level_1[] = {
-	&map,
-	&map2
-};
-const struct MapInfo* const level_2[] = {
-	&mapsewer2,
-	&mapsewer
-};
-const struct MapInfo* const level_3[] = {
-	&map3,
-	&map3tree
-};
-const struct MapInfo** const levels[] = {level_1, level_2, level_3};
-
-void UpdateHUD();
-void ShowWindow();
-void ShowWindowDiag();
+void UpdateHUD() BANKED;
+void ShowWindow() BANKED;
+void ShowWindowDiag() BANKED;
 void set_window_y(UBYTE y);
 void LCD_isr();
-void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy);
-void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
+void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
+void spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
 
 
-
-void Start_StateGame() {
+void START() {
 	
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
-	
+	fx_cooldown = 0;
+
 	if (current_level > 4u){
-		SetState(StateGame6);
+		//SetState(StateGame6);
 	}else if (current_level > 2u){
-		SetState(StateGame3);
+		//SetState(StateGame3);
 	}
 	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7); //last param is the current bank we are in
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7); //last param is the current bank we are in
+	//INIT SOUND
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR51_REG = 0xFF; //Enables all channels (left and right)
+	NR50_REG = 0xFF; //Max volume 0x77
 
-	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpritePuff);
-	//LOAD THE SPRITES FOR THE MAP
+	//LOAD THE SPRITES FOR THE MAP and plays the bgm	
 	switch (current_level){
 		case 0u:
 			SpriteManagerLoad(SpriteKey);
@@ -152,6 +134,7 @@ void Start_StateGame() {
 				set_sgb_palette01_ZOO();
 				set_sgb_palette_statusbar();
 			}
+			PlayMusic(bgm_level_emptych1, 1);
 		break;
 		case 1u:
 			SpriteManagerLoad(SpriteKey);
@@ -163,6 +146,7 @@ void Start_StateGame() {
 				set_sgb_palette01_SEWER();
 				set_sgb_palette_statusbar();
 			}
+			PlayMusic(bgm_level_emptych1, 1);
 		break;
 		case 2u:
 			SpriteManagerLoad(SpriteSpider);
@@ -187,19 +171,45 @@ void Start_StateGame() {
 	if (current_level == 2u && current_map == 0u){
 		scroll_bottom_movement_limit = 82u;
 	}
+	
+	const struct MapInfo* const level_1[] = {
+		&map,
+		&map2
+	};
+	const struct MapInfo* const level_2[] = {
+		&mapsewer2,
+		&mapsewer
+	};
+	const struct MapInfo* const level_3[] = {
+		&map3,
+		&map3tree
+	};
+	const struct MapInfo** const levels[] = {level_1, level_2, level_3};
+
+	UINT8 level_1_banks[] = {BANK(map), BANK(map2)};
+	UINT8 level_2_banks[] = {BANK(mapsewer2), BANK(mapsewer)};
+	UINT8 level_3_banks[] = {BANK(map3), BANK(map3tree)};
+	UINT8 * levels_banks[] = {level_1_banks, level_2_banks, level_3_banks};
+
 
 	const struct MapInfo** maps = levels[current_level];
-	UINT8 map_w;
-	UINT8 map_h;
-	GetMapSize(maps[current_map], &map_w, &map_h);
+	UINT8* mapbanks = levels_banks[current_level];
+	UINT8 map_w = 0;
+	UINT8 map_h = 0;
+	GetMapSize((UINT8) mapbanks[current_map], maps[current_map], &map_w, &map_h);
 	if (load_next_s == -1){ //COME FROM STATE SECRET
-		ScrollFindTile(maps[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+		ResumeMusic;
+		ScrollFindTile((UINT8) mapbanks[current_map], maps[current_map], 45, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0 || load_next_gameover){
 		spawning_counter = 0;
-		ScrollFindTile(maps[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
+		//PlayMusic(bgm_level_emptych1, 1);
+		ScrollFindTile((UINT8) mapbanks[current_map], maps[current_map], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
+	else{
+		ResumeMusic;
+	}
 	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
-	InitScroll(maps[current_map], collision_tiles, 0);
+	InitScroll((UINT8) mapbanks[current_map], maps[current_map], collision_tiles, 0);
 	SHOW_BKG;
 	
 	//INIT ARCHER
@@ -229,52 +239,11 @@ void Start_StateGame() {
 		break;
 	}
 	
-	//INIT SPAWNING	
+	//INIT ENEMIES	
 	enemies_0 = 0;
 	enemies_1 = 0;
 	enemies_2 = 0;
 	enemies_3 = 0;
-	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
-		switch(current_level){
-			case 0u:
-				switch(current_map){
-					case 0u:
-						//wrench
-						if(archer_data->tool == 0){
-							//spawn_item(scrigno_dcoin, 9u, 12u, 1, 1);
-							spawn_item(scrigno_up, 1u, 9u, 3, 0);
-						}
-					break;
-				}
-			break;
-			case 1u:
-				switch(current_map){
-					case 0u:
-						spawn_enemy(SpriteSpider, 12u, 5u);
-						spawn_enemy(SpriteSpider, 14u, 6u);
-					break;
-					case 1u:
-						spawn_item(scrigno_shield, 41u, 3u, 2, 1);
-						spawn_enemy(SpriteRat, 16u, 4u);
-						spawn_enemy(SpriteEnemy, 17u, 4u);
-					break;
-				}
-			break;
-			case 2u:
-				switch(current_map){
-					case 0u:
-						spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
-						spawn_enemy(SpriteSpider, 13u, 9u);
-						spawn_enemy(SpriteSpider, 19u, 9u);
-					break;
-					case 1u:
-						spawn_enemy(SpriteSpider, 16u, 9u);
-						spawn_enemy(SpriteSpider, 17u, 9u);
-					break;
-				}
-			break;
-		}
-	}
 
 	if(load_next_s == -1){
 		load_next_s = 0;
@@ -286,24 +255,10 @@ void Start_StateGame() {
 		}
 	}
 	load_next_d = 0;	
-	
-	//SOUND
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
-	
-	if (LCD_Installed == 0) { 
-		CRITICAL {
-			add_LCD(LCD_isr);
-			set_interrupts(VBL_IFLAG | LCD_IFLAG);
-			STAT_REG |= 0x40; 
-			set_window_y(144-8);
-		};
-	    LCD_Installed = 1; 
-	}
-	
+
 }
 
-void ShowWindow(){
+void ShowWindow() BANKED{
 	set_window_y(144 - 8);
 	showing_diag = 0;
 	show_diag = -1;
@@ -311,20 +266,20 @@ void ShowWindow(){
 	//WINDOW
 	WX_REG = 7;
 	WY_REG = 144 - 8;
-	InitWindow(0, 0, &window);
+	InitWindow(0, 0, BANK(window), &window);
 	SHOW_WIN;
 	
 	UpdateHUD();
 	
 }
 
-void ShowWindowDiag(){
+void ShowWindowDiag() BANKED{
 	if (showing_diag == 0){
 		HIDE_WIN;
 		set_window_y(144 - 32);
 		WX_REG = 0;
 		WY_REG = 144 - 32; //40
-		InitWindow(0, 0, &diagnew);
+		InitWindow(0, 0, BANK(diagnew), &diagnew);
 		SHOW_WIN;
 		
 		PRINT_POS(1,0);
@@ -340,7 +295,7 @@ void ShowWindowDiag(){
 	}
 }
 
-void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
+void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED{
 	if(spriteType == SpritePlatform){
 		platform_sprite = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
 		return;
@@ -353,9 +308,9 @@ void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy){
 	}
 }
 
-void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno){
+void spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED{
 	SpriteManagerRemoveSprite(itemin);
-	struct Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
+	Sprite* itemnew = SpriteManagerAdd(SpriteItem, (UINT16) posx << 3, (UINT16) posy << 3);
 	struct ItemInfo* datascrigno = (struct ItemInfo*)itemnew->custom_data;
 	datascrigno->setup = 1u;
 	if(scrigno){
@@ -370,12 +325,13 @@ void spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_ty
 	}
 }
 
-void Update_StateGame() {
+void UPDATE() {
 	
 	if(load_next_d){
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
 				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
@@ -392,6 +348,7 @@ void Update_StateGame() {
 		switch(load_next){
 			case 1: //stage
 			case -1:
+				PauseMusic;
 				current_map += load_next;
 			break;
 		}
@@ -404,11 +361,11 @@ void Update_StateGame() {
 			break;
 			case 3:
 			case 4:
-				SetState(StateGame3);
+				//SetState(StateGame3);
 			break;
 			case 5:
 			case 6:
-				SetState(StateGame6);
+				//SetState(StateGame6);
 			break;
 			case 7:
 			break;
@@ -418,6 +375,7 @@ void Update_StateGame() {
 	if(load_next_s == 1){
 		load_next_s = 0;
 		is_on_secret = 1;
+		PauseMusic;
 		SetState(StateSecret);
 	}
 	
@@ -426,7 +384,7 @@ void Update_StateGame() {
 			case 1: //vado allo StateBoss
 				if(archer_state != STATE_DIAG){
 					load_next_b = 0;
-					SetState(StateBoss);//StateBoss
+					SetState(StateBoss);
 				}
 			break;
 			/*case 2: // provengo dal boss, vado al next level
@@ -440,10 +398,27 @@ void Update_StateGame() {
 		SetState(StateGameover);
 	}
 	
+	if(fx_cooldown > 1){
+		fx_cooldown--;
+		//NR12_REG = 0xF0;
+		//NR22_REG = 0x20;
+		//NR32_REG = 0x20;
+		//NR42_REG = 0x20;
+	}else if (fx_cooldown == 1){
+		UNMUTE_ALL_CHANNELS;
+		fx_cooldown--;
+	}
+
 	//SPAWNING
 	switch(current_level){
 		case 0u:
 			switch(current_map){
+				case 0u:
+					if(spawning_counter == 0){
+						spawn_item(scrigno_up, 1u, 9u, 3, 0);
+						spawning_counter++;
+					}
+				break;
 				case 1u:
 					if (scroll_target->x >= (UINT16) 10u << 3 && spawning_counter == 0){
 						spawn_enemy(SpriteEnemy, 22u, 7u);
@@ -469,28 +444,33 @@ void Update_StateGame() {
 						spawn_enemy(SpriteEnemy, 155u, 8u);
 						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 150u << 3 && spawning_counter == 6){
+					/*if (scroll_target->x >= (UINT16) 150u << 3 && spawning_counter == 6){
 						spawn_item(scrigno_shield, 155u, 2u, 2, 1);
 						spawning_counter++;
-					}
+					}*/
 				break;
 			}
 		break;
 		case 1u:
 			switch(current_map){
 				case 0u:
-					if (scroll_target->x > (UINT16) 13u << 3 && spawning_counter == 0){
+					if (scroll_target->x > (UINT16) 5u << 3 && spawning_counter == 0){
+						spawn_enemy(SpriteSpider, 12u, 5u);
+						spawn_enemy(SpriteSpider, 14u, 6u);
+						spawning_counter++;
+					}						
+					if (scroll_target->x > (UINT16) 13u << 3 && spawning_counter == 1){
 						spawn_enemy(SpriteSpider, 21u, 4u);
 						spawn_item(scrigno_up, 25u, 5u, 3, 1);
 						spawn_enemy(SpritePlatform, 35u, 6u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 48u << 3 && spawning_counter == 1){
+					if (scroll_target->x > (UINT16) 48u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteRat, 58u, 6u);
 						spawn_enemy(SpriteEnemy, 61u, 6u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 67u << 3 && spawning_counter == 2){
+					if (scroll_target->x > (UINT16) 67u << 3 && spawning_counter == 3){
 						if( scroll_target->y < (UINT16) 14u << 3 ){
 							spawn_enemy(SpriteRat, 81u, 3u);
 							spawn_enemy(SpriteEnemy, 88u, 3u);
@@ -499,13 +479,13 @@ void Update_StateGame() {
 						}
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 88u << 3 && spawning_counter == 3){
+					if (scroll_target->x > (UINT16) 88u << 3 && spawning_counter == 4){
 						if(scroll_target->y > (UINT16) 14u << 3){
 							spawn_item(scrigno_shield, 93u, 18u, 2, 1);
 						}
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 97u << 3 && spawning_counter == 4){
+					if (scroll_target->x > (UINT16) 97u << 3 && spawning_counter == 5){
 						if(scroll_target->y < (UINT16) 7u << 3 ){
 							spawn_enemy(SpriteSpider, 101u, 3u);
 							spawn_enemy(SpriteSpider, 105u, 3u);
@@ -513,32 +493,42 @@ void Update_StateGame() {
 						}
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 180u << 3 && spawning_counter == 5){
+					if (scroll_target->x > (UINT16) 180u << 3 && spawning_counter == 6){
 						spawn_item(scrigno_dcoin, 192u, 7u, 7, 1);
-						struct Sprite* gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 193u << 3, (UINT16) 18u << 3);
+						Sprite* gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 193u << 3, (UINT16) 18u << 3);
 						struct EnemyInfo* gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 						gatedata->vx = 2;
+						Sprite* gate_sprite2 = SpriteManagerAdd(SpriteGate, (UINT16) 192u << 3, (UINT16) 18u << 3);
+						struct EnemyInfo* gatedata2 = (struct EnemyInfo*)gate_sprite2->custom_data;
+						gatedata2->vx = 2;
 						spawning_counter++;
 					}	
 				break;
 				case 1u:
-					if (scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 0){
+					if (scroll_target->x > (UINT16) 9u << 3 && spawning_counter == 0){
+						spawn_enemy(SpriteRat, 16u, 4u);
+						spawn_enemy(SpriteEnemy, 17u, 4u);
+						spawning_counter++;
+					}
+					if (scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 1){
 						spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 38u << 3 && spawning_counter == 1){
+					if (scroll_target->x > (UINT16) 38u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteSpider, 50u, 7u);
+						spawn_enemy(SpriteEnemy, 52u, 8u);
+						spawn_item(scrigno_shield, 41u, 3u, 2, 1);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 51u << 3 && spawning_counter == 2){
+					if (scroll_target->x > (UINT16) 51u << 3 && spawning_counter == 3){
 						spawn_enemy(SpritePlatform, 63u, 8u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 3){
+					if (scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 4){
 						spawn_enemy(SpriteSpider, 94u, 5u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 136u << 3 && spawning_counter == 4){
+					if (scroll_target->x > (UINT16) 136u << 3 && spawning_counter == 5){
 						spawn_enemy(SpriteSpider, 149u, 5u);
 						spawn_enemy(SpriteSpider, 150u, 5u);
 						spawn_enemy(SpriteRat, 143u, 13u);
@@ -550,77 +540,88 @@ void Update_StateGame() {
 		case 2u:
 			switch(current_map){
 				case 0u:
-					if (scroll_target->x > (UINT16) 37u << 3 && spawning_counter == 0){
+					if (scroll_target->x > (UINT16) 7u << 3 && spawning_counter == 0){
+						spawn_item(scrigno_dcoin, 3u, 1u, 7, 1);
+						spawn_enemy(SpriteSpider, 13u, 9u);
+						spawn_enemy(SpriteSpider, 19u, 9u);
+						spawning_counter++;
+					}
+					if (scroll_target->x > (UINT16) 37u << 3 && spawning_counter == 1){
 						spawn_item(scrigno_up, 46u, 0u, 3, 1);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 43u << 3 && spawning_counter == 1){
+					if (scroll_target->x > (UINT16) 43u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteSpider, 51u, 9u);
 						spawn_enemy(SpriteEnemy, 56u, 9u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 84u << 3 && spawning_counter == 2){
+					if (scroll_target->x > (UINT16) 84u << 3 && spawning_counter == 3){
 						spawn_enemy(SpriteBird, 90u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 104u << 3 && spawning_counter == 3){
+					if (scroll_target->x > (UINT16) 104u << 3 && spawning_counter == 4){
 						spawn_enemy(SpriteEnemy, 115u, 10u);
 						spawn_enemy(SpriteBird, 90u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 119u << 3 && spawning_counter == 4){
+					if (scroll_target->x > (UINT16) 119u << 3 && spawning_counter == 5){
 						spawn_enemy(SpritePlatform, 131u, 10u);
 						spawn_enemy(SpriteBird, 140u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 143u << 3 && spawning_counter == 5){
+					if (scroll_target->x > (UINT16) 143u << 3 && spawning_counter == 6){
 						spawn_enemy(SpriteBird, 155u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 150u << 3 && spawning_counter == 6){
+					if (scroll_target->x > (UINT16) 150u << 3 && spawning_counter == 7){
 						spawn_enemy(SpriteEnemy, 165u, 9u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 151u << 3 && spawning_counter == 7){
+					if (scroll_target->x > (UINT16) 151u << 3 && spawning_counter == 8){
 						spawn_enemy(SpriteBird, 140u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 163u << 3 && spawning_counter == 8){
+					if (scroll_target->x > (UINT16) 163u << 3 && spawning_counter == 9){
 						spawn_enemy(SpriteBird, 160u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 167u << 3 && spawning_counter == 9){
+					if (scroll_target->x > (UINT16) 167u << 3 && spawning_counter == 10){
 						spawn_enemy(SpriteBird, 178u, 3u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 170u << 3 && spawning_counter == 10){
+					if (scroll_target->x > (UINT16) 170u << 3 && spawning_counter == 11){
 						spawn_item(scrigno_shield, 183u, 6u, 2, 1);
 						spawning_counter++;
 					}
 				break;
 				case 1:
-					if (scroll_target->x > (UINT16) 123u << 3 && spawning_counter == 0){
+					if (scroll_target->x > (UINT16) 8u << 3 && spawning_counter == 0){
+						spawn_enemy(SpriteSpider, 16u, 9u);
+						spawn_enemy(SpriteSpider, 17u, 9u);
+						spawning_counter++;
+					}
+					if (scroll_target->x > (UINT16) 123u << 3 && spawning_counter == 1){
 						spawn_enemy(SpriteBird, 135u, 5u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 128u << 3 && spawning_counter == 1){
+					if (scroll_target->x > (UINT16) 128u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteBird, 116u, 5u);
 						spawn_enemy(SpriteSpider, 135u, 10u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 141u << 3 && spawning_counter == 2){
+					if (scroll_target->x > (UINT16) 141u << 3 && spawning_counter == 3){
 						spawn_enemy(SpriteBird, 130u, 5u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 152u << 3 && spawning_counter == 3){
+					if (scroll_target->x > (UINT16) 152u << 3 && spawning_counter == 4){
 						spawn_enemy(SpriteBird, 165u, 5u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 163u << 3 && spawning_counter == 4){
+					if (scroll_target->x > (UINT16) 163u << 3 && spawning_counter == 5){
 						spawn_enemy(SpriteBird, 175u, 5u);
 						spawning_counter++;
 					}
-					if (scroll_target->x > (UINT16) 168u << 3 && spawning_counter == 5){
+					if (scroll_target->x > (UINT16) 168u << 3 && spawning_counter == 6){
 						spawn_enemy(SpriteBird, 182u, 5u);
 						spawning_counter++;
 					}		
@@ -631,25 +632,24 @@ void Update_StateGame() {
 	
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 60) {
+	if (updatecounter < 20) {
 		switch(updatecounter){
 			case 1:
 				AnimSpuncioni0();
-				AnimSky0();
-			break;
-			case 20:			
+				AnimSky0();	
 				AnimWaters0();
+				AnimWaterfalls0();
 				if(archer_tool != level_tool){
 					AnimPrisoner00();
 					AnimPrisoner10();
 					AnimPrisoner20();
 				}
+				AnimSliders0();
 			break;
-			case 30:
+			case 10:
 				AnimSpuncioni1();
-			break;
-			case 40:
 				AnimWaters1();
+				AnimWaterfalls1();
 				AnimSky1();
 				if(archer_tool != level_tool){
 					if(current_level == 0u && current_map == 0u){
@@ -660,6 +660,7 @@ void Update_StateGame() {
 						AnimPrisoner21();
 					}
 				}
+				AnimSliders1();
 			break;
 		}			
 	}else{
@@ -686,7 +687,7 @@ void Update_StateGame() {
 	
 }
 
-void UpdateHUD(){
+void UpdateHUD() BANKED{
 	hp = archer_data->hp;
 	amulet = archer_data->amulet;
 	coins = archer_data->coins;
@@ -742,16 +743,6 @@ void UpdateHUD(){
 	PRINT_POS(2, 0); //up
 	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
 	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
-}
-
-void LCD_isr() NONBANKED {
-    if (LYC_REG == 0) {
-        if (WY_REG == 0) HIDE_SPRITES; else SHOW_SPRITES; 
-        LYC_REG = WY_REG;
-    } else {
-        HIDE_SPRITES; 
-        LYC_REG = 0;
-    }
 }
 
 void set_window_y(UBYTE y) {

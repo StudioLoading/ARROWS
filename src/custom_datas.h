@@ -59,6 +59,7 @@ typedef enum  {
 	ENEMY_STATE_INVISIBLE,
 	ENEMY_STATE_WAIT,
 	ENEMY_STATE_SLIDING,
+	ENEMY_STATE_WALKING,
 	STALAG_STATE_WAIT,
 	STALAG_STATE_DROP,
 	STALAG_STATE_LOW,
@@ -69,7 +70,8 @@ typedef enum  {
 	WALRUS_STATE_JUMP_UP,
 	WALRUS_STATE_JUMP_DOWN,
 	WALRUS_STATE_SWIMMING,
-	WALRUS_STATE_SWIMMING_UP
+	WALRUS_STATE_SWIMMING_UP,
+	MOTHER_FOLLOWING
 }ENEMY_STATE;
 
 struct EnemyInfo{
@@ -92,6 +94,13 @@ struct PuffInfo{
 };
 
 struct FalcebaseInfo{
-	struct Sprite * falcelama;
+	Sprite * falcelama;
 	ENEMY_STATE enemy_state;
+};
+
+struct CameraInfo{
+	UINT8 step;
+	UINT8 wait;
+	UINT16 final_x;
+	UINT16 final_y;
 };

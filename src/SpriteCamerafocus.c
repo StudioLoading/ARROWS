@@ -1,4 +1,5 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
+
 #include "main.h"
 
 #include "ZGBMain.h"
@@ -7,9 +8,11 @@
 
 const UINT8 camerafocus_normal[] = {1, 0}; //The first number indicates the number of frames
 
-void Start_SpriteCamerafocus() {
-	THIS->coll_x = 0;
-	THIS->coll_y = 0;
+extern UINT8 current_camera_counter;
+
+void START() {
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 0;
 	THIS->coll_h = 0;
 	THIS->lim_x = 255u;
@@ -17,9 +20,9 @@ void Start_SpriteCamerafocus() {
 	SetSpriteAnim(THIS, camerafocus_normal, 8u);
 }
 
-void Update_SpriteCamerafocus() {
+void UPDATE() {
 	
 }
 
-void Destroy_SpriteCamerafocus() {
+void DESTROY() {
 }

@@ -1,10 +1,11 @@
-#include "Banks/SetBank6.h"
+#include "Banks/SetAutoBank.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "string.h"
 #include "Sound.h"
+#include "Music.h"
 #include "Scroll.h"
 #include "gbt_player.h"
 
@@ -39,7 +40,8 @@ extern const UINT8 EMPTY_TILE;
 #define MAX_HIT_COOLDOWN 24
 #define MAX_DIAG_COOLDOWN 24
 
-const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
+//const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
+const UINT8 anim_idle[] = {4, 12, 13, 14, 13};
 const UINT8 anim_jump[] = {1, 11};
 const UINT8 anim_jump_up[] = {1, 6};
 const UINT8 anim_dead[] = {1, 9};
@@ -52,21 +54,22 @@ const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
 INT8 jump_power = 0;
 INT8 death_cooldown = 0;
 INT8 hit_cooldown = 0;
-UINT8 tile_collision = 0u;
+extern UINT8 tile_collision;
 INT16 archer_accel_y = 0;
 INT8 shoot_cooldown = 0;
 INT8 platform_vx = 0;
 INT8 platform_vy = 0;
-INT8 is_on_boss = -1;
+extern INT8 is_on_boss;
 INT8 is_on_secret = -1;
 INT8 is_on_gameover = -1;
-UINT8 diag_found = 0u;
+extern UINT8 diag_found;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
-UINT8 current_camera_counter = 0u;
-struct ArcherInfo* archer_data;
-ARCHER_STATE archer_state;
-struct Sprite* princess_parent = 0;
-UINT8 quiver = 0b0000000001; //little endian, rightest are the less important
+extern UINT8 current_camera_counter;
+extern struct ArcherInfo* archer_data;
+extern ARCHER_STATE archer_state;
+extern INT8 fx_cooldown;
+Sprite* princess_parent = 0;
+extern UINT8 quiver; //little endian, rightest are the less important
 INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
 
 void Die();
@@ -78,7 +81,7 @@ void CheckCollisionTileDoor();
 void Hit(INT8 damage);
 void Build_Next_Dialog();
 
-void Start_SpritePlayer() {
+void START() {
 		
 	archer_data = (struct ArcherInfo*)THIS->custom_data;
 	platform_vx = 0;
@@ -88,37 +91,29 @@ void Start_SpritePlayer() {
 	}
 	
 	if(diag_found == 21u){ //spawn key
-		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+		Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 		datakey->type = 1;
 		datakey->setup = 1u;
 	}
 	if(diag_found == 20u){ //spawn wrench			
-		struct Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+		Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 		datakey->type = 2;
 		datakey->setup = 1u;
 	}
 	
 	diag_found = 0u;
-	
-	THIS->coll_x = 5;
-	THIS->coll_y = 3;
-	THIS->coll_w = 6;
-	THIS->coll_h = 13;
-	
 	death_cooldown = 1;
 	hit_cooldown = MAX_HIT_COOLDOWN;
-	
-	NR50_REG = 0x55; //Max volume
-	
+		
 	update_hud = 1;
 
 	archer_state = STATE_NORMAL;
 	
 }
 
-void Update_SpritePlayer() {
+void UPDATE() {
 
 	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
@@ -140,15 +135,10 @@ void Update_SpritePlayer() {
 					show_diag = 0;
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					archer_state = STATE_NORMAL;
-					//archer_state = STATE_NORMAL;
 				}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					show_diag += 1;
-					//archer_state = STATE_NORMAL;
-					SetSpriteAnim(THIS, anim_idle, 33u);
-					//if(show_diag == 0){
-					//	SetSpriteAnim(THIS, anim_idle, 33u);
-					//}
+					SetSpriteAnim(THIS, anim_idle, 12u);
 				}
 			}else{
 				diag_cooldown--;
@@ -210,9 +200,9 @@ void Update_SpritePlayer() {
 							if(current_level < 3){
 								SetState(StateGame);
 							}else if (current_level < 5){
-								SetState(StateGame3);
+								//SetState(StateGame3);
 							}else{
-								SetState(StateGame6);
+								//SetState(StateGame6);
 							}
 						}
 					}
@@ -235,7 +225,7 @@ void Update_SpritePlayer() {
 					SetSpriteAnim(THIS, anim_walk, 16u);
 				}else{
 					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
-					else{SetSpriteAnim(THIS, anim_idle, 33u);}					
+					else{SetSpriteAnim(THIS, anim_idle, 12u);}					
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
@@ -247,27 +237,25 @@ void Update_SpritePlayer() {
 					SetSpriteAnim(THIS, anim_shield, 8u);
 					if (archer_state == STATE_NORMAL_PLATFORM){
 						//THIS->coll_x = 3;
-						THIS->coll_y = 9;
-						THIS->coll_w = 10;
-						THIS->coll_h = 6;	
+						//THIS->mt_sprite->dy = 9;
+						//THIS->coll_w = 10;
+						//THIS->coll_h = 6;	
 					}
 				}
-			}else if (THIS->coll_x != 5){
-				THIS->coll_x = 5;
+			}else if (THIS->mt_sprite->dx != 5){
+				THIS->mt_sprite->dx = 5;
 				if (archer_state == STATE_NORMAL_PLATFORM){
 					THIS->coll_h = 12;
-					THIS->coll_y = 3;
+					THIS->mt_sprite->dy = 3;
 					THIS->coll_w = 6;
 				}
 			}
-			
 			//Jump
 			if(KEY_TICKED(J_A)){
-				NR50_REG = 0x18; //Max volume		
-				//PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				fx_cooldown = 30;
+				PlayFx(CHANNEL_1, 30, 0x27, 0x40, 0x43, 0x68, 0x86);
 				Jump();
 			}
-			
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
 			} else {
@@ -283,8 +271,7 @@ void Update_SpritePlayer() {
 				current_camera_state = 5u; //valore che uso io completamente custom per il dialogo once a boss sconfitto
 				Build_Next_Dialog();
 				return;				
-			}
-			
+			}			
 		break;
 		case STATE_JUMPING:
 			if(shoot_cooldown) {
@@ -372,9 +359,9 @@ void Update_SpritePlayer() {
 		archer_accel_y = -12;
 		archer_state = STATE_NORMAL;
 	}
-
+	
 	UINT8 scroll_tile;
-	struct Sprite* ispr;
+	Sprite* ispr;
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
 		if(ispr->type == SpriteAmulet) {
 			if(CheckCollision(THIS, ispr)) {
@@ -422,12 +409,14 @@ void Update_SpritePlayer() {
 					switch(dataitem->type){
 						case 1u: //coins
 							archer_data->coins += 1u;
-							PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
+							fx_cooldown = 30;
+							PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 2u: //hp
 							archer_data->hp = MAX_HP;
-							PlayFx(CHANNEL_1, 3, 0x54, 0x80, 0x74, 0x83, 0x86);
+							fx_cooldown = 30;
+							PlayFx(CHANNEL_1, 30, 0x54, 0x80, 0x74, 0x83, 0x86);
 							SpriteManagerRemoveSprite(ispr);
 						break;
 						case 3u: //up
@@ -440,7 +429,8 @@ void Update_SpritePlayer() {
 								archer_data->coins = archer_data->coins - 100u;
 								archer_data->ups += 1;	
 							}else{
-								PlayFx(CHANNEL_1, 3, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
+								fx_cooldown = 30;
+								PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							}
 							SpriteManagerRemoveSprite(ispr);
 						break;
@@ -503,20 +493,22 @@ void Update_SpritePlayer() {
 				archer_state = STATE_NORMAL_PLATFORM;
 			}
 		}
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpritePorcupine 
-			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider || ispr->type == SpriteBird
+		/* || ispr->type == SpritePorcupine 
 			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
 			|| ispr->type == SpriteBee	|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
-			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead) {
+			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion
+			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
+			|| ispr->type == SpriteBird ) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				switch(is_on_boss){
 					case 0:
-						if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+						/*if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
 							return;
-						}
+						}*/
 					break;
 					case 1:
 						if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
@@ -538,16 +530,17 @@ void Update_SpritePlayer() {
 					return;
 				}
 				UINT8 being_hit = 1u;
-				if (KEY_PRESSED(J_DOWN)){// && !dataenemy->tile_e_collision){ //se mi sto riparando e lo sono girato dove serve
-					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator && ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
-						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider){
+				if (KEY_PRESSED(J_DOWN)){
+					/*&& ispr->type != SpriteAlligator && ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
+						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider*/
+					if(ispr->type != SpriteWolf){
 						if (ispr->x < THIS->x){
-							if (SPRITE_GET_VMIRROR(THIS)){//mi sto riparando bene
+							if (THIS->mirror == V_MIRROR){//mi sto riparando bene
 								TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
 								being_hit = 0u;
 							}
 						}else{
-							if (!SPRITE_GET_VMIRROR(THIS)){
+							if (THIS->mirror != V_MIRROR){
 								TranslateSprite(ispr, 16u << delta_time, -2u << delta_time);
 								being_hit = 0u;
 							}
@@ -558,10 +551,10 @@ void Update_SpritePlayer() {
 					INT8 enemydamage = 1;
 					switch(ispr->type){
 						case SpriteWolf:
-						case SpriteAlligator:
+						/*case SpriteAlligator:
 						case SpriteIbex:
 						case SpriteBear:
-						case SpriteWalrus:
+						case SpriteWalrus:*/
 							enemydamage = 2;
 							TranslateSprite(THIS, 0, -1);
 						break;
@@ -578,7 +571,7 @@ void Update_SpritePlayer() {
 				}
 			}
 		}
-		if(ispr->type == SpriteHurricane) {
+		/*if(ispr->type == SpriteHurricane) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {	
 				if (archer_state == STATE_JUMPING | archer_state == STATE_ASCENDING){
 					TranslateSprite(THIS, -2u, -2u);
@@ -586,16 +579,17 @@ void Update_SpritePlayer() {
 					TranslateSprite(THIS, -2u, -1u);
 				}
 			}
-		}
+		}*/
+		
 		if(ispr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ispr)) {
 				struct ArrowInfo* datap = (struct ArrowInfo*)ispr->custom_data;
 				if (datap->arrowdir != 1){return;}//guardo solo se è orizzontale
 				if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
-					ispr->coll_x = 0;
-					ispr->coll_y = 2;
-					ispr->coll_w = 8;
-					if (SPRITE_GET_VMIRROR(ispr)){
+					//ispr->mt_sprite->dx = 0;
+					//ispr->mt_sprite->dy = 2;
+					//ispr->coll_w = 8;
+					if (ispr->mirror == V_MIRROR){
 						platform_vx = 0-datap->vx;	
 					}else{
 						platform_vx = datap->vx;	
@@ -613,29 +607,31 @@ void Update_SpritePlayer() {
 			}
 		}
 	}
+
 }
 
 void Die(){
-	PlayFx(CHANNEL_1, 3, 0x7c, 0x80, 0x74, 0x83, 0x86);
+	StopMusic;
+	fx_cooldown = 60;
+	PlayFx(CHANNEL_1, 60, 0x7c, 0x80, 0x74, 0x83, 0x86);
 	archer_state = STATE_DEAD;
 	hit_cooldown = 0;
 	platform_vx = 0;
 	platform_vy = 0;
-	THIS->coll_x = 1;
-	THIS->coll_y = 5;
-	THIS->coll_w = 14;
-	THIS->coll_h = 7;
 }
 
 void Shoot() {
 	SetSpriteAnim(THIS, anim_shoot, 12u);
-	struct Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
-	/*NR50_REG = 0x22; //Max volume = 0x77
-	PlayFx(CHANNEL_4, 3, 0x0C, 0xB1, 0x00, 0xC0);*/
-	arrow_sprite->flags = THIS->flags;
+	Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
+	fx_cooldown = 20;
+	//PlayFx(CHANNEL_4, 20, 0x0C, 0xB1, 0x00, 0xC0);
+	PlayFx(CHANNEL_1, 20, 0x7D, 0x40, 0xF2, 0x20, 0x70);
+	arrow_sprite->mirror = THIS->mirror;//flags
 	arrow_sprite->x = THIS->x;
-	arrow_sprite->x += 4;
-	arrow_sprite->y = THIS->y;
+	if(arrow_sprite->mirror != V_MIRROR){
+		arrow_sprite->x += 4;
+	}
+	arrow_sprite->y = THIS->y+4;
 	struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_sprite->custom_data;
 	if (archer_data->amulet){arrow_data->type = archer_data->amulet;}
 	else{arrow_data->type = 1;}
@@ -645,7 +641,7 @@ void Shoot() {
 	}else{
 		if (KEY_PRESSED(J_UP)){ //verticale in su
 			arrow_data->arrowdir = 3;
-			arrow_sprite->y -= 4;
+			arrow_sprite->y -= 3;
 		}else{
 			arrow_data->arrowdir = 1;
 		}
@@ -665,7 +661,7 @@ void Jump() {
 
 void MoveArcher() {
 	if(archer_state == STATE_HIT){
-		if(SPRITE_GET_VMIRROR(THIS)){
+		if(THIS->mirror == V_MIRROR){
 			platform_vx=1;
 		}else{
 			platform_vx=-1;
@@ -678,26 +674,29 @@ void MoveArcher() {
 		if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
 			
 		}else{
-			if (SPRITE_GET_VMIRROR(THIS)){
+			if (THIS->mirror == V_MIRROR){
 				tile_collision = TranslateSprite(THIS, -1 << delta_time, 0);
 			}
 		}
-		SPRITE_SET_VMIRROR(THIS);
+		THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 	}
 	else if(KEY_PRESSED(J_RIGHT)) {
 		if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
 			
 		}else{
-			if(!SPRITE_GET_VMIRROR(THIS)){
+			if(THIS->mirror != V_MIRROR){
 				tile_collision = TranslateSprite(THIS, 1 << delta_time, 0);
 			}
 		}
-		SPRITE_UNSET_VMIRROR(THIS);
+		THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 	}
 }
 
 void CheckCollisionTileDoor(){
-	switch(tile_collision){		
+	//UINT8 getScrolledTile = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
+	tile_collision = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
+	//switch(getScrolledTile){//tile_collision
+	switch(tile_collision){//tile_collision
 		case 7u: //fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 			current_camera_counter = 0u;
@@ -805,10 +804,11 @@ void Hit(INT8 damage) {
 			Die();
 			return;
 		}
-		PlayFx(CHANNEL_1, 2, 0x4c, 0x81, 0x43, 0x73, 0x86);
+		fx_cooldown = 30;
+		PlayFx(CHANNEL_1, 30, 0x4c, 0x81, 0x43, 0x73, 0x86);
 		update_hud = 1;
 		/*platform_vx = 1;
-		if (SPRITE_GET_VMIRROR(THIS)){
+		if (THIS->mirror == V_MIRROR){
 			platform_vx = -1;
 		}*/
 		TranslateSprite(THIS, 0, -2 << delta_time);
@@ -825,11 +825,12 @@ void Build_Next_Dialog(){
 			load_next_d = 1;
 		}else{
 			archer_state = STATE_DIAG;
+			SetSpriteAnim(THIS, anim_idle, 12u);
 			show_diag = 1;	
 		}		
 	}
 }
 
-void Destroy_SpritePlayer() {
+void DESTROY() {
 	
 }

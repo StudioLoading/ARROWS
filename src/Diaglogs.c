@@ -1,4 +1,4 @@
-#pragma bank 20
+#include "Banks/SetAutoBank.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
@@ -9,23 +9,31 @@
 
 #include "custom_datas.h"
 
-extern UINT8 current_level_b;
-extern UINT8 current_level;
 extern UINT8 current_map;
+extern UINT8 current_level;
 extern UINT8 current_camera_state;
 extern UINT8 current_camera_counter;
-extern INT8 is_on_boss;
-extern INT8 load_next_b;
-extern unsigned char d1[];
-extern unsigned char d2[];
-extern unsigned char d3[];
-extern unsigned char d4[];
-extern struct ArcherInfo* archer_data;
-extern UINT8 tile_collision;
-extern ARCHER_STATE archer_state;
-extern INT8 on_worldmap;
+extern UINT8 current_cutscene;
 
-UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
+unsigned char d1[21];
+unsigned char d2[21];
+unsigned char d3[21];
+unsigned char d4[21];
+
+INT8 is_on_boss = -1;
+INT8 is_on_cutscene = 0;
+struct ArcherInfo* archer_data;
+UINT8 tile_collision = 0u;
+ARCHER_STATE archer_state;
+extern UINT8 current_cutscene;
+extern UINT8 current_level_b;
+extern INT8 load_next_d;
+extern INT8 load_next_b;
+extern INT8 on_worldmap;
+extern UINT8 colliding_mother;
+extern UINT8 quiver;
+
+UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	UINT8 diagf = 0u;	
 	memcpy(d1, "                    ", 20);
 	memcpy(d2, "                    ", 20);
@@ -85,6 +93,18 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 		}
 		on_worldmap = 0;
 	}
+	
+	if(is_on_cutscene == 1){
+		switch(current_cutscene){
+			case 1u:
+				memcpy(d1, "  WE HAVE TO PLACE  ", 20);
+				memcpy(d2, "  ALL THE AMULETS   ", 20);
+				memcpy(d3, "  AROUND THE DOOR   ", 20);
+				memcpy(d4, "  ENTRANCE          ", 20);
+				diagf = 99u;
+			break;
+		}
+	}
 	//diagf contains an integer corresponding to a map to show on StateDiag!
 	/*
 		1	Player
@@ -115,11 +135,11 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 		56 	Tusk
 		57 	Boss
 		58	Boss 2
-		60	Sister
+		60	Mother
 		99 	Suggestion
 	
 	*/
-	if(diagf == 0U){
+	if(diagf == 0u){
 		switch (is_on_boss){
 			case 0:
 				switch(current_level_b){
@@ -352,7 +372,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							memcpy(d4, "                    ", 20);
 							diagf = 99u;
 						}
-						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 4u){
+						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 4u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 4u){
 							if (archer->x > (UINT16) 90u << 3 && 
 								archer->x < (UINT16) 97u << 3 &&
 								archer_data->tool == 0){//sto cercando di parlare col prig che ha la chiave
@@ -377,14 +397,14 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								diagf = 4u;								
 							}
 						}
-						else if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 30u){
+						else if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 30u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 30u){
 							memcpy(d1, "       ON THE       ", 20);
 							memcpy(d2, "     UPPER LEVEL    ", 20);
 							memcpy(d3, "       SOMEONE      ", 20);
 							memcpy(d4, "     IS LAUGHING    ", 20);
 							diagf = 5u;
 						}
-						else if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u){
+						else if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 58u){
 							memcpy(d1, "                    ", 20);
 							memcpy(d2, "      ...MPFH !     ", 20);
 							memcpy(d3, "                    ", 20);
@@ -423,14 +443,14 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 								diagf = 19u;
 							}
 						}else{
-							if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u){
+							if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 58u){
 								memcpy(d1, "  KEEP... FORWARD.  ", 20);
 								memcpy(d2, "                    ", 20);
 								memcpy(d3, "                    ", 20);
 								memcpy(d4, "                    ", 20);
 								diagf = 6u;
 							}
-							if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 4u){
+							if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 4u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 4u){
 								memcpy(d1, "    THIS IS MOTHER  ", 20);
 								memcpy(d2, "   NATURE REVENGE!  ", 20);
 								memcpy(d3, "                    ", 20);
@@ -458,7 +478,7 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 						diagf = 99u;
 					break;
 					case 1u:
-						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u){
+						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 58u){
 							if (archer_data->tool == 0){//sto cercando di parlare col prig che WRENCH
 								memcpy(d1, "     I'LL NEVER     ", 20);
 								memcpy(d2, "   GET OUT. PLEASE  ", 20);
@@ -583,14 +603,75 @@ UINT8 Build_Next_Dialog_Banked(struct Sprite* archer) __banked{
 							default:
 								memcpy(d1, "   OPENED CASKETS   ", 20);
 								memcpy(d2, "   CLOSED CASKETS   ", 20);
-								memcpy(d3, "  NOW I AM SCARED.  ", 20);
+								memcpy(d3, "  NOW I AM SCARED... ", 20);
 								memcpy(d4, "        MOM ?       ", 20);
 								diagf = 99u;							
 							break;
 						}
 					break;
+					case 1u:
+						memcpy(d1, "  THE CASTLE IS AT  ", 20);
+						memcpy(d2, "  THE END OF THIS   ", 20);
+						memcpy(d3, "  CEMATERY.         ", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 99u;	
+					break;
+					case 2u:
+						switch (colliding_mother){
+							case 0u:
+								memcpy(d1, "  MOTHEEEEEEEEEER !!", 20);
+								memcpy(d2, "                    ", 20);
+								memcpy(d3, "                    ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 99u;
+							break;
+							case 1u:
+								memcpy(d1, "     ... MOM!       ", 20);
+								memcpy(d2, "   HOW ARE YOU ?    ", 20);
+								memcpy(d3, "   I AM SO SCARED   ", 20);
+								memcpy(d4, "       HERE!        ", 20);
+								colliding_mother = 2u;
+								diagf = 1u;
+							break;
+							case 2u:
+								memcpy(d1, "     ... SON!       ", 20);
+								memcpy(d2, " WE ARE DOING THE   ", 20);
+								memcpy(d3, " RIGHT THING. BE    ", 20);
+								memcpy(d4, " STRONG NOW.        ", 20);
+								if((quiver & 0b0000010000) == 0b0000010000){// ho vulkan pyramid
+									colliding_mother = 3u;
+								}else{
+									colliding_mother = 4u;
+								}
+								diagf = 60u;
+							break;
+							case 3u: //ho vulkan pyramid
+								memcpy(d1, "                    ", 20);
+								memcpy(d2, "   LET S GET INTO   ", 20);
+								memcpy(d3, "    THE CASTLE.     ", 20);
+								memcpy(d4, "                    ", 20);
+								colliding_mother = 5u;
+								diagf = 60u;
+							break;
+							case 4u: //non ho vulkan pyramid
+								memcpy(d1, " GO BACK TO THE     ", 20);
+								memcpy(d2, " CRYPT, I HAVE HID  ", 20);
+								memcpy(d3, " DEN THE VULKAN PYRA", 20);
+								memcpy(d4, " MID UNDERGROUND.   ", 20);
+								colliding_mother = 6u;
+								load_next_d = 0; //manino brutto
+								current_map = 0u;
+								diagf = 60u;
+							break;
+							case 5u:
+								colliding_mother = 7u;
+								diagf = 99u;
+							break;
+						}	
+					break;
 				}
 			break;
+
 		}
 	}
 	

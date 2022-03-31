@@ -1,68 +1,69 @@
-#include "Banks/SetBank8.h"
+#include "Banks/SetAutoBank.h"
 
-#include "../res/src/font.h"
-#include "../res/src/tiles.h"
-#include "../res/src/archer.h"
-#include "../res/src/diagnew.h"
+#include "Keys.h";
+#include "ZGBMain.h";
+#include "Scroll.h";
+#include "SpriteManager.h";
+#include "Palette.h";
+#include "string.h";
+#include "Print.h";
+#include "Sound.h";
+#include "Music.h";
 
-#include "../res/src/mapdiagarcher.h"
-#include "../res/src/mapdiagslave1.h"
-#include "../res/src/mapdiagslave2.h"
-#include "../res/src/mapdiagslave3.h"
-#include "../res/src/mapdiagkey.h"
-#include "../res/src/mapdiagwrench.h"
-#include "../res/src/mapdiagwolf.h"
-#include "../res/src/mapdiagcave.h"
-#include "../res/src/mapdiaggator.h"
-#include "../res/src/mapdiageagle.h"
-#include "../res/src/mapdiagibex.h"
-#include "../res/src/mapdiagbear.h"
-#include "../res/src/mapdiagwalrus.h"
+#include "custom_datas.h";
+#include "Dialogs.h";
+#include "sgb_palette.h";
 
-#include "../res/src/mapdiagamuletstone.h"
-#include "../res/src/mapdiagamuletthunder.h"
-#include "../res/src/mapdiagamuletice.h"
-#include "../res/src/mapdiagamuletfire.h"
 
-#include "../res/src/maplevel0zoo.h"
-#include "../res/src/maplevel1sewer.h"
-#include "../res/src/maplevel2forest.h"
-#include "../res/src/maplevel3sky.h"
-#include "../res/src/maplevel4jungle.h"
-#include "../res/src/maplevel5icecave.h"
-#include "../res/src/maplevel6cematery.h"
+IMPORT_TILES(font);
+IMPORT_TILES(tiles);
 
-#include "../res/src/diagslave1.h"
-#include "../res/src/diagslave2.h"
-#include "../res/src/diagslave3.h"
-#include "../res/src/diagkey.h"
-#include "../res/src/diagwrench.h"
-#include "../res/src/diagwolf.h"
-#include "../res/src/diagcave.h"
-#include "../res/src/diaggator.h"
-#include "../res/src/diageagle.h"
-#include "../res/src/diagibex.h"
-#include "../res/src/diagbear.h"
-#include "../res/src/diagwalrus.h"
+IMPORT_MAP(maplevel0zoo);
+IMPORT_MAP(maplevel1sewer);
+IMPORT_MAP(maplevel2forest);
+IMPORT_MAP(maplevel3sky);
+IMPORT_MAP(maplevel4jungle);
+IMPORT_MAP(maplevel5icecave);
+IMPORT_MAP(maplevel6cematery);
 
-#include "../res/src/diagamuletstone.h"
-#include "../res/src/diagamuletthunder.h"
-#include "../res/src/diagamuletice.h"
-#include "../res/src/diagamuletfire.h"
+IMPORT_MAP(mapdiagarcher);
+IMPORT_MAP(mapdiagslave1);
+IMPORT_MAP(mapdiagslave2);
+IMPORT_MAP(mapdiagslave3);
+IMPORT_MAP(mapdiagkey);
+IMPORT_MAP(mapdiagwrench);
+IMPORT_MAP(mapdiagwolf);
+IMPORT_MAP(mapdiagcave);
+IMPORT_MAP(mapdiaggator);
+IMPORT_MAP(mapdiageagle);
+IMPORT_MAP(mapdiagibex);
+IMPORT_MAP(mapdiagbear);
+IMPORT_MAP(mapdiagwalrus);
+IMPORT_MAP(mapdiagmother);
 
-#include "Keys.h"
-#include "ZGBMain.h"
-#include "Scroll.h"
-#include "SpriteManager.h"
-#include "Palette.h"
-#include "string.h"
-#include "Print.h"
-#include "Sound.h"
-#include "gbt_player.h"
+IMPORT_MAP(mapdiagamuletstone);
+IMPORT_MAP(mapdiagamuletthunder);
+IMPORT_MAP(mapdiagamuletice);
+IMPORT_MAP(mapdiagamuletfire);
 
-#include "custom_datas.h"
-#include "Dialogs.h"
-#include "sgb_palette.h"
+IMPORT_MAP(diagslave1);
+IMPORT_MAP(diagslave2);
+IMPORT_MAP(diagslave3);
+IMPORT_MAP(diagkey);
+IMPORT_MAP(diagwrench);
+IMPORT_MAP(diagwolf);
+IMPORT_MAP(diagcave);
+IMPORT_MAP(diaggator);
+IMPORT_MAP(diageagle);
+IMPORT_MAP(diagibex);
+IMPORT_MAP(diagbear);
+IMPORT_MAP(diagwalrus);
+
+IMPORT_MAP(diagamuletstone);
+IMPORT_MAP(diagamuletthunder);
+IMPORT_MAP(diagamuletice);
+IMPORT_MAP(diagamuletfire);
+
 
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
@@ -84,20 +85,20 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 
 extern UINT8 diag_found;
+extern UINT8 colliding_mother;
 
-const UINT16 const bg_palette_diag[] = {PALETTE_FROM_HEADER(tiles)};
+extern INT8 is_on_cutscene;
+
+//const UINT16 const bg_palette_diag[] = {PALETTE_FROM_HEADER(tiles)};
 const UINT8 const collision_dtiles[] = {0,0};
 
 
-void Start_StateDiag() {
-	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 2);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette_diag, 8);
-	
-	SPRITES_8x16;
-	SHOW_SPRITES;	
-	
+void START() {
+
 	reset_sgb_palette_statusbar();
+
+	HIDE_WIN;
+	//PlayMusic(loop0, 1);
 	
 	switch(diag_found){
 		case 0u:
@@ -107,182 +108,193 @@ void Start_StateDiag() {
 			if(sgb_check()){
 				set_sgb_palette01_TITLEINVERTED();
 			}
-			InitScroll(&mapdiagarcher, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagarcher), &mapdiagarcher, collision_dtiles, 0);
 		break;
 		case 4u:
 			if(sgb_check()){
 				set_sgb_palette01_EAGLE();
 			}
-			InitScroll(&mapdiagslave1, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagslave1), &mapdiagslave1, collision_dtiles, 0);
 		break;
 		case 5u:
 			if(sgb_check()){
 				set_sgb_palette01_TITLEINVERTED();
 			}
-			InitScroll(&mapdiagslave2, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagslave2), &mapdiagslave2, collision_dtiles, 0);
 		break;
 		case 6u:
 			if(sgb_check()){
 				set_sgb_palette01_1D();
 			}
-			InitScroll(&mapdiagslave3, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagslave3), &mapdiagslave3, collision_dtiles, 0);
 		break;
 		case 10u:
 			if(sgb_check()){
 				set_sgb_palette01_TITLEINVERTED();
 			}
-			InitScroll(&maplevel0zoo, collision_dtiles, 0);
+			InitScroll(BANK(maplevel0zoo), &maplevel0zoo, collision_dtiles, 0);
 		break;
 		case 11u:
 			if(sgb_check()){
 				set_sgb_palette01_SEWER();
 			}
-			InitScroll(&maplevel1sewer, collision_dtiles, 0);
+			InitScroll(BANK(maplevel1sewer), &maplevel1sewer, collision_dtiles, 0);
 		break;
 		case 12u:
 			if(sgb_check()){
 				set_sgb_palette01_FOREST();
 			}
-			InitScroll(&maplevel2forest, collision_dtiles, 0);
+			InitScroll(BANK(maplevel2forest), &maplevel2forest, collision_dtiles, 0);
 		break;
 		case 13u:
 			if(sgb_check()){
 				set_sgb_palette01_1B();
 			}
-			InitScroll(&maplevel3sky, collision_dtiles, 0);
+			InitScroll(BANK(maplevel3sky), &maplevel3sky, collision_dtiles, 0);
 		break;
 		case 14u:
 			if(sgb_check()){
 				set_sgb_palette01_TREES();
 			}
-			InitScroll(&maplevel4jungle, collision_dtiles, 0);
+			InitScroll(BANK(maplevel4jungle), &maplevel4jungle, collision_dtiles, 0);
 		break;
 		case 15u:
 			if(sgb_check()){
 				set_sgb_palette01_ICE();
 			}
-			InitScroll(&maplevel5icecave, collision_dtiles, 0);
+			InitScroll(BANK(maplevel5icecave), &maplevel5icecave, collision_dtiles, 0);
 		break;
 		case 16u:
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 			}
-			InitScroll(&maplevel6cematery, collision_dtiles, 0);
+			InitScroll(BANK(maplevel6cematery), &maplevel6cematery, collision_dtiles, 0);
 		break;
 		case 19u:
 			if(sgb_check()){
 				set_sgb_palette01_2E();
 			}
-			InitScroll(&mapdiagcave, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagcave), &mapdiagcave, collision_dtiles, 0);
 		break;
 		case 20u:
 			if(sgb_check()){
 				set_sgb_palette01_2H();
 			}
-			InitScroll(&mapdiagwrench, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagwrench), &mapdiagwrench, collision_dtiles, 0);
 		break;
 		case 21u:
 			if(sgb_check()){
 				set_sgb_palette01_2H();
 			}
-			InitScroll(&mapdiagkey, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagkey), &mapdiagkey, collision_dtiles, 0);
 		break;
 		case 30u:
 			if(sgb_check()){
 				set_sgb_palette01_2H();
 			}
-			InitScroll(&mapdiagamuletstone, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagamuletstone), &mapdiagamuletstone, collision_dtiles, 0);
 		break;
 		case 31u:
 			if(sgb_check()){
 				set_sgb_palette01_AMULET_THUNDER();
 			}
-			InitScroll(&mapdiagamuletthunder, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagamuletthunder), &mapdiagamuletthunder, collision_dtiles, 0);
 		break;
 		case 32u:
 			if(sgb_check()){
 				set_sgb_palette01_AMULET_ICE();
 			}
-			InitScroll(&mapdiagamuletice, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagamuletice), &mapdiagamuletice, collision_dtiles, 0);
 		break;
 		case 33u:
 			if(sgb_check()){
 				set_sgb_palette01_1B();
 			}
-			InitScroll(&mapdiagamuletfire, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagamuletfire), &mapdiagamuletfire, collision_dtiles, 0);
 		break;
 		case 51u:
 			if(sgb_check()){
 				set_sgb_palette01_WOLF();
 			}			
-			InitScroll(&mapdiagwolf, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagwolf), &mapdiagwolf, collision_dtiles, 0);
 		break;
 		case 52u:
 			if(sgb_check()){
 				set_sgb_palette01_GATOR();
 			}
-			InitScroll(&mapdiaggator, collision_dtiles, 0);
+			InitScroll(BANK(mapdiaggator), &mapdiaggator, collision_dtiles, 0);
 		break;
 		case 53u:
 			if(sgb_check()){
 				set_sgb_palette01_EAGLE();
 			}			
-			InitScroll(&mapdiageagle, collision_dtiles, 0);
+			InitScroll(BANK(mapdiageagle), &mapdiageagle, collision_dtiles, 0);
 		break;
 		case 54u:
 			if(sgb_check()){
 				set_sgb_palette01_IBEX();
 			}		
-			InitScroll(&mapdiagibex, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagibex), &mapdiagibex, collision_dtiles, 0);
 		break;
 		case 55u:
 			if(sgb_check()){
 				set_sgb_palette01_BEAR();
 			}
-			InitScroll(&mapdiagbear, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagbear), &mapdiagbear, collision_dtiles, 0);
 		break;
 		case 56u:
 			if(sgb_check()){
 				set_sgb_palette01_WALRUS();
 			}
-			InitScroll(&mapdiagwalrus, collision_dtiles, 0);
+			InitScroll(BANK(mapdiagwalrus), &mapdiagwalrus, collision_dtiles, 0);
+		break;
+		case 60u:
+			if(sgb_check()){
+				set_sgb_palette01_CEMATERYCRYPT();
+			}
+			InitScroll(BANK(mapdiagmother), &mapdiagmother, collision_dtiles, 0);
 		break;
 	}
 	SHOW_BKG;
-	
-	HIDE_WIN;
+		
+	INIT_FONT(font, PRINT_BKG); 
 
-	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 3, 4);
-	
-	//WINDOW
-	WX_REG = 0;
-	WY_REG = 144 - 40; //40
-	InitWindow(0, 0, &diagnew);
-	SHOW_WIN;
-	
-	PRINT_POS(1,0);
-	Printf(d1);
-	PRINT_POS(1,1);
-	Printf(d2);
-	PRINT_POS(1,2);
-	Printf(d3);
-	PRINT_POS(1,3);
-	Printf(d4);
-	
-	//SOUND
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
+	PRINT(0u, 13u, d1);
+	PRINT(0u, 14u, d2);
+	PRINT(0u, 15u, d3);
+	PRINT(0u, 16u, d4);
 	
 }
 
-void Update_StateDiag() {
+void UPDATE() {
 	
 	if(KEY_PRESSED(J_B) || KEY_PRESSED(J_A)) {
 		HIDE_WIN;
 		if(is_on_boss >= 0){
 			SetState(StateBoss);
+		}else if (colliding_mother != 0u && colliding_mother != 6u){
+			//0u means just the tip
+			//6u means mother told us to go back
+			//7u means cutscene!
+			diag_found = Build_Next_Dialog_Banked(0);
+			switch(colliding_mother){
+					//triggera la cutscene di madre e figlio che vanno al portale
+				case 7u:
+					is_on_cutscene = 1;
+					//SetState(StateCutscene);
+				break;
+				case 1u:
+				case 2u:
+				case 3u:
+				case 4u:
+				case 5u:
+					SetState(StateDiag);
+				break;
+			}
 		}else{
+			if(colliding_mother){ //reset coliding mother
+				colliding_mother = 0u;
+			}
 			switch(current_level){
 				case 0u:
 				case 1u:
@@ -291,11 +303,11 @@ void Update_StateDiag() {
 				break;
 				case 3u:
 				case 4u:
-					SetState(StateGame3);
+					//SetState(StateGame3);
 				break;
 				case 5u:
 				case 6u:
-					SetState(StateGame6);
+					//SetState(StateGame6);
 				break;
 			}
 		}

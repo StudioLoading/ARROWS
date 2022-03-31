@@ -1,11 +1,4 @@
-#include "Banks/SetBank7.h"
-
-
-#include "../res/src/font.h"
-#include "../res/src/tiles.h"
-#include "../res/src/mapsecret0.h"
-#include "../res/src/archer.h"
-#include "../res/src/arrow.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -19,8 +12,13 @@
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
+IMPORT_TILES(font);
+IMPORT_TILES(tiles);
 
-extern UINT8 collision_tiles[];
+
+IMPORT_MAP(mapsecret0);
+IMPORT_MAP(window);
+
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -37,10 +35,10 @@ extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
 extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
-extern struct Sprite* scrigno_coin;
-extern struct Sprite* scrigno_dcoin;
-extern struct Sprite* scrigno_shield;
-extern struct Sprite* scrigno_up;
+extern Sprite* scrigno_coin;
+extern Sprite* scrigno_dcoin;
+extern Sprite* scrigno_shield;
+extern Sprite* scrigno_up;
 extern INT8 update_hud;
 
 extern const INT8 MAX_HP;
@@ -48,23 +46,14 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-extern void ShowWindow();
-extern void UpdateHUD();
-extern struct Sprite* spawn_item(struct Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
+extern void ShowWindow() BANKED;
+extern void UpdateHUD() BANKED;
+extern Sprite* spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
 
-//Secrets
-const struct MapInfo* const secret_1[] = {
-	&mapsecret0
-};
-const struct MapInfo** const secrets[] = {secret_1};
+const UINT8 const collision_tiles_secret[] = { 19, 20, 21, 0};//numero delle tile con zero finale
 
+void START() {
 
-void Start_StateSecret() {
-
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7); //last param is the current bank we are in
-
-	SPRITES_8x16;
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpriteItem);
@@ -75,12 +64,12 @@ void Start_StateSecret() {
 	SHOW_SPRITES;
 	//SCROLL
 	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display
-	const struct MapInfo** level_maps_s = secrets[0];
-	UINT8 map_w, map_h;
-	GetMapSize(level_maps_s[0], &map_w, &map_h);
-	ScrollFindTile(level_maps_s[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x*8, drop_player_y*8);
-	InitScroll(level_maps_s[0], collision_tiles, 0);
+	UINT8 map_w = 0;
+	UINT8 map_h = 0;
+	GetMapSize(BANK(mapsecret0), &mapsecret0, &map_w, &map_h);
+	ScrollFindTile(BANK(mapsecret0), &mapsecret0, 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	InitScroll(BANK(mapsecret0), &mapsecret0, collision_tiles_secret, 0);
 	SHOW_BKG;
 
 	//INIT ARCHER
@@ -93,7 +82,7 @@ void Start_StateSecret() {
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
-	INIT_CONSOLE(font, 10, 2);
+	INIT_CONSOLE(font, 0, 4);
 	ShowWindow();	
 	
 	scrigno_coin = 0;
@@ -113,16 +102,11 @@ void Start_StateSecret() {
 		}else{
 			scrigno_shield = spawn_item(scrigno_shield, 11u, 11u, 2, 1);	
 		}		
-	}
+	}	
 	
-	
-	//SOUND
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
-
 }
 
-void Update_StateSecret() {
+void UPDATE() {
 	
 	//HUD MANAGEMENT
 	if (update_hud != 0){
@@ -137,7 +121,7 @@ void Update_StateSecret() {
 				if(current_level < 3){
 					SetState(StateGame);	
 				}else if (current_level < 6){
-					SetState(StateGame3);
+					//SetState(StateGame3);
 				}				
 			break;
 		}

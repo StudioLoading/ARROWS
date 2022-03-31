@@ -12,12 +12,5 @@
         "*.db": true,
         ".gitignore": true,
         ".vs": true
-    },
-    "files.associations": {
-        "mapdiagamuletstone.h": "c",
-        "mapdiagamuletice.h": "c",
-        "maplevel1sewer.h": "c",
-        "maplevel0zoo.h": "c",
-        "diagnew6.h": "c"
     }
 }

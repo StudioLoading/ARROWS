@@ -8,5 +8,11 @@
 		}
 	],
 	"settings": {
+		"files.associations": {
+			"zgbmain.h": "c",
+			"setautobank.h": "c",
+			"sgb.h": "c",
+			"sound.h": "c"
+		}
 	}
 }

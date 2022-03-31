@@ -1,4 +1,5 @@
-#include "Banks/SetBank14.h"
+#include "Banks/SetAutoBank.h"
+
 #include "main.h"
 
 #include "ZGBMain.h"
@@ -14,21 +15,21 @@ const UINT8 icon_mother[] = {1, 2}; //The first number indicates the number of f
 const UINT8 icon_mother_blink[] = {2, 0, 2}; //The first number indicates the number of frames
 
 
-void Start_SpriteIconpsg() {
+void START() {
 	struct ItemInfo* datak = (struct ItemInfo*)THIS->custom_data;
 	//datak->type = 0;
 	datak->setup = 0u;
 	datak->counter = -1;
 	SetSpriteAnim(THIS, icon_empty, 8u);	
-	THIS->coll_x = 0;
-	THIS->coll_y = 0;
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 16;
 	THIS->lim_x = 255;
 	THIS->lim_y = 255;
 }
 
-void Update_SpriteIconpsg() {
+void UPDATE() {
 	struct ItemInfo* datak = (struct ItemInfo*)THIS->custom_data;
 	if(datak->setup > 0u){ 
 		switch(datak->type){

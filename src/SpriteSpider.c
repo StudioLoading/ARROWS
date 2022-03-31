@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -13,14 +13,14 @@ const UINT8 spider_idle[] = {8, 0,1,2,3,4,3,2,1}; //The first number indicates t
 const UINT8 spider_hit[] = {3, 5, 5, 0}; //The first number indicates the number of frames
 const UINT8 spider_dead[] = {1, 5}; //The first number indicates the number of frames
 
-extern void CheckCollisionETile();
-extern void ETurn();
+extern void CheckCollisionETile() BANKED;
+extern void ETurn() BANKED;
 
 
-void Start_SpriteSpider() {
+void START() {
 	
-	THIS->coll_x = 1;
-	THIS->coll_y = 1;
+	THIS->mt_sprite->dx = 1;
+	THIS->mt_sprite->dy = 1;
 	THIS->coll_w = 6;
 	THIS->coll_h = 13;
 	THIS->lim_x = 255u;
@@ -34,7 +34,7 @@ void Start_SpriteSpider() {
 	spdata->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpriteSpider() {
+void UPDATE() {
 	
 	struct EnemyInfo* spdata = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -74,7 +74,7 @@ void Update_SpriteSpider() {
 	}
 	
 	UINT8 scroll_s_tile;
-	struct Sprite* isspr;
+	Sprite* isspr;
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_s_tile, isspr) {
@@ -92,7 +92,6 @@ void Update_SpriteSpider() {
 				spdata->tile_e_collision = TranslateSprite(THIS, 0, -2);
 				SpriteManagerRemoveSprite(isspr);
 				if (spdata->hp <= 0){
-					NR50_REG = 0x55; //Max volume		
 					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 					SetSpriteAnim(THIS, spider_dead, 16u);
 					spdata->wait = 8u;
@@ -105,6 +104,6 @@ void Update_SpriteSpider() {
 	}	
 }
 
-void Destroy_SpriteSpider(){
+void DESTROY(){
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 }

@@ -1,18 +1,6 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
 
-#include "../res/src/tilescredit.h"
-#include "../res/src/tilescredits2.h"
-#include "../res/src/tilescredits3.h"
-#include "../res/src/tilescredits4.h"
-#include "../res/src/mapcredit0.h"
-#include "../res/src/mapcredits1.h"
-#include "../res/src/mapcredits2.h"
-#include "../res/src/mapcredits3.h"
-#include "../res/src/mapcredits4.h"
-#include "../res/src/archer.h"
-
-#include <gb/gb.h>
-
+#include "SGB.h"
 #include "ZGBMain.h"
 #include "Keys.h"
 #include "Palette.h"
@@ -20,78 +8,78 @@
 #include "SpriteManager.h"
 #include "string.h"
 #include "Print.h"
-#include "Sound.h"
+//#include "Sound.h"
 #include "Fade.h"
-#include "gbt_player.h"
+#include "Music.h"
 
 #include "sgb_palette.h"
 
+IMPORT_TILES(tilescredit);
+IMPORT_TILES(tilescredit2);
+IMPORT_TILES(tilescredit3);
+IMPORT_TILES(tilescredit4);
+
+IMPORT_MAP(border);
+
+IMPORT_MAP(mapcredit0);
+IMPORT_MAP(mapcredits1);
+IMPORT_MAP(mapcredits2);
+IMPORT_MAP(mapcredits3);
+IMPORT_MAP(mapcredits4);
+
+//DECLARE_MUSIC(bgm_credits);
+DECLARE_MUSIC(bgm_credits);
+
 const UINT8 collision_tiles_credits[] = {1,0};
-const UINT16 bg_palette_credits[] = {PALETTE_FROM_HEADER(tilescredit)};
-const UINT16 bg_palette_credits2[] = {PALETTE_FROM_HEADER(tilescredits2)};
-const UINT16 bg_palette_credits3[] = {PALETTE_FROM_HEADER(tilescredits3)};
-const UINT16 bg_palette_credits4[] = {PALETTE_FROM_HEADER(tilescredits4)};
-UINT8 updatecounter = 20u;
-extern UINT16 sprites_palette[];
-extern UINT8* credits_bass_mod_Data[];
-extern UINT8* credits_drumbass_mod_Data[];
-extern UINT8* credits_mod_Data[];
-UINT8 credit_step = 0u;
-UINT8 wait_time = 0u;
+UINT8 updatecounter;
+UINT8 credit_step;
+UINT8 wait_time;
+UINT8 on_worldmap;
+UINT8 colliding_mother;
 
-void Start_StateCredit() {
-
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	switch (credit_step){
-		case 1u:
-			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits2, 2);
-		break;
-		case 2u:
-			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits4, 2);
-		break;
-		case 3u:
-			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits3, 2);
-		break;
-		default:
-			SetPalette(BG_PALETTE, 0, 8, bg_palette_credits, 2);
-	}
-		
-	SPRITES_8x16;
-	SHOW_SPRITES;
-	InitScroll(&mapcredit0, collision_tiles_credits, 0);	
+void START() {
+	LOAD_SGB_BORDER(border);
+	credit_step = 0u;
+	updatecounter = 20u;
+	wait_time = 0u;
+	on_worldmap = 0;
+	colliding_mother = 0u;
+	InitScroll(BANK(mapcredit0), &mapcredit0, collision_tiles_credits, 0);	
+	
 	//SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	PlayMusic(credits_mod_Data, 11, 1);
+	//NR50_REG = 0x44; //Max volume 0x77
+	PlayMusic(bgm_credits, 0);
 
 	SHOW_BKG;
 	
 }
 
-void Update_StateCredit() {
+void UPDATE() {
 	wait_time += 1u;
+	UINT8 cb = 0;
 	if(credit_step == 0u){
 		updatecounter++;
 		if (updatecounter < 20u) {
 			switch(updatecounter){
 				case 1u:
-					set_bkg_data(14u, 1u, tilescredit.data->data+352u);// 16 * 22 tile index
-					set_bkg_data(15u, 1u, tilescredit.data->data+368u);// 16 * 22 tile index
+					set_bkg_data(14u, 1u, tilescredit.data+352u);// 16 * 22 tile index
+					set_bkg_data(15u, 1u, tilescredit.data+368u);// 16 * 22 tile index
 				break;
 				case 10u:
-					set_bkg_data(14u, 1u, tilescredit.data->data+224u);// restore tile
-					set_bkg_data(15u, 1u, tilescredit.data->data+240u);// restore tile
+					set_bkg_data(14u, 1u, tilescredit.data+224u);// restore tile
+					set_bkg_data(15u, 1u, tilescredit.data+240u);// restore tile
 				break;
 			}
 		}else{
 			updatecounter = 0;
 		}
-		
 	}
 	if(KEY_TICKED(J_START)){
 		SetState(StateTitlescreen);
 		return;
-	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_time == 120u){
+	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_time == 106u){
 		wait_time = 0u;
 		updatecounter = 0u;
 		credit_step += 1u;
@@ -107,26 +95,25 @@ void Update_StateCredit() {
 				if(sgb_check()){
 					set_sgb_palette01_WOLF();
 				}
-				InitScroll(&mapcredits2, collision_tiles_credits, 0); // music of the Misty Hills
+				InitScroll(BANK(mapcredits2), &mapcredits2, collision_tiles_credits, 0); // music of the Misty Hills
 			break;
 			case 2u:
 				if(sgb_check()){
 					set_sgb_palette01_COMUNEKO();
 				}
-				InitScroll(&mapcredits4, collision_tiles_credits, 0); // comuneko
+				InitScroll(BANK(mapcredits4), &mapcredits4, collision_tiles_credits, 0); // comuneko
 			break;
 			case 3u:
 				if(sgb_check()){
 					set_sgb_palette01_2H();
 				}
-				InitScroll(&mapcredits3, collision_tiles_credits, 0); // powered by ZGB
+				InitScroll(BANK(mapcredits3), &mapcredits3, collision_tiles_credits, 0); // powered by ZGB
 			break;
 			case 4u:
 				if(sgb_check()){
 					set_sgb_palette01_1A();
 				}
-				NR50_REG = 0x00;
-				InitScroll(&mapcredits1, collision_tiles_credits, 0); //special thanks
+				InitScroll(BANK(mapcredits1), &mapcredits1, collision_tiles_credits, 0); //special thanks
 			break;
 		}
 		DISPLAY_ON;

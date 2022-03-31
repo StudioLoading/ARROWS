@@ -1,7 +1,6 @@
 #include "ZGBMain.h"
-#include "Math.h"
 
-UINT8 next_state = StateCredit;
+UINT8 next_state = StateCredit;//StateCredit
 
 
 UINT8 GetTileReplacement(UINT8* tile_ptr, UINT8* tile) {

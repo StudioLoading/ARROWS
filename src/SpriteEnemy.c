@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -14,16 +14,11 @@ const UINT8 enemy_walk[] = {2, 0, 1}; //The first number indicates the number of
 const UINT8 enemy_hit[] = {2, 0, 2}; //The first number indicates the number of frames
 const UINT8 attack_wait = 32u;
 
-void CheckCollisionETile();
-void ETurn();
-void EDie();
+void CheckCollisionETile() BANKED;
+void ETurn() BANKED;
+void EDie() BANKED;
 
-void Start_SpriteEnemy() {
-	
-	THIS->coll_x = 2;
-	THIS->coll_y = 4;
-	THIS->coll_w = 6;
-	THIS->coll_h = 12;
+void START() {
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
@@ -33,10 +28,10 @@ void Start_SpriteEnemy() {
 	edata->enemy_accel_y = 24;
 	edata->vx = -1;
 	edata->wait = 0u;
-	SPRITE_SET_VMIRROR(THIS);
+	THIS->mirror = V_MIRROR;
 }
 
-void Update_SpriteEnemy() {
+void UPDATE() {
 	
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -60,7 +55,7 @@ void Update_SpriteEnemy() {
 			edata->tile_e_collision = TranslateSprite(THIS, 0, (edata->enemy_accel_y >> 4) << delta_time);
 		}
 		if(edata->tile_e_collision) {
-			if(edata->enemy_state == ENEMY_STATE_JUMPING & edata->enemy_accel_y > 0) {
+			if(edata->enemy_state == ENEMY_STATE_JUMPING && edata->enemy_accel_y > 0) {
 				edata->enemy_state = ENEMY_STATE_NORMAL;
 			}else{
 				edata->enemy_accel_y = 0;	
@@ -70,7 +65,7 @@ void Update_SpriteEnemy() {
 	}//fine else non wait
 	
 	UINT8 scroll_e_tile;
-	struct Sprite* iespr;
+	Sprite* iespr;
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
@@ -89,12 +84,12 @@ void Update_SpriteEnemy() {
 				SetSpriteAnim(THIS, enemy_hit, 24u); 
 				edata->hp -= arrowdata->arrowdamage;
 				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
-					if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
+					if (THIS->mirror == V_MIRROR){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();
 					}
 					edata->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (edata->enemy_accel_y >> 4));
 				}else{ //se la freccia arriva da sinistra dell' enemy
-					if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
+					if (THIS->mirror != V_MIRROR){ // se sto andando a destra, l'ho preso da dietro! turn!
 						ETurn();
 					}
 					edata->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (edata->enemy_accel_y >> 4));
@@ -109,7 +104,7 @@ void Update_SpriteEnemy() {
 	
 }
 
-void EDie(){
+void EDie() BANKED{
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	edata->hp = -1;
 	edata->wait = 16u;
@@ -119,7 +114,7 @@ void EDie(){
 	SpriteManagerRemoveSprite(THIS);
 }
 
-void CheckCollisionETile() {
+void CheckCollisionETile() BANKED{
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	switch(edata->tile_e_collision) {
 		case 3u:
@@ -149,26 +144,26 @@ void CheckCollisionETile() {
 	}
 }
 
-void ETurn(){
+void ETurn() BANKED{
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	if (edata->vx == 1){
-		SPRITE_SET_VMIRROR(THIS);
+		THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 		THIS->x -= 4;
 		edata->wait = 48u;
 	}
 	if (edata->vx == -1){
-		SPRITE_UNSET_VMIRROR(THIS);
+		THIS->mirror = NO_MIRROR; // SPRITE_UNSET_VMIRROR(THIS);
 		THIS->x += 4;
 		edata->wait = 48u;			
 	}
 	edata->vx = -edata->vx;
-	if(THIS->type == SpritePorcupine){
+	/*if(THIS->type == SpritePorcupine){
 		edata->enemy_state = ENEMY_STATE_ATTACK;
 		edata->wait = attack_wait;
-	}
+	}*/
 	
 }
 
-void Destroy_SpriteEnemy(){
-	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+void DESTROY(){
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-2u);
 }

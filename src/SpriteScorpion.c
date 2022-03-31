@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -14,17 +14,13 @@ const UINT8 scorpion_walk[] = {4, 0, 2, 1, 2}; //The first number indicates the 
 const UINT8 scorpion_hit[] = {2, 0, 3}; //The first number indicates the number of frames
 const UINT8 scorpion_dead[] = {1, 0}; //The first number indicates the number of frames
 
-extern void CheckCollisionETile();
-extern void ETurn();
-extern void EDie();
+extern void CheckCollisionETile() BANKED;
+extern void ETurn() BANKED;
+extern void EDie() BANKED;
 
 
-void Start_SpriteScorpion() {
+void START() {
 	
-	THIS->coll_x = 2;
-	THIS->coll_y = 5;
-	THIS->coll_w = 8;
-	THIS->coll_h = 11;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	struct EnemyInfo* scorpion_data = (struct EnemyInfo*)THIS->custom_data;	
@@ -36,7 +32,7 @@ void Start_SpriteScorpion() {
 	scorpion_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpriteScorpion() {	
+void UPDATE() {	
 	
 	struct EnemyInfo* scorpiondata = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -76,7 +72,7 @@ void Update_SpriteScorpion() {
 	}
 	
 	UINT8 scroll_e_tile;
-	struct Sprite* iespr;
+	Sprite* iespr;
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_e_tile, iespr) {
@@ -98,12 +94,12 @@ void Update_SpriteScorpion() {
 				}
 				scorpiondata->hp -= arrowdata->arrowdamage;
 				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
-					if (SPRITE_GET_VMIRROR(THIS)){ // se sto andando a sinistra, l'ho preso da dietro! turn!
+					if (THIS->mirror == V_MIRROR){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();
 					}
 					scorpiondata->tile_e_collision = TranslateSprite(THIS, -2 << delta_time, (scorpiondata->enemy_accel_y >> 4));
 				}else{ //se la freccia arriva da sinistra dell' enemy
-					if (!SPRITE_GET_VMIRROR(THIS)){ // se sto andando a destra, l'ho preso da dietro! turn!
+					if (THIS->mirror != V_MIRROR){ // se sto andando a destra, l'ho preso da dietro! turn!
 						ETurn();
 					}
 					scorpiondata->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (scorpiondata->enemy_accel_y >> 4));
@@ -114,14 +110,11 @@ void Update_SpriteScorpion() {
 				}
 			}
 		}
-	}
-	
+	}	
 }
 
-
-
-void Destroy_SpriteScorpion() {
+void DESTROY() {
 	struct EnemyInfo* scorpion_data = (struct EnemyInfo*)THIS->custom_data;
 	scorpion_data->enemy_state = ENEMY_STATE_DEAD;
-	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y);
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-2u);
 }

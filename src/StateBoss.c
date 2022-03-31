@@ -1,15 +1,6 @@
-#include "Banks/SetBank7.h"
+#include "Banks/SetAutoBank.h"
 
-#include "../res/src/diagnew.h"
-#include "../res/src/font.h"
-#include "../res/src/tiles.h"
-#include "../res/src/mapboss0.h"
-#include "../res/src/mapboss1.h"
-#include "../res/src/mapboss2.h"
-#include "../res/src/mapboss3.h"
-#include "../res/src/mapboss4.h"
-#include "../res/src/mapboss5.h"
-
+#include "BankManager.h"
 #include "ZGBMain.h"
 #include "Scroll.h"
 #include "SpriteManager.h"
@@ -22,8 +13,17 @@
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
+IMPORT_TILES(font);
+IMPORT_TILES(tiles);
+IMPORT_TILES(diagnew);
 
-extern UINT8 collision_tiles[];
+IMPORT_MAP(mapboss0);
+IMPORT_MAP(mapboss1);
+IMPORT_MAP(mapboss2);
+IMPORT_MAP(mapboss3);
+IMPORT_MAP(mapboss4);
+IMPORT_MAP(mapboss5);
+
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -53,14 +53,12 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-extern void ShowWindow();
-extern void ShowWindowDiag();
-extern void UpdateHUD();
-extern void Build_Next_Dialog();
-
+extern void ShowWindow() BANKED;
+extern void ShowWindowDiag() BANKED ;
+extern void UpdateHUD() BANKED;
 
 //Boss
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+extern UINT8 current_level_b;
 
 const struct MapInfo* const boss_0[] = {
 	&mapboss0
@@ -80,22 +78,25 @@ const struct MapInfo* const boss_4[] = {
 const struct MapInfo* const boss_5[] = {
 	&mapboss5
 };
-const struct MapInfo** const bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4, boss_5};
+//const struct MapInfo** const bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4, boss_5};
+const struct MapInfo* const bosses[] = {&mapboss0, &mapboss1, &mapboss2, &mapboss3, &mapboss4, &mapboss5};
 
-struct Sprite* boss;
+ Sprite* boss;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
-struct Sprite* reward = 0;
+ Sprite* reward = 0;
+
+const UINT8 const collision_btiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
 const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
-const UINT8 const collision_btiles6[] = {1, 2, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_btiles6[] = {1, 2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void SpawnBoss(INT8 hp_default);
 void SpawnReward();
 void WriteBBOSSHP();
 
-void Start_StateBoss(){
+void START(){
 
 	reward = 0;
 	
@@ -119,7 +120,7 @@ void Start_StateBoss(){
 				set_sgb_palette01_2H();
 			}
 		break;
-		case 1u:
+		/*case 1u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteAmulet);
@@ -163,7 +164,7 @@ void Start_StateBoss(){
 			if(sgb_check()){
 				set_sgb_palette01_WALRUS();
 			}
-		break;
+		break;*/
 	}	
 	if(sgb_check()){
 		set_sgb_palette_statusbar();
@@ -171,17 +172,19 @@ void Start_StateBoss(){
 	SHOW_SPRITES;
 
 	//SCROLL
-	const struct MapInfo** level_maps_b = bosses[current_level_b];
-	UINT8 map_w, map_h;
-	GetMapSize(level_maps_b[0], &map_w, &map_h);
+	const struct MapInfo* level_maps_b = bosses[current_level_b];
+	UINT8 boss_banks[] = {BANK(mapboss0), BANK(mapboss1), BANK(mapboss2),BANK(mapboss3), BANK(mapboss4), BANK(mapboss5)};
+	UINT8 map_w = 0;
+	UINT8 map_h = 0;
+	GetMapSize(boss_banks[current_level_b], level_maps_b, &map_w, &map_h);
 	if(current_camera_state < 3u){
-		ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
+		ScrollFindTile((UINT8) boss_banks[current_level_b], level_maps_b, 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 		scroll_top_movement_limit = 60;
 		scroll_target = SpriteManagerAdd(SpriteCamerafocus, drop_player_x << 3, drop_player_y << 3);
 	}else{
 		if(is_on_boss <= 2){
 			is_on_boss = 2;
-			ScrollFindTile(level_maps_b[0], 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);	
+			ScrollFindTile((UINT8) boss_banks[current_level_b], level_maps_b, 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);	
 		}		
 		scroll_top_movement_limit = 30;
 		scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
@@ -193,14 +196,14 @@ void Start_StateBoss(){
 		case 0u:
 		case 1u:
 		case 2u:
-			InitScroll(level_maps_b[0], collision_tiles, 0);
+			InitScroll((UINT8) boss_banks[current_level_b], level_maps_b, collision_btiles, 0);
 		break;
 		case 3u:
 		case 4u:
-			InitScroll(level_maps_b[0], collision_btiles4, 0);
+			InitScroll((UINT8) boss_banks[current_level_b], level_maps_b, collision_btiles4, 0);
 		break;
 		case 5u:
-			InitScroll(level_maps_b[0], collision_btiles6, 0);
+			InitScroll((UINT8) boss_banks[current_level_b], level_maps_b, collision_btiles6, 0);
 		break;
 	}
 	
@@ -239,13 +242,9 @@ void Start_StateBoss(){
 	ShowWindow();
 	WriteBBOSSHP();
 	
-	//SOUND
-	NR52_REG = 0x80; //Enables sound, you should always setup this first
-	NR51_REG = 0xFF; //Enables all channels (left and right)
-
 }
 
-void Update_StateBoss() {
+void UPDATE() {
 	
 	if(load_next_d){
 		switch(load_next_d){
@@ -286,15 +285,14 @@ void Update_StateBoss() {
 				}	
 			break;
 			case 1u:
-				if(scroll_target->y < (boss->y + (boss->coll_h >> 1))){scroll_target->y += 1;}
-				if (scroll_target->y > (boss->y + (boss->coll_h >> 1))){scroll_target->y -= 1;}
-				if(scroll_target->x < (boss->x + boss->coll_x)){scroll_target->x += 1;}
-				if (scroll_target->x > (boss->x + boss->coll_x)){scroll_target->x -= 1;}
-				if (scroll_target->x == (boss->x + boss->coll_x) && 
-					scroll_target->y == (boss->y + (boss->coll_h >> 1))){
-						is_on_boss = 1;
-						current_camera_state += 1u;
-					}
+				if(scroll_target->y < boss->y){scroll_target->y += 1;}
+				if(scroll_target->y > boss->y){scroll_target->y -= 1;}
+				if(scroll_target->x < boss->x){scroll_target->x += 1;}
+				if(scroll_target->x > boss->x){scroll_target->x -= 1;}
+				if(scroll_target->x == boss->x && scroll_target->y == boss->y){
+					is_on_boss = 1;
+					current_camera_state += 1u;
+				}
 			break;
 			case 2u:
 				current_camera_counter += 1u;
@@ -382,15 +380,15 @@ void Update_StateBoss() {
 }
 
 void SpawnBoss(INT8 hp_default){
-		struct Sprite* gate_sprite = 0;
+		Sprite* gate_sprite = 0;
 		struct EnemyInfo* gatedata = 0;
 		switch(current_level_b){
 			case 0u:
-				boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 12u << 3); //34, 12
+				boss = SpriteManagerAdd(SpriteWolf, (UINT16) 24u << 3, (UINT16) 15u << 3); //34, 12
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
 			break;
-			case 1u:
+			/*case 1u:
 				boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, (UINT16) 14u << 3);
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
@@ -423,7 +421,7 @@ void SpawnBoss(INT8 hp_default){
 				gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 34 << 3, (UINT16) 19 << 3);
 				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 				gatedata->vx = 4;
-			break;
+			break;*/
 		}
 		
 		if(hp_default == 0){
@@ -433,7 +431,7 @@ void SpawnBoss(INT8 hp_default){
 
 void SpawnReward(){
 	struct ItemInfo* datak = 0;
-	struct Sprite* key_s = 0;
+	Sprite* key_s = 0;
 	switch (current_level_b){
 		case 0u:// wolf -> wrench
 			boss->x = (UINT16) 24u << 3;

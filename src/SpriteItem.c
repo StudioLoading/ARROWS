@@ -1,5 +1,5 @@
-#include "Banks/SetBank6.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
+//#include "main.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -16,7 +16,7 @@ const UINT8 item_scrignoaperto[] = {1, 5}; //The first number indicates the numb
 const UINT8 item_dcoin[] = {1, 6}; //The first number indicates the number of frames
 
 
-void Start_SpriteItem() {
+void START() {
 	
 	SetSpriteAnim(THIS, item_hidden, 8u);
 
@@ -27,15 +27,15 @@ void Start_SpriteItem() {
 	data->item_accel_y = 0;
 	data->type = 0;
 	data->vx = 0;
-	THIS->coll_x = 0;
-	THIS->coll_y = 0;
+	THIS->mt_sprite->dx = 0;
+	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 8;
 	THIS->coll_h = 8;
 	THIS->lim_x = 200u;
 	THIS->lim_y = 200u;
 }
 
-void Update_SpriteItem() {
+void UPDATE() {
 	
 	struct ItemInfo* data = (struct ItemInfo*)THIS->custom_data;
 	if (data->type == 10){ //gestione scrigno dedicata
@@ -90,7 +90,7 @@ void Update_SpriteItem() {
 					break;*/
 					case 7: //dcoin
 						SetSpriteAnim(THIS, item_dcoin, 8u);
-						THIS->coll_y = 8;
+						THIS->coll_h = 16u;
 					break;
 				}
 			} //fine setup
@@ -108,7 +108,7 @@ void Update_SpriteItem() {
 	}//fine gestione item non scrigno
 	
 	UINT8 scroll_i_tile;
-	struct Sprite* iispr;
+	Sprite* iispr;
 	SPRITEMANAGER_ITERATE(scroll_i_tile, iispr) {
 		if(iispr->type == SpritePlatform || iispr->type == SpriteIceplat) {
 			if(CheckCollision(THIS, iispr)) {
@@ -120,5 +120,5 @@ void Update_SpriteItem() {
 	}
 }
 
-void Destroy_SpriteItem() {
+void DESTROY() {
 }

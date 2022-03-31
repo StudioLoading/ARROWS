@@ -1,4 +1,4 @@
-#include "Banks/SetBank3.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -21,12 +21,8 @@ struct EnemyInfo* wolf_data ;
 void CheckCollisionBTile();
 void BTurn();
 
-void Start_SpriteWolf() {
+void START() {
 	wolf_data = (struct EnemyInfo*)THIS->custom_data;
-	THIS->coll_x = 4;
-	THIS->coll_y = 5+16;
-	THIS->coll_w = 8+16;
-	THIS->coll_h = 11;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	SetSpriteAnim(THIS, wolf_uuu, 8u);
@@ -37,7 +33,7 @@ void Start_SpriteWolf() {
 	wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpriteWolf() {
+void UPDATE() {
 	
 	if(wolf_data->enemy_state == ENEMY_STATE_WAIT){
 		return;
@@ -70,11 +66,11 @@ void Update_SpriteWolf() {
 		if(wolf_data->enemy_accel_y < 25) {
 			wolf_data->enemy_accel_y += 1;
 		}
-		if (wolf_data->vx > 0 && !SPRITE_GET_VMIRROR(THIS)){
-			SPRITE_SET_VMIRROR(THIS);
+		if (wolf_data->vx > 0 && THIS->mirror != V_MIRROR){
+			THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 		}
-		if(wolf_data->vx < 0 && SPRITE_GET_VMIRROR(THIS)){
-			SPRITE_UNSET_VMIRROR(THIS);
+		if(wolf_data->vx < 0 && THIS->mirror == V_MIRROR){
+			THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 		}
 		wolf_data->tile_e_collision = TranslateSprite(THIS, wolf_data->vx << delta_time, (wolf_data->enemy_accel_y >> 4)<< delta_time);
 		if(!wolf_data->tile_e_collision && delta_time != 0 && wolf_data->enemy_accel_y < 26) { //Do another iteration if there is no collision
@@ -92,8 +88,8 @@ void Update_SpriteWolf() {
 			CheckCollisionBTile();
 		}
 		
-		if((THIS->x == (UINT16) 24u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && SPRITE_GET_VMIRROR(THIS)) ||
-			(THIS->x == (UINT16) 26u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && !SPRITE_GET_VMIRROR(THIS))){
+		if((THIS->x == (UINT16) 24u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && THIS->mirror == V_MIRROR) ||
+			(THIS->x == (UINT16) 26u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && THIS->mirror != V_MIRROR)){
 			SetSpriteAnim(THIS, wolf_jump, 8u);
 			wolf_data->enemy_state = ENEMY_STATE_JUMPING;
 			wolf_data->enemy_accel_y = -25;
@@ -102,7 +98,7 @@ void Update_SpriteWolf() {
 	
 
 	UINT8 scroll_b_tile;
-	struct Sprite* ibspr;
+	Sprite* ibspr;
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_b_tile, ibspr) {
@@ -150,12 +146,12 @@ void CheckCollisionBTile() {
 
 void BTurn(){
 	if (wolf_data->vx == 1){
-		SPRITE_UNSET_VMIRROR(THIS);
+		THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 		THIS->x -= 4;
 		wolf_data->wait = 48u;
 	}
 	if (wolf_data->vx == -1){
-		SPRITE_SET_VMIRROR(THIS);
+		THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 		THIS->x += 4;
 		wolf_data->wait = 48u;			
 		
@@ -164,5 +160,5 @@ void BTurn(){
 	wolf_data->vx = -wolf_data->vx;
 }
 
-void Destroy_SpriteWolf() {
+void DESTROY() {
 }

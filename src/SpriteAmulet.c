@@ -1,5 +1,4 @@
-#include "Banks/SetBank6.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -15,22 +14,18 @@ const UINT8 amulet_fire[] = {2, 0, 4};
 
 struct ItemInfo* datak;
 
-void Start_SpriteAmulet() {
+void START() {
 	datak = (struct ItemInfo*)THIS->custom_data;
 	datak->type = 0;
 	datak->setup = 1u;
 	datak->counter = -1;
 	SetSpriteAnim(THIS, amulet_closed, 8u);
 	
-	THIS->coll_x = 0;
-	THIS->coll_y = 0;
-	THIS->coll_w = 8;
-	THIS->coll_h = 16;
 	THIS->lim_x = 255;
 	THIS->lim_y = 255;
 }
 
-void Update_SpriteAmulet() {
+void UPDATE() {
 	if(datak->setup){ 
 		switch(datak->type){
 			case 1:
@@ -50,5 +45,5 @@ void Update_SpriteAmulet() {
 	}
 }
 
-void Destroy_SpriteAmulet() {
+void DESTROY() {
 }

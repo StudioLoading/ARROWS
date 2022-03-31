@@ -1,5 +1,4 @@
-#include "Banks/SetBank5.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -12,9 +11,9 @@ const UINT8 iceplat_melt_1[] = {1, 1}; //The first number indicates the number o
 const UINT8 iceplat_melt_0[] = {1, 0}; //The first number indicates the number of frames
 extern INT8 spawning_triggered;
 
-void Start_SpriteIceplat() {
-	THIS->coll_x = 2;
-	THIS->coll_y = 11;
+void START() {
+	THIS->mt_sprite->dx = 2;
+	THIS->mt_sprite->dy = 11;
 	THIS->coll_w = 12;
 	THIS->coll_h = 5;
 	THIS->lim_x = 160u;
@@ -27,7 +26,7 @@ void Start_SpriteIceplat() {
 	data_platform->vy = 0;
 }
 
-void Update_SpriteIceplat() {	
+void UPDATE() {	
 	struct PlatformInfo* data_platform = (struct PlatformInfo*)THIS->custom_data;
 	if(data_platform->type != 0){ //different from 0, starts melt
 		data_platform->distance -= 2u;
@@ -44,6 +43,6 @@ void Update_SpriteIceplat() {
 	}
 }
 
-void Destroy_SpriteIceplat() {
+void DESTROY() {
 
 }

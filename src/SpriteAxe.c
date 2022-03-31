@@ -1,5 +1,4 @@
-#include "Banks/SetBank16.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -11,9 +10,9 @@ extern UINT8 current_level;
 
 const UINT8 anim_axe_normal[] = {6, 0, 1, 2, 3, 4, 5}; //The first number indicates the number of frames
 
-void Start_SpriteAxe() {	
-	THIS->coll_x = 2;
-	THIS->coll_y = 2;
+void START() {	
+	THIS->mt_sprite->dx = 2;
+	THIS->mt_sprite->dy = 2;
 	THIS->coll_w = 4;
 	THIS->coll_h = 4;
 	THIS->lim_x = 255u;
@@ -27,7 +26,7 @@ void Start_SpriteAxe() {
 	axedata->enemy_accel_y = -20;
 }
 
-void Update_SpriteAxe(){
+void UPDATE(){
 	struct EnemyInfo* axedata = (struct EnemyInfo*)THIS->custom_data;
 	axedata->wait++;
 	if(axedata->enemy_accel_y < 24) {
@@ -44,6 +43,6 @@ void Update_SpriteAxe(){
 	
 }
 
-void Destroy_SpriteAxe() {
+void DESTROY() {
 	//SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-4u);
 }
