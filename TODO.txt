@@ -52,8 +52,27 @@ KNOWN ISSUE:
 - annerire lo sfondo sulla schermata worldmap sul color
 - mettere più scrigni a moneta singola in giro
 
+TODO:
+- COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
+- menu di pausa: devo fermare tutti gli enemy in schermo, non cambio state, mostro una diag bassa 
+	"   -PAUSED-   " e sotto i tasti complessi di tip, shield, amuleti ottenuti
 
-LORE:Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence, disarm human weapons and take over the power on earth.  Retaliation for humans now to be imprisoned in zoo-es. Player controls the archer, a boy who has been freed by his mom. He is able to use the power of elements and convey it inside his arrows. This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, he has to defeat em to get those amulets. Amulets are also mandatory to enter into the final Castle, where his mother is waiting. The castle is where a crazy scientist makes his work.. is he finding a solution for moon approaching, or is he the responsible of that? if he is, why he did that? can it be reverted? ... more deeply, is it worth to be reverted ? were humans doing a good job on Earth itself, when they were at the most powerful position on the chain ?
+
+LORE:
+Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence,
+ disarm human weapons and take over the power on earth.  
+ Retaliation for humans now to be imprisoned in zoo-es. 
+ Player controls the archer, a boy who has been freed by his mom. 
+ He is able to use the power of elements and convey it inside his arrows. 
+ This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, 
+ so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, 
+ he has to defeat em to get those amulets. Amulets are also mandatory to enter into the 
+ final Castle, where his mother is waiting. The castle is where a crazy scientist makes 
+ his work.. is he finding a solution for moon approaching, 
+ or is he the responsible of that? if he is, why he did that? 
+ an it be reverted? ... more deeply, is it worth to be reverted ? 
+ were humans doing a good job on Earth itself, when they were at the most powerful 
+ position on the chain ?
 
 SOUND BACKGROUND PER OGNI LIVELLO : 
 - provare LSDJ vediamo se riesco a far da solo.
@@ -105,22 +124,15 @@ CONTROLLO di tutti i suggerimenti/dialoghi
 RICORDARSI ALLA FINE DI TUTTO DI SOSTITUIRE LE TILE DI
 SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 
-Controllare che le stanze di secret siano più a sinistra delle frecce di respawn su livello
+disabilitare ri-entrata su sstanza secret. Facile, tutto a codice.
 
-Controllare movimenti di tutti i bird, l' ho modificato l' 11 /ott sostituendo i THIS->x++ col TranslateSprite
-
-RIESCO A METTERE DIFFERENTI BORDI DI SNES PER LIVELLO ?
-
-NELLO STATESPRITE ho messo una combo Start+Selected pressed va al gameOver. toglierlo ovviamente perchè è solo per mio test.
+DIFFERENTI BORDI DI SNES PER LIVELLO
 
 
 SHOULD I.. ?
-- Dialogo sulla pietra che riflette il cambio di freccia
-- capire se col tile replacement delle animazioni posso evitare di far tornare il personaggio nelle secret. Da chiamare alla StartGame(4) quando load_next_s == -1 cioè vengo dalla secret.
 - fare una nuova mappa secret con i posti di spawn switchati. Scrivere logica di posizionamento spawn e caricamento mappa a seconda del livello di gioco. pari o dispari.
 - comparsa del testo lettera per lettera
 - diag della tile che converte e ridireziona il tipo di freccia
-- COPIARE LA LOGICA DI MORTE PER TOCCO TESCHIO SU TUTTI GLI ENEMY, L' HO FATTO SOLO SUI SERPENTI
 
 
 

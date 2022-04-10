@@ -1,4 +1,5 @@
-#include "Banks/SetBank8.h"
+#include "Banks/SetAutoBank.h"
+
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
@@ -13,15 +14,11 @@ const UINT8 const hurricane_walk[] = {4, 0, 1, 2, 1}; //The first number indicat
 const UINT8 const hurricane_hit[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 const UINT8 const hurricane_dead[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 
-extern void CheckCollisionETile();
-extern void ETurn();
+extern void CheckCollisionETile() BANKED;
+extern void ETurn() BANKED;
 
 
-void Start_SpriteHurricane() {
-	THIS->mt_sprite->dx = 1;
-	THIS->mt_sprite->dy = 2;
-	THIS->coll_w = 7;
-	THIS->coll_h = 12;
+void START() {
 	THIS->lim_x = 120u;
 	THIS->lim_y = 60u;
 	SetSpriteAnim(THIS, hurricane_idle, 8u);
@@ -33,7 +30,7 @@ void Start_SpriteHurricane() {
 	hcdata->enemy_accel_y = 28;
 }
 
-void Update_SpriteHurricane() {
+void UPDATE() {
 	
 	struct EnemyInfo* hdata = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -97,7 +94,7 @@ void Update_SpriteHurricane() {
 	
 }
 
-void Destroy_SpriteHurricane(){
+void DESTROY() {
 	struct EnemyInfo* hdata_dying = (struct EnemyInfo*)THIS->custom_data;
 	hdata_dying->enemy_state = ENEMY_STATE_DEAD;
 }

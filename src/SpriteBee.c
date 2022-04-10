@@ -1,4 +1,4 @@
-#include "Banks/SetBank2.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -6,8 +6,8 @@
 #include "Scroll.h"
 #include "gbt_player.h"
 
-#include "CircleMath.h"
 #include "custom_datas.h"
+#include "CircleMath.h"
 
 //BEE
 const UINT8 bee_idle[] = {2, 0, 2}; //The first number indicates the number of frames
@@ -15,15 +15,11 @@ const UINT8 bee_walk[] = {2, 0, 2}; //The first number indicates the number of f
 const UINT8 bee_hit[] = {2, 0, 1}; //The first number indicates the number of frames
 const UINT8 bee_dead[] = {1, 1}; //The first number indicates the number of frames
 
-extern void CheckCollisionETile();
-extern void ETurn();
-extern void EDie();
+extern void CheckCollisionETile() BANKED;
+extern void ETurn() BANKED;
+extern void EDie() BANKED;
 
-void Start_SpriteBee() {	
-	THIS->mt_sprite->dx = 1;
-	THIS->mt_sprite->dy = 2;
-	THIS->coll_w = 4;
-	THIS->coll_h = 14;
+void START() {	
 	struct EnemyInfo* beedata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, bee_idle, 24u);
 	beedata->enemy_state = ENEMY_STATE_JUMPING;
@@ -34,7 +30,7 @@ void Start_SpriteBee() {
 	beedata->archer_posx = 0u;
 }
 
-void Update_SpriteBee() { 
+void UPDATE() { 
 	
 	struct EnemyInfo* beedata = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -97,6 +93,6 @@ void Update_SpriteBee() {
 	
 }
 
-void Destroy_SpriteBee(){
+void DESTROY(){
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 }

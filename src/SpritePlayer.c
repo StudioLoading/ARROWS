@@ -493,14 +493,14 @@ void UPDATE() {
 				archer_state = STATE_NORMAL_PLATFORM;
 			}
 		}
-		/* || ispr->type == SpritePorcupine || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
+		/* || ispr->type == SpritePorcupine
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
-			|| ispr->type == SpriteBee	|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
+			|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
 			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion
+		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpriteEagle 
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
-			|| ispr->type == SpriteAlligator 
+			|| ispr->type == SpriteAlligator || ispr->type == SpriteThunder || ispr->type == SpriteBee
 			|| ispr->type == SpriteBird ) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
@@ -536,8 +536,9 @@ void UPDATE() {
 				UINT8 being_hit = 1u;
 				if (KEY_PRESSED(J_DOWN)){
 					/*&& ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
-						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider*/
-					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator){
+						 && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider*/
+					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
+						&& ispr->type != SpriteEagle){
 						if (ispr->x < THIS->x){
 							if (THIS->mirror == V_MIRROR){//mi sto riparando bene
 								TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
@@ -575,7 +576,7 @@ void UPDATE() {
 				}
 			}
 		}
-		/*if(ispr->type == SpriteHurricane) {
+		if(ispr->type == SpriteHurricane) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {	
 				if (archer_state == STATE_JUMPING | archer_state == STATE_ASCENDING){
 					TranslateSprite(THIS, -2u, -2u);
@@ -583,7 +584,7 @@ void UPDATE() {
 					TranslateSprite(THIS, -2u, -1u);
 				}
 			}
-		}*/
+		}
 		
 		if(ispr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ispr)) {

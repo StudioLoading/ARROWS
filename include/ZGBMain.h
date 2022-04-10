@@ -5,7 +5,6 @@
 #define ResumeMusic hUGE_paused = 0; UNMUTE_ALL_CHANNELS  
 
 /*
-_STATE(StateGame3)\
 _STATE(StateGame6)\
 _STATE(StateCutscene)\
 */
@@ -17,6 +16,7 @@ _STATE(StateIntro)\
 _STATE(StateWorldmap)\
 _STATE(StateDiag)\
 _STATE(StateGame)\
+_STATE(StateGame3)\
 _STATE(StateSecret)\
 _STATE(StateBoss)\
 _STATE(StateGameover)\
@@ -45,19 +45,19 @@ _SPRITE_DMG(SpriteAmulet, amulets)\
 _SPRITE_DMG(SpriteWolf, wolf)\
 _SPRITE_DMG(SpriteAlligator, alligator)\
 _SPRITE_DMG(SpriteEagle, eagle)\
+_SPRITE_DMG(SpriteThunder, thunder)\
+_SPRITE_DMG(SpriteHurricane, hurricane)\
+_SPRITE_DMG(SpriteBee, bee)\
 SPRITE_DEF_END
 
 
 /*
 _SPRITE_DMG(SpritePorcupine, porcupine)\
-_SPRITE_DMG(SpriteThunder, thunder)\
-_SPRITE_DMG(SpriteHurricane, hurricane)\
 _SPRITE_DMG(SpriteStalattite, stalattite)\
 _SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteWalrus, walrus)\
 _SPRITE_DMG(SpriteWalrusspin, walrusspin)\
-_SPRITE_DMG(SpriteBee, bee)\
 _SPRITE_DMG(SpritePenguin, penguin)\
 _SPRITE_DMG(SpriteAxethrower, axethrower)\
 _SPRITE_DMG(SpriteBat, bat)\

@@ -1,4 +1,5 @@
-#include "Banks/SetBank8.h"
+#include "Banks/SetAutoBank.h"
+
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
@@ -13,16 +14,11 @@ const UINT8 thunder_walk[] = {4, 0, 1, 2, 1}; //The first number indicates the n
 const UINT8 thunder_hit[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 const UINT8 thunder_dead[] = {2, 3, 5}; //The first number indicates the number of frames
 
-extern void CheckCollisionETile();
-extern void ETurn();
+extern void CheckCollisionETile() BANKED;
+extern void ETurn() BANKED;
 
 
-void Start_SpriteThunder() {
-	
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 5;
-	THIS->coll_w = 4;
-	THIS->coll_h = 11;
+void START() {	
 	THIS->lim_x = 120u;
 	THIS->lim_y = 60u;
 	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;	
@@ -34,7 +30,7 @@ void Start_SpriteThunder() {
 	tdata->vx = (THIS->x & 1);
 }
 
-void Update_SpriteThunder() {
+void UPDATE() {
 	
 	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -103,7 +99,7 @@ void Update_SpriteThunder() {
 	
 }
 
-void Destroy_SpriteThunder(){
+void DESTROY(){
 	struct EnemyInfo* tdata = (struct EnemyInfo*)THIS->custom_data;
 	tdata->enemy_state = ENEMY_STATE_DEAD;
 }
