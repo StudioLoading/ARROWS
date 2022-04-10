@@ -1,4 +1,4 @@
-#include "Banks/SetBank6.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -22,12 +22,13 @@ const UINT8 eagle_time_normal = 81u;
 extern void CheckCollisionETile();
 extern void ETurn();
 
-void Start_SpriteEagle() {
-	
+void START() {
+	/*
 	THIS->mt_sprite->dx = 4;
 	THIS->mt_sprite->dy = 4;
 	THIS->coll_w = 22;
 	THIS->coll_h = 22;
+	*/
 	THIS->lim_x = 255u;
 	THIS->lim_y = 255u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
@@ -39,7 +40,7 @@ void Start_SpriteEagle() {
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpriteEagle() {
+void UPDATE() {
 	
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
@@ -165,7 +166,7 @@ void Update_SpriteEagle() {
 	
 }
 
-void Destroy_SpriteEagle() {
+void DESTROY() {
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	data->enemy_state = ENEMY_STATE_DEAD;
 }

@@ -332,7 +332,7 @@ void UPDATE() {
 			archer_accel_y += 1;
 		}
 		tile_collision = TranslateSprite(THIS, 0, archer_accel_y  >> 4 );
-		if(KEY_PRESSED(J_UP)){
+		if(KEY_TICKED(J_UP)){
 			CheckCollisionTileDoor();
 		}
 		/*if(tile_collision == 0 && delta_time != 0 && archer_accel_y < 24) { //Do another iteration if there is no collision
@@ -493,22 +493,26 @@ void UPDATE() {
 				archer_state = STATE_NORMAL_PLATFORM;
 			}
 		}
-		/* || ispr->type == SpritePorcupine 
-			|| ispr->type == SpriteAlligator || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
+		/* || ispr->type == SpritePorcupine || ispr->type == SpriteEagle || ispr->type == SpriteThunder 
 			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
 			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
 			|| ispr->type == SpriteBee	|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
 			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
+			|| ispr->type == SpriteAlligator 
 			|| ispr->type == SpriteBird ) {
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
+				if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
+					dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
+					return;
+				}
 				switch(is_on_boss){
 					case 0:
-						/*if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+						if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
 							return;
-						}*/
+						}
 					break;
 					case 1:
 						if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
@@ -531,9 +535,9 @@ void UPDATE() {
 				}
 				UINT8 being_hit = 1u;
 				if (KEY_PRESSED(J_DOWN)){
-					/*&& ispr->type != SpriteAlligator && ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
+					/*&& ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
 						&& ispr->type != SpriteEagle && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider*/
-					if(ispr->type != SpriteWolf){
+					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator){
 						if (ispr->x < THIS->x){
 							if (THIS->mirror == V_MIRROR){//mi sto riparando bene
 								TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
@@ -551,8 +555,8 @@ void UPDATE() {
 					INT8 enemydamage = 1;
 					switch(ispr->type){
 						case SpriteWolf:
-						/*case SpriteAlligator:
-						case SpriteIbex:
+						case SpriteAlligator:
+						/*case SpriteIbex:
 						case SpriteBear:
 						case SpriteWalrus:*/
 							enemydamage = 2;

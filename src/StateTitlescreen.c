@@ -151,7 +151,6 @@ void UPDATE() {
 				PlayMusic(bgm_titlescreen, 1);
 			}
 			if(current_camera_counter == 62u){
-				PRINT(68u, 10u, "DEMO");	
 				current_camera_state = 2u;
 			}	
 		break;
@@ -171,12 +170,12 @@ void UPDATE() {
 		switch (wait_titlescreen){
 			case 0u:
 				//PRINT(69u, 15u, "PUSH START");
-				PRINT(65u, 16u, "PUSH START");	
+				PRINT(65u, 17u, "PUSH START");	
 				wait_titlescreen = 60u;
 			break;
 			case 30u:
 				//PRINT(69u, 15u, "          ");	
-				PRINT(65u, 16u, "          ");	
+				PRINT(65u, 17u, "          ");	
 			break;
 		}
 	}

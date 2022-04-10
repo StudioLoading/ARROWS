@@ -126,7 +126,7 @@ SHOULD I.. ?
 
 
 PNG2MAP
-C:\GB\ZGBNEW\tools\png2map\png2gbtiles.exe mapdiag.archer.png -gbm -g -pal=mypal.pal
+C:\GB\ZGB-2021.3\tools\png2map\png2gbtiles.exe test2.png -gbm -g -pal=mypal.pal
 maypal.pal file di testo contenente solo le seguenti
 #C6D783
 #8DCD53

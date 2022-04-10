@@ -120,7 +120,7 @@ void START(){
 				set_sgb_palette01_2H();
 			}
 		break;
-		/*case 1u:
+		case 1u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteAmulet);
@@ -137,7 +137,7 @@ void START(){
 			if(sgb_check()){
 				set_sgb_palette01_FOREST();
 			}			
-		break;
+		break;/*
 		case 3u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteIbex);
@@ -208,7 +208,6 @@ void START(){
 	}
 	
 	SHOW_BKG;
-	
 	
 	if (is_on_boss > 2){
 		if(is_on_boss == 4){//lo setto a 4 solo quando si muore dopo aver sconfitto il boss ma prima di essere usciti, come dei coglioni
@@ -388,7 +387,7 @@ void SpawnBoss(INT8 hp_default){
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
 			break;
-			/*case 1u:
+			case 1u:
 				boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, (UINT16) 14u << 3);
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
@@ -400,7 +399,7 @@ void SpawnBoss(INT8 hp_default){
 				boss = SpriteManagerAdd(SpriteEagle, (UINT16) 28u << 3, (UINT16) 14u << 3);
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
-			break;
+			break;/*
 			case 3u:
 				boss = SpriteManagerAdd(SpriteIbex, (UINT16) 24u << 3, (UINT16) 12u << 3);
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;

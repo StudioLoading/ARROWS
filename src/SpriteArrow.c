@@ -26,21 +26,10 @@ const UINT8 arrow_fire_g[] = {1, 14};
 const UINT8 spine[] = {1, 15};
 UINT8 internal_t; // 1 normal 2 water 3 stone 4 blast 5 fire
 
-Sprite * ids[4] = {0,0,0,0};
-INT8 falen = 0; //counts in-screen arrows 
-
 void SetupArrow();
 void CheckCollisionArrowTile(UINT8 ta);
-void FApush();
-void FApop();
 
 void START() {
-	/*
-	THIS->mt_sprite->dx = 5;
-	THIS->mt_sprite->dy = 6;
-	THIS->coll_w = 3;
-	THIS->coll_h = 3;
-	*/
 	THIS->lim_x = 60u;
 	THIS->lim_y = 60u;
 	
@@ -48,29 +37,6 @@ void START() {
 	data->type = 0;
 	data->original_type = 0;
 	data->arrowdir = -1;
-	//data->counter = 0;
-
-	FApush();
-}
-
-void FApush(){
-	if (falen <= 4 && falen > 0){
-		ids[falen-1] = THIS;
-	}else{
-		FApop();
-		ids[0] = THIS;
-	}
-	falen++;
-}
-
-void FApop(){
-	if (falen){
-		falen--;
-		SpriteManagerRemoveSprite(ids[falen-1]);
-	}
-	ids[3] = ids[2];
-	ids[2] = ids[1];
-	ids[1] = ids[0];
 }
 
 void UPDATE() {
@@ -316,10 +282,4 @@ void CheckCollisionArrowTile(UINT8 ta) {
 }
 
 void DESTROY() {
-	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	if(data->arrowdamage != 100){
-		FApop();
-	}else if (falen){
-		falen--;
-	}
 }

@@ -54,6 +54,7 @@ void START() {
 	countdown = 10;
 	one_second = 0;
 	
+	scroll_bottom_movement_limit = 76u;
 	InitScroll( (UINT8) BANK(mapdiaggameover), &mapdiaggameover, collision_tiles_gameover, 0);	
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
@@ -100,9 +101,9 @@ void ResetConfig(INT8 gameo){
 		SetState(StateTitlescreen);
 	}else{
 		if(is_on_boss > 0){
-			if(current_level > 0u){
+			/*if(current_level > 0u){
 				current_level_b = current_level -1u;
-			}
+			}*/
 			SetState(StateBoss);	
 		}else{
 			SetState(StateWorldmap);			

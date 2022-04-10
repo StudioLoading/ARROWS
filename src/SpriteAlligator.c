@@ -1,4 +1,4 @@
-#include "Banks/SetBank3.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
@@ -21,12 +21,12 @@ UINT8 poss = 0;
 struct EnemyInfo* alligator_data ;
 
 
-void Start_SpriteAlligator() {
+void START() {
 	alligator_data = (struct EnemyInfo*)THIS->custom_data;
-	THIS->mt_sprite->dx = 0;
+	/*THIS->mt_sprite->dx = 0;
 	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 0;
-	THIS->coll_h = 0;
+	THIS->coll_h = 0;*/
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	SetSpriteAnim(THIS, alligator_hide, 16u);
@@ -37,19 +37,20 @@ void Start_SpriteAlligator() {
 	alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
 }
 
-void Update_SpriteAlligator() {
-	
+void UPDATE() {
+	/*
 	if(alligator_data->enemy_state == ENEMY_STATE_ATTACK){	
 		THIS->coll_w = 16;
 		THIS->coll_h = 16;
 	}
-	
+	*/
 	if(alligator_data->enemy_state == ENEMY_STATE_WAIT){
 		return;
 	}
 	
 	if (alligator_data->enemy_state == ENEMY_STATE_DEAD){
 		SetSpriteAnim(THIS, alligator_dead, 4u);
+		TranslateSprite(THIS, 0, 1);
 		alligator_data->hp = 0;
 		return;
 	}
@@ -65,30 +66,24 @@ void Update_SpriteAlligator() {
 			THIS->x = boss_posx[poss] << 3;
 		}
 		alligator_data->enemy_state = ENEMY_STATE_INVISIBLE;
-		THIS->coll_w = 0;
-		THIS->coll_h = 0;
 		SetSpriteAnim(THIS, alligator_invisible, 8u);
 	}
 	if (alligator_data->wait >= 100u & alligator_data->wait <= 120u){
 		if (poss){
-			TranslateSprite(THIS, -1 << delta_time, 0);
+			TranslateSprite(THIS, -1 << delta_time, 1);
 		}else{
-			TranslateSprite(THIS, 1 << delta_time, 0);	
+			TranslateSprite(THIS, 1 << delta_time, 1);	
 		}
 
 	}
 	if (alligator_data->wait == 230u){
 		alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
-		THIS->coll_w = 0;
-		THIS->coll_h = 0;
 		SetSpriteAnim(THIS, alligator_hide, 8u);
 	}else if (alligator_data->wait == 180u){
 		alligator_data->enemy_state = ENEMY_STATE_ATTACK;
 		SetSpriteAnim(THIS, alligator_bite, 10u);
 	}else if (alligator_data->wait == 120u){
 		alligator_data->enemy_state = ENEMY_STATE_NORMAL;
-		THIS->coll_w = 0;
-		THIS->coll_h = 0;
 		SetSpriteAnim(THIS, alligator_normal, 8u);			
 	}
 
@@ -104,7 +99,7 @@ void Update_SpriteAlligator() {
 		}
 		if(iaspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, iaspr) & alligator_data->enemy_state != ENEMY_STATE_DEAD) {
-				if(alligator_data->enemy_state != ENEMY_STATE_INVISIBLE & alligator_data->enemy_state != ENEMY_STATE_HIDDEN){ 
+				if(alligator_data->enemy_state != ENEMY_STATE_INVISIBLE && alligator_data->enemy_state != ENEMY_STATE_HIDDEN){ 
 					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iaspr->custom_data;
 					if (arrowdata->original_type == 2){ //hit only with stoned arrows
 						SetSpriteAnim(THIS, alligator_hit, 18u);
@@ -126,5 +121,5 @@ void Update_SpriteAlligator() {
 	
 }
 
-void Destroy_SpriteAlligator() {
+void DESTROY() {
 }

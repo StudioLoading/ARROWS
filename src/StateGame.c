@@ -66,11 +66,11 @@ extern unsigned char d4[];
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_d = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b sullo StateBoss
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
 UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
-UINT8 current_map = 1u; // 0u default
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+UINT8 current_map = 0u; // 0u default
 UINT8 current_cutscene = 0u;
 
 UINT16 drop_player_x = 0u;
@@ -190,7 +190,6 @@ void START() {
 	UINT8 level_2_banks[] = {BANK(mapsewer2), BANK(mapsewer)};
 	UINT8 level_3_banks[] = {BANK(map3), BANK(map3tree)};
 	UINT8 * levels_banks[] = {level_1_banks, level_2_banks, level_3_banks};
-
 
 	const struct MapInfo** maps = levels[current_level];
 	UINT8* mapbanks = levels_banks[current_level];
@@ -512,10 +511,12 @@ void UPDATE() {
 					}
 					if (scroll_target->x > (UINT16) 29u << 3 && spawning_counter == 1){
 						spawn_item(scrigno_dcoin, 36u, 3u, 1, 1);
+						spawn_enemy(SpriteRat, 42u, 4u);
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 38u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteSpider, 50u, 7u);
+						spawn_enemy(SpriteRat, 34u, 6u);
 						spawn_enemy(SpriteEnemy, 52u, 8u);
 						spawn_item(scrigno_shield, 41u, 3u, 2, 1);
 						spawning_counter++;
@@ -526,12 +527,16 @@ void UPDATE() {
 					}
 					if (scroll_target->x > (UINT16) 89u << 3 && spawning_counter == 4){
 						spawn_enemy(SpriteSpider, 94u, 5u);
+						spawn_enemy(SpriteRat, 100u, 6u);
+						spawn_enemy(SpriteEnemy, 102u, 5u);
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 136u << 3 && spawning_counter == 5){
 						spawn_enemy(SpriteSpider, 149u, 5u);
 						spawn_enemy(SpriteSpider, 150u, 5u);
 						spawn_enemy(SpriteRat, 143u, 13u);
+						spawn_enemy(SpriteEnemy, 142u, 14u);
+						spawn_enemy(SpriteEnemy, 141u, 14u);
 						spawning_counter++;
 					}					
 				break;
@@ -553,6 +558,7 @@ void UPDATE() {
 					if (scroll_target->x > (UINT16) 43u << 3 && spawning_counter == 2){
 						spawn_enemy(SpriteSpider, 51u, 9u);
 						spawn_enemy(SpriteEnemy, 56u, 9u);
+						spawn_enemy(SpriteEnemy, 66u, 9u);
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 84u << 3 && spawning_counter == 3){

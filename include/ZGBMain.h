@@ -1,8 +1,8 @@
 #ifndef ZGBMAIN_H
 #define ZGBMAIN_H
 #define PauseMusic hUGE_paused = 1; hUGE_mute(HT_CH_MUTE);
-#define ResumeMusic hUGE_paused = 0 
 #define UNMUTE_ALL_CHANNELS hUGE_mute(HT_CH_PLAY)
+#define ResumeMusic hUGE_paused = 0; UNMUTE_ALL_CHANNELS  
 
 /*
 _STATE(StateGame3)\
@@ -43,6 +43,8 @@ _SPRITE_DMG(SpriteStalagmite, stalagmite)\
 _SPRITE_DMG(SpriteAxe, axe)\
 _SPRITE_DMG(SpriteAmulet, amulets)\
 _SPRITE_DMG(SpriteWolf, wolf)\
+_SPRITE_DMG(SpriteAlligator, alligator)\
+_SPRITE_DMG(SpriteEagle, eagle)\
 SPRITE_DEF_END
 
 
@@ -51,8 +53,6 @@ _SPRITE_DMG(SpritePorcupine, porcupine)\
 _SPRITE_DMG(SpriteThunder, thunder)\
 _SPRITE_DMG(SpriteHurricane, hurricane)\
 _SPRITE_DMG(SpriteStalattite, stalattite)\
-_SPRITE_DMG(SpriteAlligator, alligator)\
-_SPRITE_DMG(SpriteEagle, eagle)\
 _SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteWalrus, walrus)\
