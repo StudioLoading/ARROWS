@@ -121,7 +121,7 @@ void UPDATE() {
 				if(current_level < 3){
 					SetState(StateGame);	
 				}else if (current_level < 6){
-					//SetState(StateGame3);
+					SetState(StateGame3);
 				}				
 			break;
 		}

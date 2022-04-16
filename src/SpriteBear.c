@@ -1,15 +1,13 @@
-#include "Banks/SetBank8.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
 extern UINT8 current_camera_state;
-
 
 //BEAR
 const UINT8 bear_idle[] = {1, 2}; //The first number indicates the number of frames
@@ -24,7 +22,7 @@ void CheckCollisionBETile();
 void BETurn();
 void ToNormalState();
 
-void Start_SpriteBear() {
+void START() {
 	THIS->lim_x = 255u;
 	THIS->lim_y = 255u;
 	SetSpriteAnim(THIS, bear_idle, 4u);
@@ -38,7 +36,7 @@ void Start_SpriteBear() {
 	}
 }
 
-void Update_SpriteBear() {
+void UPDATE() {
 	
 	if(bear_data->enemy_state != ENEMY_STATE_NORMAL){		
 		if(bear_data->enemy_state == ENEMY_STATE_ATTACK){
@@ -47,7 +45,7 @@ void Update_SpriteBear() {
 				case 20u:
 				case 30u:
 				case 50u:		
-					bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0);
+					bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 1 << delta_time);
 					CheckCollisionBETile();
 				break;
 			}
@@ -94,7 +92,7 @@ void Update_SpriteBear() {
 	}
 	
 	if(bear_data->enemy_state == ENEMY_STATE_NORMAL){		
-		bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0);
+		bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 1 << delta_time);
 	}
 	CheckCollisionBETile();
 	if((THIS->x == (UINT16) 13u << 3 && bear_data->vx < 0) || (THIS->x == (UINT16) 22u << 3)){
@@ -102,10 +100,6 @@ void Update_SpriteBear() {
 			SetSpriteAnim(THIS, bear_attack, 12u);
 			bear_data->enemy_state = ENEMY_STATE_ATTACK;
 			bear_data->wait = 58;
-			THIS->mt_sprite->dx = 4;
-			THIS->mt_sprite->dy = 0;
-			THIS->coll_w = 24;
-			THIS->coll_h = 32;
 		}	
 	}
 
@@ -184,12 +178,8 @@ void BETurn(){
 
 void ToNormalState(){
 	bear_data->enemy_state = ENEMY_STATE_NORMAL;
-	SetSpriteAnim(THIS, bear_walk, 13u);
-	THIS->mt_sprite->dx = 4;
-	THIS->mt_sprite->dy = 12;
-	THIS->coll_w = 24;
-	THIS->coll_h = 20;	
+	SetSpriteAnim(THIS, bear_walk, 13u);	
 }
 
-void Destroy_SpriteBear() {
+void DESTROY() {
 }

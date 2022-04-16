@@ -127,6 +127,9 @@ void UPDATE(){
 			}
 		break;
 		case 2u:
+			if (counter == 10u) {
+				WorldmapQuiverStone();
+			}
 			if(counter > 80u && siconpsg->x < 57u && (counter & 1)){
 				siconpsg->x++;
 			}
@@ -142,6 +145,7 @@ void UPDATE(){
 		case 4u:
 			if (counter == 10u) {
 				WorldmapQuiverStone();
+				WorldmapQuiverThunder();
 			}
 			if(counter > 80u && siconpsg->x > 48u && (counter & 1)){
 				siconpsg->x-=2;

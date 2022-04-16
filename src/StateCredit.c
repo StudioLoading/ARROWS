@@ -40,7 +40,6 @@ UINT8 colliding_mother;
 void START() {
 	LOAD_SGB_BORDER(border);
 	credit_step = 0u;
-	updatecounter = 20u;
 	wait_time = 0u;
 	on_worldmap = 0;
 	colliding_mother = 0u;
@@ -59,29 +58,11 @@ void START() {
 void UPDATE() {
 	wait_time += 1u;
 	UINT8 cb = 0;
-	if(credit_step == 0u){
-		updatecounter++;
-		if (updatecounter < 20u) {
-			switch(updatecounter){
-				case 1u:
-					set_bkg_data(14u, 1u, tilescredit.data+352u);// 16 * 22 tile index
-					set_bkg_data(15u, 1u, tilescredit.data+368u);// 16 * 22 tile index
-				break;
-				case 10u:
-					set_bkg_data(14u, 1u, tilescredit.data+224u);// restore tile
-					set_bkg_data(15u, 1u, tilescredit.data+240u);// restore tile
-				break;
-			}
-		}else{
-			updatecounter = 0;
-		}
-	}
 	if(KEY_TICKED(J_START)){
 		SetState(StateTitlescreen);
 		return;
 	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_time == 106u){
 		wait_time = 0u;
-		updatecounter = 0u;
 		credit_step += 1u;
 		if(credit_step == 5u){
 			SetState(StateTitlescreen);

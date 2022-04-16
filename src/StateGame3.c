@@ -89,7 +89,6 @@ void UpdateHUD3() BANKED;
 void ShowWindow3() BANKED;
 void ShowWindowDiag3() BANKED;
 void set_window_y3(UBYTE y);
-//void LCD_isr3();
 void spawn_enemy3(UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
 void spawn_item3(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
 Sprite* spawn_vplatform4(Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
@@ -488,7 +487,7 @@ void UPDATE() {
 						spawning_counter++;
 					}
 					if(scroll_target->x > (UINT16) 42u << 3 && scroll_target->y < (UINT16) 14u << 3 && spawning_counter == 1){
-						spawn_enemy3(SpriteRat, 36u, 14u);
+						spawn_enemy3(SpriteRat, 36u, 15u);
 						spawn_enemy3(SpriteBee, 37u, 18u);
 						spawning_counter++;
 					}
@@ -531,7 +530,9 @@ void UPDATE() {
 					if(scroll_target->y > (UINT16) 10u << 3 && spawning_counter == 0){
 						spawn_enemy3(SpriteSpider, 31u, 13u);
 						spawn_enemy3(SpriteBee, 34u, 13u);
-						spawn_item3(scrigno_dcoin, 34u, 2u, 7, 0);
+						if(scroll_target->x > (UINT16) 20u << 3){
+							spawn_item3(scrigno_dcoin, 34u, 2u, 7, 0);
+						}
 						spawning_counter++;
 					}
 					if(scroll_target->y > (UINT16) 20u << 3 && spawning_counter == 1){
@@ -690,17 +691,6 @@ void UpdateHUD3() BANKED{
 	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
 	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
 }
-
-/*
-void LCD_isr3() NONBANKED {
-    if (LYC_REG == 0) {
-        if (WY_REG == 0) HIDE_SPRITES; else SHOW_SPRITES; 
-        LYC_REG = WY_REG;
-    } else {
-        HIDE_SPRITES; 
-        LYC_REG = 0;
-    }
-}*/
 
 void set_window_y3(UBYTE y) {
     WX_REG = 7u;

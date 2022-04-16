@@ -7,10 +7,10 @@
 #include "Sound.h"
 #include "Music.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 #include "Dialogs.h"
+#include "sgb_palette.h"
 
 extern UINT8 amulet;
 extern INT8 load_next;
@@ -31,6 +31,7 @@ extern UINT16 drop_player_y;
 extern INT8 level_tool;
 extern INT8 archer_tool;
 extern INT8 update_hud;
+extern UINT8 paused;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -135,10 +136,20 @@ void UPDATE() {
 					show_diag = 0;
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					archer_state = STATE_NORMAL;
-				}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
+				}else if(paused && KEY_TICKED(J_START)){
+					set_sgb_palette_statusbar();
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					show_diag += 1;
 					SetSpriteAnim(THIS, anim_idle, 12u);
+					paused = 0;
+				} 
+				else if(!paused){				
+					if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
+						set_sgb_palette_statusbar();
+						diag_cooldown = MAX_DIAG_COOLDOWN;
+						show_diag += 1;
+						SetSpriteAnim(THIS, anim_idle, 12u);
+					}
 				}
 			}else{
 				diag_cooldown--;
@@ -147,10 +158,17 @@ void UPDATE() {
 		break;
 	}
 	
-	if(KEY_TICKED(J_START) && is_on_boss < 0){
+	if(KEY_TICKED(J_START) && is_on_boss < 0 && is_on_secret == -1){
 		//se sono sullo stato del boss non fare un bel niente !!!!!!
 		//non si mette in pausa al mostro!
-		SetState(StateGame);
+		if(paused == 0u){
+			paused = 1u;
+			diag_found = Build_Next_Dialog_Banked(THIS);// expected 98
+			archer_state = STATE_DIAG;
+			SetSpriteAnim(THIS, anim_idle, 12u);
+			show_diag = 1;
+		}	
+		//SetState(StateGame);
 		return;
 	}
 	
@@ -200,7 +218,7 @@ void UPDATE() {
 							if(current_level < 3){
 								SetState(StateGame);
 							}else if (current_level < 5){
-								//SetState(StateGame3);
+								SetState(StateGame3);
 							}else{
 								//SetState(StateGame6);
 							}
@@ -372,8 +390,8 @@ void UPDATE() {
 					ispr->y -= 20u;
 					archer_data->hp = MAX_HP;
 					death_cooldown = 127;
-					THIS->x = ispr->x-3u;
-					THIS->y = ispr->y+12u;
+					THIS->x = ispr->x-2u;
+					THIS->y = ispr->y+14u;
 					switch(dataamulet->type){
 						case 1:
 							archer_state = STATE_AMULET_STONE;
@@ -500,8 +518,8 @@ void UPDATE() {
 			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
 		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpriteEagle 
 			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
-			|| ispr->type == SpriteAlligator || ispr->type == SpriteThunder || ispr->type == SpriteBee
-			|| ispr->type == SpriteBird ) {
+			|| ispr->type == SpriteThunder || ispr->type == SpriteAlligator || ispr->type == SpriteBee
+			|| ispr->type == SpriteBird ) { //
 			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
 				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
 				if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
@@ -535,10 +553,12 @@ void UPDATE() {
 				}
 				UINT8 being_hit = 1u;
 				if (KEY_PRESSED(J_DOWN)){
-					/*&& ispr->type != SpriteWalrus && ispr->type != SpriteWalrusspin
-						 && ispr->type != SpriteIbex && ispr->type != SpriteBear && ispr->type != SpriteSpider*/
-					if(ispr->type != SpriteWolf && ispr->type != SpriteAlligator 
-						&& ispr->type != SpriteEagle){
+					/*&& ispr->type != SpriteWalrus 
+					&& ispr->type != SpriteWalrusspin
+						&& ispr->type != SpriteBear */
+					if(ispr->type != SpriteSpider && ispr->type != SpriteWolf 
+						&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
+						&& ispr->type != SpriteIbex){
 						if (ispr->x < THIS->x){
 							if (THIS->mirror == V_MIRROR){//mi sto riparando bene
 								TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
@@ -557,8 +577,8 @@ void UPDATE() {
 					switch(ispr->type){
 						case SpriteWolf:
 						case SpriteAlligator:
-						/*case SpriteIbex:
-						case SpriteBear:
+						case SpriteIbex:
+						/*case SpriteBear:
 						case SpriteWalrus:*/
 							enemydamage = 2;
 							TranslateSprite(THIS, 0, -1);
@@ -824,7 +844,9 @@ void Hit(INT8 damage) {
 void Build_Next_Dialog(){
 	diag_found = Build_Next_Dialog_Banked(THIS);
 	if(diag_found){
-		if(diag_found != 99u){ // 99u means no state changing, just simple diag message to show from StateGame			
+		if(diag_found < 98u){ 
+			// 99u means no state changing, just simple diag message to show from StateGame			
+			// 98u means paused
 			drop_player_x = THIS->x >> 3;
 			drop_player_y = THIS->y >> 3;
 			load_next_d = 1;

@@ -1,10 +1,9 @@
-#include "Banks/SetBank8.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -23,11 +22,7 @@ struct EnemyInfo* ibex_data ;
 void CheckCollisionIBTile();
 void IBTurn();
 
-void Start_SpriteIbex() {
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 15;
-	THIS->coll_w = 28;
-	THIS->coll_h = 17;
+void START() {
 	THIS->lim_x = 255u;
 	THIS->lim_y = 2550u;
 	SetSpriteAnim(THIS, ibex_idle, 4u);
@@ -39,7 +34,7 @@ void Start_SpriteIbex() {
 	ibex_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
-void Update_SpriteIbex() {
+void UPDATE() {
 	
 	if(ibex_data->enemy_state == ENEMY_STATE_WAIT){
 		return;
@@ -98,7 +93,7 @@ void Update_SpriteIbex() {
 					ibex_data->vx = -1;
 					ibex_data->enemy_state = ENEMY_STATE_JUMPING;
 					SetSpriteAnim(THIS, ibex_jump_up, 8u);
-					ibex_data->enemy_accel_y = -32;
+					ibex_data->enemy_accel_y = -28;
 				}	
 			}
 		}
@@ -182,5 +177,5 @@ void IBTurn(){
 	}
 }
 
-void Destroy_SpriteIbex() {
+void DESTROY() {
 }

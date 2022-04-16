@@ -42,5 +42,5 @@ void UPDATE() {
 
 
 void DESTROY() {
-	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+4u);
 }

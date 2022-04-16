@@ -4,7 +4,6 @@
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -128,7 +127,6 @@ void CheckCollisionETile() BANKED{
 		case 18u:
 		case 20u:
 		case 22u:
-		case 23u:
 		case 29u:
 		case 69u:
 		case 70u:
@@ -138,6 +136,8 @@ void CheckCollisionETile() BANKED{
 		case 81u:
 			ETurn();
 		break;
+		case 2u://spuncioni alti
+		case 23u://spuncioni bassi
 		case 40u://skull of death
 			EDie();
 		break;

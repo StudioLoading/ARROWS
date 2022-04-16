@@ -32,6 +32,7 @@ extern INT8 load_next_b;
 extern INT8 on_worldmap;
 extern UINT8 colliding_mother;
 extern UINT8 quiver;
+extern UINT8 paused;
 
 UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	UINT8 diagf = 0u;	
@@ -136,9 +137,39 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		57 	Boss
 		58	Boss 2
 		60	Mother
+		98  Paused
 		99 	Suggestion
 	
 	*/
+
+	if(diagf == 0u){
+		if(paused){
+			memcpy(d1, "       PAUSED       ", 20);
+			switch(current_level){
+				case 0u:
+				case 1u://45 (47 48 46 49)
+					memcpy(d2, "         $          ", 20);
+				break;
+				case 2u:
+				case 3u://45 47 (48 46 49)
+					memcpy(d2, "        $ [         ", 20);
+				break;
+				case 4u:
+				case 5u://45 47 48 (46 49)
+					memcpy(d2, "       $ [ #        ", 20);
+
+				break;
+				case 6u://45 47 48 46 (49)
+					memcpy(d2, "      $ [ # ]       ", 20);
+				break;
+			}
+			
+			memcpy(d3, " PRESS DOWN-JUMP TO ", 20);
+			memcpy(d4, " GET SUGGESTIONS.   ", 20);
+			diagf = 98u;
+		}
+	}
+
 	if(diagf == 0u){
 		switch (is_on_boss){
 			case 0:

@@ -268,7 +268,7 @@ void START() {
 
 void UPDATE() {
 	
-	if(KEY_PRESSED(J_B) || KEY_PRESSED(J_A)) {
+	if(KEY_PRESSED(J_B) || KEY_PRESSED(J_A) || KEY_PRESSED(J_START)) {
 		HIDE_WIN;
 		if(is_on_boss >= 0){
 			SetState(StateBoss);

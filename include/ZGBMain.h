@@ -47,15 +47,15 @@ _SPRITE_DMG(SpriteAlligator, alligator)\
 _SPRITE_DMG(SpriteEagle, eagle)\
 _SPRITE_DMG(SpriteThunder, thunder)\
 _SPRITE_DMG(SpriteHurricane, hurricane)\
+_SPRITE_DMG(SpriteIbex, ibex)\
 _SPRITE_DMG(SpriteBee, bee)\
+_SPRITE_DMG(SpriteBear, bear)\
 SPRITE_DEF_END
 
 
 /*
 _SPRITE_DMG(SpritePorcupine, porcupine)\
 _SPRITE_DMG(SpriteStalattite, stalattite)\
-_SPRITE_DMG(SpriteIbex, ibex)\
-_SPRITE_DMG(SpriteBear, bear)\
 _SPRITE_DMG(SpriteWalrus, walrus)\
 _SPRITE_DMG(SpriteWalrusspin, walrusspin)\
 _SPRITE_DMG(SpritePenguin, penguin)\

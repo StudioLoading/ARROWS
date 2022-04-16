@@ -66,11 +66,11 @@ extern unsigned char d4[];
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_d = 0;
-INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
+UINT8 current_level_b = 4u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
 UINT8 current_level = 4u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
-UINT8 current_map = 0u; // 0u default
+UINT8 current_map = 1u; // 0u default
 UINT8 current_cutscene = 0u;
 
 UINT16 drop_player_x = 0u;
@@ -82,6 +82,8 @@ INT8 spawning_counter = 0;
 INT8 update_hud = 0;
 INT8 LCD_Installed = 0;
 INT8 fx_cooldown = 0;
+
+UINT8 paused = 0;
 
 Sprite* platform_sprite = 0;
 Sprite* enemies_0 = 0;
@@ -274,6 +276,7 @@ void ShowWindow() BANKED{
 
 void ShowWindowDiag() BANKED{
 	if (showing_diag == 0){
+		reset_sgb_palette_statusbar();
 		HIDE_WIN;
 		set_window_y(144 - 32);
 		WX_REG = 0;
@@ -419,34 +422,36 @@ void UPDATE() {
 					}
 				break;
 				case 1u:
-					if (scroll_target->x >= (UINT16) 10u << 3 && spawning_counter == 0){
+					if (scroll_target->x >= (UINT16) 6u << 3 && spawning_counter == 0){
+						spawn_enemy(SpriteEnemy, 13u, 7u);
+						spawning_counter++;
+					}
+					if (scroll_target->x >= (UINT16) 10u << 3 && spawning_counter == 1){
 						spawn_enemy(SpriteEnemy, 22u, 7u);
+						spawn_enemy(SpriteEnemy, 26u, 7u);
 						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 30u << 3 && spawning_counter == 1){
-						spawn_enemy(SpritePlatform, 38u, 8u);
+					if (scroll_target->x >= (UINT16) 30u << 3 && spawning_counter == 2){
+						spawn_enemy(SpritePlatform, 39u, 8u);
 						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 47u << 3 && spawning_counter == 2){
+					if (scroll_target->x >= (UINT16) 47u << 3 && spawning_counter == 3){
 						spawn_enemy(SpriteScorpion, 56u, 8u);
+						spawn_enemy(SpriteEnemy, 51u, 8u);
 						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 77u << 3 && spawning_counter == 3){
+					if (scroll_target->x >= (UINT16) 77u << 3 && spawning_counter == 4){
 						spawn_enemy(SpriteEnemy, 85u, 7u);
 						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 95u << 3 && spawning_counter == 4){
+					if (scroll_target->x >= (UINT16) 95u << 3 && spawning_counter == 5){
 						spawn_enemy(SpriteScorpion, 107u, 8u);
 						spawning_counter++;
 					}
-					if (scroll_target->x >= (UINT16) 146u << 3 && spawning_counter == 5){
+					if (scroll_target->x >= (UINT16) 146u << 3 && spawning_counter == 6){
 						spawn_enemy(SpriteEnemy, 155u, 8u);
 						spawning_counter++;
 					}
-					/*if (scroll_target->x >= (UINT16) 150u << 3 && spawning_counter == 6){
-						spawn_item(scrigno_shield, 155u, 2u, 2, 1);
-						spawning_counter++;
-					}*/
 				break;
 			}
 		break;
