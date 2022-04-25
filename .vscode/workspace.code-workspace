@@ -12,7 +12,10 @@
 			"zgbmain.h": "c",
 			"setautobank.h": "c",
 			"sgb.h": "c",
-			"sound.h": "c"
+			"sound.h": "c",
+			"sgb_palette.h": "c",
+			"gbt_player.h": "c",
+			"spritemanager.h": "c"
 		}
 	}
 }

@@ -52,7 +52,11 @@ KNOWN ISSUE:
 	ma in base al livello. Forse chissene, ma è da tenere come known issue.
 
 TODO:
-- menu di pausa: devo fermare tutti gli enemy in schermo, non cambio state, mostro una diag bassa 
+- completare l' upgrade ZGB v2021.3
+	BEAR non si volta
+- menu di pausa: devo fermare tutti gli enemy in schermo 
+	mettendo lo ENEMY_STATE_PAUSED dallo StateGame, non cambio state, 
+	mostro una diag bassa 
 	"   -PAUSED-   " e sotto i tasti complessi di tip, shield, amuleti ottenuti
 - porte: mettere la collisione sugli angoli della porta. gestire angolo destro o sinistro attivi se current_map == 0
 - fare i loop audio da dare ad Antonio Coronato per preventivo

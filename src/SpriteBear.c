@@ -56,15 +56,16 @@ void UPDATE() {
 		}else{
 			if(bear_data->enemy_state == ENEMY_STATE_HIT){
 				bear_data->wait--;
-				if(bear_data->wait > 0){			
+				/*if(bear_data->wait > 0){			
 					if(bear_data->wait == 1  || bear_data->wait == 20 || bear_data->wait == 40 ){
 						THIS->y = (UINT16) 29u << 3;
 					}else{
 						THIS->y = (UINT16) 12u << 3;
 					}
-				}else{
+				}else{*/
+				if(bear_data->wait <= 0){
 					bear_data->wait = 0;
-					THIS->y = (UINT16) 12u << 3;
+					//THIS->y = (UINT16) 12u << 3;
 					bear_data->enemy_state = ENEMY_STATE_NORMAL;
 				}
 			}
@@ -92,9 +93,12 @@ void UPDATE() {
 	}
 	
 	if(bear_data->enemy_state == ENEMY_STATE_NORMAL){		
-		bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 1 << delta_time);
+		bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0 << delta_time);
+		if(bear_data->tile_e_collision){
+			CheckCollisionBETile();
+			TranslateSprite(THIS, 0, 1 << delta_time);
+		}
 	}
-	CheckCollisionBETile();
 	if((THIS->x == (UINT16) 13u << 3 && bear_data->vx < 0) || (THIS->x == (UINT16) 22u << 3)){
 		if(bear_data->enemy_state != ENEMY_STATE_ATTACK){			
 			SetSpriteAnim(THIS, bear_attack, 12u);
@@ -108,37 +112,35 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_be_tile, bebspr) {
-		if(bebspr->type == SpritePlayer) {
-			if(CheckCollision(THIS, bebspr)) {
-				bear_data->wait = 24u;
-			}
-		}
-		if(bebspr->type == SpriteGate) {
-			if(CheckCollision(THIS, bebspr)) {
-				BETurn();
-			}
-		}
-		if(bebspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, bebspr) && bear_data->enemy_state != ENEMY_STATE_DEAD) {
-				struct ArrowInfo* arrowdata = (struct ArrowInfo*)bebspr->custom_data;
-				if(arrowdata->arrowdir == 4 || (bear_data->enemy_state == ENEMY_STATE_ATTACK)){
-					bear_data->wait = 60u;
-					bear_data->enemy_state = ENEMY_STATE_HIT;
-					bear_data->hp -= 1;
-					if (bear_data->vx < 0){
-						THIS->x++;
-					}else{
-						THIS->x--;
+		if(CheckCollision(THIS, bebspr)) {
+			switch(bebspr->type){
+				case SpritePlayer:
+					bear_data->wait = 24u;
+				break;
+				case SpriteArrow:
+					if(bear_data->enemy_state != ENEMY_STATE_DEAD) {
+						struct ArrowInfo* arrowdata = (struct ArrowInfo*)bebspr->custom_data;
+						if(arrowdata->arrowdir == 4 || (bear_data->enemy_state == ENEMY_STATE_ATTACK)){
+							bear_data->wait = 60u;
+							bear_data->enemy_state = ENEMY_STATE_HIT;
+							bear_data->hp -= 1;
+							if (bear_data->vx < 0){
+								THIS->x++;
+							}else{
+								THIS->x--;
+							}
+							SpriteManagerRemoveSprite(bebspr);
+						}
+						if (bear_data->hp <= 0){
+							bear_data->enemy_state = ENEMY_STATE_DEAD;
+							bear_data->hp = 0;
+							THIS->x = (UINT16) 25u << 3;
+							THIS->y = (UINT16) 12u << 3;
+							SetSpriteAnim(THIS, bear_dead, 16u);
+						}
 					}
-					SpriteManagerRemoveSprite(bebspr);
-				}
-				if (bear_data->hp <= 0){
-					bear_data->enemy_state = ENEMY_STATE_DEAD;
-					bear_data->hp = 0;
-					THIS->x = (UINT16) 25u << 3;
-					THIS->y = (UINT16) 12u << 3;
-					SetSpriteAnim(THIS, bear_dead, 16u);
-				}
+				break;
+
 			}
 		}
 	}

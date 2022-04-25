@@ -428,7 +428,7 @@ void SpawnBoss(INT8 hp_default){
 		}
 }
 
-void SpawnReward(){
+void SpawnReward(){//and move boss to position
 	struct ItemInfo* datak = 0;
 	Sprite* key_s = 0;
 	switch (current_level_b){
@@ -462,10 +462,12 @@ void SpawnReward(){
 			datak->setup = 1;	
 		break;
 		case 4u: // bear -> wrench
-			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 11u << 3);
+			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 12u << 3);
 			datak = (struct ItemInfo*)reward->custom_data;
 			datak->type = 2;
 			datak->setup = 1u;
+			boss->x = (UINT16) 24u << 3;
+			boss->y = (UINT16) 13u << 3;
 		break;
 		case 5u: // tusk -> amulet water		
 			boss->x = (UINT16) 12u << 3;

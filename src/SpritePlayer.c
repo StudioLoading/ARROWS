@@ -69,9 +69,15 @@ extern UINT8 current_camera_counter;
 extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
 extern INT8 fx_cooldown;
-Sprite* princess_parent = 0;
 extern UINT8 quiver; //little endian, rightest are the less important
 INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
+
+UINT8 scroll_tile;
+Sprite* ispr;
+struct ItemInfo* itemdata;
+struct PlatformInfo* platformdata;
+struct EnemyInfo* dataenemy;
+struct ArrowInfo* arrowdata;
 
 void Die();
 void Shoot();
@@ -119,7 +125,7 @@ void UPDATE() {
 	if (is_on_boss == 0 && current_camera_state != 3u){
 		return;
 	}
-	switch(archer_state){
+	switch(archer_state){//for STATES AMULET AND DIAG
 		case STATE_AMULET_STONE:
 		case STATE_AMULET_ICE:
 		case STATE_AMULET_THUNDER:
@@ -344,7 +350,7 @@ void UPDATE() {
 		break;
 	}//end switch archer_state	
 	
-	if(princess_parent == 0 && archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD) {
+	if( archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD) {
 		//Simple gravity physics 
 		if(archer_accel_y < 24) {
 			archer_accel_y += 1;
@@ -365,10 +371,6 @@ void UPDATE() {
 			CheckCollisionTile();
 		}
 	}
-	if(princess_parent && archer_state == STATE_JUMPING) {
-		archer_accel_y = 0;
-		archer_state = STATE_NORMAL;
-	}
 	
 	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
 		archer_accel_y = -2;
@@ -378,261 +380,256 @@ void UPDATE() {
 		archer_state = STATE_NORMAL;
 	}
 	
-	UINT8 scroll_tile;
-	Sprite* ispr;
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
-		if(ispr->type == SpriteAmulet) {
-			if(CheckCollision(THIS, ispr)) {
-				struct ItemInfo* dataamulet = (struct ItemInfo*)ispr->custom_data;
-				if(dataamulet->counter == -1){
-					dataamulet->counter = 60;
-					dataamulet->setup = 0;
-					ispr->y -= 20u;
-					archer_data->hp = MAX_HP;
-					death_cooldown = 127;
-					THIS->x = ispr->x-2u;
-					THIS->y = ispr->y+14u;
-					switch(dataamulet->type){
-						case 1:
-							archer_state = STATE_AMULET_STONE;
-							quiver = quiver | 0b0000000010; 
-						break;
-						case 2:
-							archer_state = STATE_AMULET_ICE;
-							quiver = quiver | 0b0000001000;
-						break;
-						case 3:
-							archer_state = STATE_AMULET_THUNDER;
-							quiver = quiver | 0b0000000100;
-						break;
-						case 4:
-							quiver = quiver | 0b0000010000;
-							archer_state = STATE_AMULET_FIRE;
-						break;
-					}
-					SetSpriteAnim(THIS, anim_jump, 8u);
-					update_hud = 1;
-					if(is_on_boss >= 0){
-						is_on_boss = 3;
-					}else{
-						Build_Next_Dialog();
-					}					
-				}
-			}
-		}
-		if(ispr->type == SpriteItem) {
-			if(CheckCollision(THIS, ispr)) {
-				struct ItemInfo* dataitem = (struct ItemInfo*)ispr->custom_data;
-				if (dataitem->setup == 0u){ //se e' trasparente non faccio niente
-					switch(dataitem->type){
-						case 1u: //coins
-							archer_data->coins += 1u;
-							fx_cooldown = 30;
-							PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
-							SpriteManagerRemoveSprite(ispr);
-						break;
-						case 2u: //hp
-							archer_data->hp = MAX_HP;
-							fx_cooldown = 30;
-							PlayFx(CHANNEL_1, 30, 0x54, 0x80, 0x74, 0x83, 0x86);
-							SpriteManagerRemoveSprite(ispr);
-						break;
-						case 3u: //up
-							archer_data->ups += 1;
-							SpriteManagerRemoveSprite(ispr);
-						break;
-						case 7u: //dcoin
-							archer_data->coins += 10u;
-							if (archer_data->coins >= 100u){
-								archer_data->coins = archer_data->coins - 100u;
-								archer_data->ups += 1;	
-							}else{
-								fx_cooldown = 30;
-								PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
-							}
-							SpriteManagerRemoveSprite(ispr);
-						break;
-					}
-					update_hud = 1;
-				}
-			}			
-		}
-		if(ispr->type == SpriteKey) {
-			if(CheckCollision(THIS, ispr)) {
-				//archer_tool = 0;
-				struct ItemInfo* datakey = (struct ItemInfo*)ispr->custom_data;
-				switch(datakey->type){
-					case 1: //key				
-						SetSpriteAnim(THIS, anim_idle, 12u);	
-						if (current_level == 0u && current_map == 0u){
-							if( archer_data->coins < 20u){
-								return;
-							}
-							archer_data->coins -= 20u;
+		if(CheckCollision(THIS, ispr)) {
+			switch(ispr->type){
+				case SpriteAmulet: 
+					itemdata = (struct ItemInfo*)ispr->custom_data;
+					if(itemdata->counter == -1){
+						itemdata->counter = 60;
+						itemdata->setup = 0;
+						ispr->y -= 20u;
+						archer_data->hp = MAX_HP;
+						death_cooldown = 127;
+						THIS->x = ispr->x-2u;
+						THIS->y = ispr->y+14u;
+						switch(itemdata->type){
+							case 1:
+								archer_state = STATE_AMULET_STONE;
+								quiver = quiver | 0b0000000010; 
+							break;
+							case 2:
+								archer_state = STATE_AMULET_ICE;
+								quiver = quiver | 0b0000001000;
+							break;
+							case 3:
+								archer_state = STATE_AMULET_THUNDER;
+								quiver = quiver | 0b0000000100;
+							break;
+							case 4:
+								quiver = quiver | 0b0000010000;
+								archer_state = STATE_AMULET_FIRE;
+							break;
 						}
-						archer_data->tool = 6;
+						SetSpriteAnim(THIS, anim_jump, 8u);
 						update_hud = 1;
-						SpriteManagerRemoveSprite(ispr);
-						return;
-					break;
-					case 2: //wrench
-						SetSpriteAnim(THIS, anim_idle, 12u);
-						archer_data->tool = 7;
-						update_hud = 1;
-						SpriteManagerRemoveSprite(ispr);
-						return;
-					break;
-				}
-			}
-		}
-		if(ispr->type == SpritePlatform || ispr->type == SpriteIceplat) {
-			if(CheckCollision(THIS, ispr)) {//&& (ispr->y - THIS->y) > 10
-				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
-				if (archer_accel_y > 0){//se sono in salita non collido !
-					archer_accel_y = 0;
-					if(archer_state != STATE_NORMAL_PLATFORM){
-						archer_state = STATE_NORMAL_PLATFORM;
-						THIS->y = ispr->y - ispr->coll_h;
-						if(ispr->type == SpriteIceplat){
-							datap->type = 1u;
-						}
-					}
-				}
-				platform_vx = datap->vx;
-				platform_vy = datap->vy;
-				//THIS->y = ispr->y-3;				
-			}
-		}
-		if(ispr->type == SpriteIceplat){
-			if(CheckCollision(THIS, ispr) && archer_state != STATE_NORMAL_PLATFORM) {
-				struct PlatformInfo* datap = (struct PlatformInfo*)ispr->custom_data;
-				datap->type = 1u;
-				THIS->y -= ispr->coll_h;
-				archer_state = STATE_NORMAL_PLATFORM;
-			}
-		}
-		/* || ispr->type == SpritePorcupine
-			|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
-			|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
-			|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
-			|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
-		if(ispr->type == SpriteEnemy || ispr->type == SpriteScorpion || ispr->type == SpriteEagle 
-			|| ispr->type == SpriteRat || ispr->type == SpriteWolf || ispr->type == SpriteSpider
-			|| ispr->type == SpriteThunder || ispr->type == SpriteAlligator || ispr->type == SpriteBee
-			|| ispr->type == SpriteBird ) { //
-			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {
-				struct EnemyInfo* dataenemy = (struct EnemyInfo*)ispr->custom_data;
-				if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
-					dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
-					return;
-				}
-				switch(is_on_boss){
-					case 0:
-						if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
-							return;
-						}
-					break;
-					case 1:
-						if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
-							if (ispr->x > THIS->x){
-								THIS->x -= 1;
-							}else{
-								THIS->x += 1;
-							}
-							if(KEY_TICKED(J_A)){
-								if (KEY_PRESSED(J_UP)){		
-									Build_Next_Dialog();	
-								}
-							}						
-							return;
-						}
-					break;
-				}
-				if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
-					return;
-				}
-				UINT8 being_hit = 1u;
-				if (KEY_PRESSED(J_DOWN)){
-					/*&& ispr->type != SpriteWalrus 
-					&& ispr->type != SpriteWalrusspin
-						&& ispr->type != SpriteBear */
-					if(ispr->type != SpriteSpider && ispr->type != SpriteWolf 
-						&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
-						&& ispr->type != SpriteIbex){
-						if (ispr->x < THIS->x){
-							if (THIS->mirror == V_MIRROR){//mi sto riparando bene
-								TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
-								being_hit = 0u;
-							}
+						if(is_on_boss >= 0){
+							is_on_boss = 3;
 						}else{
-							if (THIS->mirror != V_MIRROR){
-								TranslateSprite(ispr, 16u << delta_time, -2u << delta_time);
-								being_hit = 0u;
-							}
+							Build_Next_Dialog();
 						}					
 					}
-				}
-				if (being_hit == 1u && archer_state != STATE_DEAD){
-					INT8 enemydamage = 1;
-					switch(ispr->type){
-						case SpriteWolf:
-						case SpriteAlligator:
-						case SpriteIbex:
-						/*case SpriteBear:
-						case SpriteWalrus:*/
-							enemydamage = 2;
-							TranslateSprite(THIS, 0, -1);
+				break;
+				case SpriteItem:
+					itemdata = (struct ItemInfo*)ispr->custom_data;
+					if (itemdata->setup == 0u){ //se e' trasparente non faccio niente
+						switch(itemdata->type){
+							case 1u: //coins
+								archer_data->coins += 1u;
+								fx_cooldown = 30;
+								PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
+								SpriteManagerRemoveSprite(ispr);
+							break;
+							case 2u: //hp
+								archer_data->hp = MAX_HP;
+								fx_cooldown = 30;
+								PlayFx(CHANNEL_1, 30, 0x54, 0x80, 0x74, 0x83, 0x86);
+								SpriteManagerRemoveSprite(ispr);
+							break;
+							case 3u: //up
+								archer_data->ups += 1;
+								SpriteManagerRemoveSprite(ispr);
+							break;
+							case 7u: //dcoin
+								archer_data->coins += 10u;
+								if (archer_data->coins >= 100u){
+									archer_data->coins = archer_data->coins - 100u;
+									archer_data->ups += 1;	
+								}else{
+									fx_cooldown = 30;
+									PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
+								}
+								SpriteManagerRemoveSprite(ispr);
+							break;
+						}
+						update_hud = 1;
+					}
+				break;
+				case SpriteKey:
+					//archer_tool = 0;
+					itemdata = (struct ItemInfo*)ispr->custom_data;
+					switch(itemdata->type){
+						case 1: //key				
+							SetSpriteAnim(THIS, anim_idle, 12u);	
+							if (current_level == 0u && current_map == 0u){
+								if( archer_data->coins < 20u){
+									return;
+								}
+								archer_data->coins -= 20u;
+							}
+							archer_data->tool = 6;
+							update_hud = 1;
+							SpriteManagerRemoveSprite(ispr);
+							return;
+						break;
+						case 2: //wrench
+							SetSpriteAnim(THIS, anim_idle, 12u);
+							archer_data->tool = 7;
+							update_hud = 1;
+							SpriteManagerRemoveSprite(ispr);
+							return;
 						break;
 					}
-					if (ispr->x < THIS->x){
-						platform_vx = 1;
-					}else{
-						platform_vx = -1;
+				break;
+				case SpritePlatform:
+				case SpriteIceplat:
+					platformdata = (struct PlatformInfo*)ispr->custom_data;
+					if (archer_accel_y > 0){//se sono in salita non collido !
+						archer_accel_y = 0;
+						if(archer_state != STATE_NORMAL_PLATFORM){
+							archer_state = STATE_NORMAL_PLATFORM;
+							THIS->y = ispr->y - ispr->coll_h;
+							if(ispr->type == SpriteIceplat){
+								platformdata->type = 1u;
+							}
+						}
 					}
-					if(dataenemy->vx){
-						platform_vx = dataenemy->vx;
+					platform_vx = platformdata->vx;
+					platform_vy = platformdata->vy;
+					//THIS->y = ispr->y-3;
+					if(ispr->type == SpriteIceplat){
+						if(archer_state != STATE_NORMAL_PLATFORM) {
+							platformdata = (struct PlatformInfo*)ispr->custom_data;
+							platformdata->type = 1u;
+							THIS->y -= ispr->coll_h;
+							archer_state = STATE_NORMAL_PLATFORM;
+						}
 					}
-					Hit(enemydamage);
-				}
-			}
-		}
-		if(ispr->type == SpriteHurricane) {
-			if(CheckCollision(THIS, ispr) && archer_state != STATE_HIT) {	
-				if (archer_state == STATE_JUMPING | archer_state == STATE_ASCENDING){
-					TranslateSprite(THIS, -2u, -2u);
-				}else{
-					TranslateSprite(THIS, -2u, -1u);
-				}
-			}
-		}
-		
-		if(ispr->type == SpriteArrow) {
-			if(CheckCollision(THIS, ispr)) {
-				struct ArrowInfo* datap = (struct ArrowInfo*)ispr->custom_data;
-				if (datap->arrowdir != 1){return;}//guardo solo se è orizzontale
-				if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
-					//ispr->mt_sprite->dx = 0;
-					//ispr->mt_sprite->dy = 2;
-					//ispr->coll_w = 8;
-					if (ispr->mirror == V_MIRROR){
-						platform_vx = 0-datap->vx;	
-					}else{
-						platform_vx = datap->vx;	
-					}					
-					if(archer_state != STATE_NORMAL && archer_state != STATE_NORMAL_PLATFORM){
-						archer_state = STATE_NORMAL_PLATFORM;
-						THIS->y = ispr->y - 12;
+				break;				
+				/* || ispr->type == SpritePorcupine
+					|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
+					|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
+					|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
+					|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
+				case SpriteEnemy:
+				case SpriteScorpion:
+				case SpriteSpider:
+				case SpriteEagle:
+				case SpriteRat: 
+				case SpriteWolf:
+				case SpriteThunder:
+				case SpriteAlligator:
+				case SpriteBee:
+				case SpriteBird:
+					if(archer_state != STATE_HIT) {					
+						dataenemy = (struct EnemyInfo*)ispr->custom_data;
+						if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
+							dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
+							return;
+						}
+						switch(is_on_boss){
+							case 0:
+								if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+									return;
+								}
+							break;
+							case 1:
+								if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
+									if (ispr->x > THIS->x){
+										THIS->x -= 1;
+									}else{
+										THIS->x += 1;
+									}
+									if(KEY_TICKED(J_A)){
+										if (KEY_PRESSED(J_UP)){		
+											Build_Next_Dialog();	
+										}
+									}						
+									return;
+								}
+							break;
+						}
+						if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
+							return;
+						}
+						UINT8 being_hit = 1u;
+						if (KEY_PRESSED(J_DOWN)){
+							/*&& ispr->type != SpriteWalrus 
+							&& ispr->type != SpriteWalrusspin
+								&& ispr->type != SpriteBear */
+							if(ispr->type != SpriteSpider && ispr->type != SpriteWolf 
+								&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
+								&& ispr->type != SpriteIbex){
+								if (ispr->x < THIS->x){
+									if (THIS->mirror == V_MIRROR){//mi sto riparando bene
+										TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
+										being_hit = 0u;
+									}
+								}else{
+									if (THIS->mirror != V_MIRROR){
+										TranslateSprite(ispr, 16u << delta_time, -2u << delta_time);
+										being_hit = 0u;
+									}
+								}					
+							}
+						}
+						if (being_hit == 1u && archer_state != STATE_DEAD){
+							INT8 enemydamage = 1;
+							switch(ispr->type){
+								case SpriteWolf:
+								case SpriteAlligator:
+								case SpriteIbex:
+								/*case SpriteBear:
+								case SpriteWalrus:*/
+									enemydamage = 2;
+									TranslateSprite(THIS, 0, -1);
+								break;
+							}
+							if (ispr->x < THIS->x){
+								platform_vx = 1;
+							}else{
+								platform_vx = -1;
+							}
+							if(dataenemy->vx){
+								platform_vx = dataenemy->vx;
+							}
+							Hit(enemydamage);
+						}
 					}
-				}
-			}
-		}
-		if(ispr->type == SpriteGate) {
-			if(CheckCollision(THIS, ispr)) {
-				THIS->x--;
-			}
-		}
-	}
-
+				break;
+				case SpriteHurricane:
+					if (archer_state != STATE_HIT) {	
+						if (archer_state == STATE_JUMPING || archer_state == STATE_ASCENDING){
+							TranslateSprite(THIS, -2u, -2u);
+						}else{
+							TranslateSprite(THIS, -2u, -1u);
+						}
+					}
+				break;
+				case SpriteArrow:					
+					arrowdata = (struct ArrowInfo*)ispr->custom_data;
+					if (arrowdata->arrowdir != 1){return;}//guardo solo se è orizzontale
+					if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
+						//ispr->mt_sprite->dx = 0;
+						//ispr->mt_sprite->dy = 2;
+						//ispr->coll_w = 8;
+						if (ispr->mirror == V_MIRROR){
+							platform_vx = 0-arrowdata->vx;	
+						}else{
+							platform_vx = arrowdata->vx;	
+						}					
+						if(archer_state != STATE_NORMAL && archer_state != STATE_NORMAL_PLATFORM){
+							archer_state = STATE_NORMAL_PLATFORM;
+							THIS->y = ispr->y - 12;
+						}
+					}
+				break;
+				case SpriteGate:
+					THIS->x--;
+				break;
+			}//fine switch ispr->type
+		}// fine check collision
+	}//fine SPRITEMANAGER_ITERATE
 }
 
 void Die(){
@@ -678,7 +675,6 @@ void Jump() {
 	if(archer_state != STATE_JUMPING) {
 		archer_state = STATE_JUMPING;
 		archer_accel_y = -14;
-		princess_parent = 0;
 		THIS->coll_w = 6;
 		SetSpriteAnim(THIS, anim_jump_up, 12u);
 	}
