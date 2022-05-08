@@ -177,13 +177,5 @@ void UPDATE(){
 	if(counter == 0){
 		diag_found = Build_Next_Dialog_Banked(siconpsg);
 		SetState(StateDiag);
-		
-		/*if(current_level < 3){
-			SetState(StateGame);
-		}else if (current_level < 5){
-			SetState(StateGame3);
-		}else{
-			SetState(StateGame6);
-		}*/
 	}
 }

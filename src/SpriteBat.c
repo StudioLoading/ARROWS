@@ -1,24 +1,17 @@
-#include "Banks/SetBank17.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
 #include "custom_datas.h"
 
-
 extern UINT8 current_level;
-extern void ETurn();
 
 const UINT8 anim_bat_normal[] = {4, 0, 1, 2, 1}; //The first number indicates the number of frames
 const UINT8 anim_bat_hit[] = {2, 0, 3}; //The first number indicates the number of frames
 const INT8 V_MAX = 2;
 
-void Start_SpriteBat() {	
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 2;
-	THIS->coll_w = 8;
-	THIS->coll_h = 8;
+void START() {
 	THIS->lim_x = 120u;
 	THIS->lim_y = 120u;
 	SetSpriteAnim(THIS, anim_bat_normal, 16u);
@@ -32,7 +25,7 @@ void Start_SpriteBat() {
 	THIS->mirror = V_MIRROR;
 }
 
-void Update_SpriteBat(){
+void UPDATE(){
 	struct EnemyInfo* batdata = (struct EnemyInfo*)THIS->custom_data;
 	batdata->wait++;
 	batdata->archer_posx--;
@@ -85,7 +78,8 @@ void Update_SpriteBat(){
 				if (batdata->vx == -V_MAX){
 					THIS->mirror = NO_MIRROR; //SPRITE_UNSET_VMIRROR(THIS);
 				}
-				batdata->vx = -batdata->vx;				
+				batdata->vx = -batdata->vx;	
+				batdata->archer_posx = 127u;			
 			}
 		break;
 		case ENEMY_STATE_HIT:
@@ -100,16 +94,25 @@ void Update_SpriteBat(){
 	UINT8 scroll_tile;
 	Sprite* ibatspr;
 	SPRITEMANAGER_ITERATE(scroll_tile, ibatspr) {
-		if(ibatspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, ibatspr)) {
+		if(CheckCollision(THIS, ibatspr)) {
+			if(ibatspr->type == SpriteArrow) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibatspr->custom_data;
 				batdata->wait = 0u;//this time because wait++ on the update
 				SetSpriteAnim(THIS, anim_bat_hit, 24u); 
 				batdata->hp -= arrowdata->arrowdamage;
 				batdata->enemy_state = ENEMY_STATE_HIT;
+				batdata->wait=0;
 				SpriteManagerRemoveSprite(ibatspr);
 				if (batdata->hp <= 0){
 					SpriteManagerRemove(THIS_IDX);
+				}
+				if(ibatspr->x < THIS->x && THIS->mirror == NO_MIRROR){
+					batdata->archer_posx = 0;
+					batdata->enemy_state = ENEMY_STATE_WAIT;
+				}				
+				if(ibatspr->x > THIS->x && THIS->mirror == V_MIRROR){
+					batdata->archer_posx = 0;
+					batdata->enemy_state = ENEMY_STATE_WAIT;
 				}
 			}				
 		}
@@ -117,6 +120,6 @@ void Update_SpriteBat(){
 	
 }
 
-void Destroy_SpriteBat() {
+void DESTROY() {
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-4u);
 }

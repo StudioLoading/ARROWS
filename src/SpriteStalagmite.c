@@ -4,7 +4,6 @@
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -18,12 +17,7 @@ const UINT8 stalag_hh[] = {1, 0}; //The first number indicates the number of fra
 
 void CheckCollisionStalagTile(struct EnemyInfo* stalag_data);
 
-void START() {
-	
-	THIS->mt_sprite->dx = 1;
-	THIS->mt_sprite->dy = 4;
-	THIS->coll_w = 6;
-	THIS->coll_h = 4;
+void START() {	
 	THIS->lim_x = 240u;
 	THIS->lim_y = 40u;
 	SetSpriteAnim(THIS, stalag_drop_big, 4u);

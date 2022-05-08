@@ -1,25 +1,17 @@
-#include "Banks/SetBank13.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
-#include "CircleMath.h"
 #include "custom_datas.h"
 
 
 //CATHEAD
 const UINT8 cathead_idle[] = {2, 0, 1}; //The first number indicates the number of frames
 
-extern void ETurn();
-
-void Start_SpriteCathead() {	
-	THIS->mt_sprite->dx = 4;
-	THIS->mt_sprite->dy = 4;
-	THIS->coll_w = 10;
-	THIS->coll_h = 8;
+void START() {	
 	struct EnemyInfo* catheaddata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, cathead_idle, 16u);
 	catheaddata->enemy_state = ENEMY_STATE_ATTACK;
@@ -30,7 +22,7 @@ void Start_SpriteCathead() {
 	catheaddata->archer_posx = 0u;
 }
 
-void Update_SpriteCathead() { 
+void UPDATE() { 
 	struct EnemyInfo* catheaddata = (struct EnemyInfo*)THIS->custom_data;
 	if(catheaddata->enemy_state == ENEMY_STATE_HIT){
 		catheaddata->wait--;
@@ -74,6 +66,6 @@ void Update_SpriteCathead() {
 	
 }
 
-void Destroy_SpriteCathead(){
+void DESTROY(){
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-4u);
 }

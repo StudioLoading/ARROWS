@@ -10,13 +10,9 @@ extern UINT8 current_level;
 
 const UINT8 anim_axe_normal[] = {6, 0, 1, 2, 3, 4, 5}; //The first number indicates the number of frames
 
-void START() {	
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 2;
-	THIS->coll_w = 4;
-	THIS->coll_h = 4;
-	THIS->lim_x = 255u;
-	THIS->lim_y = 255u;
+void START() {
+	THIS->lim_x = 80u;
+	THIS->lim_y = 80u;
 	SetSpriteAnim(THIS, anim_axe_normal, 28u);
 	struct EnemyInfo* axedata = (struct EnemyInfo*)THIS->custom_data;
 	axedata->enemy_state = ENEMY_STATE_NORMAL;
@@ -44,5 +40,5 @@ void UPDATE(){
 }
 
 void DESTROY() {
-	//SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-4u);
+	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-4u);
 }

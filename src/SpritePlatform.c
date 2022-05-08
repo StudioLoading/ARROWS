@@ -1,5 +1,4 @@
 #include "Banks/SetAutoBank.h"
-//#include "main.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -10,10 +9,6 @@ const UINT8 platform_normal[] = {1, 0}; //The first number indicates the number 
 extern INT8 spawning_triggered;
 
 void START() {
-	THIS->mt_sprite->dx = 0;
-	THIS->mt_sprite->dy = 12;
-	THIS->coll_w = 16;
-	THIS->coll_h = 4;
 	THIS->lim_x = 250u;
 	THIS->lim_y = 160u;
 	SetSpriteAnim(THIS, platform_normal, 8u);

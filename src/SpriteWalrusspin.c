@@ -1,12 +1,12 @@
-#include "Banks/SetBank14.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
+
 
 //WALRUS
 const UINT8 walrusspin_spin[] = {4, 0, 1, 2, 3}; //The first number indicates the number of frames
@@ -18,12 +18,8 @@ struct EnemyInfo* walrusspin_data ;
 extern struct EnemyInfo* walrus_data;
 
 
-void Start_SpriteWalrusspin() {
+void START() {
 	walrusspin_data = (struct EnemyInfo*)THIS->custom_data;
-	THIS->mt_sprite->dx = 4;
-	THIS->mt_sprite->dy = 4;
-	THIS->coll_w = 8;
-	THIS->coll_h = 8;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 255u;
 	SetSpriteAnim(THIS, walrusspin_hidden, 4u);
@@ -34,7 +30,7 @@ void Start_SpriteWalrusspin() {
 	walrusspin_data->enemy_state = ENEMY_STATE_HIDDEN;
 }
 
-void Update_SpriteWalrusspin() {
+void UPDATE() {
 	
 	if(walrus_data->enemy_state == WALRUS_STATE_SPIN && walrusspin_data->enemy_state != WALRUS_STATE_SPIN){
 		SetSpriteAnim(THIS, walrusspin_spin, 32u);
@@ -64,5 +60,5 @@ void Update_SpriteWalrusspin() {
 	
 }
 
-void Destroy_SpriteWalrusspin() {
+void DESTROY() {
 }

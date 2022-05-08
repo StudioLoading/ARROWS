@@ -75,8 +75,6 @@ extern unsigned char d3[];
 extern unsigned char d4[];
 extern INT8 spawning_counter;
 extern UINT8 updatecounter;
-extern INT8 platform_vx;
-extern bool LCD_Installed;
 extern INT8 update_hud;
 extern INT8 fx_cooldown;
 
@@ -107,10 +105,20 @@ void START() {
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
 	
-	if (current_level < 3u){
-		SetState(StateGame);
-	}else if (current_level > 4u && current_level < 7u){
-		//SetState(StateGame6);
+	switch(current_level){
+		case 0u:
+		case 1u:
+		case 2u:
+			SetState(StateGame);
+		break;
+		case 3u:
+		case 4u:
+			SetState(StateGame3);
+		break;
+		case 5u:
+		case 6u:
+			SetState(StateGame6);
+		break;
 	}
 
 	//INIT SOUND
@@ -219,10 +227,6 @@ void START() {
 	enemies_3 = 0;
 	
 	//INIT SPAWNING	
-	enemies_0 = 0;
-	enemies_1 = 0;
-	enemies_2 = 0;
-	enemies_3 = 0;
 	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
 			case 3u:
@@ -355,13 +359,9 @@ void UPDATE() {
 			case 2:
 				SetState(StateGame);	
 			break;
-			case 3:
-			case 4:
-				SetState(StateGame3);
-			break;
 			case 5:
 			case 6:
-				//SetState(StateGame6);
+				SetState(StateGame6);
 			break;
 			case 7:
 			break;

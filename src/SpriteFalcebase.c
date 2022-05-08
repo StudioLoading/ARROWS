@@ -1,16 +1,17 @@
-#include "Banks/SetBank15.h"
+#include "Banks/SetAutoBank.h"
+
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
+
 
 //FALCE
 const UINT8 falcebase_sliding[] = {1, 0}; //The first number indicates the number of frames
 
-void Start_SpriteFalcebase() {
+void START() {
 	THIS->lim_x = 80u;
 	THIS->lim_y = 60u;
 	SetSpriteAnim(THIS, falcebase_sliding, 8u);	
@@ -18,7 +19,7 @@ void Start_SpriteFalcebase() {
 	falcebasedata->enemy_state = ENEMY_STATE_WAIT;
 }
 
-void Update_SpriteFalcebase() {	
+void UPDATE() {	
 	struct FalcebaseInfo* falcebasedata = (struct FalcebaseInfo*)THIS->custom_data;
 	Sprite* lama = falcebasedata->falcelama;
 	switch(falcebasedata->enemy_state){
@@ -28,6 +29,6 @@ void Update_SpriteFalcebase() {
 	}
 }
 
-void Destroy_SpriteFalcebase(){
+void DESTROY(){
 	
 }

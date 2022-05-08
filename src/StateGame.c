@@ -66,10 +66,10 @@ extern unsigned char d4[];
 INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_d = 0;
-INT8 load_next_b = 1; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
-UINT8 current_level_b = 4u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
+UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
-UINT8 current_level = 5u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 0u; // 0u default
 UINT8 current_cutscene = 0u;
 
@@ -99,7 +99,6 @@ void UpdateHUD() BANKED;
 void ShowWindow() BANKED;
 void ShowWindowDiag() BANKED;
 void set_window_y(UBYTE y);
-//void LCD_isr();
 void spawn_enemy(UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
 void spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
 
@@ -110,12 +109,17 @@ void START() {
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
 
-	if (current_level > 4u){
-		//SetState(StateGame6);
-	}else if (current_level > 2u){
-		SetState(StateGame3);
+	switch(current_level){
+		case 3u:
+		case 4u:
+			SetState(StateGame3);
+		break;
+		case 5u:
+		case 6u:
+			SetState(StateGame6);
+		break;
 	}
-	
+
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
@@ -367,7 +371,7 @@ void UPDATE() {
 			break;
 			case 5:
 			case 6:
-				//SetState(StateGame6);
+				SetState(StateGame6);
 			break;
 			case 7:
 			break;

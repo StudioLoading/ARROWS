@@ -1,17 +1,5 @@
 #include "Banks/SetAutoBank.h"
 
-#include "../res/src/window6.h"
-#include "../res/src/diagnew6.h"
-#include "../res/src/font.h"
-#include "../res/src/tiles6.h"
-#include "../res/src/tilesanims.h"
-#include "../res/src/map60.h"
-#include "../res/src/map61.h"
-#include "../res/src/map70.h"
-#include "../res/src/map71.h"
-#include "../res/src/mapcutscene0.h"
-#include "../res/src/archer.h"
-
 #include "ZGBMain.h"
 #include "Scroll.h"
 #include "SpriteManager.h"
@@ -19,12 +7,24 @@
 #include "string.h"
 #include "Print.h"
 #include "Sound.h"
-#include "gbt_player.h"
+#include "Music.h"
 
 #include "custom_datas.h"
 #include "TileAnimations.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
+
+IMPORT_TILES(font);
+IMPORT_TILES(tiles6);
+
+IMPORT_MAP(map60);
+IMPORT_MAP(map61);
+IMPORT_MAP(map70);
+IMPORT_MAP(map71);
+IMPORT_MAP(mapcutscene0);
+
+IMPORT_MAP(diagnew6);
+IMPORT_MAP(window6);
 
 
 const UINT8 const collision_tiles6[] = {2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
@@ -70,12 +70,12 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
+extern INT8 spawning_counter;
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
-extern INT8 LCD_Installed;
-extern UINT8 thunder_delay;
 extern INT8 update_hud;
-extern INT8 spawning_counter;
+extern INT8 fx_cooldown;
+extern UINT8 thunder_delay;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -83,54 +83,53 @@ extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 extern UINT8 quiver;
 
-const UINT16 bg_palette6[] = {PALETTE_FROM_HEADER(tiles6)};
+void UpdateHUD6() BANKED;
+void ShowWindow6() BANKED;
+void ShowWindowDiag6() BANKED;
+void set_window_y6(UBYTE y);
+void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
+void spawn_item6(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
+Sprite* spawn_vplatform6(Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
 
-//Maps
-const struct MapInfo* const level_6[] = {
-	&map60, &map61
-};
-const struct MapInfo* const level_7[] = {
-	&map70, &map71,  &mapcutscene0
-};
-const struct MapInfo* const level_8[] = {
-	&mapcutscene0
-};
-
-const struct MapInfo** const levels6[] = {level_6, level_7, level_8};
+Sprite* spawn_vplatform6(Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED{
+	SpriteManagerRemoveSprite(enem);
+	enem = SpriteManagerAdd(spriteType, (UINT16) posx << 3, (UINT16) posy << 3);
+	struct PlatformInfo* data_platform = (struct PlatformInfo*)enem->custom_data;
+	data_platform->type = 1;
+	return enem;
+}
 
 INT8 amulet_spawn;
-
-void UpdateHUD6();
-void ShowWindow6();
-void ShowWindowDiag6();
-void set_window_y6(UBYTE y);
-void LCD_isr6();
-void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy);
-void spawn_item6(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
 void spawn_falci(UINT16 x, UINT16 y);
 
 void START() {
 	
-	is_on_boss = -1;
-	thunder_delay = 80u;
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
+	fx_cooldown = 0;
 	
-	if (current_level < 3u){
-		SetState(StateGame);
-	}else if (current_level < 5u){
-		SetState(StateGame3);
+	switch(current_level){
+		case 0u:
+		case 1u:
+		case 2u:
+			SetState(StateGame);
+		break;
+		case 3u:
+		case 4u:
+			SetState(StateGame3);
+		break;
 	}
-	
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette6, 18);
 
-	SPRITES_8x16;
+	//INIT SOUND
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR51_REG = 0xFF; //Enables all channels (left and right)
+	NR50_REG = 0xFF; //Max volume 0x77
+
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
-	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpritePlatform);
-	SpriteManagerLoad(SpritePuff);
+	SpriteManagerLoad(SpriteItem);
+
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
 		case 5u:
@@ -156,56 +155,77 @@ void START() {
 				SpriteManagerLoad(SpriteFalcebase);
 				SpriteManagerLoad(SpriteCathead);
 			}else{
-				SpriteManagerLoad(SpriteMother);
+				//SpriteManagerLoad(SpriteMother);
 			}
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 				set_sgb_palette_statusbar();
 			}
-		break;		
+		break;
 	}		
 	SHOW_SPRITES;
 
-	//SCROLL
-	//if (current_level == 2u & current_map == 0u)
-	scroll_bottom_movement_limit = 62u;
+	//CLEAN DIAGS
+	memcpy(d1, "                    ", 20);
+	memcpy(d2, "                    ", 20);
+	memcpy(d3, "                    ", 20);
+	memcpy(d4, "                    ", 20);
 
-	const struct MapInfo** maps6 = levels6[current_level-5u];
-	UINT8 map_w6;
-	UINT8 map_h6;
-	GetMapSize(maps6[current_map], &map_w6, &map_h6);
+	//SCROLL	
+	scroll_bottom_movement_limit = 62u;	
+
+	const struct MapInfo* const level_6[] = { &map60, &map61 };
+	const struct MapInfo* const level_7[] = { &map70, &map71 };
+
+	const struct MapInfo** const levels67[] = {level_6, level_7};
+
+	UINT8 level_6_banks[] = {BANK(map60), BANK(map61)};
+	UINT8 level_7_banks[] = {BANK(map70), BANK(map71)};
+	UINT8 * levels67_banks[] = {level_6_banks, level_7_banks};
+
+	const struct MapInfo** maps67 = levels67[current_level-5];
+	UINT8* map67banks = levels67_banks[current_level-5];
+	UINT8 map_w6 = 0;
+	UINT8 map_h6 = 0;
+	GetMapSize((UINT8) map67banks[current_map], maps67[current_map], &map_w6, &map_h6);
+
 	if (load_next_s == -1){ //COME FROM STATE SECRET
-		ScrollFindTile(maps6[current_map], 45, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);
+		ResumeMusic;
+		ScrollFindTile((UINT8) map67banks[current_map], maps67[current_map], 45, 0, 0, 
+			map_w6, map_h6, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0 || load_next_gameover){
 		spawning_counter = 0;
-		ScrollFindTile(maps6[current_map], 9, 0, 0, map_w6, map_h6, &drop_player_x, &drop_player_y);		
+		//PlayMusic(bgm_level_emptych1, 1);
+		ScrollFindTile((UINT8) map67banks[current_map], maps67[current_map], 9, 0, 0, 
+			map_w6, map_h6, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
-	if(current_level == 6u && current_map == 2u){
-		InitScroll(maps6[current_map], collision_tiles_cutscene0, 0);
-	}else{
-		InitScroll(maps6[current_map], collision_tiles6, 0);
+	else{
+		ResumeMusic;
 	}
+	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	InitScroll((UINT8) map67banks[current_map], maps67[current_map], collision_tiles6, 0);
 	SHOW_BKG;
-	
+
 	//INIT ARCHER
 	is_on_boss = -1;
 	archer_data->hp = hp;
 	archer_data->ups = ups;
 	archer_data->coins = coins;
 	archer_data->tool = archer_tool;
-	archer_state = STATE_JUMPING;	
+	archer_state = STATE_JUMPING;
 	
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 0, 4);
 	ShowWindow6();
 	
-	//INIT SPAWNING
+	//INIT ENEMIES	
 	enemies_0 = 0;
 	enemies_1 = 0;
 	enemies_2 = 0;
 	enemies_3 = 0;
+	
+	//INIT SPAWNING	
 	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
 			case 5u:
@@ -230,16 +250,6 @@ void START() {
 		}
 	}
 	load_next_d = 0;
-	
-	if (!LCD_Installed) { 
-		CRITICAL {
-			add_LCD(LCD_isr6);
-			set_interrupts(VBL_IFLAG | LCD_IFLAG);
-			STAT_REG |= 0x40; 
-			set_window_y6(144-8);
-		}
-	    LCD_Installed = 1; 
-	}
 	
 }
 
@@ -536,7 +546,8 @@ void UPDATE() {
 						spawn_enemy6(SpriteBat, 104u, 20u);
 						amulet_spawn = 0;
 						spawning_counter++;
-					}if(scroll_target->x > (UINT16) 117u << 3 && spawning_counter == 9){
+					}
+					if(scroll_target->x > (UINT16) 117u << 3 && spawning_counter == 9){
 						spawn_enemy6(SpriteBat, 120u, 20u);
 						amulet_spawn = 0;
 						spawning_counter++;
@@ -609,13 +620,13 @@ void UPDATE() {
 						spawn_enemy6(SpriteBat, 161u, 23u);
 						spawning_counter++;
 					}
-				break;
+				break;/*
 				case 2u:
 					if(scroll_target->x > (UINT16) 43u << 3 && spawning_counter == 0){
 						spawn_enemy6(SpriteMother, 56u, 18u);
 						spawning_counter++;
 					}
-				break;
+				break;*/
 			}
 		break;
 	}
@@ -664,15 +675,15 @@ void UPDATE() {
 
 void spawn_falci(UINT16 x, UINT16 y){
 	Sprite* sfalce1 = SpriteManagerAdd(SpriteFalce, (UINT16) x << 3, (UINT16) y << 3);
-	Sprite* sfalce2 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+1u) << 3, (UINT16) y << 3);
-	Sprite* sfalce3 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+2u) << 3, (UINT16) y << 3);
-	Sprite* falcebase = SpriteManagerAdd(SpriteFalcebase, (UINT16) x << 3, (UINT16) (y+2u) << 3);
-	Sprite* falcebase2 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+1u) << 3, (UINT16) (y+2) << 3);
-	Sprite* falcebase3 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+2u) << 3, (UINT16) (y+2) << 3);				
-	struct EnemyInfo * sfalce2data = (struct EnemyInfo*)sfalce2->custom_data;
-	sfalce2data->wait = 10u;
 	struct EnemyInfo * sfalcedata = (struct EnemyInfo*)sfalce1->custom_data;
 	sfalcedata->wait = 20u;
+	Sprite* sfalce2 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+1u) << 3, (UINT16) y << 3);
+	Sprite* sfalce3 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+2u) << 3, (UINT16) y << 3);
+	Sprite* falcebase = SpriteManagerAdd(SpriteFalcebase, (UINT16) x << 3, (UINT16) (y+1u) << 3);
+	Sprite* falcebase2 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+1u) << 3, (UINT16) (y+1) << 3);
+	Sprite* falcebase3 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+2u) << 3, (UINT16) (y+1) << 3);				
+	struct EnemyInfo * sfalce2data = (struct EnemyInfo*)sfalce2->custom_data;
+	sfalce2data->wait = 10u;
 	struct FalcebaseInfo* falcebasedata = (struct FalcebaseInfo*)falcebase->custom_data;
 	falcebasedata->falcelama = sfalce1;
 	falcebasedata->enemy_state = ENEMY_STATE_SLIDING;
@@ -750,7 +761,7 @@ void ShowWindow6(){
 	//WINDOW
 	WX_REG = 7;
 	WY_REG = 144 - 8;
-	InitWindow(0, 0, &window6);
+	InitWindow(0, 0, BANK(window6), &window6);
 	SHOW_WIN;	
 	UpdateHUD6();
 }
@@ -761,7 +772,7 @@ void ShowWindowDiag6(){
 		set_window_y6(144 - 32);
 		WX_REG = 1;
 		WY_REG = 144 - 32; //40
-		InitWindow(0, 0, &diagnew6);
+		InitWindow(0, 0, BANK(diagnew6), &diagnew6);
 		SHOW_WIN;
 		
 		PRINT_POS(1,0);
@@ -777,15 +788,6 @@ void ShowWindowDiag6(){
 	}	
 }
 
-void LCD_isr6() NONBANKED {
-    if (LYC_REG == 0) {
-        if (WY_REG == 0) HIDE_SPRITES; else SHOW_SPRITES; 
-        LYC_REG = WY_REG;
-    } else {
-        HIDE_SPRITES; 
-        LYC_REG = 0;
-    }
-}
 
 void set_window_y6(UBYTE y) {
     WX_REG = 7u;

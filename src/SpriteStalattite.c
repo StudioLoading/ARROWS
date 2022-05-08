@@ -1,10 +1,9 @@
-#include "Banks/SetBank9.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -13,12 +12,8 @@ const UINT8 stalat_drop[] = {1, 0}; //The first number indicates the number of f
 
 void CheckCollisionStalatTile(struct EnemyInfo* stalat_data);
 
-void Start_SpriteStalattite() {
+void START() {
 	
-	THIS->mt_sprite->dx = 1;
-	THIS->mt_sprite->dy = 4;
-	THIS->coll_w = 6;
-	THIS->coll_h = 4;
 	THIS->lim_x = 200u;
 	THIS->lim_y = 80u;
 	SetSpriteAnim(THIS, stalat_drop, 4u);
@@ -37,7 +32,7 @@ void Start_SpriteStalattite() {
 	*/
 }
 
-void Update_SpriteStalattite() {
+void UPDATE() {
 	
 	struct EnemyInfo* ldata = (struct EnemyInfo*)THIS->custom_data;
 	UINT8 scroll_sl_tile;
@@ -87,6 +82,6 @@ void CheckCollisionStalatTile(struct EnemyInfo* stalat_data){
 	SpriteManagerRemoveSprite(THIS);
 }
 
-void Destroy_SpriteStalattite(){
+void DESTROY(){
 	SpriteManagerAdd(SpritePuff, THIS->x, (UINT16)THIS->y-3u);
 }

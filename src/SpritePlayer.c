@@ -226,7 +226,7 @@ void UPDATE() {
 							}else if (current_level < 5){
 								SetState(StateGame3);
 							}else{
-								//SetState(StateGame6);
+								SetState(StateGame6);
 							}
 						}
 					}
@@ -506,11 +506,8 @@ void UPDATE() {
 						}
 					}
 				break;				
-				/* || ispr->type == SpritePorcupine
-					|| ispr->type == SpriteIbex || ispr->type == SpriteStalattite || ispr->type == SpriteStalagmite 
-					|| ispr->type == SpriteBear || ispr->type == SpriteWalrus || ispr->type == SpriteWalrusspin 
-					|| ispr->type == SpritePenguin || ispr->type == SpriteAxe 
-					|| ispr->type == SpriteBat || ispr->type == SpriteFalce || ispr->type == SpriteCathead*/
+				/* || ispr->type == SpritePorcupine  
+					|| ispr->type == */
 				case SpriteEnemy:
 				case SpriteScorpion:
 				case SpriteSpider:
@@ -519,9 +516,20 @@ void UPDATE() {
 				case SpriteWolf:
 				case SpriteThunder:
 				case SpriteAlligator:
+				case SpriteIbex:
 				case SpriteBee:
 				case SpriteBird:
-					if(archer_state != STATE_HIT) {					
+				case SpriteBear:
+				case SpritePenguin:
+				case SpriteStalattite:
+				case SpriteStalagmite:
+				case SpriteWalrus:
+				case SpriteWalrusspin:
+				case SpriteAxe:
+				case SpriteBat:
+				case SpriteFalce:
+				case SpriteCathead:
+					if(archer_state != STATE_HIT) {
 						dataenemy = (struct EnemyInfo*)ispr->custom_data;
 						if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
 							dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
@@ -554,12 +562,11 @@ void UPDATE() {
 						}
 						UINT8 being_hit = 1u;
 						if (KEY_PRESSED(J_DOWN)){
-							/*&& ispr->type != SpriteWalrus 
-							&& ispr->type != SpriteWalrusspin
-								&& ispr->type != SpriteBear */
 							if(ispr->type != SpriteSpider && ispr->type != SpriteWolf 
 								&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
-								&& ispr->type != SpriteIbex){
+								&& ispr->type != SpriteIbex && ispr->type != SpriteWalrus 
+								&& ispr->type != SpriteWalrusspin
+								&& ispr->type != SpriteBear){
 								if (ispr->x < THIS->x){
 									if (THIS->mirror == V_MIRROR){//mi sto riparando bene
 										TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
@@ -579,8 +586,9 @@ void UPDATE() {
 								case SpriteWolf:
 								case SpriteAlligator:
 								case SpriteIbex:
-								/*case SpriteBear:
-								case SpriteWalrus:*/
+								case SpriteBear:
+								case SpriteWalrus:
+								case SpriteWalrusspin:
 									enemydamage = 2;
 									TranslateSprite(THIS, 0, -1);
 								break;
@@ -610,9 +618,6 @@ void UPDATE() {
 					arrowdata = (struct ArrowInfo*)ispr->custom_data;
 					if (arrowdata->arrowdir != 1){return;}//guardo solo se è orizzontale
 					if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
-						//ispr->mt_sprite->dx = 0;
-						//ispr->mt_sprite->dy = 2;
-						//ispr->coll_w = 8;
 						if (ispr->mirror == V_MIRROR){
 							platform_vx = 0-arrowdata->vx;	
 						}else{

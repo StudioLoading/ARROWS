@@ -1,21 +1,18 @@
-#include "Banks/SetBank15.h"
+#include "Banks/SetAutoBank.h"
+
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
-//SCYTHE
-const UINT8 falce_attack[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 falce_idle[] = {1, 1}; //The first number indicates the number of frames
 
-void Start_SpriteFalce() {
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 1;
-	THIS->coll_w = 4;
-	THIS->coll_h = 11;
+//SCYTHE
+const UINT8 falce_attack[] = {1, 1}; //The first number indicates the number of frames
+const UINT8 falce_idle[] = {1, 0}; //The first number indicates the number of frames
+
+void START() {
 	THIS->lim_x = 80u;
 	THIS->lim_y = 60u;
 	SetSpriteAnim(THIS, falce_idle, 8u);
@@ -25,7 +22,7 @@ void Start_SpriteFalce() {
 	falcedata->enemy_accel_y = THIS->y;
 }
 
-void Update_SpriteFalce() {
+void UPDATE() {
 	struct EnemyInfo* falcedata = (struct EnemyInfo*)THIS->custom_data;
 	falcedata->wait++;
 	switch(falcedata->enemy_state){
@@ -68,6 +65,5 @@ void Update_SpriteFalce() {
 	}
 }
 
-void Destroy_SpriteFalce(){
-	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+void DESTROY(){
 }

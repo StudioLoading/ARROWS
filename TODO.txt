@@ -53,15 +53,12 @@ KNOWN ISSUE:
 
 TODO:
 - completare l' upgrade ZGB v2021.3
-	BEAR non si volta
+	cematery
 - menu di pausa: devo fermare tutti gli enemy in schermo 
-	mettendo lo ENEMY_STATE_PAUSED dallo StateGame, non cambio state, 
-	mostro una diag bassa 
-	"   -PAUSED-   " e sotto i tasti complessi di tip, shield, amuleti ottenuti
-- porte: mettere la collisione sugli angoli della porta. gestire angolo destro o sinistro attivi se current_map == 0
+	mettendo lo ENEMY_STATE_PAUSED dallo StateGame, non cambio state
 - fare i loop audio da dare ad Antonio Coronato per preventivo
 - piume che cadono quando colpisco l acquila
-- fare tombe visitabili (per lurkare sul kickstarter?)
+- fare tombe visitabili
 - dare un animale alla mamma che aspetta, così alla cutscene va incontro al protagonista. 
 	che si chiami e che abbia la foto di uno che paga su KS per avere il suo cane magari morto!!
 - finire cutscene fine liv CIMITERO

@@ -1,12 +1,12 @@
-#include "Banks/SetBank14.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
+
 
 //WALRUS
 /*
@@ -31,12 +31,8 @@ extern struct ArcherInfo* archer_data;
 
 void EnableCollision(INT8 e);
 
-void Start_SpriteWalrus() {
+void START() {
 	walrus_data = (struct EnemyInfo*)THIS->custom_data;
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 0;
-	THIS->coll_w = 12;
-	THIS->coll_h = 32;
 	THIS->lim_x = 255u;
 	THIS->lim_y = 255u;
 	walrus_data->enemy_accel_y = 24;
@@ -49,7 +45,7 @@ void Start_SpriteWalrus() {
 	walrus_spin = SpriteManagerAdd(SpriteWalrusspin, THIS->x, THIS->y - 24u);//(THIS->y + 50u));
 }
 
-void Update_SpriteWalrus() {
+void UPDATE() {
 	
 	if(walrus_data->enemy_state == WALRUS_STATE_JUMP_DOWN || walrus_data->enemy_state == WALRUS_STATE_JUMP_UP){
 		if(THIS->x < (UINT16) 12u << 3){
@@ -245,5 +241,5 @@ void EnableCollision(INT8 e){
 	}
 }
 
-void Destroy_SpriteWalrus() {
+void DESTROY() {
 }

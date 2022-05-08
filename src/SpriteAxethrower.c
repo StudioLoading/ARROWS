@@ -1,5 +1,4 @@
-#include "Banks/SetBank17.h"
-#include "main.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "Sprite.h"
@@ -13,11 +12,7 @@ const UINT8 anim_axethrower_normal[] = {1, 0}; //The first number indicates the 
 const UINT8 anim_axethrower_throw[] = {2, 0, 2}; //The first number indicates the number of frames
 const UINT8 anim_axethrower_hit[] = {2, 0, 1}; //The first number indicates the number of frames
 
-void Start_SpriteAxethrower() {	
-	THIS->mt_sprite->dx = 4;
-	THIS->mt_sprite->dy = 2;
-	THIS->coll_w = 8;
-	THIS->coll_h = 14;
+void START() {	
 	THIS->lim_x = 80u;
 	THIS->lim_y = 80u;
 	SetSpriteAnim(THIS, anim_axethrower_normal, 8u);
@@ -27,7 +22,7 @@ void Start_SpriteAxethrower() {
 	throwerdata->hp = 45;
 }
 
-void Update_SpriteAxethrower(){
+void UPDATE(){
 	struct EnemyInfo* throwerdata = (struct EnemyInfo*)THIS->custom_data;
 	throwerdata->wait--;
 	if((throwerdata->enemy_state == ENEMY_STATE_ATTACK || throwerdata->enemy_state == ENEMY_STATE_SLIDING) && throwerdata->wait == 16u){
@@ -60,25 +55,27 @@ void Update_SpriteAxethrower(){
 	UINT8 scroll_at_tile;
 	Sprite* iatspr;
 	SPRITEMANAGER_ITERATE(scroll_at_tile, iatspr) {
-		if(iatspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, iatspr)) {
-				if(throwerdata->enemy_state != ENEMY_STATE_HIT){
-					SetSpriteAnim(THIS, anim_axethrower_hit, 20u);
-					throwerdata->enemy_state = ENEMY_STATE_HIT;	
-					throwerdata->wait = 20u;
-					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iatspr->custom_data;
-					throwerdata->hp -= arrowdata->arrowdamage;
-					SpriteManagerRemoveSprite(iatspr);
-					if (throwerdata->hp <= 0){
-						SpriteManagerRemove(THIS_IDX);
+		if(CheckCollision(THIS, iatspr)) {
+			switch(iatspr->type){
+				case SpriteArrow:
+					if(throwerdata->enemy_state != ENEMY_STATE_HIT){
+						SetSpriteAnim(THIS, anim_axethrower_hit, 20u);
+						throwerdata->enemy_state = ENEMY_STATE_HIT;	
+						throwerdata->wait = 20u;
+						struct ArrowInfo* arrowdata = (struct ArrowInfo*)iatspr->custom_data;
+						throwerdata->hp -= arrowdata->arrowdamage;
+						SpriteManagerRemoveSprite(iatspr);
+						if (throwerdata->hp <= 0){
+							SpriteManagerRemove(THIS_IDX);
+						}
 					}
-				}
+				break;
 			}
 		}
 	}
 }
 
 
-void Destroy_SpriteAxethrower() {
+void DESTROY() {
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y-4u);
 }

@@ -1,12 +1,10 @@
-#include "Banks/SetBank14.h"
+#include "Banks/SetAutoBank.h"
 
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
-#include "CircleMath.h"
 #include "custom_datas.h"
 
 //SNAKE
@@ -21,11 +19,7 @@ void CheckCollisionPTile(UINT8 t);
 void PTurn();
 void PDie();
 
-void Start_SpritePenguin() {	
-	THIS->mt_sprite->dx = 4;
-	THIS->mt_sprite->dy = 1;
-	THIS->coll_w = 4;
-	THIS->coll_h = 14;
+void START() {	
 	THIS->lim_x = 164u;
 	struct EnemyInfo* pendata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, penguin_walk, 8u);
@@ -37,7 +31,7 @@ void Start_SpritePenguin() {
 	pendata->archer_posx = 0u;
 }
 
-void Update_SpritePenguin() { 
+void UPDATE() { 
 	
 	struct EnemyInfo* pendata = (struct EnemyInfo*)THIS->custom_data;
 	pendata->wait--;
@@ -181,6 +175,6 @@ void PDie(){
 	edata->enemy_state = ENEMY_STATE_DEAD;
 }
 
-void Destroy_SpritePenguin(){
+void DESTROY(){
 	SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
 }
