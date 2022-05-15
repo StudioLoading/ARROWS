@@ -107,16 +107,16 @@ void UPDATE() {
 			}		
 		break;
 		case 1:
-			if(KEY_TICKED(J_A)){
+			if(KEY_TICKED(J_B)){
 				loading_code = 2;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}
 		break;
 		case 0:
-			if(KEY_TICKED(J_B)){
+			if(KEY_TICKED(J_A)){
 				loading_code = 1;
-			}else if (KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}
 		break;

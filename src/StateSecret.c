@@ -8,7 +8,6 @@
 #include "Print.h"
 
 #include "custom_datas.h"
-#include "TileAnimations.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
 

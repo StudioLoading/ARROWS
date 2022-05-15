@@ -128,7 +128,7 @@ void UPDATE(){
 		break;
 		case 2u:
 			if (counter == 10u) {
-				WorldmapQuiverStone();
+				//WorldmapQuiverStone();
 			}
 			if(counter > 80u && siconpsg->x < 57u && (counter & 1)){
 				siconpsg->x++;
@@ -136,7 +136,7 @@ void UPDATE(){
 		break;
 		case 3u:
 			if (counter == 10u) {
-				WorldmapQuiverStone();
+				//WorldmapQuiverStone();
 			}
 			if(counter > 80u && siconpsg->x < 82u && (counter & 1)){
 				siconpsg->x++;
@@ -144,8 +144,8 @@ void UPDATE(){
 		break;
 		case 4u:
 			if (counter == 10u) {
-				WorldmapQuiverStone();
-				WorldmapQuiverThunder();
+				//WorldmapQuiverStone();
+				//WorldmapQuiverThunder();
 			}
 			if(counter > 80u && siconpsg->x > 48u && (counter & 1)){
 				siconpsg->x-=2;
@@ -156,8 +156,8 @@ void UPDATE(){
 		break;
 		case 5u:
 			if (counter == 10u) {
-				WorldmapQuiverStone();
-				WorldmapQuiverThunder();
+				//WorldmapQuiverStone();
+				//WorldmapQuiverThunder();
 			}
 			if(counter > 80u && siconpsg->x < 73u && (counter & 1)){
 				siconpsg->x++;
@@ -165,9 +165,9 @@ void UPDATE(){
 		break;
 		case 6u:
 			if (counter == 10u) {
-				WorldmapQuiverStone();
-				WorldmapQuiverThunder();
-				WorldmapQuiverIce();
+				//WorldmapQuiverStone();
+				//WorldmapQuiverThunder();
+				//WorldmapQuiverIce();
 			}
 			if(counter > 80u && siconpsg->x < 98u && (counter & 1)){
 				siconpsg->x++;

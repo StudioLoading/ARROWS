@@ -33,6 +33,8 @@ const UINT8 const collision_tiles3[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17
 
 UINT8 thunder_delay = 16u;
 
+UINT8 bank_tiles4 = BANK(tiles4);
+
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
 extern UINT8 coins ;
@@ -555,64 +557,21 @@ void UPDATE() {
 		break;
 	}
 
-	//MOVING BACKGROUND TILES	
+//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 120) {		
-		if (current_level != 3u){
-			switch(updatecounter){
-				case 1:
-				case 20:
-					AnimSliders0();
-				break;
-				case 40:
-					AnimSliders1();
-				break;
-				case 60:
-					AnimWaters0();
-					AnimSpuncioni0();
-					AnimSliders1();
-				break;
-				case 80:
-					AnimSliders0();
-				break;
-				case 30:
-				case 90:
-					AnimWaters1();
-					AnimSpuncioni1();
-				break;
-			}
-		}else{ //cioè liv3 sky
-			switch(updatecounter){
-				case 1:
-					AnimClouds0();
-					AnimRain0();
-					AnimSliders1();
-				break;
-				case 20:
-					AnimClouds0();
-					AnimRain1();
-				break;
-				case 40:
-					AnimClouds1();
-					AnimRain0();
-				break;
-				case 60:
-					AnimClouds1();
-					AnimRain1();
-					AnimSliders0();
-				break;
-				case 80:
-					AnimRain0();
-				break;
-				case 100:
-					AnimRain1();
-				break;
-			}
-		
-		}
+	if (updatecounter < 30) {
+		switch(updatecounter){
+			case 1:
+				Anim_Tiles_0();
+			break;
+			case 15:
+				Anim_Tiles_1();
+			break;
+		}			
 	}else{
 		updatecounter = 0;
-	}
+	}	
+
 	
 	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 

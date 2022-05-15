@@ -103,9 +103,10 @@ void START(){
 	if(is_on_boss <= 0){
 		is_on_boss = 0;
 	}
-	
+	/*
 	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
 	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7);
+	*/
 	SPRITES_8x16;
 	
 	SpriteManagerLoad(SpriteCamerafocus);
@@ -154,7 +155,7 @@ void START(){
 			if(sgb_check()){
 				set_sgb_palette01_TREES();
 			}
-		break;/*
+		break;
 		case 5u:
 			level_tool=0;
 			SpriteManagerLoad(SpriteWalrus);
@@ -164,7 +165,7 @@ void START(){
 			if(sgb_check()){
 				set_sgb_palette01_WALRUS();
 			}
-		break;*/
+		break;
 	}	
 	if(sgb_check()){
 		set_sgb_palette_statusbar();
@@ -354,21 +355,23 @@ void UPDATE() {
 		if (updatecounter < 60) {
 			switch(updatecounter){
 				case 1:
-					AnimSpuncioni0();
+					//Anim_Tiles_0();
+					//AnimSpuncioni0();
 				break;
 				case 30:
-					AnimSpuncioni1();
+					//AnimSpuncioni1();
 				break;
 			}
 			if(current_level_b > 0u && current_level_b != 5u){
 				switch(updatecounter){
 					case 1:
 					case 30:
-						AnimWaters0();
+						//Anim_Tiles_0();
+						//AnimWaters0();
 					break;
 					case 15:
 					case 45:
-						AnimWaters1();
+						//AnimWaters1();
 					break;
 				}
 			}

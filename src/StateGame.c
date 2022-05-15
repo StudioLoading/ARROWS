@@ -15,6 +15,9 @@
 #include "sgb_palette.h"
 
 IMPORT_TILES(font);
+IMPORT_TILES(tiles);
+IMPORT_TILES(tilesanims);
+IMPORT_TILES(tilesanimsmapworld);
 
 IMPORT_MAP(map);
 IMPORT_MAP(map2);
@@ -70,7 +73,7 @@ INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coeren
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
 UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
-UINT8 current_map = 0u; // 0u default
+UINT8 current_map = 1u; // 0u default
 UINT8 current_cutscene = 0u;
 
 UINT16 drop_player_x = 0u;
@@ -84,6 +87,11 @@ INT8 LCD_Installed = 0;
 INT8 fx_cooldown = 0;
 
 UINT8 paused = 0;
+
+UINT8 bank_tiles = BANK(tiles);
+UINT8 bank_tilesanims = BANK(tilesanims);
+UINT8 bank_tilesanimsmapworld = BANK(tilesanimsmapworld);
+
 
 Sprite* platform_sprite = 0;
 Sprite* enemies_0 = 0;
@@ -650,32 +658,10 @@ void UPDATE() {
 	if (updatecounter < 20) {
 		switch(updatecounter){
 			case 1:
-				AnimSpuncioni0();
-				AnimSky0();	
-				AnimWaters0();
-				AnimWaterfalls0();
-				if(archer_tool != level_tool){
-					AnimPrisoner00();
-					AnimPrisoner10();
-					AnimPrisoner20();
-				}
-				AnimSliders0();
+				Anim_Tiles_0();
 			break;
 			case 10:
-				AnimSpuncioni1();
-				AnimWaters1();
-				AnimWaterfalls1();
-				AnimSky1();
-				if(archer_tool != level_tool){
-					if(current_level == 0u && current_map == 0u){
-						AnimPrisoner01();
-						AnimPrisoner11();
-					}
-					if(current_level == 1u && current_map == 1u){
-						AnimPrisoner21();
-					}
-				}
-				AnimSliders1();
+				Anim_Tiles_1();
 			break;
 		}			
 	}else{

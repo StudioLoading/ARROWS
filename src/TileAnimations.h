@@ -1,3 +1,11 @@
+void Anim_Tiles_0() NONBANKED;
+void Anim_Tiles_1() NONBANKED;
+
+
+void WorldmapQuiverStone() BANKED;
+void WorldmapQuiverThunder() BANKED;
+void WorldmapQuiverIce() BANKED;
+/*
 void AnimSliders0() BANKED;
 void AnimSliders1() BANKED;
 void AnimWaters0() BANKED;
@@ -18,6 +26,4 @@ void AnimPrisoner10() BANKED;
 void AnimPrisoner11() BANKED;
 void AnimPrisoner20() BANKED;
 void AnimPrisoner21() BANKED;
-void WorldmapQuiverStone() BANKED;
-void WorldmapQuiverThunder() BANKED;
-void WorldmapQuiverIce() BANKED;
+*/

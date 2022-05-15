@@ -30,6 +30,8 @@ IMPORT_MAP(window6);
 const UINT8 const collision_tiles6[] = {2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
 
+UINT8 bank_tiles6 = BANK(tiles6);
+
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
 extern UINT8 coins ;
@@ -633,25 +635,6 @@ void UPDATE() {
 	
 	if(thunder_delay == 0u){
 		thunder_delay = 104u;
-	}
-	
-	//MOVING BACKGROUND TILES
-	updatecounter++;
-	if (updatecounter < 60) {
-		switch(updatecounter){
-			case 20:
-			case 40:
-			case 59:
-				AnimSliders0();
-			break;
-			case 10:
-			case 30:
-			case 50:
-				AnimSliders1();
-			break;
-		}	
-	}else{
-		updatecounter = 0;
 	}	
 	
 	//DIAG MANAGEMENT
