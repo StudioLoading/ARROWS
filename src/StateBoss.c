@@ -10,7 +10,6 @@
 
 #include "custom_datas.h"
 #include "TilesAnimations0.h"
-#include "TilesAnimations1.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
 

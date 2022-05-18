@@ -13,7 +13,6 @@
 
 #include "custom_datas.h"
 #include "TilesAnimations0.h"
-#include "TilesAnimations1.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
@@ -33,8 +32,6 @@ DECLARE_MUSIC(bgm_level_emptych1);
 const UINT8 const collision_tiles3[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
 UINT8 thunder_delay = 16u;
-
-UINT8 bank_tiles4 = BANK(tiles4);
 
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;

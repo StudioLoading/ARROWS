@@ -164,11 +164,38 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 
 DISCORD MARKDOWN: ```c ```
 
+StateWorldmap.c calls for a tile replacement: method WorldmapQuiverStone().
+Tile replacement is inside my module TilesAnimations.c/.h
+TilesAnimations0.c is:
 ```c
-		NR12_REG = 0b11111111;
-	PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
-```
+#include "Banks/SetAutoBank.h"
+#include "ZGBMain.h"
+IMPORT_TILES(tiles);
+IMPORT_TILES(tilesanims);
+IMPORT_TILES(tilesanimsmapworld);
+extern UINT8 current_level;
+extern UINT8 current_map;
+extern UINT8 bank_tiles;
+extern UINT8 bank_tilesanims;
+extern UINT8 bank_tilesanimsmapworld;
 
+void set_banked_bkg_data(UINT8 first_tile, UINT8 nb_tiles, const UINT8 *data, UINT8 bank) NONBANKED {
+    uint8_t save = _current_bank;
+    SWITCH_ROM(bank);   
+    set_bkg_data(first_tile, nb_tiles, data);
+    SWITCH_ROM(save);
+}
+
+void WorldmapQuiverStone(){
+	set_banked_bkg_data(44u, 1u, tilesanims.data+16u, bank_tilesanims);// 16 * 1
+}
+```
+As soon as StateWorldmap calls the method, all the game breaks.
+
+Setting a breakpoint on that line, debug correctly stops there.
+Setting a breakpoint inside my module, inside the method WorldmapQuiverStone(), it does not stops.
+
+Why is the game breaking like that?
 
 
 
