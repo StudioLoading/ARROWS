@@ -9,7 +9,8 @@
 #include "Print.h"
 
 #include "custom_datas.h"
-#include "TileAnimations.h"
+#include "TilesAnimations0.h"
+#include "TilesAnimations1.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
@@ -350,35 +351,20 @@ void UPDATE() {
 	boss_data_b->archer_posx = scroll_target->x;
 	
 	//MOVING BACKGROUND TILES	
-	if (current_level_b != 3u){ // ibex has not to be animated with water
-		updatecounter++;
-		if (updatecounter < 60) {
-			switch(updatecounter){
-				case 1:
-					//Anim_Tiles_0();
-					//AnimSpuncioni0();
-				break;
-				case 30:
-					//AnimSpuncioni1();
-				break;
-			}
-			if(current_level_b > 0u && current_level_b != 5u){
-				switch(updatecounter){
-					case 1:
-					case 30:
-						//Anim_Tiles_0();
-						//AnimWaters0();
-					break;
-					case 15:
-					case 45:
-						//AnimWaters1();
-					break;
-				}
-			}
-		}else{
-			updatecounter = 0;
-		}
+	updatecounter++;
+	if (updatecounter < 20) {
+		switch(updatecounter){
+			case 1:
+				Anim_Tiles_0();
+			break;
+			case 10:
+				Anim_Tiles_1();
+			break;
+		}			
+	}else{
+		updatecounter = 0;
 	}	
+	
 }
 
 void SpawnBoss(INT8 hp_default){

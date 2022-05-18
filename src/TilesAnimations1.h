@@ -1,0 +1,1 @@
+void Anim_Tiles_1() NONBANKED;

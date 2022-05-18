@@ -12,7 +12,8 @@
 #include "Music.h"
 
 #include "custom_datas.h"
-#include "TileAnimations.h"
+#include "TilesAnimations0.h"
+#include "TilesAnimations1.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
@@ -557,7 +558,7 @@ void UPDATE() {
 		break;
 	}
 
-//MOVING BACKGROUND TILES	
+	//MOVING BACKGROUND TILES	
 	updatecounter++;
 	if (updatecounter < 30) {
 		switch(updatecounter){
