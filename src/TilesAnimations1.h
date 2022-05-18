@@ -1,1 +1,1 @@
-void Anim_Tiles_1() NONBANKED;
+void Anim_Tiles_1();

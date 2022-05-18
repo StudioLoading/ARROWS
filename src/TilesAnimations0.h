@@ -1,6 +1,6 @@
-void Anim_Tiles_0() NONBANKED;
+void Anim_Tiles_0();
 
-void WorldmapQuiverStone() NONBANKED;
-void WorldmapQuiverThunder() NONBANKED;
-void WorldmapQuiverIce() NONBANKED;
-void WorldmapQuiverFire() NONBANKED;
+void WorldmapQuiverStone();
+void WorldmapQuiverThunder();
+void WorldmapQuiverIce();
+void WorldmapQuiverFire();
