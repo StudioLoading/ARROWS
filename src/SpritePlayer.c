@@ -267,12 +267,12 @@ void UPDATE() {
 					}
 				}
 			}else if (THIS->mt_sprite->dx != 5){
-				THIS->mt_sprite->dx = 5;
-				if (archer_state == STATE_NORMAL_PLATFORM){
-					THIS->coll_h = 12;
-					THIS->mt_sprite->dy = 3;
-					THIS->coll_w = 6;
-				}
+				//THIS->mt_sprite->dx = 5;
+				//if (archer_state == STATE_NORMAL_PLATFORM){
+					//THIS->coll_h = 12;
+					//THIS->mt_sprite->dy = 3;
+					//THIS->coll_w = 6;
+				//}
 			}
 			//Jump
 			if(KEY_TICKED(J_A)){

@@ -111,10 +111,6 @@ void START() {
 		case 2u:
 			SetState(StateGame);
 		break;
-		case 3u:
-		case 4u:
-			SetState(StateGame3);
-		break;
 		case 5u:
 		case 6u:
 			SetState(StateGame6);
@@ -354,16 +350,9 @@ void UPDATE() {
 		}
 		load_next = 0;
 		switch(current_level){
-			case 0:
-			case 1:
-			case 2:
-				SetState(StateGame);	
-			break;
-			case 5:
-			case 6:
-				SetState(StateGame6);
-			break;
-			case 7:
+			case 3:
+			case 4:
+				SetState(StateGame3);
 			break;
 		} 
 	}

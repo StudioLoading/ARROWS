@@ -397,7 +397,7 @@ void SpawnBoss(INT8 hp_default){
 				gatedata->vx = 3;
 			break;
 			case 4u:
-				boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, ((UINT16) 14u << 3) - 4u);
+				boss = SpriteManagerAdd(SpriteBear, (UINT16) 20u << 3, (UINT16) 14u << 3);
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
 			break;

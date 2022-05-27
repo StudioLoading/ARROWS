@@ -23,7 +23,7 @@ void START() {
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, enemy_idle, 8u);
 	edata->enemy_state = ENEMY_STATE_NORMAL;
-	edata->hp = 45;
+	edata->hp = 25;
 	edata->enemy_accel_y = 24;
 	edata->vx = -1;
 	edata->wait = 0u;
