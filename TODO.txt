@@ -45,20 +45,17 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 
 KNOWN ISSUE:
-- colori viola della schermata cematery sul color
-- annerire lo sfondo sulla schermata worldmap sul color
 - mettere più scrigni a moneta singola in giro
-- nel menu di pausa e nel worldmap sono mostrati gli amuleti posseduti non in base al quiver 
+- nel menu di pausa e nel worldmap sono mostrati gli amuleti posseduti 
+	non in base al quiver 
 	ma in base al livello. Forse chissene, ma è da tenere come known issue.
 
 TODO:
--prigionieri lampeggianti in black wolf cave
 - completare l' upgrade ZGB v2021.3
 	cematery
 - menu di pausa: devo fermare tutti gli enemy in schermo 
 	mettendo lo ENEMY_STATE_PAUSED dallo StateGame, non cambio state
-- fare i loop audio da dare ad Antonio Coronato per preventivo
-- piume che cadono quando colpisco l acquila
+- piume che cadono quando colpisco l aquila
 - fare tombe visitabili
 - dare un animale alla mamma che aspetta, così alla cutscene va incontro al protagonista. 
 	che si chiami e che abbia la foto di uno che paga su KS per avere il suo cane magari morto!!
@@ -67,25 +64,6 @@ TODO:
 - final boss
 - bonus level
 
-LORE:
-Lore is about the Moon approaching the Earth, causing wild animals to develop intelligence,
- disarm human weapons and take over the power on earth.  
- Retaliation for humans now to be imprisoned in zoo-es. 
- Player controls the archer, a boy who has been freed by his mom. 
- He is able to use the power of elements and convey it inside his arrows. 
- This power-transfer is made through amulets he got to find. He starts with the Bow of Wind, 
- so he is basically able to fly arrows. Wild Animals keep amulets safe from humans, 
- he has to defeat em to get those amulets. Amulets are also mandatory to enter into the 
- final Castle, where his mother is waiting. The castle is where a crazy scientist makes 
- his work.. is he finding a solution for moon approaching, 
- or is he the responsible of that? if he is, why he did that? 
- an it be reverted? ... more deeply, is it worth to be reverted ? 
- were humans doing a good job on Earth itself, when they were at the most powerful 
- position on the chain ?
-
-SOUND BACKGROUND PER OGNI LIVELLO : 
-- sul drive di checco.1809 cartella ARROWS c'è il video di tutti i giri di Leonardo alla tastiera. 
-Ho già messo in midi solo il primo. Mettere anche gli altri o salvarsi il video.
 
 polish:
 	- feedback audio di "swish" quando la freccia scheggia cancello senza romperlo
