@@ -8,40 +8,60 @@
 
 const UINT8 amulet_closed[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 amulet_water[] = {2, 0, 1}; //The first number indicates the number of frames
+const UINT8 amulet_water_const[] = {1, 1}; //The first number indicates the number of frames
 const UINT8 amulet_earth[] = {2, 0, 2}; //The first number indicates the number of frames
+const UINT8 amulet_earth_const[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 amulet_blast[] = {2, 0, 3}; //The first number indicates the number of frames
+const UINT8 amulet_blast_const[] = {1, 3}; //The first number indicates the number of frames
 const UINT8 amulet_fire[] = {2, 0, 4};
+const UINT8 amulet_fire_const[] = {1, 4};
 
-struct ItemInfo* datak;
+struct AmuletInfo* data_amulet;
 
 void START() {
-	datak = (struct ItemInfo*)THIS->custom_data;
-	datak->type = 0;
-	datak->setup = 1u;
-	datak->counter = -1;
-	SetSpriteAnim(THIS, amulet_closed, 8u);
-	
+	data_amulet = (struct AmuletInfo*)THIS->custom_data;
+	data_amulet->type = 0;
+	data_amulet->setup = 1u;
+	data_amulet->counter = -1;
+	data_amulet->picked = 0;
 	THIS->lim_x = 255;
 	THIS->lim_y = 255;
 }
 
 void UPDATE() {
-	if(datak->setup){ 
-		switch(datak->type){
+	if(data_amulet->setup == 0u){ 
+		switch(data_amulet->type){
 			case 1:
-				SetSpriteAnim(THIS, amulet_earth, 16u);
+				SetSpriteAnim(THIS, amulet_earth, 24u);
 			break;
 			case 2:
-				SetSpriteAnim(THIS, amulet_water, 16u);
+				SetSpriteAnim(THIS, amulet_water, 24u);
 			break;
 			case 3:
-				SetSpriteAnim(THIS, amulet_blast, 16u);
+				SetSpriteAnim(THIS, amulet_blast, 24u);
 			break;
 			case 4:
-				SetSpriteAnim(THIS, amulet_fire, 16u);
+				SetSpriteAnim(THIS, amulet_fire, 24u);
 			break;
 		}
-		datak->setup = 1u;
+		data_amulet->setup = 1u;
+	}
+	if(data_amulet->picked == 1){
+		switch(data_amulet->type){
+			case 1:
+				SetSpriteAnim(THIS, amulet_earth_const, 4u);
+			break;
+			case 2:
+				SetSpriteAnim(THIS, amulet_water_const, 4u);
+			break;
+			case 3:
+				SetSpriteAnim(THIS, amulet_blast_const, 4u);
+			break;
+			case 4:
+				SetSpriteAnim(THIS, amulet_fire_const, 4u);
+			break;
+		}
+		data_amulet->picked = 2;
 	}
 }
 

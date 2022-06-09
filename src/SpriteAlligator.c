@@ -92,29 +92,31 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_a_tile, iaspr) {
-		if(iaspr->type == SpritePlayer) {
-			if(CheckCollision(THIS, iaspr)) {
-				alligator_data->wait = 24u;
-			}
-		}
-		if(iaspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, iaspr) & alligator_data->enemy_state != ENEMY_STATE_DEAD) {
-				if(alligator_data->enemy_state != ENEMY_STATE_INVISIBLE && alligator_data->enemy_state != ENEMY_STATE_HIDDEN){ 
-					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iaspr->custom_data;
-					if (arrowdata->original_type == 2){ //hit only with stoned arrows
-						SetSpriteAnim(THIS, alligator_hit, 18u);
-						alligator_data->hp -= 1;
-						if (alligator_data->hp <= 0){
-							alligator_data->hp = 0;
-							SetSpriteAnim(THIS, alligator_dead, 16u);
-							alligator_data->enemy_state = ENEMY_STATE_DEAD;
-							THIS->x = (UINT16) 21u << 3;
-							THIS->y = (UINT16) 14u << 3;
+		if(CheckCollision(THIS, iaspr) && alligator_data->enemy_state != ENEMY_STATE_DEAD) {
+			switch (iaspr->type){
+				case SpritePlayer:
+					alligator_data->wait = 24u;
+				break;
+				case SpriteArrow:
+					if(alligator_data->enemy_state == ENEMY_STATE_NORMAL || alligator_data->enemy_state == ENEMY_STATE_ATTACK){
+						struct ArrowInfo* arrowdata = (struct ArrowInfo*)iaspr->custom_data;
+						if (arrowdata->original_type == 2){ //hit only with stoned arrows
+							alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
+							alligator_data->wait = 24u;
+							SetSpriteAnim(THIS, alligator_hit, 18u);
+							alligator_data->hp -= 1;
+							if (alligator_data->hp <= 0){
+								alligator_data->hp = 0;
+								alligator_data->enemy_state = ENEMY_STATE_DEAD;
+								SetSpriteAnim(THIS, alligator_dead, 16u);
+								THIS->x = (UINT16) 21u << 3;
+								THIS->y = (UINT16) 14u << 3;
+							}
+							alligator_data->wait = 121u;
 						}
-						alligator_data->wait = 121u;
+						SpriteManagerRemoveSprite(iaspr);
 					}
-				}
-				SpriteManagerRemoveSprite(iaspr);				
+				break;
 			}
 		}
 	}

@@ -39,6 +39,13 @@ struct PlatformInfo {
 	INT8 vx;
 	INT8 vy;
 };
+struct AmuletInfo{
+	INT8 type;
+	UINT8 setup;
+	INT8 counter;
+	INT8 picked;
+	UINT8 nothing_2;
+};
 struct ItemInfo{
 	UINT8 collided;
 	INT8 type; //1=coin, 2=hp, 3=up, 4=amulet?

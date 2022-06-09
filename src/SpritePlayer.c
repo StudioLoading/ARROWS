@@ -75,6 +75,7 @@ INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
 UINT8 scroll_tile;
 Sprite* ispr;
 struct ItemInfo* itemdata;
+struct AmuletInfo* amuletdata;
 struct PlatformInfo* platformdata;
 struct EnemyInfo* dataenemy;
 struct ArrowInfo* arrowdata;
@@ -384,40 +385,37 @@ void UPDATE() {
 		if(CheckCollision(THIS, ispr)) {
 			switch(ispr->type){
 				case SpriteAmulet: 
-					itemdata = (struct ItemInfo*)ispr->custom_data;
-					if(itemdata->counter == -1){
-						itemdata->counter = 60;
-						itemdata->setup = 0;
-						ispr->y -= 20u;
-						archer_data->hp = MAX_HP;
-						death_cooldown = 127;
-						THIS->x = ispr->x-2u;
-						THIS->y = ispr->y+14u;
-						switch(itemdata->type){
-							case 1:
-								archer_state = STATE_AMULET_STONE;
-								quiver = quiver | 0b0000000010; 
-							break;
-							case 2:
-								archer_state = STATE_AMULET_ICE;
-								quiver = quiver | 0b0000001000;
-							break;
-							case 3:
-								archer_state = STATE_AMULET_THUNDER;
-								quiver = quiver | 0b0000000100;
-							break;
-							case 4:
-								quiver = quiver | 0b0000010000;
-								archer_state = STATE_AMULET_FIRE;
-							break;
-						}
-						SetSpriteAnim(THIS, anim_jump, 8u);
-						update_hud = 1;
-						if(is_on_boss >= 0){
-							is_on_boss = 3;
-						}else{
-							Build_Next_Dialog();
-						}					
+					amuletdata = (struct AmuletInfo*)ispr->custom_data;
+					ispr->y -= 24u;
+					archer_data->hp = MAX_HP;
+					death_cooldown = 127;
+					THIS->x = ispr->x;
+					THIS->y = ispr->y+20u;
+					amuletdata->picked = 1;
+					switch(amuletdata->type){
+						case 1:
+							archer_state = STATE_AMULET_STONE;
+							quiver = quiver | 0b0000000010; 
+						break;
+						case 2:
+							archer_state = STATE_AMULET_ICE;
+							quiver = quiver | 0b0000001000;
+						break;
+						case 3:
+							archer_state = STATE_AMULET_THUNDER;
+							quiver = quiver | 0b0000000100;
+						break;
+						case 4:
+							quiver = quiver | 0b0000010000;
+							archer_state = STATE_AMULET_FIRE;
+						break;
+					}
+					SetSpriteAnim(THIS, anim_jump, 8u);
+					update_hud = 1;
+					if(is_on_boss >= 0){
+						is_on_boss = 3;
+					}else{
+						Build_Next_Dialog();
 					}
 				break;
 				case SpriteItem:

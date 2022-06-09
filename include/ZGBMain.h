@@ -41,7 +41,7 @@ _SPRITE_DMG(SpriteBird, bird)\
 _SPRITE_DMG(SpriteGate, gate)\
 _SPRITE_DMG(SpriteStalagmite, stalagmite)\
 _SPRITE_DMG(SpriteStalattite, stalattite)\
-_SPRITE_DMG(SpriteAmulet, amulets)\
+_SPRITE_DMG(SpriteAmulet, amuleto)\
 _SPRITE_DMG(SpriteWolf, wolf)\
 _SPRITE_DMG(SpriteAlligator, alligator)\
 _SPRITE_DMG(SpriteEagle, eagle)\

@@ -528,9 +528,9 @@ void UPDATE() {
 					if(scroll_target->x > (UINT16) 74u << 3 && scroll_target->x < (UINT16) 80u << 3 && amulet_spawn == 0 
 						&& ((quiver & 0b00010000) == 0b00000000)){
 						Sprite* reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 61u << 3, (UINT16) 25u << 3);
-						struct ItemInfo* datak = (struct ItemInfo*)reward->custom_data;
+						struct AmuletInfo* datak = (struct AmuletInfo*)reward->custom_data;
 						datak->type = 4;
-						datak->setup = 1;
+						datak->setup = 0;
 						amulet_spawn = 1;
 					}
 					if(scroll_target->x > (UINT16) 85u << 3 && spawning_counter == 6){

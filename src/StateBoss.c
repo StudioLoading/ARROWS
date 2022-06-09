@@ -418,6 +418,7 @@ void SpawnBoss(INT8 hp_default){
 
 void SpawnReward(){//and move boss to position
 	struct ItemInfo* datak = 0;
+	struct AmuletInfo* data_amulet = 0;
 	Sprite* key_s = 0;
 	switch (current_level_b){
 		case 0u:// wolf -> wrench
@@ -429,10 +430,10 @@ void SpawnReward(){//and move boss to position
 			datak->setup = 1u;
 		break;
 		case 1u: // gator -> amulet stone
-			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 24u << 3, (UINT16) 13u << 3);
-			datak = (struct ItemInfo*)reward->custom_data;
-			datak->type = 1;
-			datak->setup = 1;
+			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 22u << 3, (UINT16) 13u << 3);
+			data_amulet = (struct AmuletInfo*)reward->custom_data;
+			data_amulet->setup = 0u;
+			data_amulet->type = 1;
 		break;
 		case 2u: // eagle -> key
 			reward = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
@@ -445,9 +446,9 @@ void SpawnReward(){//and move boss to position
 			boss->y = (UINT16) 14u << 3;
 			boss->mirror = V_MIRROR;
 			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
-			datak = (struct ItemInfo*)reward->custom_data;
-			datak->type = 3;
-			datak->setup = 1;	
+			data_amulet = (struct AmuletInfo*)reward->custom_data;
+			data_amulet->type = 3;
+			data_amulet->setup = 0;	
 		break;
 		case 4u: // bear -> wrench
 			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 12u << 3);
@@ -461,9 +462,9 @@ void SpawnReward(){//and move boss to position
 			boss->x = (UINT16) 12u << 3;
 			boss->y = (UINT16) 15u << 3;
 			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 28u << 3, (UINT16) 13u << 3);
-			datak = (struct ItemInfo*)reward->custom_data;
-			datak->type = 2;
-			datak->setup = 1;
+			data_amulet = (struct AmuletInfo*)reward->custom_data;
+			data_amulet->type = 2;
+			data_amulet->setup = 0;
 		break;
 	}
 }

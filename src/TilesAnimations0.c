@@ -10,6 +10,7 @@ IMPORT_TILES(tilesanimsmapworld);
 extern UINT8 current_level;
 extern UINT8 current_map;
 extern INT8 archer_tool;
+extern INT8 level_tool;
 extern INT8 is_on_boss;
 
 UINT8 bank_tiles = BANK(tiles);
@@ -54,7 +55,7 @@ void Anim_Tiles_0() BANKED{
 		set_banked_bkg_data(111u, 1u, 4u, BANK(tiles4));// + 16u * 111 tile index
 		set_banked_bkg_data(119u, 1u, 4u, BANK(tiles4));// + 16u * 119 tile index				
 	}	
-	if(current_level < 2 && archer_tool == 0 && is_on_boss == 0){
+	if(current_level < 2 && is_on_boss == -1){// && archer_tool != level_tool
 		//prisoner00
 		set_banked_bkg_data(4u, 1u, 0u, BANK(tiles));
 		//prisoner10
@@ -104,7 +105,7 @@ void Anim_Tiles_1() BANKED{
 	set_banked_bkg_data(99u, 1u, 1u, BANK(tilesanims));// + 16u * 99 tile index SLIDING UP TILES 99 100
 	set_banked_bkg_data(111u, 1u, 1u, BANK(tilesanims));// + 16u * 111 tile index
 	set_banked_bkg_data(119u, 1u, 1u, BANK(tilesanims));// + 16u * 119 tile index
-	if(current_level < 2 && archer_tool == 0 && is_on_boss == 0){
+	if(current_level < 2 && archer_tool != level_tool && is_on_boss == -1){
 		//prisoner01
 		set_banked_bkg_data(4u, 1u, 1u, BANK(tilesanims));
 		//prisoner11
