@@ -281,7 +281,7 @@ void UPDATE() {
 					//triggera la cutscene di madre e figlio che vanno al portale
 				case 7u:
 					is_on_cutscene = 1;
-					//SetState(StateCutscene);
+					SetState(StateCutscene);
 				break;
 				case 1u:
 				case 2u:

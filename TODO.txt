@@ -12,8 +12,7 @@ KNOWN ISSUE:
 TODO:
 - completare l' upgrade ZGB v2021.3
 	cematery
-- menu di pausa ? devo fermare tutti gli enemy in schermo 
-	mettendo lo ENEMY_STATE_PAUSED dallo StateGame, non cambio state
+- menu di pausa ? 
 - piume che cadono quando colpisco l aquila
 - fare tombe visitabili
 - dare un animale alla mamma che aspetta, così alla cutscene va incontro al protagonista. 

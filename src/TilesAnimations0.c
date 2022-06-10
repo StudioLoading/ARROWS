@@ -41,10 +41,12 @@ void set_banked_bkg_data(UINT8 first_tile, UINT8 nb_tiles, UINT8 tiles_used, UIN
 
 void Anim_Tiles_0() BANKED{
 	//spuncioni0
-	set_banked_bkg_data(2u, 1u, 0u, BANK(tiles));
-	set_banked_bkg_data(20u, 1u, 0u, BANK(tiles));
-	set_banked_bkg_data(23u, 1u, 0u, BANK(tiles));
-	set_banked_bkg_data(29u, 1u, 0u, BANK(tiles));
+	if(current_level < 5u){
+		set_banked_bkg_data(2u, 1u, 0u, BANK(tiles));
+		set_banked_bkg_data(20u, 1u, 0u, BANK(tiles));
+		set_banked_bkg_data(23u, 1u, 0u, BANK(tiles));
+		set_banked_bkg_data(29u, 1u, 0u, BANK(tiles));
+	}
 	//sliders0
 	if(current_level < 3){
 		set_banked_bkg_data(99u, 1u, 0u, BANK(tiles));// + 16u * 99 tile index SLIDING UP TILES 99 100
@@ -96,11 +98,14 @@ void Anim_Tiles_0() BANKED{
 }
 
 void Anim_Tiles_1() BANKED{
+	
 	//spuncioni1
-	set_banked_bkg_data(2u, 1u, 1u, BANK(tilesanims));
-	set_banked_bkg_data(20u, 1u, 1u, BANK(tilesanims));
-	set_banked_bkg_data(23u, 1u, 1u, BANK(tilesanims));
-	set_banked_bkg_data(29u, 1u, 1u, BANK(tilesanims));
+	if(current_level < 5u){
+		set_banked_bkg_data(2u, 1u, 1u, BANK(tilesanims));
+		set_banked_bkg_data(20u, 1u, 1u, BANK(tilesanims));
+		set_banked_bkg_data(23u, 1u, 1u, BANK(tilesanims));
+		set_banked_bkg_data(29u, 1u, 1u, BANK(tilesanims));
+	}
 	//sliders1
 	set_banked_bkg_data(99u, 1u, 1u, BANK(tilesanims));// + 16u * 99 tile index SLIDING UP TILES 99 100
 	set_banked_bkg_data(111u, 1u, 1u, BANK(tilesanims));// + 16u * 111 tile index

@@ -1,36 +1,29 @@
-#include "Banks/SetBank6.h"
+#include "Banks/SetAutoBank.h"
 
 #include "Keys.h"
 #include "ZGBMain.h"
+#include "Sprite.h"
 #include "SpriteManager.h"
-#include "string.h"
-#include "Sound.h"
-#include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 #include "Dialogs.h"
 
 extern UINT8 diag_found;
-extern void Build_Next_Dialog();
+extern void Build_Next_Dialog() BANKED;
 
 const UINT8 mother_idle[] = {1, 0}; //The first number indicates the number of frames
 extern UINT8 colliding_mother;
 struct EnemyInfo* mother_data;
 
-void Start_SpriteMother(){
+void START(){
 	SetSpriteAnim(THIS, mother_idle, 8u);
-    THIS->mt_sprite->dx = 0;
-    THIS->mt_sprite->dy = 0;
-    THIS->coll_w = 16;
-    THIS->coll_h = 16;
    	mother_data = (struct EnemyInfo*)THIS->custom_data;
     mother_data->enemy_state = ENEMY_STATE_WAIT;
     mother_data->enemy_accel_y = 24;
     mother_data->vx = 0;
 }
 
-void Update_SpriteMother(){
+void UPDATE(){
 
    	struct EnemyInfo* cutmother = (struct EnemyInfo*)THIS->custom_data;
 
@@ -57,6 +50,6 @@ void Update_SpriteMother(){
 
 }
 
-void Destroy_SpriteMother(){
+void DESTROY(){
 
 }

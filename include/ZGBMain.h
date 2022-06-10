@@ -5,7 +5,6 @@
 #define ResumeMusic hUGE_paused = 0; UNMUTE_ALL_CHANNELS  
 
 /*
-_STATE(StateCutscene)\
 */
 
 #define STATES \
@@ -20,6 +19,7 @@ _STATE(StateGame6)\
 _STATE(StateSecret)\
 _STATE(StateBoss)\
 _STATE(StateGameover)\
+_STATE(StateCutscene)\
 STATE_DEF_END
 
 #define SPRITES \
@@ -59,13 +59,13 @@ _SPRITE_DMG(SpriteBat, bat)\
 _SPRITE_DMG(SpriteFalce, falce)\
 _SPRITE_DMG(SpriteFalcebase, falcebase)\
 _SPRITE_DMG(SpriteCathead, cathead)\
+_SPRITE_DMG(SpriteMother, mother)\
+_SPRITE_DMG(SpriteCutarcher, cutarcher)\
 SPRITE_DEF_END
 
 
 /*
 _SPRITE_DMG(SpritePorcupine, porcupine)\
-_SPRITE_DMG(SpriteMother, mother)\
-_SPRITE_DMG(SpriteCutarcher, cutarcher)\
 */
 #include "ZGBMain_Init.h"
 

@@ -144,7 +144,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 
 	if(diagf == 0u){
 		if(paused){
-			memcpy(d1, "       PAUSED       ", 20);
+			memcpy(d1, "    AMULETS OWNED   ", 20);
 			switch(current_level){
 				case 0u:
 				case 1u://45 (47 48 46 49)
@@ -489,10 +489,10 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								diagf = 4u;
 							}
 							if(diagf == 0u){
-								memcpy(d1, " I CAN SMELL...     ", 20);
-								memcpy(d2, " CAVE ENTRANCE      ", 20);
-								memcpy(d3, " CAN'T BE FAR.      ", 20);
-								memcpy(d4, "                    ", 20);
+								memcpy(d1, " I SMELL SOMETHING. ", 20);
+								memcpy(d2, " WOLF'S CAVE CAN'T  ", 20);
+								memcpy(d3, "       BE FAR.      ", 20);
+								memcpy(d4, "      LET'S GO!     ", 20);
 								diagf = 99u;							
 							}
 						}
@@ -665,33 +665,33 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								diagf = 1u;
 							break;
 							case 2u:
-								memcpy(d1, "     ... SON!       ", 20);
-								memcpy(d2, " WE ARE DOING THE   ", 20);
-								memcpy(d3, " RIGHT THING. BE    ", 20);
-								memcpy(d4, " STRONG NOW.        ", 20);
 								if((quiver & 0b0000010000) == 0b0000010000){// ho vulkan pyramid
-									colliding_mother = 3u;
+									/*memcpy(d1, "     ... SON!       ", 20);
+									memcpy(d2, " WE ARE DOING THE   ", 20);
+									memcpy(d3, " RIGHT THING. BE    ", 20);
+									memcpy(d4, " STRONG NOW.        ", 20);*/
+									memcpy(d1, "                    ", 20);
+									memcpy(d2, "   LET S GET INTO   ", 20);
+									memcpy(d3, "    THE CASTLE.     ", 20);
+									memcpy(d4, "                    ", 20);
+									load_next_d = 0; //manino brutto
+									current_map = 0u;
 								}else{
+									memcpy(d1, " GO BACK TO THE     ", 20);
+									memcpy(d2, " CRYPT, I HAVE HID  ", 20);
+									memcpy(d3, " DEN THE VULKAN PYRA", 20);
+									memcpy(d4, " MID UNDERGROUND.   ", 20);
 									colliding_mother = 4u;
 								}
 								diagf = 60u;
 							break;
 							case 3u: //ho vulkan pyramid
-								memcpy(d1, "                    ", 20);
-								memcpy(d2, "   LET S GET INTO   ", 20);
-								memcpy(d3, "    THE CASTLE.     ", 20);
-								memcpy(d4, "                    ", 20);
 								colliding_mother = 5u;
 								diagf = 60u;
 							break;
 							case 4u: //non ho vulkan pyramid
-								memcpy(d1, " GO BACK TO THE     ", 20);
-								memcpy(d2, " CRYPT, I HAVE HID  ", 20);
-								memcpy(d3, " DEN THE VULKAN PYRA", 20);
-								memcpy(d4, " MID UNDERGROUND.   ", 20);
 								colliding_mother = 6u;
-								load_next_d = 0; //manino brutto
-								current_map = 0u;
+								
 								diagf = 60u;
 							break;
 							case 5u:

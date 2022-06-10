@@ -1,11 +1,5 @@
 #include "Banks/SetAutoBank.h"
 
-#include "../res/src/font.h"
-#include "../res/src/diagnew.h"
-#include "../res/src/archer.h"
-#include "../res/src/tilescutscene.h"
-#include "../res/src/mapcutscene0.h"
-
 #include "Keys.h"
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -14,12 +8,20 @@
 #include "string.h"
 #include "Print.h"
 #include "Sound.h"
-#include "gbt_player.h"
+#include "Music.h"
 
 #include "custom_datas.h"
-#include "TileAnimations.h"
+#include "TilesAnimations0.h"
 #include "Dialogs.h"
 #include "sgb_palette.h"
+
+IMPORT_TILES(font);
+IMPORT_TILES(tiles6);
+
+IMPORT_MAP(mapcutscene0);
+IMPORT_MAP(diagnew);
+const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
+extern UINT8 bank_tiles6;
 
 
 extern const UINT16 bg_palette6[];
@@ -50,21 +52,19 @@ UINT16 sprite_2_finalx = 0u;
 
 void ShowCutDiag();
 void set_window_y_c(UBYTE y);
+void CalculateSpritesDestinations() BANKED;
 
 void START() {
-
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);//leave at 7
-	SetPalette(BG_PALETTE, 0, 8, bg_palette6, 18); //last param is the bank we bg_palette variable is declared
 	
-	SPRITES_8x16;
+	//INIT SOUND
+	NR52_REG = 0x80; //Enables sound, you should always setup this first
+	NR51_REG = 0xFF; //Enables all channels (left and right)
+	NR50_REG = 0xFF; //Max volume 0x77
+
     SpriteManagerLoad(SpriteCamerafocus);
     SpriteManagerLoad(SpriteMother);
 	SpriteManagerLoad(SpriteCutarcher);
-
-	//SCROLL
-	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display
-	//const struct MapInfo** level_cuts = cutscenes[current_cutscene];
-
+	
 	current_cutscene++;
 	is_on_cutscene = 1;
 
@@ -73,17 +73,34 @@ void START() {
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 			}
+			/*const struct MapInfo* const level_cutscene[] = { &mapcutscene0 };
+			const struct MapInfo** const levels_cutscene[] = {level_cutscene};
+			UINT8 level_cuscene_banks[] = {BANK(mapcutscene0)};
+			UINT8 * levels_cutscenes_banks[] = {level_cuscene_banks};
+			const struct MapInfo** levels_cutscenes = levels_cutscene[0];
+			*/
+			UINT8 cutscene0_bank = BANK(mapcutscene0);
+			InitScroll(cutscene0_bank, &mapcutscene0, collision_tiles_cutscene, 0);
+
 			scroll_target = SpriteManagerAdd(SpriteCamerafocus, 100u, 150u);
 	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
-			InitScroll(&mapcutscene0, collision_tiles_cutscene, 0);
 			sprite_1 = SpriteManagerAdd(SpriteMother, 100u, 142u);
-			SPRITE_SET_VMIRROR(sprite_1);
+			sprite_1->mirror = V_MIRROR;
 			sprite_2 = SpriteManagerAdd(SpriteCutarcher, 80u, 138u);
 		break;
 	}
 	
 	SHOW_SPRITES;
-	SHOW_BKG;
+
+	//CLEAN DIAGS
+	memcpy(d1, "                    ", 20);
+	memcpy(d2, "                    ", 20);
+	memcpy(d3, "                    ", 20);
+	memcpy(d4, "                    ", 20);
+
+	//SCROLL
+	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display
+	//const struct MapInfo** level_cuts = cutscenes[current_cutscene];
 
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -105,7 +122,6 @@ void UPDATE() {
 				diag_found = Build_Next_Dialog_Banked(scroll_target);
 				ShowCutDiag();
 				CalculateSpritesDestinations();
-
 				wait_c = 41u;
 			}
 		break;
@@ -125,7 +141,7 @@ void ShowCutDiag(){
 	set_window_y_c(144 - 32);
 	WX_REG = 0;
 	WY_REG = 144 - 32; //40
-	InitWindow(0, 0, &diagnew);
+	InitWindow(0, 0, BANK(diagnew), &diagnew);
 	SHOW_WIN;
 	
 	PRINT_POS(1,0);
@@ -138,7 +154,7 @@ void ShowCutDiag(){
 	Printf(d4);
 }
 
-void CalculateSpritesDestinations(){
+void CalculateSpritesDestinations() BANKED{
 	switch(current_cutscene){
 		case 1u:
 			sprite_1_finalx = sprite_1->x + 100u;

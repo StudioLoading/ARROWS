@@ -28,7 +28,6 @@ IMPORT_MAP(window6);
 
 
 const UINT8 const collision_tiles6[] = {2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
-const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
 
 UINT8 bank_tiles6 = BANK(tiles6);
 
@@ -157,7 +156,7 @@ void START() {
 				SpriteManagerLoad(SpriteFalcebase);
 				SpriteManagerLoad(SpriteCathead);
 			}else{
-				//SpriteManagerLoad(SpriteMother);
+				SpriteManagerLoad(SpriteMother);
 			}
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
@@ -177,12 +176,12 @@ void START() {
 	scroll_bottom_movement_limit = 62u;	
 
 	const struct MapInfo* const level_6[] = { &map60, &map61 };
-	const struct MapInfo* const level_7[] = { &map70, &map71 };
+	const struct MapInfo* const level_7[] = { &map70, &map71, &mapcutscene0 };
 
 	const struct MapInfo** const levels67[] = {level_6, level_7};
 
 	UINT8 level_6_banks[] = {BANK(map60), BANK(map61)};
-	UINT8 level_7_banks[] = {BANK(map70), BANK(map71)};
+	UINT8 level_7_banks[] = {BANK(map70), BANK(map71), BANK(mapcutscene0)};
 	UINT8 * levels67_banks[] = {level_6_banks, level_7_banks};
 
 	const struct MapInfo** maps67 = levels67[current_level-5];
@@ -622,21 +621,36 @@ void UPDATE() {
 						spawn_enemy6(SpriteBat, 161u, 23u);
 						spawning_counter++;
 					}
-				break;/*
+				break;
 				case 2u:
 					if(scroll_target->x > (UINT16) 43u << 3 && spawning_counter == 0){
 						spawn_enemy6(SpriteMother, 56u, 18u);
 						spawning_counter++;
 					}
-				break;*/
+				break;
 			}
 		break;
 	}
 	
 	if(thunder_delay == 0u){
 		thunder_delay = 104u;
-	}	
-	
+	}
+
+	//MOVING BACKGROUND TILES	
+	updatecounter++;
+	if (updatecounter < 20) {
+		switch(updatecounter){
+			case 1:
+				Anim_Tiles_0();
+			break;
+			case 10:
+				Anim_Tiles_1();
+			break;
+		}			
+	}else{
+		updatecounter = 0;
+	}
+
 	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
 		ShowWindow6();
@@ -770,7 +784,6 @@ void ShowWindowDiag6(){
 		showing_diag = 1;
 	}	
 }
-
 
 void set_window_y6(UBYTE y) {
     WX_REG = 7u;

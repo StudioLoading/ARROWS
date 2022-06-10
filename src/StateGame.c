@@ -72,8 +72,8 @@ INT8 load_next_d = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
-UINT8 current_map = 0u; // 0u default
+UINT8 current_level = 6u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_map = 2u; // 0u default
 UINT8 current_cutscene = 0u;
 
 UINT16 drop_player_x = 0u;
@@ -714,7 +714,7 @@ void UpdateHUD() BANKED{
 		}	
 	}
 	//write hp
-	if(hp<=0)hp=0;
+	if(hp<0)hp=0;
 	INT8 i;
 	for(i = 0; i != hp; ++i) {
 		set_win_tiles(5 + i, 0, 1, 1, &SHIELD_TILE);

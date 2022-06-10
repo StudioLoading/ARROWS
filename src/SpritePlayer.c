@@ -38,8 +38,8 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-#define MAX_HIT_COOLDOWN 24
-#define MAX_DIAG_COOLDOWN 24
+#define MAX_HIT_COOLDOWN 48
+#define MAX_DIAG_COOLDOWN 60
 
 //const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_idle[] = {4, 12, 13, 14, 13};
@@ -87,7 +87,7 @@ void MoveArcher();
 void CheckCollisionTile();
 void CheckCollisionTileDoor();
 void Hit(INT8 damage);
-void Build_Next_Dialog();
+void Build_Next_Dialog() BANKED;
 
 void START() {
 		
@@ -334,18 +334,20 @@ void UPDATE() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
-			if(KEY_PRESSED(J_A) && hit_cooldown < 8) {
-				Jump();
-			}
-			MoveArcher();
-			if (hit_cooldown <= 0){
-				jump_power = 0;
-				archer_accel_y += 10;
-				MoveArcher();
-				platform_vx = 0;
-				platform_vy = 0;
+			if(KEY_PRESSED(J_A) && hit_cooldown < 20) {
 				hit_cooldown = MAX_HIT_COOLDOWN;
-				archer_state = STATE_NORMAL;
+				Jump();
+			}else{
+				//MoveArcher();
+				if (hit_cooldown <= 0){
+					jump_power = 0;
+					archer_accel_y += 10;
+					MoveArcher();
+					platform_vx = 0;
+					platform_vy = 0;
+					hit_cooldown = MAX_HIT_COOLDOWN;
+					archer_state = STATE_NORMAL;
+				}
 			}
 			return;
 		break;
@@ -486,23 +488,15 @@ void UPDATE() {
 						archer_accel_y = 0;
 						if(archer_state != STATE_NORMAL_PLATFORM){
 							archer_state = STATE_NORMAL_PLATFORM;
-							THIS->y = ispr->y - ispr->coll_h;
+							THIS->y = ispr->y - 5;
 							if(ispr->type == SpriteIceplat){
 								platformdata->type = 1u;
+								THIS->y = ispr->y-14;
 							}
 						}
 					}
 					platform_vx = platformdata->vx;
 					platform_vy = platformdata->vy;
-					//THIS->y = ispr->y-3;
-					if(ispr->type == SpriteIceplat){
-						if(archer_state != STATE_NORMAL_PLATFORM) {
-							platformdata = (struct PlatformInfo*)ispr->custom_data;
-							platformdata->type = 1u;
-							THIS->y -= ispr->coll_h;
-							archer_state = STATE_NORMAL_PLATFORM;
-						}
-					}
 				break;				
 				/* || ispr->type == SpritePorcupine  
 					|| ispr->type == */
@@ -527,80 +521,81 @@ void UPDATE() {
 				case SpriteBat:
 				case SpriteFalce:
 				case SpriteCathead:
-					if(archer_state != STATE_HIT) {
-						dataenemy = (struct EnemyInfo*)ispr->custom_data;
-						if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
-							dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
-							return;
-						}
-						switch(is_on_boss){
-							case 0:
-								if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
-									return;
-								}
-							break;
-							case 1:
-								if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
-									if (ispr->x > THIS->x){
-										THIS->x -= 1;
-									}else{
-										THIS->x += 1;
-									}
-									if(KEY_TICKED(J_A)){
-										if (KEY_PRESSED(J_UP)){		
-											Build_Next_Dialog();	
-										}
-									}						
-									return;
-								}
-							break;
-						}
-						if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
-							return;
-						}
-						UINT8 being_hit = 1u;
-						if (KEY_PRESSED(J_DOWN)){
-							if(ispr->type != SpriteSpider && ispr->type != SpriteWolf 
-								&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
-								&& ispr->type != SpriteIbex && ispr->type != SpriteWalrus 
-								&& ispr->type != SpriteWalrusspin
-								&& ispr->type != SpriteBear){
-								if (ispr->x < THIS->x){
-									if (THIS->mirror == V_MIRROR){//mi sto riparando bene
-										TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
-										being_hit = 0u;
-									}
+					if(archer_state == STATE_HIT || hit_cooldown < MAX_HIT_COOLDOWN) {
+						return;
+					}
+					dataenemy = (struct EnemyInfo*)ispr->custom_data;
+					if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
+						dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
+						return;
+					}
+					switch(is_on_boss){
+						case 0:
+							if(ispr->type == SpriteEagle && dataenemy->enemy_state != ENEMY_STATE_ATTACK){
+								return;
+							}
+						break;
+						case 1:
+							if(dataenemy->enemy_state == ENEMY_STATE_DEAD){
+								if (ispr->x > THIS->x){
+									THIS->x -= 1;
 								}else{
-									if (THIS->mirror != V_MIRROR){
-										TranslateSprite(ispr, 16u << delta_time, -2u << delta_time);
-										being_hit = 0u;
+									THIS->x += 1;
+								}
+								if(KEY_TICKED(J_A)){
+									if (KEY_PRESSED(J_UP)){		
+										Build_Next_Dialog();	
 									}
-								}					
+								}						
+								return;
 							}
-						}
-						if (being_hit == 1u && archer_state != STATE_DEAD){
-							INT8 enemydamage = 1;
-							switch(ispr->type){
-								case SpriteWolf:
-								case SpriteAlligator:
-								case SpriteIbex:
-								case SpriteBear:
-								case SpriteWalrus:
-								case SpriteWalrusspin:
-									enemydamage = 2;
-									TranslateSprite(THIS, 0, -1);
-								break;
-							}
+						break;
+					}
+					if (dataenemy->enemy_state == ENEMY_STATE_DEAD){
+						return;
+					}
+					UINT8 being_hit = 1u;
+					if (KEY_PRESSED(J_DOWN)){
+						if(ispr->type != SpriteSpider && ispr->type != SpriteWolf 
+							&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
+							&& ispr->type != SpriteIbex && ispr->type != SpriteWalrus 
+							&& ispr->type != SpriteWalrusspin
+							&& ispr->type != SpriteBear){
 							if (ispr->x < THIS->x){
-								platform_vx = 1;
+								if (THIS->mirror == V_MIRROR){//mi sto riparando bene
+									TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
+									being_hit = 0u;
+								}
 							}else{
-								platform_vx = -1;
-							}
-							if(dataenemy->vx){
-								platform_vx = dataenemy->vx;
-							}
-							Hit(enemydamage);
+								if (THIS->mirror != V_MIRROR){
+									TranslateSprite(ispr, 16u << delta_time, -2u << delta_time);
+									being_hit = 0u;
+								}
+							}					
 						}
+					}
+					if (being_hit == 1u && archer_state != STATE_DEAD){
+						INT8 enemydamage = 1;
+						switch(ispr->type){
+							case SpriteWolf:
+							case SpriteAlligator:
+							case SpriteIbex:
+							case SpriteBear:
+							case SpriteWalrus:
+							case SpriteWalrusspin:
+								enemydamage = 2;
+								TranslateSprite(THIS, 0, -1);
+							break;
+						}
+						if (ispr->x < THIS->x){
+							platform_vx = 1;
+						}else{
+							platform_vx = -1;
+						}
+						if(dataenemy->vx){
+							platform_vx = dataenemy->vx;
+						}
+						Hit(enemydamage);
 					}
 				break;
 				case SpriteHurricane:
@@ -840,7 +835,7 @@ void Hit(INT8 damage) {
 	}
 }
 
-void Build_Next_Dialog(){
+void Build_Next_Dialog() BANKED{
 	diag_found = Build_Next_Dialog_Banked(THIS);
 	if(diag_found){
 		if(diag_found < 98u){ 

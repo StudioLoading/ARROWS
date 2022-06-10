@@ -34,7 +34,7 @@ void UPDATE(){
 	}
 	switch(batdata->enemy_state){
 		case ENEMY_STATE_WAIT:
-			if(batdata->wait == 20){
+			if(batdata->wait == 36){
 				batdata->wait = 0;
 				batdata->enemy_state = ENEMY_STATE_NORMAL;
 			}
@@ -62,14 +62,16 @@ void UPDATE(){
 			if(batdata->wait & 1){
 				batdata->tile_e_collision = TranslateSprite(THIS, batdata->vx, (batdata->enemy_accel_y >> 3) << delta_time);
 			}
-			switch(batdata->tile_e_collision){
-				case 81u:
-				case 84u:
-				case 85u:
-					batdata->archer_posx = 0;
-					batdata->enemy_state = ENEMY_STATE_WAIT;
-					batdata->wait=0;
-				break;
+			if(batdata->enemy_state != ENEMY_STATE_WAIT){
+				switch(batdata->tile_e_collision){
+					case 81u:
+					case 84u:
+					case 85u:
+						batdata->archer_posx = 0;
+						batdata->enemy_state = ENEMY_STATE_WAIT;
+						batdata->wait=0;
+					break;
+				}
 			}
 			if(batdata->archer_posx == 0u){
 				if (batdata->vx == V_MAX){
