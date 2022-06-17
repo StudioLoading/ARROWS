@@ -65,6 +65,7 @@ extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
 extern unsigned char d4[];
+extern INT8 platform_vx;
 
 INT8 load_next = 0;
 INT8 load_next_s = 0;
@@ -87,6 +88,9 @@ INT8 LCD_Installed = 0;
 INT8 fx_cooldown = 0;
 
 UINT8 paused = 0;
+UINT16 apx = 0;
+UINT16 apy = 0;
+UINT16 apx_mirrored = 0;
 
 Sprite* platform_sprite = 0;
 Sprite* enemies_0 = 0;
@@ -97,6 +101,7 @@ Sprite* scrigno_coin = 0;
 Sprite* scrigno_dcoin = 0;
 Sprite* scrigno_shield = 0;
 Sprite* scrigno_up = 0;
+Sprite* archer_player = 0;
 
 void UpdateHUD() BANKED;
 void ShowWindow() BANKED;
@@ -133,6 +138,7 @@ void START() {
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
 	SpriteManagerLoad(SpritePuff);
+	SpriteManagerLoad(SpriteCamerafocus);
 	//LOAD THE SPRITES FOR THE MAP and plays the bgm	
 	switch (current_level){
 		case 0u:
@@ -216,7 +222,8 @@ void START() {
 	else{
 		ResumeMusic;
 	}
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x , archer_player->y);
 	InitScroll((UINT8) mapbanks[current_map], maps[current_map], collision_tiles, 0);
 	SHOW_BKG;
 	
@@ -256,7 +263,7 @@ void START() {
 	if(load_next_s == -1){
 		load_next_s = 0;
 	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
-		diag_found = Build_Next_Dialog_Banked(scroll_target);
+		diag_found = Build_Next_Dialog_Banked(archer_player);
 		if(diag_found){
 			//archer_state = STATE_DIAG;
 			//show_diag = 1;	
@@ -335,11 +342,39 @@ void spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT
 }
 
 void UPDATE() {
-	
+	//camerafocus shifting management
+	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
+		if(archer_player->x < 32u){
+			scroll_target->x = 32u;
+		}else{
+			apx = archer_player->x + 24;
+			apy = archer_player->y - 8;
+			apx_mirrored = archer_player->x - 24;
+			scroll_target->y = apy;
+			INT8 dx = platform_vx;
+			if(archer_player->mirror == V_MIRROR){
+				if(scroll_target->x > apx_mirrored){
+					dx -= 1;
+				}
+				if(scroll_target->x < apx_mirrored){
+					dx += 1;
+				}
+			}else{
+				if(scroll_target->x < apx){
+					dx += 1;
+				}
+				if(scroll_target->x > apx){
+					dx -= 1;
+				}
+			}
+			scroll_target->x += dx;
+		}
+	}
+
 	if(load_next_d){
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
-				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				diag_found = Build_Next_Dialog_Banked(archer_player);
 				PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);

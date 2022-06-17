@@ -38,7 +38,7 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-#define MAX_HIT_COOLDOWN 48
+#define MAX_HIT_COOLDOWN 64
 #define MAX_DIAG_COOLDOWN 60
 
 //const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
@@ -339,7 +339,7 @@ void UPDATE() {
 				Jump();
 			}else{
 				//MoveArcher();
-				if (hit_cooldown <= 0){
+				if (hit_cooldown < 1){
 					jump_power = 0;
 					archer_accel_y += 10;
 					MoveArcher();
@@ -596,6 +596,12 @@ void UPDATE() {
 							platform_vx = dataenemy->vx;
 						}
 						Hit(enemydamage);
+					}else{
+						if(THIS->mirror != V_MIRROR){
+							SpriteManagerAdd(SpritePuff, THIS->x + 16, ispr->y + 10);
+						}else{
+							SpriteManagerAdd(SpritePuff, THIS->x, ispr->y + 10);
+						}
 					}
 				break;
 				case SpriteHurricane:
@@ -814,7 +820,8 @@ void CheckCollisionTile() {
 }
 
 void Hit(INT8 damage) {
-	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){
+	if (archer_state != STATE_DEAD && archer_state != STATE_HIT && archer_state != STATE_JUMPING){
+		//hit_cooldown > (MAX_HIT_COOLDOWN >> 1)
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
 		if (archer_data->hp <= 0){

@@ -69,6 +69,7 @@ extern Sprite* scrigno_coin;
 extern Sprite* scrigno_dcoin;
 extern Sprite* scrigno_shield;
 extern Sprite* scrigno_up;
+extern Sprite* archer_player;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -77,6 +78,10 @@ extern INT8 spawning_counter;
 extern UINT8 updatecounter;
 extern INT8 update_hud;
 extern INT8 fx_cooldown;
+extern UINT16 apx;
+extern UINT16 apy;
+extern UINT16 apx_mirrored;
+extern INT8 platform_vx;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -104,7 +109,7 @@ void START() {
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
-	
+	/*
 	switch(current_level){
 		case 0u:
 		case 1u:
@@ -115,7 +120,7 @@ void START() {
 		case 6u:
 			SetState(StateGame6);
 		break;
-	}
+	}*/
 
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -126,6 +131,7 @@ void START() {
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
+	SpriteManagerLoad(SpriteCamerafocus);
 
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
@@ -199,7 +205,8 @@ void START() {
 	else{
 		ResumeMusic;
 	}
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x , archer_player->y);
 	InitScroll((UINT8) map45banks[current_map], maps45[current_map], collision_tiles3, 0);
 	SHOW_BKG;
 	
@@ -242,10 +249,16 @@ void START() {
 		}
 	}	
 	
+	//INIT ENEMIES	
+	enemies_0 = 0;
+	enemies_1 = 0;
+	enemies_2 = 0;
+	enemies_3 = 0;
+
 	if(load_next_s == -1){
 		load_next_s = 0;
 	}else if (load_next_d == 0){//copiato dallo SpritePlayer quando chiedo il tip
-		diag_found = Build_Next_Dialog_Banked(scroll_target);
+		diag_found = Build_Next_Dialog_Banked(archer_player);
 		if(diag_found){
 			//archer_state = STATE_DIAG;
 			//show_diag = 1;	
@@ -323,10 +336,39 @@ void spawn_item3(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, IN
 
 void UPDATE() {
 	
+	//camerafocus shifting management
+	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
+		if(archer_player->x < 32u){
+			scroll_target->x = 32u;
+		}else{
+			apx = archer_player->x + 24;
+			apy = archer_player->y - 8;
+			apx_mirrored = archer_player->x - 24;
+			scroll_target->y = apy;
+			INT8 dx = platform_vx;
+			if(archer_player->mirror == V_MIRROR){
+				if(scroll_target->x > apx_mirrored){
+					dx -= 1;
+				}
+				if(scroll_target->x < apx_mirrored){
+					dx += 1;
+				}
+			}else{
+				if(scroll_target->x < apx){
+					dx += 1;
+				}
+				if(scroll_target->x > apx){
+					dx -= 1;
+				}
+			}
+			scroll_target->x += dx;
+		}
+	}
+
 	if(load_next_d){
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
-				diag_found = Build_Next_Dialog_Banked(scroll_target);
+				diag_found = Build_Next_Dialog_Banked(archer_player);
 				PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);
@@ -432,20 +474,20 @@ void UPDATE() {
 					}
 				break;
 				case 1u:
-					if(scroll_target->mirror != V_MIRROR && archer_state != STATE_HIT){
+					if(archer_player->mirror != V_MIRROR && archer_state != STATE_HIT){
 						switch(thunder_delay){
-							case 40u:
-								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) + 2u, 4u);
-							break;
 							case 80u:
+								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) + 3u, 4u);
+							break;
+							case 100u:
 								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) - 2u, 4u);
 							break;
-							case 120u:
-								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) + 1u, 4u);
+							case 170u:
+								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) , 4u);
 							break;
 							case 0u:
 								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) + 5u, 4u);
-								thunder_delay = 160u;
+								thunder_delay = 200u;
 							break;
 							default:
 								if (scroll_target->x == (UINT16) 30u << 3){

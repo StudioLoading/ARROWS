@@ -67,6 +67,7 @@ extern Sprite* scrigno_coin;
 extern Sprite* scrigno_dcoin;
 extern Sprite* scrigno_shield;
 extern Sprite* scrigno_up;
+extern Sprite* archer_player;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -77,6 +78,10 @@ extern INT8 platform_vx;
 extern INT8 update_hud;
 extern INT8 fx_cooldown;
 extern UINT8 thunder_delay;
+extern UINT16 apx;
+extern UINT16 apy;
+extern UINT16 apx_mirrored;
+extern INT8 platform_vx;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -109,18 +114,6 @@ void START() {
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
 	
-	switch(current_level){
-		case 0u:
-		case 1u:
-		case 2u:
-			SetState(StateGame);
-		break;
-		case 3u:
-		case 4u:
-			SetState(StateGame3);
-		break;
-	}
-
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
@@ -130,6 +123,7 @@ void START() {
 	SpriteManagerLoad(SpriteArrow);
 	SpriteManagerLoad(SpritePlatform);
 	SpriteManagerLoad(SpriteItem);
+	SpriteManagerLoad(SpriteCamerafocus);
 
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
@@ -203,7 +197,8 @@ void START() {
 	else{
 		ResumeMusic;
 	}
-	scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x , archer_player->y);
 	InitScroll((UINT8) map67banks[current_map], maps67[current_map], collision_tiles6, 0);
 	SHOW_BKG;
 
@@ -255,6 +250,35 @@ void START() {
 }
 
 void UPDATE() {
+	//camerafocus shifting management
+	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
+		if(archer_player->x < 32u){
+			scroll_target->x = 32u;
+		}else{
+			apx = archer_player->x + 24;
+			apy = archer_player->y - 8;
+			apx_mirrored = archer_player->x - 24;
+			scroll_target->y = apy;
+			INT8 dx = platform_vx;
+			if(archer_player->mirror == V_MIRROR){
+				if(scroll_target->x > apx_mirrored){
+					dx -= 1;
+				}
+				if(scroll_target->x < apx_mirrored){
+					dx += 1;
+				}
+			}else{
+				if(scroll_target->x < apx){
+					dx += 1;
+				}
+				if(scroll_target->x > apx){
+					dx -= 1;
+				}
+			}
+			scroll_target->x += dx;
+		}
+	}
+	
 	thunder_delay -= 1u;
 	
 	if(load_next_d){
