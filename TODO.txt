@@ -10,13 +10,6 @@ KNOWN ISSUE:
 	ma in base al livello. Forse chissene, ma è da tenere come known issue.
 
 TODO:
-- completare l' upgrade ZGB v2021.3
-	cematery
-- menu di pausa ? 
-- piume che cadono quando colpisco l aquila
-- fare tombe visitabili
-- dare un animale alla mamma che aspetta, così alla cutscene va incontro al protagonista. 
-	che si chiami e che abbia la foto di uno che paga su KS per avere il suo cane magari morto!!
 - finire cutscene fine liv CIMITERO
 - livello castello come da design sopra
 - final boss

@@ -165,9 +165,12 @@ void UPDATE() {
 		break;
 	}
 	
-	if(KEY_TICKED(J_START) && is_on_boss < 0 && is_on_secret == -1){
-		//se sono sullo stato del boss non fare un bel niente !!!!!!
-		//non si mette in pausa al mostro!
+	if(KEY_TICKED(J_START) && KEY_PRESSED(J_DOWN)){
+		SetState(StateGame);
+		return;
+	}
+
+	if(KEY_TICKED(J_START) && is_on_boss < 0 && is_on_secret == -1 && archer_state == STATE_NORMAL){
 		if(paused == 0u){
 			paused = 1u;
 			diag_found = Build_Next_Dialog_Banked(THIS);// expected 98
@@ -175,7 +178,6 @@ void UPDATE() {
 			SetSpriteAnim(THIS, anim_idle, 12u);
 			show_diag = 1;
 		}	
-		//SetState(StateGame);
 		return;
 	}
 	
@@ -362,10 +364,6 @@ void UPDATE() {
 		if(KEY_TICKED(J_UP)){
 			CheckCollisionTileDoor();
 		}
-		/*if(tile_collision == 0 && delta_time != 0 && archer_accel_y < 24) { //Do another iteration if there is no collision
-			archer_accel_y += 1;
-			tile_collision = TranslateSprite(THIS, 0, archer_accel_y >> 4);
-		}*/
 		if(tile_collision) {
 			if(archer_state == STATE_JUMPING && archer_accel_y > 0) {
 				archer_state = STATE_NORMAL;
@@ -456,7 +454,6 @@ void UPDATE() {
 					}
 				break;
 				case SpriteKey:
-					//archer_tool = 0;
 					itemdata = (struct ItemInfo*)ispr->custom_data;
 					switch(itemdata->type){
 						case 1: //key				
@@ -498,8 +495,6 @@ void UPDATE() {
 					platform_vx = platformdata->vx;
 					platform_vy = platformdata->vy;
 				break;				
-				/* || ispr->type == SpritePorcupine  
-					|| ispr->type == */
 				case SpriteEnemy:
 				case SpriteScorpion:
 				case SpriteSpider:
@@ -650,7 +645,6 @@ void Shoot() {
 	SetSpriteAnim(THIS, anim_shoot, 12u);
 	Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
 	fx_cooldown = 20;
-	//PlayFx(CHANNEL_4, 20, 0x0C, 0xB1, 0x00, 0xC0);
 	PlayFx(CHANNEL_1, 20, 0x7D, 0x40, 0xF2, 0x20, 0x70);
 	arrow_sprite->mirror = THIS->mirror;//flags
 	arrow_sprite->x = THIS->x;
@@ -718,9 +712,7 @@ void MoveArcher() {
 }
 
 void CheckCollisionTileDoor(){
-	//UINT8 getScrolledTile = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
 	tile_collision = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
-	//switch(getScrolledTile){//tile_collision
 	switch(tile_collision){//tile_collision
 		case 7u: //fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
@@ -821,11 +813,9 @@ void CheckCollisionTile() {
 
 void Hit(INT8 damage) {
 	if (archer_state != STATE_DEAD && archer_state != STATE_HIT && archer_state != STATE_JUMPING){
-		//hit_cooldown > (MAX_HIT_COOLDOWN >> 1)
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
 		if (archer_data->hp <= 0){
-			//archer_data->hp = 0;
 			update_hud = 1;
 			Die();
 			return;
@@ -833,10 +823,6 @@ void Hit(INT8 damage) {
 		fx_cooldown = 30;
 		PlayFx(CHANNEL_1, 30, 0x4c, 0x81, 0x43, 0x73, 0x86);
 		update_hud = 1;
-		/*platform_vx = 1;
-		if (THIS->mirror == V_MIRROR){
-			platform_vx = -1;
-		}*/
 		TranslateSprite(THIS, 0, -2 << delta_time);
 		SetSpriteAnim(THIS, anim_hit, 24u);
 	}

@@ -64,6 +64,8 @@ IMPORT_MAP(diagamuletthunder);
 IMPORT_MAP(diagamuletice);
 IMPORT_MAP(diagamuletfire);
 
+IMPORT_MAP(mapdiagtomb);
+
 
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
@@ -253,6 +255,12 @@ void START() {
 				set_sgb_palette01_CEMATERYCRYPT();
 			}
 			InitScroll(BANK(mapdiagmother), &mapdiagmother, collision_dtiles, 0);
+		break;
+		case 88u:
+			if(sgb_check()){
+				set_sgb_palette01_CEMATERYCRYPT();
+			}
+			InitScroll(BANK(mapdiagtomb), &mapdiagtomb, collision_dtiles, 0);
 		break;
 	}
 	SHOW_BKG;

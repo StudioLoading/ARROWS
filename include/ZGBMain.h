@@ -45,6 +45,7 @@ _SPRITE_DMG(SpriteAmulet, amuleto)\
 _SPRITE_DMG(SpriteWolf, wolf)\
 _SPRITE_DMG(SpriteAlligator, alligator)\
 _SPRITE_DMG(SpriteEagle, eagle)\
+_SPRITE_DMG(SpriteFeather, feather)\
 _SPRITE_DMG(SpriteThunder, thunder)\
 _SPRITE_DMG(SpriteHurricane, hurricane)\
 _SPRITE_DMG(SpriteIbex, ibex)\

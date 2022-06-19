@@ -23,12 +23,6 @@ extern void CheckCollisionETile();
 extern void ETurn();
 
 void START() {
-	/*
-	THIS->mt_sprite->dx = 4;
-	THIS->mt_sprite->dy = 4;
-	THIS->coll_w = 22;
-	THIS->coll_h = 22;
-	*/
 	THIS->lim_x = 255u;
 	THIS->lim_y = 255u;
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;	
@@ -145,12 +139,11 @@ void UPDATE() {
 					data->enemy_state = ENEMY_STATE_HIT;
 					data->wait = 32u;
 					SetSpriteAnim(THIS, eagle_hit, 24u);
+					SpriteManagerAdd(SpriteFeather, (UINT16) ibispr->x, (UINT16) ibispr->y);
 					data->hp -= arrowbidata->original_type;
 					if (data->hp <= 0){
 						data->enemy_state = ENEMY_STATE_DEAD;
 						data->hp = 0;
-						THIS->mt_sprite->dx=0;
-						THIS->mt_sprite->dy=0;
 						THIS->x = (UINT16) 23u << 3;
 						THIS->y = (UINT16) 13u << 3;
 						data->vx=0;

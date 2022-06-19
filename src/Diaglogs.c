@@ -137,6 +137,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		57 	Boss
 		58	Boss 2
 		60	Mother
+		88  Cat Tomb
 		98  Paused
 		99 	Suggestion
 	
@@ -641,11 +642,19 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						}
 					break;
 					case 1u:
-						memcpy(d1, "  THE CASTLE IS AT  ", 20);
-						memcpy(d2, "  THE END OF THIS   ", 20);
-						memcpy(d3, "  CEMATERY.         ", 20);
-						memcpy(d4, "                    ", 20);
-						diagf = 99u;	
+						if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 88u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 88u){
+							memcpy(d1, "                    ", 20);
+							memcpy(d2, " THIS IS THE NICEST ", 20);
+							memcpy(d3, " CAT I'VE EVER SEEN.", 20);
+							memcpy(d4, "                    ", 20);
+							diagf = 88u;
+						}else{
+							memcpy(d1, "  THE CASTLE IS AT  ", 20);
+							memcpy(d2, "  THE END OF THIS   ", 20);
+							memcpy(d3, "  CEMATERY.         ", 20);
+							memcpy(d4, "                    ", 20);
+							diagf = 99u;	
+						}
 					break;
 					case 2u:
 						switch (colliding_mother){

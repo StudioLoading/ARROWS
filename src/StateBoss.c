@@ -134,6 +134,7 @@ void START(){
 		case 2u:
 			level_tool=6;
 			SpriteManagerLoad(SpriteEagle);
+			SpriteManagerLoad(SpriteFeather);
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_FOREST();

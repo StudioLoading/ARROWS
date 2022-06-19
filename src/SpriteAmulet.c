@@ -4,7 +4,9 @@
 #include "Sprite.h"
 #include "SpriteManager.h"
 #include "custom_datas.h"
+#include "Music.h"
 
+DECLARE_MUSIC(bgm_amulet);
 
 const UINT8 amulet_closed[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 amulet_water[] = {2, 2, 1}; //The first number indicates the number of frames
@@ -17,6 +19,9 @@ const UINT8 amulet_fire[] = {2, 2, 4};
 const UINT8 amulet_fire_const[] = {1, 4};
 
 struct AmuletInfo* data_amulet;
+
+UINT8 amulet_scroll_tile;
+Sprite* aispr;
 
 void START() {
 	data_amulet = (struct AmuletInfo*)THIS->custom_data;
@@ -47,6 +52,7 @@ void UPDATE() {
 		data_amulet->setup = 1u;
 	}
 	if(data_amulet->picked == 1){
+		play_picked_music();
 		switch(data_amulet->type){
 			case 1:
 				SetSpriteAnim(THIS, amulet_earth_const, 4u);
@@ -63,6 +69,11 @@ void UPDATE() {
 		}
 		data_amulet->picked = 2;
 	}
+
+}
+
+void play_picked_music(){
+	PlayMusic(bgm_amulet, 1);
 }
 
 void DESTROY() {
