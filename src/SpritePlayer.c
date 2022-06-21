@@ -40,6 +40,8 @@ extern const UINT8 EMPTY_TILE;
 
 #define MAX_HIT_COOLDOWN 64
 #define MAX_DIAG_COOLDOWN 60
+#define MAX_LANDING_TIME 24
+#define MAX_ACCEL_Y_TO_LAND_ANIMATION 36
 
 //const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_idle[] = {4, 12, 13, 14, 13};
@@ -71,6 +73,7 @@ extern ARCHER_STATE archer_state;
 extern INT8 fx_cooldown;
 extern UINT8 quiver; //little endian, rightest are the less important
 INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
+INT8 landing_time = MAX_LANDING_TIME;
 
 UINT8 scroll_tile;
 Sprite* ispr;
@@ -118,7 +121,7 @@ void START() {
 	update_hud = 1;
 
 	archer_state = STATE_NORMAL;
-	
+	landing_time = MAX_LANDING_TIME;
 }
 
 void UPDATE() {
@@ -140,10 +143,12 @@ void UPDATE() {
 		case STATE_DIAG:
 			if(diag_cooldown == 0){
 				if (show_diag == -1){ //NON TOCCARE
+					ResumeMusic;
 					show_diag = 0;
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					archer_state = STATE_NORMAL;
 				}else if(paused && KEY_TICKED(J_START)){
+					ResumeMusic;
 					set_sgb_palette_statusbar();
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					show_diag += 1;
@@ -152,6 +157,7 @@ void UPDATE() {
 				} 
 				else if(!paused){				
 					if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
+						ResumeMusic;	
 						set_sgb_palette_statusbar();
 						diag_cooldown = MAX_DIAG_COOLDOWN;
 						show_diag += 1;
@@ -248,12 +254,22 @@ void UPDATE() {
 			if(shoot_cooldown) {
 				SetSpriteAnim(THIS, anim_shoot, 12u);
 			} else if(!KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT)) {
-					SetSpriteAnim(THIS, anim_walk, 16u);
-				}else{
-					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
-					else{SetSpriteAnim(THIS, anim_idle, 12u);}					
-				}
+				//else{
+					if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT)) {
+						landing_time = MAX_LANDING_TIME;
+						SetSpriteAnim(THIS, anim_walk, 16u);
+					}else{
+						if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
+						else{
+							if(landing_time < MAX_LANDING_TIME){
+								SetSpriteAnim(THIS, anim_shield, 16u);
+								landing_time++;
+							}else{
+								SetSpriteAnim(THIS, anim_idle, 12u);
+							}
+						}					
+					}
+				//}
 			}
 			if (KEY_PRESSED(J_DOWN)){
 				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
@@ -262,23 +278,10 @@ void UPDATE() {
 					return;
 				}else if (!KEY_PRESSED(J_RIGHT) && !KEY_PRESSED(J_LEFT)){
 					SetSpriteAnim(THIS, anim_shield, 8u);
-					if (archer_state == STATE_NORMAL_PLATFORM){
-						//THIS->coll_x = 3;
-						//THIS->mt_sprite->dy = 9;
-						//THIS->coll_w = 10;
-						//THIS->coll_h = 6;	
-					}
 				}
-			}else if (THIS->mt_sprite->dx != 5){
-				//THIS->mt_sprite->dx = 5;
-				//if (archer_state == STATE_NORMAL_PLATFORM){
-					//THIS->coll_h = 12;
-					//THIS->mt_sprite->dy = 3;
-					//THIS->coll_w = 6;
-				//}
 			}
 			//Jump
-			if(KEY_TICKED(J_A)){
+			if(KEY_TICKED(J_A) && landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
 				PlayFx(CHANNEL_1, 30, 0x27, 0x40, 0x43, 0x68, 0x86);
 				Jump();
@@ -367,6 +370,9 @@ void UPDATE() {
 		if(tile_collision) {
 			if(archer_state == STATE_JUMPING && archer_accel_y > 0) {
 				archer_state = STATE_NORMAL;
+				if(archer_accel_y > MAX_ACCEL_Y_TO_LAND_ANIMATION){
+					landing_time = 0;
+				}
 			}
 			archer_accel_y = 0;	
 			CheckCollisionTile();
@@ -431,7 +437,7 @@ void UPDATE() {
 							case 2u: //hp
 								archer_data->hp = MAX_HP;
 								fx_cooldown = 30;
-								PlayFx(CHANNEL_1, 30, 0x54, 0x80, 0x74, 0x83, 0x86);
+								PlayFx(CHANNEL_1, 30, 0x36, 0x81, 0xc2, 0xa5, 0x86);
 								SpriteManagerRemoveSprite(ispr);
 							break;
 							case 3u: //up
@@ -592,10 +598,11 @@ void UPDATE() {
 						}
 						Hit(enemydamage);
 					}else{
+						PlayFx(CHANNEL_1, 30, 0x2c, 0x81, 0x43, 0x73, 0x86);	
 						if(THIS->mirror != V_MIRROR){
-							SpriteManagerAdd(SpritePuff, THIS->x + 16, ispr->y + 10);
+							SpriteManagerAdd(SpritePuff, THIS->x + 8, ispr->y -2u);
 						}else{
-							SpriteManagerAdd(SpritePuff, THIS->x, ispr->y + 10);
+							SpriteManagerAdd(SpritePuff, THIS->x - 8, ispr->y -2u);
 						}
 					}
 				break;
@@ -689,30 +696,33 @@ void MoveArcher() {
 	if(platform_vx || platform_vy){
 		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
 	}
-	if(KEY_PRESSED(J_LEFT)) {
-		if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
-			
-		}else{
-			if (THIS->mirror == V_MIRROR){
-				tile_collision = TranslateSprite(THIS, -1 << delta_time, 0);
+	if(landing_time == MAX_LANDING_TIME){
+		if(KEY_PRESSED(J_LEFT)) {
+			if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
+				
+			}else{
+				if (THIS->mirror == V_MIRROR){
+					tile_collision = TranslateSprite(THIS, -1 << delta_time, 0);
+				}
 			}
+			THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 		}
-		THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
-	}
-	else if(KEY_PRESSED(J_RIGHT)) {
-		if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
-			
-		}else{
-			if(THIS->mirror != V_MIRROR){
-				tile_collision = TranslateSprite(THIS, 1 << delta_time, 0);
+		else if(KEY_PRESSED(J_RIGHT)) {
+			if(KEY_PRESSED(J_DOWN) && archer_state != STATE_JUMPING){
+				
+			}else{
+				if(THIS->mirror != V_MIRROR){
+					tile_collision = TranslateSprite(THIS, 1 << delta_time, 0);
+				}
 			}
+			THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 		}
-		THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 	}
 }
 
 void CheckCollisionTileDoor(){
 	tile_collision = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
+	PauseMusic;
 	switch(tile_collision){//tile_collision
 		case 7u: //fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
@@ -799,11 +809,13 @@ void CheckCollisionTile() {
 			break;
 			case 111u:
 				if(platform_vx != 2){
+					landing_time = MAX_LANDING_TIME;
 					platform_vx = 2;
 				}
 			break;
 			case 119u:
 				if(platform_vx != -2){
+					landing_time = MAX_LANDING_TIME;
 					platform_vx = -2;
 				}
 			break;
@@ -812,6 +824,7 @@ void CheckCollisionTile() {
 }
 
 void Hit(INT8 damage) {
+	landing_time = MAX_LANDING_TIME;
 	if (archer_state != STATE_DEAD && archer_state != STATE_HIT && archer_state != STATE_JUMPING){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
@@ -831,9 +844,13 @@ void Hit(INT8 damage) {
 void Build_Next_Dialog() BANKED{
 	diag_found = Build_Next_Dialog_Banked(THIS);
 	if(diag_found){
-		if(diag_found < 98u){ 
+		if(diag_found < 89u){ 
 			// 99u means no state changing, just simple diag message to show from StateGame			
 			// 98u means paused
+			// 90u suggestion with error sound
+			if(diag_found == 90u){
+				PlayFx(CHANNEL_1, 30, 0x3a, 0xc3, 0xe0, 0xa7, 0xc5);
+			}
 			drop_player_x = THIS->x >> 3;
 			drop_player_y = THIS->y >> 3;
 			load_next_d = 1;

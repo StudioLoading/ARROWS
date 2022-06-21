@@ -4,6 +4,7 @@
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "Sound.h"
 #include "custom_datas.h"
 
 extern INT8 platform_vx;
@@ -33,10 +34,11 @@ void START() {
 	THIS->lim_x = 60u;
 	THIS->lim_y = 60u;
 	
-	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
-	data->type = 0;
-	data->original_type = 0;
-	data->arrowdir = -1;
+	struct ArrowInfo* arrow_data = (struct ArrowInfo*)THIS->custom_data;
+	arrow_data->type = 0;
+	arrow_data->original_type = 0;
+	arrow_data->arrowdir = -1;
+	arrow_data->play_sound = 0;
 }
 
 void UPDATE() {
@@ -89,118 +91,118 @@ void UPDATE() {
 }
 
 void SetupArrow(){
-	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+	struct ArrowInfo* arrow_data = (struct ArrowInfo*)THIS->custom_data;
 	switch(internal_t) {
 		case 1: //NORMAL
-			data->arrowdamage = 8u;
-			switch(data->arrowdir){
+			arrow_data->arrowdamage = 8u;
+			switch(arrow_data->arrowdir){
 				case 1: //orizzontale
-					data->vy = 0;
-					data->vx = 2;
+					arrow_data->vy = 0;
+					arrow_data->vx = 2;
 					SetSpriteAnim(THIS, arrow_normal, 18u);
 				break;
 				case 3: //verticale in su
-					data->vy = -1;
-					data->vx = 0;
+					arrow_data->vy = -1;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_normal_v, 18u);	
 				break;
 				case 4: //verticale in giu
-					data->vy = 2;
-					data->vx = 0;
+					arrow_data->vy = 2;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_normal_g, 18u);	
 				break;
 			}
-			data->type = 0;
+			arrow_data->type = 0;
 		break;
 		case 2: //STONE
-			data->arrowdamage = 16u;
-			switch(data->arrowdir){
+			arrow_data->arrowdamage = 16u;
+			switch(arrow_data->arrowdir){
 				case 1:
-					data->vy = 0;
-					data->vx = 1;
+					arrow_data->vy = 0;
+					arrow_data->vx = 1;
 					SetSpriteAnim(THIS, arrow_stone, 18u);	
 				break;
 				case 3:
-					data->vy = -1;
-					data->vx = 0;
+					arrow_data->vy = -1;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_stone_v, 18u);	
 				break;
 				case 4:
-					data->vy = 2;
-					data->vx = 0;
+					arrow_data->vy = 2;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_stone_g, 18u);
 				break;
 			}						
-			data->type = 0;
+			arrow_data->type = 0;
 		break;
 		case 3: // BLAST
-			data->arrowdamage =20u;
-			switch(data->arrowdir){
+			arrow_data->arrowdamage =20u;
+			switch(arrow_data->arrowdir){
 				case 1:
-					data->vy = 0;
-					data->vx = 3;
+					arrow_data->vy = 0;
+					arrow_data->vx = 3;
 					SetSpriteAnim(THIS, arrow_blast, 18u);	
 				break;
 				case 3:
-					data->vy = -3;
-					data->vx = 0;
+					arrow_data->vy = -3;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_blast_v, 18u);	
 				break;
 				case 4:
-					data->vy = 3;
-					data->vx = 0;
+					arrow_data->vy = 3;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_blast_g, 18u);	
 				break;
-			}						
-			data->type = 0;
+			}
+			arrow_data->type = 0;
 		break;
 		case 4:// ICE
-			data->arrowdamage = 10u;
-			switch(data->arrowdir){
+			arrow_data->arrowdamage = 10u;
+			switch(arrow_data->arrowdir){
 				case 1:
-					data->vy = 0;
-					data->vx = 2;
+					arrow_data->vy = 0;
+					arrow_data->vx = 2;
 					SetSpriteAnim(THIS, arrow_water, 18u);	
 				break;
 				case 3:
-					data->vy = -2;
-					data->vx = 0;
+					arrow_data->vy = -2;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_water_v, 18u);	
 				break;
 				case 4:
-					data->vy = 2;
-					data->vx = 0;
+					arrow_data->vy = 2;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_water_g, 18u);	
 				break;
 			}						
-			data->type = 0;
+			arrow_data->type = 0;
 		break;
 		case 5: //FIRE
-			data->arrowdamage = 30u;
-			switch(data->arrowdir){
+			arrow_data->arrowdamage = 30u;
+			switch(arrow_data->arrowdir){
 				case 1:
-					data->vy = 0;
-					data->vx = 2;
+					arrow_data->vy = 0;
+					arrow_data->vx = 2;
 					SetSpriteAnim(THIS, arrow_fire, 18u);	
 				break;
 				case 3:
-					data->vy = -2;
-					data->vx = 0;
+					arrow_data->vy = -2;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_fire_v, 18u);	
 				break;
 				case 4:
-					data->vy = 2;
-					data->vx = 0;
+					arrow_data->vy = 2;
+					arrow_data->vx = 0;
 					SetSpriteAnim(THIS, arrow_fire_g, 18u);	
 				break;
 			}						
-			data->type = 0;
+			arrow_data->type = 0;
 		break;
 		case 6:
-			switch(data->arrowdir){
+			switch(arrow_data->arrowdir){
 				case 1:
-					data->vy = 0;
-					data->vx = 2;
+					arrow_data->vy = 0;
+					arrow_data->vx = 2;
 					SetSpriteAnim(THIS, spine, 18u);	
 				break;
 			}
@@ -210,18 +212,19 @@ void SetupArrow(){
 	//RELATIVE MOVEMENT ON X AXIS!
 	if(platform_vx){
 		if(platform_vx > 0 && THIS->mirror != V_MIRROR){
-			data->vx += platform_vx;
+			arrow_data->vx += platform_vx;
 		}else if (platform_vx < 0 && THIS->mirror == V_MIRROR){
-			data->vx -= platform_vx;
+			arrow_data->vx -= platform_vx;
 		}		
 	}
 }
 
-void CheckCollisionArrowTile(UINT8 ta) {	
-	struct ArrowInfo* data = (struct ArrowInfo*)THIS->custom_data;
+void CheckCollisionArrowTile(UINT8 ta) {
+	struct ArrowInfo* arrow_data = (struct ArrowInfo*)THIS->custom_data;
+	arrow_data->play_sound = 1;
 	switch(ta) {
 		case 11u: //da DX a GIU
-			data->arrowdir = 4;
+			arrow_data->arrowdir = 4;
 			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 2;
 			}else{
@@ -230,7 +233,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 			THIS->y += 4;
 		break;
 		case 13u: // da DX a SU
-			data->arrowdir = 3;
+			arrow_data->arrowdir = 3;
 			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
 			}else{
@@ -239,46 +242,50 @@ void CheckCollisionArrowTile(UINT8 ta) {
 		break;
 		case 16u://da GIU a DX
 			THIS->mirror = NO_MIRROR; //SPRITE_UNSET_VMIRROR(THIS);
-			data->arrowdir = 1;
+			arrow_data->arrowdir = 1;
 			THIS->x += 4;
 			THIS->y -= 4;
 		break;
 		case 17u: //da GIU a SX
 			THIS->mirror = V_MIRROR; //SPRITE_SET_VMIRROR(THIS);
-			data->arrowdir = 1;
+			arrow_data->arrowdir = 1;
 			THIS->x -= 4;
 			THIS->y -= 4;
 		break;
 		case 89u: //STONE generator da DX a GIU
-			data->arrowdir = 4;
+			arrow_data->arrowdir = 4;
 			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
 			}else{
 				THIS->x += 4;
 			}			
 			THIS->y += 4;
-			data->original_type = 2; //questo dovrebbe triggerare il Setup al prossimo frame
+			arrow_data->original_type = 2; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		case 90u: //thunder generator da DX a GIU
-			data->arrowdir = 4;
+			arrow_data->arrowdir = 4;
 			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
 			}else{
 				THIS->x += 4;
 			}		
 			THIS->y += 4;
-			data->original_type = 3; //questo dovrebbe triggerare il Setup al prossimo frame
+			arrow_data->original_type = 3; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		case 200u://numero per indicare la goccia che cade da stalattite
-			data->original_type = 4; //questo dovrebbe triggerare il Setup al prossimo frame
+			arrow_data->original_type = 4; //questo dovrebbe triggerare il Setup al prossimo frame
 		break;
 		default:
-			data->arrowdamage = 100;
+			arrow_data->arrowdamage = 100;
+			arrow_data->play_sound = 0;
 			SpriteManagerRemove(THIS_IDX);
 			return;
 		break;
 	}
-	data->type = data->original_type;
+	arrow_data->type = arrow_data->original_type;
+	if(arrow_data->play_sound == 1){
+		PlayFx(CHANNEL_1, 30, 0x2e, 0x81, 0xc2, 0x73, 0x86);
+	}
 }
 
 void DESTROY() {

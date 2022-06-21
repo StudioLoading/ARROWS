@@ -442,9 +442,9 @@ void UPDATE() {
 			switch(current_map){
 				case 0u:
 					if (scroll_target->x > (UINT16) 93u << 3 && scroll_target->x < (UINT16) 143u << 3 ){
-						if (scroll_target->x == (UINT16) 120u << 3){
-							scroll_target->x++;
+						if (scroll_target->x == (UINT16) 120u << 3 && spawning_counter == 0){
 							spawn_item3(scrigno_shield, 133u, 9u, 2, 1);
+							spawning_counter = 1;
 						}
 						switch(thunder_delay){
 							case 60u:
@@ -463,14 +463,16 @@ void UPDATE() {
 						}
 						thunder_delay -= 1u;
 					}
-					if (scroll_target->x == (UINT16) 135u << 3){						
-						scroll_target->x++;
+					if (scroll_target->x == (UINT16) 135u << 3 && spawning_counter == 1){						
 						Sprite* gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 152u << 3, (UINT16) 10u << 3);
 						struct EnemyInfo* gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 						gatedata->vx = 3;						
 						Sprite* gate_sprite2 = SpriteManagerAdd(SpriteGate, (UINT16) 151u << 3, (UINT16) 10u << 3);
 						struct EnemyInfo* gatedata2 = (struct EnemyInfo*)gate_sprite2->custom_data;
-						gatedata2->vx = 3;
+						gatedata2->vx = 3;					
+						Sprite* gate_sprite3 = SpriteManagerAdd(SpriteGate, (UINT16) 150u << 3, (UINT16) 10u << 3);
+						struct EnemyInfo* gatedata3 = (struct EnemyInfo*)gate_sprite3->custom_data;
+						gatedata3->vx = 3;
 					}
 				break;
 				case 1u:
@@ -490,17 +492,17 @@ void UPDATE() {
 								thunder_delay = 200u;
 							break;
 							default:
-								if (scroll_target->x == (UINT16) 30u << 3){
-									scroll_target->x++;
+								if (scroll_target->x == (UINT16) 30u << 3 && spawning_counter ==0){
 									spawn_item3(scrigno_shield, 39u, 4u, 2, 1);
+									spawning_counter = 1;
 								}
-								if(scroll_target->x == (UINT16) 140u << 3){
-									scroll_target->x++;
-									spawn_item3(scrigno_shield, 156u, 5u, 2, 1);							
+								if(scroll_target->x == (UINT16) 140u << 3 && spawning_counter == 1){
+									spawn_item3(scrigno_shield, 156u, 5u, 2, 1);
+									spawning_counter = 2;							
 								}					
-								if(scroll_target->x == (UINT16) 175u << 3){
-									scroll_target->x++;
+								if(scroll_target->x == (UINT16) 175u << 3 && spawning_counter == 2){
 									spawn_item3(scrigno_shield, 185u, 4u, 2, 1);
+									spawning_counter = 3;
 								}
 							break;
 						}

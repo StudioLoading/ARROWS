@@ -5,6 +5,7 @@
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "Sound.h"
 #include "custom_datas.h"
 
 
@@ -34,6 +35,8 @@ void UPDATE() {
 				struct EnemyInfo* gdata = (struct EnemyInfo*)THIS->custom_data;
 				if (arrowdata->original_type == gdata->vx){ // uso il campo vx dell' EnemyInfo per capire con che freccia è rompibile.
 					SpriteManagerRemoveSprite(THIS);
+				}else{
+					PlayFx(CHANNEL_1, 30, 0x57, 0x49, 0xf5, 0x9b, 0x57);
 				}
 			}
 		}

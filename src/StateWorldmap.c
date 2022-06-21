@@ -21,7 +21,7 @@ IMPORT_TILES(font);
 
 IMPORT_MAP(mapworld);
 
-DECLARE_MUSIC(loop0);
+DECLARE_MUSIC(bgm_worldmap);
 
 extern unsigned char d1[];
 extern unsigned char d2[];
@@ -113,7 +113,7 @@ void START() {
 	
 	on_worldmap = 1;
 
-	PlayMusic(loop0, 1);
+	PlayMusic(bgm_worldmap, 1);
 	
 }
 

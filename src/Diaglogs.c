@@ -121,7 +121,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		14	Stage Forest
 		15 	Stage Iced Cavern
 		16	Stage Castle
-		19	Door
+		19	Door - key ok
 		20	wrench
 		21	key
 		30 	amulet calice stone
@@ -138,6 +138,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		58	Boss 2
 		60	Mother
 		88  Cat Tomb
+		90  Suggestion with error
 		98  Paused
 		99 	Suggestion
 	
@@ -471,8 +472,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								memcpy(d2, "    BLACK WOLF. I   ", 20);
 								memcpy(d3, "    NEED A KEY TO   ", 20);
 								memcpy(d4, "   OPEN THIS DOOR.  ", 20);
-								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
-								diagf = 19u;
+								diagf = 90u;
 							}
 						}else{
 							if(GetScrollTile((archer->x >> 3) +1, (archer->y >> 3)) == 58u || GetScrollTile((archer->x >> 3), (archer->y >> 3)) == 58u){
@@ -538,7 +538,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								memcpy(d3, "OPEN THIS DOOR.     ", 20);
 								memcpy(d4, "                    ", 20);
 								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
-								diagf = 99u;
+								diagf = 90u;
 							}
 						}
 						if(diagf == 0u){

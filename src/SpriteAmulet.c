@@ -73,7 +73,9 @@ void UPDATE() {
 }
 
 void play_picked_music(){
-	PlayMusic(bgm_amulet, 1);
+	if(data_amulet->type != 4){
+		PlayMusic(bgm_amulet, 1);
+	}
 }
 
 void DESTROY() {

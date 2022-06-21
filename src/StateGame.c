@@ -30,7 +30,9 @@ IMPORT_MAP(map3tree);
 IMPORT_MAP(diagnew);
 IMPORT_MAP(window);
 
-DECLARE_MUSIC(bgm_level_emptych1);
+DECLARE_MUSIC(bgm_level_zoo);
+DECLARE_MUSIC(bgm_level_sewer);
+DECLARE_MUSIC(bgm_level_forest);
 
 extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
@@ -73,7 +75,7 @@ INT8 load_next_d = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
-UINT8 current_level = 6u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_level = 1u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
 UINT8 current_map = 1u; // 0u default
 UINT8 current_cutscene = 0u;
 
@@ -149,7 +151,7 @@ void START() {
 				set_sgb_palette01_ZOO();
 				set_sgb_palette_statusbar();
 			}
-			PlayMusic(bgm_level_emptych1, 1);
+			PlayMusic(bgm_level_zoo, 1);
 		break;
 		case 1u:
 			SpriteManagerLoad(SpriteKey);
@@ -161,7 +163,7 @@ void START() {
 				set_sgb_palette01_SEWER();
 				set_sgb_palette_statusbar();
 			}
-			PlayMusic(bgm_level_emptych1, 1);
+			PlayMusic(bgm_level_sewer, 1);
 		break;
 		case 2u:
 			SpriteManagerLoad(SpriteSpider);
@@ -170,7 +172,8 @@ void START() {
 			if(sgb_check()){
 				set_sgb_palette01_FOREST();
 				set_sgb_palette_statusbar();
-			}
+			}			
+			PlayMusic(bgm_level_forest, 1);
 		break;		
 	}
 	SHOW_SPRITES;

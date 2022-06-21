@@ -76,11 +76,11 @@ void UPDATE() {
 			if(KEY_TICKED(J_UP)){
 				StopMusic;
 				quiver = 0b0000011111;
-				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
-				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
-				PlayFx(CHANNEL_1, 60, 0x46, 0xC2, 0x43, 0x68, 0x86);
+				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
+				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
+				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
+				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
 				loading_code = 7;
-				PlayMusic(bgm_titlescreen, 1);
 			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}	

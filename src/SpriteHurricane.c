@@ -25,9 +25,9 @@ void START() {
 	struct EnemyInfo* hcdata = (struct EnemyInfo*)THIS->custom_data;
 	hcdata->enemy_state = ENEMY_STATE_WAIT;
 	hcdata->vx = 1;
-	hcdata->hp = 60u;
+	hcdata->hp = 48u;
 	hcdata->wait = 15u;
-	hcdata->enemy_accel_y = 28;
+	hcdata->enemy_accel_y = 24;
 }
 
 void UPDATE() {
