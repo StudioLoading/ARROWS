@@ -30,6 +30,8 @@ extern unsigned char d4[];
 extern UINT8 current_level;
 extern UINT8 diag_found;
 extern UINT8 on_worldmap;
+extern UINT8 quiver;
+extern INT8 visited;
 
 const UINT8 const collision_tiles_worldmap[] = {0, 0};
 
@@ -51,9 +53,6 @@ void START() {
 		set_sgb_palette01_worldmap();
 		//reset_sgb_palette_statusbar();
 	}
-	
-	
-	SPRITES_8x16;
 	
 	switch(current_level){
 		case 0u:
@@ -114,39 +113,40 @@ void START() {
 	on_worldmap = 1;
 
 	PlayMusic(bgm_worldmap, 1);
-	
+
+	visited = -1;
 }
 
 void UPDATE(){
 	counter++;
+	if(counter == 10u){	
+		if((quiver & 0b0000000010) == 0b0000000010){// ho stone calice
+			WorldmapQuiverStone();
+		}
+		if((quiver & 0b0000000100) == 0b0000000100){// ho thunder horn
+			WorldmapQuiverThunder();
+		}
+		if((quiver & 0b0000001000) == 0b0000001000){// ho ice kneckle
+			WorldmapQuiverIce();
+		}		
+	}
 	switch(current_level){ // spostamento orizzontale da un punto all' altro di 25u
-		//case 0u: ho appena iniziato , non faccio niente
 		case 1u:
 			if(counter > 80u && siconpsg->x < 32u && (counter & 1)){
 				siconpsg->x++;
 			}
 		break;
 		case 2u:
-			if (counter == 10u) {
-				WorldmapQuiverStone();
-			}
 			if(counter > 80u && siconpsg->x < 57u && (counter & 1)){
 				siconpsg->x++;
 			}
 		break;
 		case 3u:
-			if (counter == 10u) {
-				WorldmapQuiverStone();
-			}
 			if(counter > 80u && siconpsg->x < 82u && (counter & 1)){
 				siconpsg->x++;
 			}
 		break;
 		case 4u:
-			if (counter == 10u) {
-				WorldmapQuiverStone();
-				WorldmapQuiverThunder();
-			}
 			if(counter > 80u && siconpsg->x > 48u && (counter & 1)){
 				siconpsg->x-=2;
 			}
@@ -155,20 +155,11 @@ void UPDATE(){
 			}
 		break;
 		case 5u:
-			if (counter == 10u) {
-				WorldmapQuiverStone();
-				WorldmapQuiverThunder();
-			}
 			if(counter > 80u && siconpsg->x < 73u && (counter & 1)){
 				siconpsg->x++;
 			}
 		break;
 		case 6u:
-			if (counter == 10u) {
-				WorldmapQuiverStone();
-				WorldmapQuiverThunder();
-				WorldmapQuiverIce();
-			}
 			if(counter > 80u && siconpsg->x < 98u && (counter & 1)){
 				siconpsg->x++;
 			}

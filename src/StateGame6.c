@@ -26,6 +26,8 @@ IMPORT_MAP(mapcutscene0);
 IMPORT_MAP(diagnew6);
 IMPORT_MAP(window6);
 
+DECLARE_MUSIC(bgm_level_zoo);
+DECLARE_MUSIC(bgm_level_cematery);
 
 const UINT8 const collision_tiles6[] = {2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 61, 62, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
@@ -190,7 +192,14 @@ void START() {
 			map_w6, map_h6, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0 || load_next_gameover){
 		spawning_counter = 0;
-		//PlayMusic(bgm_level_emptych1, 1);
+		switch(current_level){
+			case 5u:
+				PlayMusic(bgm_level_zoo, 1);
+			break;
+			case 6u:
+				PlayMusic(bgm_level_cematery, 1);
+			break;
+		}		
 		ScrollFindTile((UINT8) map67banks[current_map], maps67[current_map], 9, 0, 0, 
 			map_w6, map_h6, &drop_player_x, &drop_player_y);		
 	}//else COME FROM THE DIALOG STATE, I ALREADY SAVED PLAYER COORDS IN drop_player_x/y

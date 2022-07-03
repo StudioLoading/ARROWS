@@ -63,27 +63,29 @@ void UPDATE() {
 	
 	UINT8 scroll_a_tile;
 	Sprite* iaspr;
+	struct EnemyInfo* stala_sprite;
+	struct ItemInfo* item_data;
 	SPRITEMANAGER_ITERATE(scroll_a_tile, iaspr) {
-		if(iaspr->type == SpriteItem) {
-			if(CheckCollision(THIS, iaspr)) {
-				struct ItemInfo* item_data = (struct ItemInfo*)iaspr->custom_data;
-				if (item_data->collided == 0u){
+		if(CheckCollision(THIS, iaspr)) {
+			switch(iaspr->type){
+				case SpriteItem:
+					item_data = (struct ItemInfo*)iaspr->custom_data;
+					if (item_data->collided == 0u){
+						SpriteManagerRemove(THIS_IDX);
+					}
+					item_data->collided = 1u;
+				break;
+				case SpriteStalagmite:
+					if(CheckCollision(THIS, iaspr)) {
+						stala_sprite = (struct EnemyInfo*)iaspr->custom_data;
+						if(stala_sprite->enemy_state == STALAG_STATE_DROP){
+							CheckCollisionArrowTile(200u);					
+						}
+					}
+				break;
+				case SpriteAxe:
 					SpriteManagerRemove(THIS_IDX);
-				}
-				item_data->collided = 1u;
-			}
-		}
-		if(iaspr->type == SpriteStalagmite){
-			if(CheckCollision(THIS, iaspr)) {
-				struct EnemyInfo* stala_sprite = (struct EnemyInfo*)iaspr->custom_data;
-				if(stala_sprite->enemy_state == STALAG_STATE_DROP){
-					CheckCollisionArrowTile(200u);					
-				}
-			}
-		}
-		if(iaspr->type == SpriteAxe) {
-			if(CheckCollision(THIS, iaspr)) {
-				SpriteManagerRemove(THIS_IDX);
+				break;
 			}
 		}
 	}

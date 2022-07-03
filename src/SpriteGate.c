@@ -36,7 +36,7 @@ void UPDATE() {
 				if (arrowdata->original_type == gdata->vx){ // uso il campo vx dell' EnemyInfo per capire con che freccia è rompibile.
 					SpriteManagerRemoveSprite(THIS);
 				}else{
-					PlayFx(CHANNEL_1, 30, 0x57, 0x49, 0xf5, 0x9b, 0x57);
+					PlayFx(CHANNEL_1, 60, 0x57, 0x49, 0xf5, 0x9b, 0x57);
 				}
 			}
 		}

@@ -68,7 +68,7 @@ void UPDATE() {
 		
 		CheckCollisionETile();
 		
-		if(spdata->tile_e_collision == 18u | spdata->tile_e_collision == 22u | spdata->tile_e_collision == 23u | spdata->tile_e_collision == 81u | spdata->tile_e_collision == 104u){
+		if(spdata->tile_e_collision == 18u || spdata->tile_e_collision == 22u || spdata->tile_e_collision == 23u || spdata->tile_e_collision == 81u || spdata->tile_e_collision == 104u){
 			spdata->vx = -spdata->vx;
 		}
 	}
@@ -89,10 +89,11 @@ void UPDATE() {
 				SetSpriteAnim(THIS, spider_hit, 24u); 
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)isspr->custom_data;
 				spdata->hp -= arrowdata->arrowdamage;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				spdata->tile_e_collision = TranslateSprite(THIS, 0, -2);
 				SpriteManagerRemoveSprite(isspr);
 				if (spdata->hp <= 0){
-					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+					PlayFx(CHANNEL_1, 30, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 					SetSpriteAnim(THIS, spider_dead, 16u);
 					spdata->wait = 8u;
 					spdata->enemy_state = ENEMY_STATE_DEAD;

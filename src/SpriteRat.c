@@ -94,6 +94,7 @@ void UPDATE() {
 				ratdata->wait = 16u;
 				SetSpriteAnim(THIS, rat_hit, 24u); 
 				ratdata->hp -= arrowdata->arrowdamage;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				if (THIS->x < irspr->x){ //se la freccia arriva dalla destra dell' enemy
 					if (THIS->mirror == V_MIRROR){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();
@@ -108,6 +109,8 @@ void UPDATE() {
 				SpriteManagerRemoveSprite(irspr);
 				if (ratdata->hp <= 0){
 					EDie();
+				}else{
+					ratdata->enemy_state = ENEMY_STATE_HIT;
 				}
 			}
 		}

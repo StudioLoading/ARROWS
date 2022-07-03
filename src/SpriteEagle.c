@@ -125,7 +125,7 @@ void UPDATE() {
 						data->vx = 1;	
 					}
 				}
-				if ((ibispr->x - THIS->x) == 33u | ((THIS->x - ibispr->x) == 33u)){
+				if ((ibispr->x - THIS->x) == 33u || ((THIS->x - ibispr->x) == 33u)){
 					SetSpriteAnim(THIS, eagle_attack, 14u);
 					data->wait = eagle_time_attack;
 					data->enemy_state = ENEMY_STATE_ATTACK;
@@ -149,7 +149,7 @@ void UPDATE() {
 						data->vx=0;
 						data->enemy_accel_y = 0;
 						SetSpriteAnim(THIS, eagle_dead, 14u);
-						PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+						PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 					}
 					SpriteManagerRemoveSprite(ibispr);
 				}

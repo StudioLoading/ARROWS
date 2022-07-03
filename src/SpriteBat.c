@@ -3,6 +3,7 @@
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "Sound.h"
 #include "custom_datas.h"
 
 extern UINT8 current_level;
@@ -104,6 +105,7 @@ void UPDATE(){
 				batdata->hp -= arrowdata->arrowdamage;
 				batdata->enemy_state = ENEMY_STATE_HIT;
 				batdata->wait=0;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				SpriteManagerRemoveSprite(ibatspr);
 				if (batdata->hp <= 0){
 					SpriteManagerRemove(THIS_IDX);

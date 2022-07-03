@@ -3,6 +3,7 @@
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "Sound.h"
 #include "custom_datas.h"
 
 const UINT8 item_hidden[] = {1, 0}; //The first number indicates the number of frames
@@ -70,10 +71,11 @@ void UPDATE() {
 				}
 			}
 	}else{ //inizio gestione non scrigno
-		if (data->collided | data->item_accel_y | data->counter == 0){
+		if (data->collided || data->item_accel_y || data->counter == 0){
 			if (data->setup){ //inizio setup
 				data->setup = 0u;
 				SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+				PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 				switch(data->type){
 					case 1: //coin
 						SetSpriteAnim(THIS, item_coin, 8u);
@@ -84,9 +86,6 @@ void UPDATE() {
 					case 3: //up
 						SetSpriteAnim(THIS, item_up, 8u);
 					break;
-					/*case 6: //wrench
-						SetSpriteAnim(THIS, item_wrench, 8u);
-					break;*/
 					case 7: //dcoin
 						SetSpriteAnim(THIS, item_dcoin, 8u);
 						THIS->coll_h = 16u;
@@ -94,15 +93,13 @@ void UPDATE() {
 				}
 			} //fine setup
 			
-			if(data->item_accel_y < 24) {
+			if(data->item_accel_y < 8) {
 				data->item_accel_y += 1;
 			}
-			data->tile_i_collision = TranslateSprite(THIS, data->vx, data->item_accel_y >> 4);
-			if(!data->tile_i_collision && delta_time != 0 && data->item_accel_y < 24) { //Do another iteration if there is no collision
-				data->item_accel_y += 2;
-				data->tile_i_collision = TranslateSprite(THIS, data->vx, data->item_accel_y >> 4);
+			data->tile_i_collision = TranslateSprite(THIS, data->vx, data->item_accel_y >> 2);	
+			if(data->tile_i_collision != 0 && data->item_accel_y > 0){
+				data->item_accel_y = -6;
 			}
-			
 		}
 	}//fine gestione item non scrigno
 	

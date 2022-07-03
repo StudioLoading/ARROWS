@@ -7,6 +7,8 @@
 #include "Palette.h"
 #include "string.h"
 #include "Print.h"
+#include "Sound.h"
+#include "Music.h"
 
 #include "custom_datas.h"
 #include "TilesAnimations0.h"
@@ -23,6 +25,8 @@ IMPORT_MAP(mapboss2);
 IMPORT_MAP(mapboss3);
 IMPORT_MAP(mapboss4);
 IMPORT_MAP(mapboss5);
+
+DECLARE_MUSIC(bgm_boss_defeated);
 
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
@@ -103,10 +107,7 @@ void START(){
 	if(is_on_boss <= 0){
 		is_on_boss = 0;
 	}
-	/*
-	SetPalette(SPRITES_PALETTE, 0, 8, sprites_palette, 7);
-	SetPalette(BG_PALETTE, 0, 8, bg_palette, 7);
-	*/
+	
 	SPRITES_8x16;
 	
 	SpriteManagerLoad(SpriteCamerafocus);
@@ -186,7 +187,7 @@ void START(){
 	}else{
 		if(is_on_boss <= 2){
 			is_on_boss = 2;
-			ScrollFindTile((UINT8) boss_banks[current_level_b], level_maps_b, 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);	
+			ScrollFindTile((UINT8) boss_banks[current_level_b], level_maps_b, 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
 		}		
 		scroll_top_movement_limit = 30;
 		scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
@@ -211,7 +212,7 @@ void START(){
 	
 	SHOW_BKG;
 	
-	if (is_on_boss > 2){
+	if (is_on_boss > 2){	
 		if(is_on_boss == 4){//lo setto a 4 solo quando si muore dopo aver sconfitto il boss ma prima di essere usciti, come dei coglioni
 			SpawnReward();
 		}		
@@ -421,6 +422,7 @@ void SpawnReward(){//and move boss to position
 	struct ItemInfo* datak = 0;
 	struct AmuletInfo* data_amulet = 0;
 	Sprite* key_s = 0;
+	PlayMusic(bgm_boss_defeated, 1);
 	switch (current_level_b){
 		case 0u:// wolf -> wrench
 			boss->x = (UINT16) 24u << 3;

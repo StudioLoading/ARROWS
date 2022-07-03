@@ -81,6 +81,7 @@ void UPDATE() {
 				beedata->wait = 24u;
 				SetSpriteAnim(THIS, bee_hit, 24u); 
 				beedata->hp -= arrowdata->arrowdamage;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				SpriteManagerRemoveSprite(ibeespr);
 				if (beedata->hp <= 0){
 					EDie();

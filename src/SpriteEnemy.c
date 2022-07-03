@@ -80,8 +80,9 @@ void UPDATE() {
 					return;
 				}
 				edata->wait = 16u;
-				SetSpriteAnim(THIS, enemy_hit, 24u); 
+				SetSpriteAnim(THIS, enemy_hit, 24u);
 				edata->hp -= arrowdata->arrowdamage;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				if (THIS->x < iespr->x){ //se la freccia arriva dalla destra dell' enemy
 					if (THIS->mirror == V_MIRROR){ // se sto andando a sinistra, l'ho preso da dietro! turn!
 						ETurn();

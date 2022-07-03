@@ -147,25 +147,18 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	if(diagf == 0u){
 		if(paused){
 			memcpy(d1, "    AMULETS OWNED   ", 20);
-			switch(current_level){
-				case 0u:
-				case 1u://45 (47 48 46 49)
+			if((quiver & 0b0000000010) == 0b0000000010){// ho stone calice
 					memcpy(d2, "         $          ", 20);
-				break;
-				case 2u:
-				case 3u://45 47 (48 46 49)
-					memcpy(d2, "        $ [         ", 20);
-				break;
-				case 4u:
-				case 5u://45 47 48 (46 49)
-					memcpy(d2, "       $ [ #        ", 20);
-
-				break;
-				case 6u://45 47 48 46 (49)
-					memcpy(d2, "      $ [ # ]       ", 20);
-				break;
 			}
-			
+			if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010){// ho thunder horn
+				memcpy(d2, "        $ [         ", 20);
+			}
+			if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010 && (quiver & 0b0000001000) == 0b0000001000){// ho ice kneckle
+				memcpy(d2, "       $ [ #        ", 20);
+			}
+			if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010 && (quiver & 0b0000001000) == 0b0000001000  && (quiver & 0b0000010000) == 0b0000010000){// ho ice kneckle
+				memcpy(d2, "      $ [ # ]       ", 20);
+			}			
 			memcpy(d3, " PRESS DOWN-JUMP TO ", 20);
 			memcpy(d4, " GET SUGGESTIONS.   ", 20);
 			diagf = 98u;
@@ -537,7 +530,6 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								memcpy(d2, "THE WRENCH TO       ", 20);
 								memcpy(d3, "OPEN THIS DOOR.     ", 20);
 								memcpy(d4, "                    ", 20);
-								PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 								diagf = 90u;
 							}
 						}
@@ -593,7 +585,6 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 					memcpy(d2, "MUCH SILENCE        ", 20);
 					memcpy(d3, "FROM HERE ON.       ", 20);
 					memcpy(d4, "                    ", 20);
-					PlayFx(CHANNEL_1, 3, 0x0D, 0x01, 0x43, 0x73, 0x86);
 					diagf = 99u;
 				}else{							
 					memcpy(d1, "I HAVE TO GO        ", 20);
@@ -675,16 +666,12 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 							break;
 							case 2u:
 								if((quiver & 0b0000010000) == 0b0000010000){// ho vulkan pyramid
-									/*memcpy(d1, "     ... SON!       ", 20);
-									memcpy(d2, " WE ARE DOING THE   ", 20);
-									memcpy(d3, " RIGHT THING. BE    ", 20);
-									memcpy(d4, " STRONG NOW.        ", 20);*/
 									memcpy(d1, "                    ", 20);
-									memcpy(d2, "   LET S GET INTO   ", 20);
+									memcpy(d2, "   LET'S GET INTO   ", 20);
 									memcpy(d3, "    THE CASTLE.     ", 20);
 									memcpy(d4, "                    ", 20);
-									load_next_d = 0; //manino brutto
-									current_map = 0u;
+									//load_next_d = 0; //manino brutto
+									//current_map = 0u;
 								}else{
 									memcpy(d1, " GO BACK TO THE     ", 20);
 									memcpy(d2, " CRYPT, I HAVE HID  ", 20);

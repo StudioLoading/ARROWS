@@ -58,7 +58,7 @@ void UPDATE() {
 	alligator_data->wait -= 1u;	
 	if (alligator_data->wait == 100u){
 		poss++;
-		if (poss == 3u | (poss == 1u && alligator_data->hp == 1)) {
+		if (poss == 3u || (poss == 1u && alligator_data->hp == 1)) {
 			poss = 0u;
 			if (alligator_data->archer_posx > 60u & alligator_data->archer_posx < 224u)
 			THIS->x = alligator_data->archer_posx;

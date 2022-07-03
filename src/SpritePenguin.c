@@ -105,6 +105,7 @@ void UPDATE() {
 				pendata->wait = 40u;
 				SetSpriteAnim(THIS, penguin_hit, 24u); 
 				pendata->hp -= arrowdata->arrowdamage;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				SpriteManagerRemoveSprite(ipenspr);
 				if (pendata->hp <= 0){
 					PDie();
@@ -167,7 +168,7 @@ void CheckCollisionPTile(UINT8 t) {
 }
 
 void PDie(){
-	PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+	PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 	struct EnemyInfo* edata = (struct EnemyInfo*)THIS->custom_data;
 	edata->hp = -1;
 	SetSpriteAnim(THIS, penguin_dead, 16u);

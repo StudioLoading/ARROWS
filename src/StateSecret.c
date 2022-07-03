@@ -49,6 +49,8 @@ extern void ShowWindow() BANKED;
 extern void UpdateHUD() BANKED;
 extern Sprite* spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
 
+INT8 visited = -1;
+
 const UINT8 const collision_tiles_secret[] = { 19, 20, 21, 0};//numero delle tile con zero finale
 
 void START() {
@@ -90,17 +92,15 @@ void START() {
 	scrigno_up = 0;
 
 	//ITEMS
-	if ((current_level == 0u && current_map == 0u) || (current_level == 1u && current_map == 1u) ||
-		(current_level == 4u && current_map == 1u)){
-		scrigno_up = spawn_item(scrigno_up, 5u, 5u, 3, 1);
-		scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
-	}else{
-		scrigno_coin = spawn_item(scrigno_coin, 5u, 5u, 1, 1);
-		if(archer_data->hp == MAX_HP){
+	if(visited < current_map){
+		if (current_map == 0u){		
+			scrigno_up = spawn_item(scrigno_up, 5u, 5u, 3, 1);
 			scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
 		}else{
-			scrigno_shield = spawn_item(scrigno_shield, 11u, 11u, 2, 1);	
-		}		
+			scrigno_coin = spawn_item(scrigno_coin, 5u, 5u, 1, 1);
+			scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
+		}
+		visited = current_map;
 	}	
 	
 }

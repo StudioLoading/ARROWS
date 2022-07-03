@@ -27,7 +27,8 @@ IMPORT_MAP(map51);
 IMPORT_MAP(diagnew4);
 IMPORT_MAP(window4);
 
-DECLARE_MUSIC(bgm_level_emptych1);
+DECLARE_MUSIC(bgm_level_sky);
+DECLARE_MUSIC(bgm_level_forest);
 
 const UINT8 const collision_tiles3[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
@@ -198,6 +199,14 @@ void START() {
 			map_w4, map_h4, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0 || load_next_gameover){
 		spawning_counter = 0;
+		switch(current_level){
+			case 3u:
+				PlayMusic(bgm_level_sky, 1);
+			break;
+			case 4u:
+				PlayMusic(bgm_level_forest, 1);
+			break;
+		}
 		//PlayMusic(bgm_level_emptych1, 1);
 		ScrollFindTile((UINT8) map45banks[current_map], maps45[current_map], 9, 0, 0, 
 			map_w4, map_h4, &drop_player_x, &drop_player_y);		

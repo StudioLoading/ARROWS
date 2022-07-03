@@ -15,7 +15,7 @@ void START() {
 	struct PuffInfo* puff_data = (struct PuffInfo*)THIS->custom_data;
 	puff_data->puff_counter = 24;
 	SetSpriteAnim(THIS, anim_puff, 8u);
-	PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+	//PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 }
 
 void UPDATE() {

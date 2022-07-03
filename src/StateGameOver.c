@@ -8,6 +8,7 @@
 #include "string.h"
 #include "Print.h"
 #include "Sound.h"
+#include "Music.h"
 #include "Fade.h"
 
 #include "sgb_palette.h"
@@ -15,6 +16,8 @@
 IMPORT_MAP(mapdiaggameover);
 
 IMPORT_TILES(font);
+
+DECLARE_MUSIC(bgm_gameover);
 
 const UINT8 collision_tiles_gameover[] = {1,0};
 INT8 countdown;
@@ -58,6 +61,9 @@ void START() {
 	InitScroll( (UINT8) BANK(mapdiaggameover), &mapdiaggameover, collision_tiles_gameover, 0);	
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
+			
+	PlayMusic(bgm_gameover, 1);
+
 	
 }
 

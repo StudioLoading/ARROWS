@@ -4,24 +4,37 @@ Engine: ZGB, Version: 2021.0
 Music: GBT Player
 
 KNOWN ISSUE:
-- mettere più scrigni a moneta singola in giro
 - nel menu di pausa e nel worldmap sono mostrati gli amuleti posseduti 
 	non in base al quiver 
 	ma in base al livello. Forse chissene, ma è da tenere come known issue.
 
 TODO:
-- disabilitare ri-entrata su stanza secret. Facile, tutto a codice.
-- finire di settare le bgm_level dei livelli  3 4 5 6
 - finire cutscene fine liv CIMITERO
 - livello castello come da design sopra
 - final boss
 - bonus level
-- DIFFERENTI BORDI DI SNES PER LIVELLO
+- DIFFERENTE BORDO DI SNES PER LIVELLO CASTELLO
 - dopo titleScreen, prima del biglietto, schermata di configurazione per salto/fire A/B o viceversa
 But it is not that hard. J_A is defined as 0x10u. Just make a variable which contains this value and change it as fit. 
 KEY_PRESSED(A_Button_Var)
 A_Button_Var contains the value you set in the configuration. 0x10u as default, 0x20 is the B button, 0x40u is the Select button, and so on. 
 
+MUSIC MANAGEMENT
+
+credits			2 prechorus
+titleScreen		2 chorus
+intro			intro leo
+ZOO				9 verse
+SEWER			3 prechorus + chorus
+HILLS			1 verse vocal
+SKY				1 chorus guitar
+FOREST			1 verse vocal
+icecave			bgm_level_zoo
+cematery		5 verse
+castle			5 prechorus
+gameover		5 preOutro
+boss defeated	4 preChorus  todo
+amulet			4 outro
 
 LIV 0 ZOO -> Wolf -> tool per uscita
 LIV 1 SEWER -> Gator -> stone
@@ -29,29 +42,38 @@ LIV 2 FOREST -> Eagle  -> tool per uscita
 LIV 3 SKY -> Ibex -> thunder
 LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
-LIV 6 CIMITERO -> mother cutscene
-				- terminare il design
+LIV 6 CIMITERO -> no boss
 				
 LIV 7 CASTELLO -> 3 MAPPE
-		- mappa 0 -> castello un po' labirintico, 
-			- Nemici bomba, 
-			- formica gigante che si forma da formichine piccole, immortale
-			- fantasmi immortali però freezzabili
-			- ad un certo punto devo fare una cutscene piccola di ri-chiusura del portone alle mie spalle. 
-				Il finalBoss infatti ha preso l' amuleto del fuoco e lo userà al primo scontro con me.
-		- bossFight 1 -> la cutscene qiui è importante perchè devo spiegare perchè il cattivone ha fatto avvicinare la luna. 
-				che devo battere, perchè alla fine, "da morto" - viene menato dalla mamma con la balestra, rilascia la piramide di fuoco e scappa "giù". la mamma prende l' amuleto, cutscene in cui la mamma ce lo da e dice che deve andare sopra la torre da sola per "liberare le bestie".
+		cutscene in cui la mamma dice che deve andare sopra la torre da sola per "liberare le bestie".
 		- mappa 1 torre -> vado con la mamma in cima - da sola
-				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione. 
-				Se li colpisco, mi cacciano, se ci parlo, li curo e verranno dopo in aiuto.
+				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione.
+				la mamma non fa niente, se non saltare. non può essere ferita => non può morire. 
+				Se li trovo e ci parlo, li curo e verranno dopo in aiuto.
 				il finalboss l' attacca, la scena si sposta sull' arcere che deve rifare da solo 
-		- mappa 2 torre -> le stanze segrete sono vuote. cronometro di 60secondi, se non arrivo in tempo, mamma muore GAME OVER
-		- bossFight 2 -> in cima alla torre Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. 
-			Ho a disposizione frecce normali e frecce di fuoco per demolirlo. Alla fine arriva mamma , dice "insieme figlio!" 
-			scoccano una freccia insieme, che diventa freccia di luce e colpisce il cattivone, sparandolo lontano dalla torre.
-			cutscene dell' arcere e madre che escono dal cancello, senza più gli amuleti perchè diciamo di averceli tutti
+		- mappa 2 torre -> controllo l' arcere: le stanze segrete sono vuote ma con scrigni di vite.
+		- boss -> in cima alla torre c'è boss, mamma e arcere: l' aquila prende il boss e vola via.
+			cutscene di mamma che dice "vallo a prendere!" 
+			mamma spara freccia ogni 2 secondi finchè non ci salgo sopra e supero un po' di metri
+			la freccia della mamma va piuttosto lenta, direi come la nostra di stone
+			sono in aria, sto andando verso destra e devo arrivare alla fine
+			c'è qualche tassello di rimbalzo, magari doppio così in uno ci atterro sopra, nell' altro a sinistra sparo che, 
+				tornando indietro, ci posso risalire sopra
+			nemici uccelli, pipistrelli e teste di gatto
+			arrivo sull' altra torre, la freccia della mamma sparisce e atterro
+			diag col boss che mi minaccia  
+			Inizia lo scontro col boss a schermata fissa
+			Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. 
+			Ho a disposizione frecce normali e frecce di fuoco per demolirlo. 
+			Alla fine arriva mamma , dice "insieme figlio!" 
+			cutscene con mamma e figlio che scoccano una freccia ciscuno, quando le frecce si uniscono spariscono e diventano
+			un freccione di "luce" (? forse riesco con sfondo scuro scuro)
+			il boss viene colpito in pieno e viene spinto giù fuori schermo.
+			diag dell' arcere e madre che escono dal cancello, senza più gli amuleti perchè diciamo di averceli tutti
+			titoli di coda
 			titoli di coda
 			cutscene alla Gator Swamp col coccodrillo insieme al finalBoss.
+
 			
 ---------------------------------------------------------
 LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
@@ -62,17 +84,15 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 
 polish:
-	- SOUND EFFECT DI EXIT SENZA TOOL
-	- frame arciere di cambio di direzione - che guardi il giocatore, a spalle verso il background - potrei sacrificare il frame di discesa
-	- bordo cornice tutto schermo del livello bonus
-	- sound lancio freccia
-	- sound di quando lo scrigno si apre !	
+	- sfx dei boss dato che ho scelto di non mettere bgm
 	- effetto di camera tramble che potrebbe essere utile da usare come effetto
 	- schermata di fine livello - direi con pergamena descrittiva
 
 
 
 nice2have:
+	- bonus level con bordo cornice tutto schermo del livello bonus
+	- schermata dopo titoli di coda per configurazione tasti
 	- comparsa del testo lettera per lettera
 	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c

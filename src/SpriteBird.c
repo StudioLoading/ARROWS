@@ -125,7 +125,7 @@ void UPDATE() {
 					data->vx = 1;
 					THIS->mirror = NO_MIRROR; //SPRITE_UNSET_VMIRROR(THIS);
 				}
-				if ((ibispr->x - THIS->x) == 33u | ((THIS->x - ibispr->x) == 33u)){
+				if ((ibispr->x - THIS->x) == 33u || ((THIS->x - ibispr->x) == 33u)){
 					SetSpriteAnim(THIS, bird_attack, 8u);
 					data->wait = bird_time_attack;
 					data->enemy_state = ENEMY_STATE_ATTACK;					
@@ -140,12 +140,13 @@ void UPDATE() {
 				data->enemy_state = ENEMY_STATE_HIT;
 				data->wait = 30u;
 				SetSpriteAnim(THIS, bird_hit, 24u); 
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				data->hp -= arrowbidata->arrowdamage;
 				if (data->hp <= 0){
 					data->wait = 8u;
 					data->enemy_state = ENEMY_STATE_DEAD;
 					SetSpriteAnim(THIS, bird_dead, 16u);
-					PlayFx(CHANNEL_1, 5, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+					PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 				}
 			}
 		}

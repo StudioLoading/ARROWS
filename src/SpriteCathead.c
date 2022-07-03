@@ -55,6 +55,7 @@ void UPDATE() {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)icatheadsprite->custom_data;
 				catheaddata->wait = 48u;
 				catheaddata->hp -= arrowdata->arrowdamage;
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				catheaddata->enemy_state = ENEMY_STATE_HIT;
 				SpriteManagerRemoveSprite(icatheadsprite);
 				if (catheaddata->hp <= 0){

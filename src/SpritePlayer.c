@@ -143,12 +143,12 @@ void UPDATE() {
 		case STATE_DIAG:
 			if(diag_cooldown == 0){
 				if (show_diag == -1){ //NON TOCCARE
-					ResumeMusic;
+					if(is_on_boss == -1) ResumeMusic;
 					show_diag = 0;
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					archer_state = STATE_NORMAL;
 				}else if(paused && KEY_TICKED(J_START)){
-					ResumeMusic;
+					if(is_on_boss == -1) ResumeMusic;
 					set_sgb_palette_statusbar();
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					show_diag += 1;
@@ -157,7 +157,7 @@ void UPDATE() {
 				} 
 				else if(!paused){				
 					if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
-						ResumeMusic;	
+						if(is_on_boss == -1) ResumeMusic;	
 						set_sgb_palette_statusbar();
 						diag_cooldown = MAX_DIAG_COOLDOWN;
 						show_diag += 1;
@@ -283,7 +283,7 @@ void UPDATE() {
 			//Jump
 			if(KEY_TICKED(J_A) && landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
-				PlayFx(CHANNEL_1, 30, 0x27, 0x40, 0x43, 0x68, 0x86);
+				PlayFx(CHANNEL_1, 50, 0x27, 0x40, 0x43, 0x68, 0x86);
 				Jump();
 			}
 			if(shoot_cooldown) {
@@ -294,7 +294,7 @@ void UPDATE() {
 				}
 			}
 			//Check falling
-			if((archer_accel_y >> 3) > 1 && archer_state != STATE_DIAG) {
+			if((archer_accel_y >> 3) > 1 && archer_state != STATE_JUMPING && archer_state != STATE_NORMAL_PLATFORM){
 				archer_state = STATE_JUMPING;
 			}
 			if(is_on_boss == 3 && current_camera_state < 5u){
@@ -427,17 +427,15 @@ void UPDATE() {
 				case SpriteItem:
 					itemdata = (struct ItemInfo*)ispr->custom_data;
 					if (itemdata->setup == 0u){ //se e' trasparente non faccio niente
+						fx_cooldown = 30;
+						PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 						switch(itemdata->type){
 							case 1u: //coins
 								archer_data->coins += 1u;
-								fx_cooldown = 30;
-								PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 								SpriteManagerRemoveSprite(ispr);
 							break;
 							case 2u: //hp
 								archer_data->hp = MAX_HP;
-								fx_cooldown = 30;
-								PlayFx(CHANNEL_1, 30, 0x36, 0x81, 0xc2, 0xa5, 0x86);
 								SpriteManagerRemoveSprite(ispr);
 							break;
 							case 3u: //up
@@ -449,9 +447,6 @@ void UPDATE() {
 								if (archer_data->coins >= 100u){
 									archer_data->coins = archer_data->coins - 100u;
 									archer_data->ups += 1;	
-								}else{
-									fx_cooldown = 30;
-									PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 								}
 								SpriteManagerRemoveSprite(ispr);
 							break;
@@ -623,8 +618,9 @@ void UPDATE() {
 							platform_vx = 0-arrowdata->vx;	
 						}else{
 							platform_vx = arrowdata->vx;	
-						}					
-						if(archer_state != STATE_NORMAL && archer_state != STATE_NORMAL_PLATFORM){
+						}
+						archer_accel_y = 0;
+						if(archer_state != STATE_NORMAL_PLATFORM){
 							archer_state = STATE_NORMAL_PLATFORM;
 							THIS->y = ispr->y - 12;
 						}
@@ -652,7 +648,7 @@ void Shoot() {
 	SetSpriteAnim(THIS, anim_shoot, 12u);
 	Sprite* arrow_sprite = SpriteManagerAdd(SpriteArrow, 0, 0);
 	fx_cooldown = 20;
-	PlayFx(CHANNEL_1, 20, 0x7D, 0x40, 0xF2, 0x20, 0x70);
+	//PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);
 	arrow_sprite->mirror = THIS->mirror;//flags
 	arrow_sprite->x = THIS->x;
 	if(arrow_sprite->mirror != V_MIRROR){
@@ -722,7 +718,6 @@ void MoveArcher() {
 
 void CheckCollisionTileDoor(){
 	tile_collision = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
-	PauseMusic;
 	switch(tile_collision){//tile_collision
 		case 7u: //fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
@@ -845,16 +840,16 @@ void Build_Next_Dialog() BANKED{
 	diag_found = Build_Next_Dialog_Banked(THIS);
 	if(diag_found){
 		if(diag_found < 89u){ 
-			// 99u means no state changing, just simple diag message to show from StateGame			
+			drop_player_x = THIS->x >> 3;
+			drop_player_y = THIS->y >> 3;
+			load_next_d = 1;
+		}else{//means no state changing
+			// 99u just simple diag message to show from StateGame			
 			// 98u means paused
 			// 90u suggestion with error sound
 			if(diag_found == 90u){
 				PlayFx(CHANNEL_1, 30, 0x3a, 0xc3, 0xe0, 0xa7, 0xc5);
 			}
-			drop_player_x = THIS->x >> 3;
-			drop_player_y = THIS->y >> 3;
-			load_next_d = 1;
-		}else{
 			archer_state = STATE_DIAG;
 			SetSpriteAnim(THIS, anim_idle, 12u);
 			show_diag = 1;	
