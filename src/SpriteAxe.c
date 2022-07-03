@@ -2,6 +2,7 @@
 
 #include "ZGBMain.h"
 #include "Sprite.h"
+#include "Sound.h"
 #include "SpriteManager.h"
 #include "custom_datas.h"
 
@@ -17,7 +18,7 @@ void START() {
 	struct EnemyInfo* axedata = (struct EnemyInfo*)THIS->custom_data;
 	axedata->enemy_state = ENEMY_STATE_NORMAL;
 	axedata->wait = 0u;
-	axedata->hp = 45;
+	axedata->hp = 24;
 	axedata->vx = -3;
 	axedata->enemy_accel_y = -20;
 }
@@ -25,6 +26,11 @@ void START() {
 void UPDATE(){
 	struct EnemyInfo* axedata = (struct EnemyInfo*)THIS->custom_data;
 	axedata->wait++;
+	axedata->hp--;
+	if(axedata->hp == 0){
+		PlayFx(CHANNEL_1, 60, 0x23, 0xcc, 0xf7, 0x43, 0x85);
+		axedata->hp = 24;
+	}
 	if(axedata->enemy_accel_y < 24) {
 		axedata->enemy_accel_y += 1;
 	}

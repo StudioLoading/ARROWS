@@ -281,8 +281,9 @@ void UPDATE() {
 				}
 			}
 			//Jump
-			if(KEY_TICKED(J_A) && landing_time == MAX_LANDING_TIME){
+			if(KEY_TICKED(J_A)){//&& landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
+				landing_time = MAX_LANDING_TIME;
 				PlayFx(CHANNEL_1, 50, 0x27, 0x40, 0x43, 0x68, 0x86);
 				Jump();
 			}
@@ -467,6 +468,7 @@ void UPDATE() {
 							}
 							archer_data->tool = 6;
 							update_hud = 1;
+							PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							SpriteManagerRemoveSprite(ispr);
 							return;
 						break;
@@ -628,7 +630,7 @@ void UPDATE() {
 				break;
 				case SpriteGate:
 					THIS->x--;
-				break;
+				break;				
 			}//fine switch ispr->type
 		}// fine check collision
 	}//fine SPRITEMANAGER_ITERATE
@@ -829,7 +831,7 @@ void Hit(INT8 damage) {
 			return;
 		}
 		fx_cooldown = 30;
-		PlayFx(CHANNEL_1, 30, 0x4c, 0x81, 0x43, 0x73, 0x86);
+		PlayFx(CHANNEL_1, 60, 0x4c, 0x81, 0x43, 0x73, 0x86);
 		update_hud = 1;
 		TranslateSprite(THIS, 0, -2 << delta_time);
 		SetSpriteAnim(THIS, anim_hit, 24u);
@@ -848,7 +850,7 @@ void Build_Next_Dialog() BANKED{
 			// 98u means paused
 			// 90u suggestion with error sound
 			if(diag_found == 90u){
-				PlayFx(CHANNEL_1, 30, 0x3a, 0xc3, 0xe0, 0xa7, 0xc5);
+				PlayFx(CHANNEL_1, 60, 0x70a, 0x80, 0xf4, 0x73, 0x86);
 			}
 			archer_state = STATE_DIAG;
 			SetSpriteAnim(THIS, anim_idle, 12u);

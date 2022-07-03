@@ -16,6 +16,7 @@ const UINT8 wolf_dead[] = {1, 5}; //The first number indicates the number of fra
 
 INT8 jump_i = 0;
 struct EnemyInfo* wolf_data ;
+INT8 walk_fx_cooldown = 0;
 
 void CheckCollisionBTile();
 void BTurn();
@@ -37,7 +38,6 @@ void UPDATE() {
 	if(wolf_data->enemy_state == ENEMY_STATE_WAIT){
 		return;
 	}
-	
 	if (wolf_data->enemy_state == ENEMY_STATE_DEAD){
 		if(wolf_data->tile_e_collision==0){
 			wolf_data->tile_e_collision = TranslateSprite(THIS, 0, 1);	
@@ -52,6 +52,7 @@ void UPDATE() {
 		if (jump_i == 44){
 			SetSpriteAnim(THIS, wolf_walk, 13u);
 			wolf_data->enemy_state = ENEMY_STATE_NORMAL;
+			walk_fx_cooldown = WALK_FX_COOLDOWN-4;
 			jump_i = 0;
 			wolf_data->enemy_accel_y = 25;
 		}
@@ -71,6 +72,11 @@ void UPDATE() {
 		if(wolf_data->vx < 0 && THIS->mirror == V_MIRROR){
 			THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 		}
+		walk_fx_cooldown++;
+		if(walk_fx_cooldown == WALK_FX_COOLDOWN){
+			PlayFx(CHANNEL_4, 60, 0x3a, 0xd2, 0x00, 0xc0, 0x85);
+			walk_fx_cooldown = 0;
+		}
 		wolf_data->tile_e_collision = TranslateSprite(THIS, wolf_data->vx << delta_time, (wolf_data->enemy_accel_y >> 4)<< delta_time);
 		if(!wolf_data->tile_e_collision && delta_time != 0 && wolf_data->enemy_accel_y < 26) { //Do another iteration if there is no collision
 			wolf_data->enemy_accel_y += 2;
@@ -81,6 +87,7 @@ void UPDATE() {
 			if(wolf_data->enemy_state == ENEMY_STATE_JUMPING && wolf_data->enemy_accel_y > 0) {
 				wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 				SetSpriteAnim(THIS, wolf_walk, 13u);
+				walk_fx_cooldown = WALK_FX_COOLDOWN-4;
 			}else{
 				wolf_data->enemy_accel_y = 0;	
 			}
@@ -90,6 +97,7 @@ void UPDATE() {
 		if((THIS->x == (UINT16) 24u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && THIS->mirror == V_MIRROR) ||
 			(THIS->x == (UINT16) 26u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && THIS->mirror != V_MIRROR)){
 			SetSpriteAnim(THIS, wolf_jump, 8u);
+			PlayFx(CHANNEL_1, 60, 0x17, 0x82, 0xf1, 0x7e, 0x84);
 			wolf_data->enemy_state = ENEMY_STATE_JUMPING;
 			wolf_data->enemy_accel_y = -25;
 		}
@@ -114,6 +122,7 @@ void UPDATE() {
 						wolf_data->wait = 28u;
 						SetSpriteAnim(THIS, wolf_hit, 16u);
 						wolf_data->hp -= arrowdata->original_type;
+						PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 					}
 				}
 				SpriteManagerRemoveSprite(ibspr);

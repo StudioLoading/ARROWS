@@ -8,6 +8,7 @@
 #include "custom_datas.h"
 
 extern UINT8 current_camera_state;
+extern INT8 walk_fx_cooldown;
 
 //BEAR
 const UINT8 bear_idle[] = {1, 2}; //The first number indicates the number of frames
@@ -44,7 +45,8 @@ void UPDATE() {
 			switch(bear_data->wait){
 				case 20u:
 				case 30u:
-				case 50u:		
+				case 50u:
+					PlayFx(CHANNEL_4, 60, 0x01, 0xf9, 0x32, 0xc0, 0x00);		
 					bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 1 << delta_time);
 					CheckCollisionBETile();
 				break;
@@ -92,7 +94,12 @@ void UPDATE() {
 		}		
 	}
 	
-	if(bear_data->enemy_state == ENEMY_STATE_NORMAL){		
+	if(bear_data->enemy_state == ENEMY_STATE_NORMAL){
+		walk_fx_cooldown++;
+		if(walk_fx_cooldown == WALK_FX_COOLDOWN){
+			PlayFx(CHANNEL_4, 60, 0x3a, 0xd2, 0x00, 0xc0, 0x85);
+			walk_fx_cooldown = 0;
+		}		
 		bear_data->tile_e_collision = TranslateSprite(THIS, bear_data->vx << delta_time, 0 << delta_time);
 		if(bear_data->tile_e_collision){
 			CheckCollisionBETile();
@@ -102,6 +109,7 @@ void UPDATE() {
 	if((THIS->x == (UINT16) 13u << 3 && bear_data->vx < 0) || (THIS->x == (UINT16) 22u << 3)){
 		if(bear_data->enemy_state != ENEMY_STATE_ATTACK){			
 			SetSpriteAnim(THIS, bear_attack, 12u);
+			PlayFx(CHANNEL_4, 60, 0x01, 0xf9, 0x32, 0xc0, 0x00);
 			bear_data->enemy_state = ENEMY_STATE_ATTACK;
 			bear_data->wait = 58;
 		}	
@@ -179,6 +187,7 @@ void BETurn(){
 }
 
 void ToNormalState(){
+	walk_fx_cooldown = WALK_FX_COOLDOWN-4;
 	bear_data->enemy_state = ENEMY_STATE_NORMAL;
 	SetSpriteAnim(THIS, bear_walk, 13u);	
 }

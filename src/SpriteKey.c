@@ -40,13 +40,12 @@ void UPDATE() {
 		}
 		keydata->setup = 0;
 	}
-	if(keydata->item_accel_y < 24) {
+	if(keydata->item_accel_y < 8) {
 		keydata->item_accel_y += 1;
 	}
-	keydata->tile_i_collision = TranslateSprite(THIS, 0, keydata->item_accel_y >> 4);
-	if(!keydata->tile_i_collision && delta_time != 0 && keydata->item_accel_y < 24) { //Do another iteration if there is no collision
-		keydata->item_accel_y += 2;
-		keydata->tile_i_collision = TranslateSprite(THIS, 0, keydata->item_accel_y >> 4);
+	keydata->tile_i_collision = TranslateSprite(THIS, keydata->vx, keydata->item_accel_y >> 2);	
+	if(keydata->tile_i_collision != 0 && keydata->item_accel_y > 6){
+		keydata->item_accel_y = -4;
 	}
 	
 }

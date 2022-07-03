@@ -212,6 +212,7 @@ void UPDATE() {
 						break;						
 					} 
 					walrus_data->hp -= arrowdata->original_type;
+					PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 					if (walrus_data->hp <= 0){
 						walrus_data->hp = 0;
 						SetSpriteAnim(THIS, walrus_dead, 16u);

@@ -3,10 +3,6 @@ Tools: GBDK, Version: 2020.4.0.2
 Engine: ZGB, Version: 2021.0
 Music: GBT Player
 
-KNOWN ISSUE:
-- nel menu di pausa e nel worldmap sono mostrati gli amuleti posseduti 
-	non in base al quiver 
-	ma in base al livello. Forse chissene, ma è da tenere come known issue.
 
 TODO:
 - finire cutscene fine liv CIMITERO
@@ -83,28 +79,15 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 ---------------------------------------------------------
 
 
-polish:
-	- sfx dei boss dato che ho scelto di non mettere bgm
-	- effetto di camera tramble che potrebbe essere utile da usare come effetto
-	- schermata di fine livello - direi con pergamena descrittiva
-
-
-
 nice2have:
 	- bonus level con bordo cornice tutto schermo del livello bonus
-	- schermata dopo titoli di coda per configurazione tasti
-	- comparsa del testo lettera per lettera
+	- schermata dopo titlescreen per configurazione tasti
 	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  
 
-replay value:
-start screen è selezione del livello. Si può scegliere ultimo livello del castello, ma verrà inquadrato un cancello attorno al quale depositare gli amuleti. solo coi 4 amuleti ottenuti il cancello si aprirà.
-in questo modo chi ricomincia può andare a scegliere solo i livelli con gli amuleti e arrivare al castello.
-dopo i boss senza amuleti si accede ad un livello bonus, se lo si supera, il boss del livello entra "in gioco" nello scontro finale col boss finale e lo picchia - buttandogli giù della vita.
-
-
 TODO PER IL BUILDONE DEFINITIVO:
+- INSERIRE NEI CREDITI I NOMI DI QUELLI DEL PERK CREDITI KICKSTARTER
 - CONTROLLO di tutti i suggerimenti/dialoghi
 - SOSTITUIRE LE TILE DI SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 - svuotare il frame della camera sul suo camerafocus.gbr.c

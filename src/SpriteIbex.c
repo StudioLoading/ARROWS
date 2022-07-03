@@ -18,6 +18,7 @@ const UINT8 ibex_jump_down[] = {1, 3};
 extern INT8 jump_i;
 
 struct EnemyInfo* ibex_data ;
+INT8 zoccolo_fx_cooldown = WALK_FX_COOLDOWN;
 
 void CheckCollisionIBTile();
 void IBTurn();
@@ -47,6 +48,7 @@ void UPDATE() {
 	if (ibex_data->enemy_state == ENEMY_STATE_JUMPING){
 		jump_i += 1;
 		if(ibex_data->enemy_accel_y > 0 && ibex_data->enemy_accel_y < 3){
+			PlayFx(CHANNEL_4, 60, 0x03, 0xf9, 0x71, 0x80, 0x00);					
 			SetSpriteAnim(THIS, ibex_jump_down, 8u);
 		}
 		if (jump_i == 160){ //64
@@ -71,6 +73,13 @@ void UPDATE() {
 		if(ibex_data->vx < 0 & THIS->mirror == V_MIRROR){
 			THIS->mirror = NO_MIRROR;//SPRITE_UNSET_VMIRROR(THIS);
 		}
+		if(ibex_data->enemy_state == ENEMY_STATE_NORMAL){
+			zoccolo_fx_cooldown++;
+			if(zoccolo_fx_cooldown == WALK_FX_COOLDOWN){
+				PlayFx(CHANNEL_4, 60, 0x03, 0xf1, 0x88, 0x80, 0x00);
+				zoccolo_fx_cooldown = 0;
+			}
+		}
 		ibex_data->tile_e_collision = TranslateSprite(THIS, ibex_data->vx << delta_time, (ibex_data->enemy_accel_y >> 4)<< delta_time);
 		if(!ibex_data->tile_e_collision && delta_time != 0 && ibex_data->enemy_accel_y < 24) { //Do another iteration if there is no collision
 			ibex_data->enemy_accel_y += 2;
@@ -91,6 +100,7 @@ void UPDATE() {
 			if(ibex_data->enemy_state != ENEMY_STATE_JUMPING){
 				if(THIS->mirror != V_MIRROR && THIS->x == (UINT16) 24u << 3 ){
 					ibex_data->vx = -1;
+					PlayFx(CHANNEL_1, 60, 0x17, 0x82, 0xf1, 0x7e, 0x84);
 					ibex_data->enemy_state = ENEMY_STATE_JUMPING;
 					SetSpriteAnim(THIS, ibex_jump_up, 8u);
 					ibex_data->enemy_accel_y = -28;
@@ -117,6 +127,7 @@ void UPDATE() {
 					ibex_data->wait = 28u;
 					SetSpriteAnim(THIS, ibex_hit, 18u);
 					ibex_data->hp -= 1;
+					PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 					if (ibex_data->vx < 0){
 						THIS->x++;
 					}else{

@@ -90,6 +90,7 @@ void UPDATE() {
 		if(data->wait == 0u){
 			SetSpriteAnim(THIS, eagle_attack, 14u);
 			data->wait = eagle_time_attack;
+			PlayFx(CHANNEL_4, 60, 0x06, 0xf3, 0x51, 0x80, 0x00);
 			data->enemy_state = ENEMY_STATE_ATTACK;
 			return;
 		}
@@ -139,6 +140,7 @@ void UPDATE() {
 					data->enemy_state = ENEMY_STATE_HIT;
 					data->wait = 32u;
 					SetSpriteAnim(THIS, eagle_hit, 24u);
+					PlayFx(CHANNEL_4, 60, 0x0a, 0xf1, 0x14, 0x80, 0x00);
 					SpriteManagerAdd(SpriteFeather, (UINT16) ibispr->x, (UINT16) ibispr->y);
 					data->hp -= arrowbidata->original_type;
 					if (data->hp <= 0){

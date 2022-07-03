@@ -146,7 +146,6 @@ void UPDATE() {
 					data->wait = 8u;
 					data->enemy_state = ENEMY_STATE_DEAD;
 					SetSpriteAnim(THIS, bird_dead, 16u);
-					PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 				}
 			}
 		}

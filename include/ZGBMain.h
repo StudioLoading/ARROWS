@@ -4,6 +4,7 @@
 #define UNMUTE_ALL_CHANNELS hUGE_mute(HT_CH_PLAY)
 #define ResumeMusic hUGE_paused = 0; UNMUTE_ALL_CHANNELS  
 
+#define WALK_FX_COOLDOWN 32
 /*
 */
 

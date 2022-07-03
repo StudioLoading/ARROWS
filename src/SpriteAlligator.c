@@ -38,12 +38,6 @@ void START() {
 }
 
 void UPDATE() {
-	/*
-	if(alligator_data->enemy_state == ENEMY_STATE_ATTACK){	
-		THIS->coll_w = 16;
-		THIS->coll_h = 16;
-	}
-	*/
 	if(alligator_data->enemy_state == ENEMY_STATE_WAIT){
 		return;
 	}
@@ -81,6 +75,7 @@ void UPDATE() {
 		SetSpriteAnim(THIS, alligator_hide, 8u);
 	}else if (alligator_data->wait == 180u){
 		alligator_data->enemy_state = ENEMY_STATE_ATTACK;
+		PlayFx(CHANNEL_4, 60, 0x08, 0xf7, 0x04, 0x80, 0x00);
 		SetSpriteAnim(THIS, alligator_bite, 10u);
 	}else if (alligator_data->wait == 120u){
 		alligator_data->enemy_state = ENEMY_STATE_NORMAL;
