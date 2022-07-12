@@ -75,7 +75,6 @@ void UPDATE() {
 			if (data->setup){ //inizio setup
 				data->setup = 0u;
 				SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
-				PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
 				switch(data->type){
 					case 1: //coin
 						SetSpriteAnim(THIS, item_coin, 8u);
@@ -96,8 +95,10 @@ void UPDATE() {
 			if(data->item_accel_y < 8) {
 				data->item_accel_y += 1;
 			}
-			data->tile_i_collision = TranslateSprite(THIS, data->vx, data->item_accel_y >> 2);	
+			data->tile_i_collision = TranslateSprite(THIS, data->vx, data->item_accel_y >> 3);	
 			if(data->tile_i_collision != 0 && data->item_accel_y > 0){
+				//PlayFx(CHANNEL_1, 60, 0x4b, 0xc2, 0x43, 0x68, 0x86);
+				PlayFx(CHANNEL_1, 60, 0x64, 0x81, 0x43, 0x73, 0x86);
 				data->item_accel_y = -6;
 			}
 		}

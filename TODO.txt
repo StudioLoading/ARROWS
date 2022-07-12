@@ -41,7 +41,8 @@ LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CIMITERO -> no boss
 				
 LIV 7 CASTELLO -> 3 MAPPE
-		cutscene in cui la mamma dice che deve andare sopra la torre da sola per "liberare le bestie".
+		cutscene in cui la mamma dice che deve andare sopra la torre da sola per 
+		"liberare le bestie".
 		- mappa 1 torre -> vado con la mamma in cima - da sola
 				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione.
 				la mamma non fa niente, se non saltare. non può essere ferita => non può morire. 
@@ -81,13 +82,12 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 nice2have:
 	- bonus level con bordo cornice tutto schermo del livello bonus
-	- schermata dopo titlescreen per configurazione tasti
 	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  
 
 TODO PER IL BUILDONE DEFINITIVO:
-- INSERIRE NEI CREDITI I NOMI DI QUELLI DEL PERK CREDITI KICKSTARTER
+- INSERIRE NEI CREDITI FINALI I NOMI DI QUELLI DEL PERK CREDITI KICKSTARTER
 - CONTROLLO di tutti i suggerimenti/dialoghi
 - SOSTITUIRE LE TILE DI SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
 - svuotare il frame della camera sul suo camerafocus.gbr.c

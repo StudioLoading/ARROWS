@@ -20,7 +20,7 @@ IMPORT_MAP(maptitlescreen);
 
 DECLARE_MUSIC(bgm_titlescreen);
 
-UINT8 quiver = 0b0000000001;
+UINT8 quiver = 0b0000011111;//0b0000000001;
 UINT8 amulet = 0;// = 0u;
 UINT8 coins = 0;// = 30u;
 INT8 ups = 0;// = 1;

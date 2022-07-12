@@ -6,6 +6,7 @@ IMPORT_TILES(tiles);
 IMPORT_TILES(tiles4);
 IMPORT_TILES(tilesanims);
 IMPORT_TILES(tilesanimsmapworld);
+IMPORT_TILES(tilesanimscutscene);
 
 extern UINT8 current_level;
 extern UINT8 current_map;
@@ -34,6 +35,9 @@ void set_banked_bkg_data(UINT8 first_tile, UINT8 nb_tiles, UINT8 tiles_used, UIN
 		break;
 		case 4u:
 		    set_bkg_data(first_tile, nb_tiles, tiles4.data+((16u) * first_tile));
+		break;
+		case 5u:
+		    set_bkg_data(first_tile, nb_tiles, tilesanimscutscene.data+((16u) * first_tile));
 		break;
 	}
     SWITCH_ROM(save);
@@ -161,4 +165,17 @@ void WorldmapQuiverIce() BANKED{
 }
 void WorldmapQuiverFire() BANKED{
 	set_banked_bkg_data(47u, 1u, 2, BANK(tilesanimsmapworld));// 16 * 10
+}
+
+void CutsceneAmulet0() BANKED{
+	set_banked_bkg_data(30u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
+}
+void CutsceneAmulet1() BANKED{
+	set_banked_bkg_data(31u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
+}
+void CutsceneAmulet2() BANKED{
+	set_banked_bkg_data(38u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
+}
+void CutsceneAmulet3() BANKED{
+	set_banked_bkg_data(39u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
 }

@@ -4,3 +4,7 @@ void WorldmapQuiverStone() BANKED;
 void WorldmapQuiverThunder() BANKED;
 void WorldmapQuiverIce() BANKED;
 void WorldmapQuiverFire() BANKED;
+void CutsceneAmulet0() BANKED;
+void CutsceneAmulet1() BANKED;
+void CutsceneAmulet2() BANKED;
+void CutsceneAmulet3() BANKED;

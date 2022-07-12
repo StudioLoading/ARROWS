@@ -34,7 +34,7 @@ const UINT8 const collision_tiles6[] = {2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17,
 UINT8 bank_tiles6 = BANK(tiles6);
 
 extern UINT16 sprites_palette[];
-extern UINT8 amulet ;
+extern UINT8 amulet;
 extern UINT8 coins ;
 extern INT8 ups ;
 extern INT8 hp;
@@ -152,7 +152,7 @@ void START() {
 				SpriteManagerLoad(SpriteFalcebase);
 				SpriteManagerLoad(SpriteCathead);
 			}else{
-				SpriteManagerLoad(SpriteMother);
+				SpriteManagerLoad(SpriteCutmother);
 			}
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
@@ -293,9 +293,8 @@ void UPDATE() {
 	if(load_next_d){
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
-				if(diag_found == 0){
-					diag_found = Build_Next_Dialog_Banked(scroll_target);
-				}
+				diag_found = Build_Next_Dialog_Banked(archer_player);
+				PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
@@ -312,6 +311,7 @@ void UPDATE() {
 		switch(load_next){
 			case 1: //stage
 			case -1:
+				PauseMusic;
 				current_map += load_next;
 			break;
 		}
@@ -329,6 +329,7 @@ void UPDATE() {
 	if(load_next_s == 1){
 		load_next_s = 0;
 		is_on_secret = 1;
+		PauseMusic;
 		SetState(StateSecret);
 	}
 	
@@ -657,7 +658,7 @@ void UPDATE() {
 				break;
 				case 2u:
 					if(scroll_target->x > (UINT16) 43u << 3 && spawning_counter == 0){
-						spawn_enemy6(SpriteMother, 56u, 18u);
+						spawn_enemy6(SpriteCutmother, 56u, 18u);
 						spawning_counter++;
 					}
 				break;

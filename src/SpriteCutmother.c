@@ -12,6 +12,7 @@ extern UINT8 diag_found;
 extern void Build_Next_Dialog() BANKED;
 
 const UINT8 mother_idle[] = {1, 0}; //The first number indicates the number of frames
+const UINT8 anim_mother_walk[] = {4, 0, 1, 0, 2}; //The first number indicates the number of frames
 extern UINT8 colliding_mother;
 struct EnemyInfo* mother_data;
 
@@ -31,6 +32,7 @@ void UPDATE(){
     Sprite* mspr;
     switch(mother_data->enemy_state){
         case ENEMY_STATE_WAIT:
+            SetSpriteAnim(THIS, mother_idle, 8u);
             SPRITEMANAGER_ITERATE(smother_tile, mspr) {
                 if(mspr->type == SpritePlayer) {
                     if(CheckCollision(THIS, mspr)) {
@@ -44,7 +46,7 @@ void UPDATE(){
             }
         break;
         case ENEMY_STATE_WALKING:
-            TranslateSprite(THIS, (cutmother->vx >> 4) << delta_time, (cutmother->enemy_accel_y >> 4) << delta_time);
+            SetSpriteAnim(THIS, anim_mother_walk, 8u);
         break;
     }
 

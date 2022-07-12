@@ -100,7 +100,7 @@ void UPDATE() {
 			if(ibex_data->enemy_state != ENEMY_STATE_JUMPING){
 				if(THIS->mirror != V_MIRROR && THIS->x == (UINT16) 24u << 3 ){
 					ibex_data->vx = -1;
-					PlayFx(CHANNEL_1, 60, 0x17, 0x82, 0xf1, 0x7e, 0x84);
+					PlayFx(CHANNEL_1, 60, 0x36, 0xf2, 0xf5, 0x82, 0x83);
 					ibex_data->enemy_state = ENEMY_STATE_JUMPING;
 					SetSpriteAnim(THIS, ibex_jump_up, 8u);
 					ibex_data->enemy_accel_y = -28;

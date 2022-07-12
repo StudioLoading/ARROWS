@@ -670,6 +670,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 									memcpy(d2, "   LET'S GET INTO   ", 20);
 									memcpy(d3, "    THE CASTLE.     ", 20);
 									memcpy(d4, "                    ", 20);
+									colliding_mother = 3u;
 									//load_next_d = 0; //manino brutto
 									//current_map = 0u;
 								}else{
@@ -682,8 +683,10 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								diagf = 60u;
 							break;
 							case 3u: //ho vulkan pyramid
-								colliding_mother = 5u;
-								diagf = 60u;
+								colliding_mother = 7u;
+								diagf = 99u;
+								//colliding_mother = 5u;
+								//diagf = 60u;
 							break;
 							case 4u: //non ho vulkan pyramid
 								colliding_mother = 6u;

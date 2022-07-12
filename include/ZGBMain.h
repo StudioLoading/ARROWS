@@ -61,8 +61,9 @@ _SPRITE_DMG(SpriteBat, bat)\
 _SPRITE_DMG(SpriteFalce, falce)\
 _SPRITE_DMG(SpriteFalcebase, falcebase)\
 _SPRITE_DMG(SpriteCathead, cathead)\
-_SPRITE_DMG(SpriteMother, mother)\
+_SPRITE_DMG(SpriteCutmother, cutmother)\
 _SPRITE_DMG(SpriteCutarcher, cutarcher)\
+_SPRITE_DMG(SpriteCastlegate, castlegate)\
 SPRITE_DEF_END
 
 

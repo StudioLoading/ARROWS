@@ -70,7 +70,9 @@ void UPDATE() {
 		}
 		FadeIn();
 		DISPLAY_OFF;
-		BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
+		if(sgb_check()){
+			BGP_REG = OBP0_REG = OBP1_REG = PAL_DEF(0, 1, 2, 3);
+		}
 		switch (credit_step){
 			case 1u:
 				if(sgb_check()){

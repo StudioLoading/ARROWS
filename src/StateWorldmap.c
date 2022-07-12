@@ -42,10 +42,9 @@ struct ItemInfo* dataiconpsg;
 
 void START() {
 
-	HIDE_WIN;
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
-	//NR50_REG = 0x44; //Max volume 0x77
+	NR50_REG = 0xFF; //Max volume 0x77
 	
 	SpriteManagerLoad(SpriteIconpsg);
 	
@@ -97,9 +96,15 @@ void START() {
 			dataiconpsg->type=1;
 			dataiconpsg->setup=1u;
 		break;
+		case 7u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 96u, (UINT16) 120u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=2;
+			dataiconpsg->setup=1u;
+		break;
 	}
 
-	SHOW_SPRITES;
+	HIDE_WIN;
 	
 	//CLEAN DIAGS
 	memcpy(d1, "                    ", 20);
@@ -128,6 +133,9 @@ void UPDATE(){
 		}
 		if((quiver & 0b0000001000) == 0b0000001000){// ho ice kneckle
 			WorldmapQuiverIce();
+		}		
+		if((quiver & 0b0000010000) == 0b0000010000){// ho vulkan pyramid
+			WorldmapQuiverFire();
 		}		
 	}
 	switch(current_level){ // spostamento orizzontale da un punto all' altro di 25u
@@ -162,6 +170,14 @@ void UPDATE(){
 		case 6u:
 			if(counter > 80u && siconpsg->x < 98u && (counter & 1)){
 				siconpsg->x++;
+			}
+		break;
+		case 7u:
+			if(counter > 80u && siconpsg->x < 128u && (counter & 1)){
+				siconpsg->x+=2;
+			}
+			if(counter > 80u && siconpsg->y > 104u && (counter & 1)){
+				siconpsg->y--;
 			}
 		break;
 	}
