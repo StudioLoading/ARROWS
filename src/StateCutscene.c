@@ -20,7 +20,6 @@ IMPORT_TILES(tiles6);
 
 IMPORT_MAP(mapcutscene0);
 IMPORT_MAP(diagnew);
-
 DECLARE_MUSIC(bgm_level_cematery);
 
 
@@ -133,7 +132,7 @@ void UPDATE() {
 	}
 	switch(current_cutscene){
 		case 1u:
-			if((KEY_TICKED(J_A) || KEY_TICKED(J_B)) && wait_c == 40u){
+			if(wait_c == 40u){ // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
 				diag_found = Build_Next_Dialog_Banked(scroll_target);
 				ShowCutDiag();
 				CalculateSpritesDestinations();
@@ -141,8 +140,7 @@ void UPDATE() {
 				sprite_3 = SpriteManagerAdd(SpriteCastlegate, (UINT16) 600u, (UINT16) 130u);
 				sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
 				sprite_3_data->enemy_state = ENEMY_STATE_NORMAL;
-				sprite_3->attr_add = 0b10000000;
-				quiver = 0b0000000001;
+				quiver = 0b00000001;
 			}
 		break;
 	}
@@ -213,7 +211,7 @@ void UPDATE() {
 				}else{
 					sprite_3->y -= 2;
 				}
-				if(temporeggia >> 2 == 0){					
+				if(temporeggia & 1 == 0){					
 					PlayFx(CHANNEL_1, 60, 0x73, 0x09, 0xf2, 0x1e, 0x86);
 				}
 				temporeggia++;

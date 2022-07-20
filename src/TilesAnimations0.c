@@ -4,6 +4,8 @@
 
 IMPORT_TILES(tiles);
 IMPORT_TILES(tiles4);
+IMPORT_TILES(tiles6);
+IMPORT_TILES(tiles7);
 IMPORT_TILES(tilesanims);
 IMPORT_TILES(tilesanimsmapworld);
 IMPORT_TILES(tilesanimscutscene);
@@ -39,6 +41,12 @@ void set_banked_bkg_data(UINT8 first_tile, UINT8 nb_tiles, UINT8 tiles_used, UIN
 		case 5u:
 		    set_bkg_data(first_tile, nb_tiles, tilesanimscutscene.data+((16u) * first_tile));
 		break;
+		case 6u:
+		    set_bkg_data(first_tile, nb_tiles, tiles6.data+((16u) * first_tile));
+		break;
+		case 7u:
+		    set_bkg_data(first_tile, nb_tiles, tiles7.data+((16u) * first_tile));
+		break;
 	}
     SWITCH_ROM(save);
 }
@@ -52,11 +60,11 @@ void Anim_Tiles_0() BANKED{
 		set_banked_bkg_data(29u, 1u, 0u, BANK(tiles));
 	}
 	//sliders0
-	if(current_level < 3){
+	if(current_level < 3u){
 		set_banked_bkg_data(99u, 1u, 0u, BANK(tiles));// + 16u * 99 tile index SLIDING UP TILES 99 100
 		set_banked_bkg_data(111u, 1u, 0u, BANK(tiles));// + 16u * 111 tile index
 		set_banked_bkg_data(119u, 1u, 0u, BANK(tiles));// + 16u * 119 tile index		
-	}else if (current_level > 2){
+	}else if (current_level > 2u){
 		set_banked_bkg_data(99u, 1u, 4u, BANK(tiles4));// + 16u * 99 tile index SLIDING UP TILES 99 100
 		set_banked_bkg_data(111u, 1u, 4u, BANK(tiles4));// + 16u * 111 tile index
 		set_banked_bkg_data(119u, 1u, 4u, BANK(tiles4));// + 16u * 119 tile index				
@@ -88,7 +96,7 @@ void Anim_Tiles_0() BANKED{
 		set_banked_bkg_data(87u, 1u, 0u, BANK(tiles));///+ 16u * 87 tile index
 		set_banked_bkg_data(88u, 1u, 0u, BANK(tiles));///+ 16u * 88 tile index
 	}
-	if(current_level == 3){
+	if(current_level == 3u){
 		//rain0
 		set_banked_bkg_data(36u, 1u, 4u, BANK(tiles4));//16u * 36u tile index
 		set_banked_bkg_data(37u, 1u, 4u, BANK(tiles4));//16u * 37u tile index
@@ -98,6 +106,12 @@ void Anim_Tiles_0() BANKED{
 		//clouds1
 		set_banked_bkg_data(100u, 1u, 4u, BANK(tiles4));///+ 16u * 100 tile index
 		set_banked_bkg_data(101u, 1u, 4u, BANK(tiles4));// + 16u * 101 tile index	
+	}
+	if(current_level == 6u){
+		set_banked_bkg_data(88u, 1u, 6u, BANK(tiles6));
+	}
+	if(current_level >= 7u){
+		set_banked_bkg_data(43, 1u, 7u, BANK(tiles7));
 	}
 }
 
@@ -151,6 +165,12 @@ void Anim_Tiles_1() BANKED{
 		//clouds1
 		set_banked_bkg_data(100u, 1u, 1u, BANK(tilesanims));///+ 16u * 100 tile index
 		set_banked_bkg_data(101u, 1u, 1u, BANK(tilesanims));// + 16u * 101 tile index	
+	}
+	if(current_level == 6u){
+		set_banked_bkg_data(88u, 1u, 1u, BANK(tilesanims));
+	}
+	if(current_level >= 7u){
+		set_banked_bkg_data(43u, 1u, 1u, BANK(tilesanims));
 	}
 }
 

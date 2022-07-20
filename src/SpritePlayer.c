@@ -230,12 +230,13 @@ void UPDATE() {
 							current_camera_state = 3u;
 							SetState(StateBoss);							
 						}else{ //non vado alla worldmap perchè è una rottura per il giocatore				
-							if(current_level < 3){
+							if(current_level < 3u){
 								SetState(StateGame);
-							}else if (current_level < 5){
+							}else if (current_level < 5u){
 								SetState(StateGame3);
-							}else{
-								SetState(StateGame6);
+							}else if (current_level == 7u){
+								current_map = 2;
+								SetState(StateGame7);
 							}
 						}
 					}
@@ -380,7 +381,7 @@ void UPDATE() {
 		}
 	}
 	
-	if (GetScrollTile((THIS->x >> 3) +1, (THIS->y >> 3)) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
+	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
 		archer_accel_y = -2;
 		archer_state = STATE_ASCENDING;
 	}else if (archer_state == STATE_ASCENDING){

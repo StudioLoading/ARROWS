@@ -1,6 +1,7 @@
 #include "Banks/SetAutoBank.h"
 
 #include "SGB.h"
+#include "Palette.h"
 #include "ZGBMain.h"
 #include "Keys.h"
 #include "Palette.h"
@@ -8,7 +9,6 @@
 #include "SpriteManager.h"
 #include "string.h"
 #include "Print.h"
-//#include "Sound.h"
 #include "Fade.h"
 #include "Music.h"
 
@@ -19,8 +19,6 @@ IMPORT_TILES(tilescredit2);
 IMPORT_TILES(tilescredit3);
 IMPORT_TILES(tilescredit4);
 
-IMPORT_MAP(border);
-
 IMPORT_MAP(mapcredit0);
 IMPORT_MAP(mapcredits1);
 IMPORT_MAP(mapcredits2);
@@ -29,6 +27,7 @@ IMPORT_MAP(mapcredits4);
 
 //DECLARE_MUSIC(bgm_credits);
 DECLARE_MUSIC(bgm_credits);
+IMPORT_MAP(border);
 
 const UINT8 collision_tiles_credits[] = {1,0};
 UINT8 updatecounter;

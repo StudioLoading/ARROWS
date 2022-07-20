@@ -35,7 +35,7 @@ void START() {
 	}
 	scroll_bottom_movement_limit = 36u;
 	
-	SpriteManagerLoad(SpriteCamerafocus);
+	//SpriteManagerLoad(SpriteCamerafocus);
 	SHOW_SPRITES;
 	
 	//SOUND

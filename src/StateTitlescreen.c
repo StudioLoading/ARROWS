@@ -57,8 +57,8 @@ void START() {
 		set_sgb_palette_title();
 	}
 
-	SpriteManagerLoad(SpriteCamerafocus);
-	SpriteManagerLoad(SpriteArrowtitle);
+	//SpriteManagerLoad(SpriteCamerafocus);
+	//SpriteManagerLoad(SpriteArrowtitle);
 	SHOW_SPRITES;
 	
 	INIT_FONT(font, PRINT_BKG); 

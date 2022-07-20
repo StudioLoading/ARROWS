@@ -46,7 +46,7 @@ void START() {
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	NR50_REG = 0xFF; //Max volume 0x77
 	
-	SpriteManagerLoad(SpriteIconpsg);
+	//SpriteManagerLoad(SpriteIconpsg);
 	
 	if(sgb_check()){
 		set_sgb_palette01_worldmap();

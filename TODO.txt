@@ -5,7 +5,6 @@ Music: GBT Player
 
 
 TODO:
-- finire cutscene fine liv CIMITERO
 - livello castello come da design sopra
 - final boss
 - bonus level
@@ -44,7 +43,8 @@ LIV 7 CASTELLO -> 3 MAPPE
 		cutscene in cui la mamma dice che deve andare sopra la torre da sola per 
 		"liberare le bestie".
 		- mappa 1 torre -> vado con la mamma in cima - da sola
-				stanze segrete per liberare i lupo, aquila, orso che erano stati messi in trappola dal finalBoss per punizione.
+				stanze segrete per liberare i lupo, aquila, orso 
+				che erano stati messi in trappola dal finalBoss per punizione.
 				la mamma non fa niente, se non saltare. non può essere ferita => non può morire. 
 				Se li trovo e ci parlo, li curo e verranno dopo in aiuto.
 				il finalboss l' attacca, la scena si sposta sull' arcere che deve rifare da solo 
@@ -81,7 +81,7 @@ LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa co
 
 
 nice2have:
-	- bonus level con bordo cornice tutto schermo del livello bonus
+	- bonus level
 	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  

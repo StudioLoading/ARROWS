@@ -25,6 +25,7 @@ IMPORT_MAP(maplevel3sky);
 IMPORT_MAP(maplevel4jungle);
 IMPORT_MAP(maplevel5icecave);
 IMPORT_MAP(maplevel6cematery);
+IMPORT_MAP(maplevel7castle);
 
 IMPORT_MAP(mapdiagarcher);
 IMPORT_MAP(mapdiagslave1);
@@ -40,6 +41,7 @@ IMPORT_MAP(mapdiagibex);
 IMPORT_MAP(mapdiagbear);
 IMPORT_MAP(mapdiagwalrus);
 IMPORT_MAP(mapdiagmother);
+IMPORT_MAP(mapdiagfinalboss);
 
 IMPORT_MAP(mapdiagamuletstone);
 IMPORT_MAP(mapdiagamuletthunder);
@@ -172,6 +174,12 @@ void START() {
 			}
 			InitScroll(BANK(maplevel6cematery), &maplevel6cematery, collision_dtiles, 0);
 		break;
+		case 17u:
+			if(sgb_check()){
+				set_sgb_palette01_CASTLE();
+			}
+			InitScroll(BANK(maplevel7castle), &maplevel7castle, collision_dtiles, 0);
+		break;
 		case 19u:
 			if(sgb_check()){
 				set_sgb_palette01_2E();
@@ -250,15 +258,21 @@ void START() {
 			}
 			InitScroll(BANK(mapdiagwalrus), &mapdiagwalrus, collision_dtiles, 0);
 		break;
+		case 57u:
+			if(sgb_check()){
+				set_sgb_palette01_BOSS();
+			}
+			InitScroll(BANK(mapdiagfinalboss), &mapdiagfinalboss, collision_dtiles, 0);
+		break;
 		case 60u:
 			if(sgb_check()){
-				set_sgb_palette01_CEMATERYCRYPT();
+				set_sgb_palette01_TITLEINVERTED();
 			}
 			InitScroll(BANK(mapdiagmother), &mapdiagmother, collision_dtiles, 0);
 		break;
 		case 88u:
 			if(sgb_check()){
-				set_sgb_palette01_CEMATERYCRYPT();
+				set_sgb_palette01_CASTLE();
 			}
 			InitScroll(BANK(mapdiagtomb), &mapdiagtomb, collision_dtiles, 0);
 		break;
@@ -300,9 +314,7 @@ void UPDATE() {
 				break;
 			}
 		}else{
-			if(colliding_mother){ //reset coliding mother
-				colliding_mother = 0u;
-			}
+			colliding_mother = 0u;
 			switch(current_level){
 				case 0u:
 				case 1u:
@@ -316,6 +328,9 @@ void UPDATE() {
 				case 5u:
 				case 6u:
 					SetState(StateGame6);
+				break;
+				case 7u:
+					SetState(StateGame7);
 				break;
 			}
 		}

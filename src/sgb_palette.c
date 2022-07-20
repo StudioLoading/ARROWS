@@ -279,7 +279,12 @@ void set_sgb_palette01_WALRUS() __banked {
 void set_sgb_palette01_CEMATERYCRYPT() __banked {
 	set_sgb_palette(RGB8(255, 255, 255), RGB8(184, 184, 184), RGB8(176, 62, 255), RGB8(40, 0, 136));
 }
-
+void set_sgb_palette01_CASTLE() __banked{
+    set_sgb_palette(RGB8(220, 220, 220), RGB8(160, 160, 160), RGB8(0, 128, 128), RGB8(86, 56, 32));
+}
+void set_sgb_palette01_BOSS() __banked{
+    set_sgb_palette(RGB8(255, 255, 255), RGB8(192, 208, 240), RGB8(255, 168, 0), RGB8(80, 8, 88));
+}
 void set_sgb_palette01_1A() __banked {
 	set_sgb_palette(SGB_PAL1A_LIGHTER, SGB_PAL1A_LIGHT, SGB_PAL1A_DARK, SGB_PAL1A_DARKER);
 }

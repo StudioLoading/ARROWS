@@ -111,3 +111,21 @@ struct CameraInfo{
 	UINT16 final_x;
 	UINT16 final_y;
 };
+
+typedef enum  {
+	WOLF_CAGED,
+	WOLF_FREE,
+	IBEX_CAGED,
+	IBEX_FREE,
+	BEAR_CAGED,
+	BEAR_FREE,
+	BOSS_IDLE
+}CAGEDBOSS_STATE;
+
+
+struct CagedbossInfo{
+	INT8 setup;
+	CAGEDBOSS_STATE state;
+	UINT8 hit; 
+	UINT8 wait;
+};

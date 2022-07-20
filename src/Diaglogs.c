@@ -23,11 +23,11 @@ unsigned char d4[21];
 INT8 is_on_boss = -1;
 INT8 is_on_cutscene = 0;
 struct ArcherInfo* archer_data;
+struct CagedbossInfo* cagedboss_data;
 UINT8 tile_collision = 0u;
 ARCHER_STATE archer_state;
 extern UINT8 current_cutscene;
 extern UINT8 current_level_b;
-extern INT8 load_next_d;
 extern INT8 load_next_b;
 extern INT8 on_worldmap;
 extern UINT8 colliding_mother;
@@ -91,6 +91,13 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 				memcpy(d4, "                    ", 20);
 				diagf = 16u;
 			break;
+			case 7u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "    FINAL CASTLE    ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 17u;
+			break;
 		}
 		on_worldmap = 0;
 	}
@@ -120,7 +127,8 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		13	Stage Sky
 		14	Stage Forest
 		15 	Stage Iced Cavern
-		16	Stage Castle
+		16	Stage Cematery
+		17  Stage Castle
 		19	Door - key ok
 		20	wrench
 		21	key
@@ -144,25 +152,23 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	
 	*/
 
-	if(diagf == 0u){
-		if(paused){
-			memcpy(d1, "    AMULETS OWNED   ", 20);
-			if((quiver & 0b0000000010) == 0b0000000010){// ho stone calice
-					memcpy(d2, "         $          ", 20);
-			}
-			if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010){// ho thunder horn
-				memcpy(d2, "        $ [         ", 20);
-			}
-			if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010 && (quiver & 0b0000001000) == 0b0000001000){// ho ice kneckle
-				memcpy(d2, "       $ [ #        ", 20);
-			}
-			if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010 && (quiver & 0b0000001000) == 0b0000001000  && (quiver & 0b0000010000) == 0b0000010000){// ho ice kneckle
-				memcpy(d2, "      $ [ # ]       ", 20);
-			}			
-			memcpy(d3, " PRESS DOWN-JUMP TO ", 20);
-			memcpy(d4, " GET SUGGESTIONS.   ", 20);
-			diagf = 98u;
+	if(paused && diagf == 0u){
+		memcpy(d1, "    AMULETS OWNED   ", 20);
+		if((quiver & 0b0000000010) == 0b0000000010){// ho stone calice
+				memcpy(d2, "         $          ", 20);
 		}
+		if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010){// ho thunder horn
+			memcpy(d2, "        $ [         ", 20);
+		}
+		if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010 && (quiver & 0b0000001000) == 0b0000001000){// ho ice kneckle
+			memcpy(d2, "       $ [ #        ", 20);
+		}
+		if((quiver & 0b0000000100) == 0b0000000100 && (quiver & 0b0000000010) == 0b0000000010 && (quiver & 0b0000001000) == 0b0000001000  && (quiver & 0b0000010000) == 0b0000010000){// ho ice kneckle
+			memcpy(d2, "      $ [ # ]       ", 20);
+		}			
+		memcpy(d3, " PRESS DOWN-JUMP TO ", 20);
+		memcpy(d4, " GET SUGGESTIONS.   ", 20);
+		diagf = 98u;
 	}
 
 	if(diagf == 0u){
@@ -671,7 +677,6 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 									memcpy(d3, "    THE CASTLE.     ", 20);
 									memcpy(d4, "                    ", 20);
 									colliding_mother = 3u;
-									//load_next_d = 0; //manino brutto
 									//current_map = 0u;
 								}else{
 									memcpy(d1, " GO BACK TO THE     ", 20);
@@ -701,7 +706,68 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 					break;
 				}
 			break;
-
+			case 7u:
+				switch(current_map){
+					case 0u:
+						switch(archer->type){
+							case SpritePlayer:
+								memcpy(d1, "  THE ANSWER IS     ", 20);
+								memcpy(d2, "  SO CLOSE NOW !!   ", 20);
+								memcpy(d3, "                    ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 99u;
+							break;
+							case SpriteCagedboss:
+								cagedboss_data = (struct CagedbossInfo*)archer->custom_data;
+								switch(cagedboss_data->state){
+									case BOSS_IDLE:
+										memcpy(d1, " MY PETS HAVE BEEN  ", 20);
+										memcpy(d2, " PUNISHED FOR THEIR ", 20);
+										memcpy(d3, " FAILURES. WHAT DO  ", 20);
+										memcpy(d4, " YOU WANT DOCTOR ?  ", 20);
+										diagf = 57u;
+									break;
+									case WOLF_CAGED:
+									case IBEX_CAGED:
+									case BEAR_CAGED:
+										switch(cagedboss_data->hit){
+											case 0:
+												memcpy(d1, "   THANK YOU FOR    ", 20);
+												memcpy(d2, "   HEALING ME ...   ", 20);
+												memcpy(d3, "   NOW YOU ARE MY   ", 20);
+												memcpy(d4, "   MASTER.          ", 20);
+												if(cagedboss_data->state == WOLF_CAGED){
+													diagf = 51u;
+												}else if(cagedboss_data->state == IBEX_CAGED){
+													diagf = 54u;
+												}else if(cagedboss_data->state == BEAR_CAGED){
+													diagf = 55u;
+												}											
+											break;
+											case 1:
+												memcpy(d1, "                    ", 20);
+												memcpy(d2, "   GRRRRRRRR  !!    ", 20);
+												memcpy(d3, "                    ", 20);
+												memcpy(d4, "                    ", 20);
+												diagf = 99u;												
+											break;
+										}
+									break;
+								}
+							break;		
+						}			
+					break;
+					case 1u://sono appena entrato nel livello 7.1					
+						case SpritePlayer:
+							memcpy(d1, "                    ", 20);
+							memcpy(d2, "     MOTHEEEER !    ", 20);
+							memcpy(d3, "                    ", 20);
+							memcpy(d4, "                    ", 20);
+							diagf = 1u;
+						break;
+					break;
+				}
+			break;
 		}
 	}
 	

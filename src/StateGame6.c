@@ -77,13 +77,13 @@ extern unsigned char d4[];
 extern INT8 spawning_counter;
 extern UINT8 updatecounter;
 extern INT8 platform_vx;
+extern INT8 platform_vy;
 extern INT8 update_hud;
 extern INT8 fx_cooldown;
 extern UINT8 thunder_delay;
 extern UINT16 apx;
 extern UINT16 apy;
 extern UINT16 apx_mirrored;
-extern INT8 platform_vx;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -97,6 +97,7 @@ void ShowWindowDiag6() BANKED;
 void set_window_y6(UBYTE y);
 void spawn_enemy6(UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
 void spawn_item6(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
+
 Sprite* spawn_vplatform6(Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED;
 
 Sprite* spawn_vplatform6(Sprite* enem, UINT8 spriteType, UINT16 posx, UINT16 posy) BANKED{
@@ -267,7 +268,7 @@ void UPDATE() {
 			apx = archer_player->x + 24;
 			apy = archer_player->y - 8;
 			apx_mirrored = archer_player->x - 24;
-			scroll_target->y = apy;
+			scroll_target->y = apy + platform_vy;
 			INT8 dx = platform_vx;
 			if(archer_player->mirror == V_MIRROR){
 				if(scroll_target->x > apx_mirrored){
@@ -726,7 +727,7 @@ void spawn_falci(UINT16 x, UINT16 y){
 	falcebasedata3->enemy_state = ENEMY_STATE_SLIDING;
 }
 
-void UpdateHUD6(){
+void UpdateHUD6() BANKED{
 	hp = archer_data->hp;
 	amulet = archer_data->amulet;
 	coins = archer_data->coins;
@@ -784,7 +785,7 @@ void UpdateHUD6(){
 	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
 }
 
-void ShowWindow6(){	
+void ShowWindow6() BANKED{	
 	set_window_y6(144 - 8);
 	showing_diag = 0;
 	show_diag = -1;
@@ -797,7 +798,7 @@ void ShowWindow6(){
 	UpdateHUD6();
 }
 
-void ShowWindowDiag6(){
+void ShowWindowDiag6() BANKED{
 	if (showing_diag == 0){
 		HIDE_WIN;
 		set_window_y6(144 - 32);

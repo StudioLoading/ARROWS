@@ -4,7 +4,6 @@
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 #include "CircleMath.h"
@@ -70,24 +69,25 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_bee_tile, ibeespr) {
-		if(ibeespr->type == SpritePlayer) {
-			if(CheckCollision(THIS, ibeespr)) {
-				beedata->wait = 24u;
-			}
-		}
-		if(ibeespr->type == SpriteArrow) {
-			if(CheckCollision(THIS, ibeespr)) {
-				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibeespr->custom_data;
-				beedata->wait = 24u;
-				SetSpriteAnim(THIS, bee_hit, 24u); 
-				beedata->hp -= arrowdata->arrowdamage;
-				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
-				SpriteManagerRemoveSprite(ibeespr);
-				if (beedata->hp <= 0){
-					EDie();
-				}else{
-					beedata->enemy_state = ENEMY_STATE_HIT;
-				}
+		if(CheckCollision(THIS, ibeespr)) {
+			struct ArrowInfo* arrowdata = 0;
+			switch(ibeespr->type){
+				case SpritePlayer:
+					beedata->wait = 24u;
+				break;
+				case SpriteArrow:
+					arrowdata = (struct ArrowInfo*)ibeespr->custom_data;
+					beedata->wait = 24u;
+					SetSpriteAnim(THIS, bee_hit, 24u); 
+					beedata->hp -= arrowdata->arrowdamage;
+					PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
+					SpriteManagerRemoveSprite(ibeespr);
+					if (beedata->hp <= 0){
+						EDie();
+					}else{
+						beedata->enemy_state = ENEMY_STATE_HIT;
+					}
+				break;
 			}
 		}
 	}

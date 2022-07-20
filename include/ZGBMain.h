@@ -21,6 +21,7 @@ _STATE(StateSecret)\
 _STATE(StateBoss)\
 _STATE(StateGameover)\
 _STATE(StateCutscene)\
+_STATE(StateGame7)\
 STATE_DEF_END
 
 #define SPRITES \
@@ -64,6 +65,7 @@ _SPRITE_DMG(SpriteCathead, cathead)\
 _SPRITE_DMG(SpriteCutmother, cutmother)\
 _SPRITE_DMG(SpriteCutarcher, cutarcher)\
 _SPRITE_DMG(SpriteCastlegate, castlegate)\
+_SPRITE_DMG(SpriteCagedboss, cagedboss)\
 SPRITE_DEF_END
 
 

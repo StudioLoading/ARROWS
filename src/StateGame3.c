@@ -83,6 +83,7 @@ extern UINT16 apx;
 extern UINT16 apy;
 extern UINT16 apx_mirrored;
 extern INT8 platform_vx;
+extern INT8 platform_vy;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -353,7 +354,7 @@ void UPDATE() {
 			apx = archer_player->x + 24;
 			apy = archer_player->y - 8;
 			apx_mirrored = archer_player->x - 24;
-			scroll_target->y = apy;
+			scroll_target->y = apy + platform_vy;
 			INT8 dx = platform_vx;
 			if(archer_player->mirror == V_MIRROR){
 				if(scroll_target->x > apx_mirrored){

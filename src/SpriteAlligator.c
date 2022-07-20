@@ -23,10 +23,6 @@ struct EnemyInfo* alligator_data ;
 
 void START() {
 	alligator_data = (struct EnemyInfo*)THIS->custom_data;
-	/*THIS->mt_sprite->dx = 0;
-	THIS->mt_sprite->dy = 0;
-	THIS->coll_w = 0;
-	THIS->coll_h = 0;*/
 	THIS->lim_x = 255u;
 	THIS->lim_y = 244u;
 	SetSpriteAnim(THIS, alligator_hide, 16u);
