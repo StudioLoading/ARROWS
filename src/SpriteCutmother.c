@@ -12,7 +12,7 @@ extern UINT8 diag_found;
 extern void Build_Next_Dialog() BANKED;
 
 const UINT8 mother_idle[] = {1, 0}; //The first number indicates the number of frames
-const UINT8 anim_mother_walk[] = {4, 0, 1, 0, 2}; //The first number indicates the number of frames
+const UINT8 anim_cutmother_walk[] = {4, 0, 1, 0, 2}; //The first number indicates the number of frames
 extern UINT8 colliding_mother;
 struct EnemyInfo* mother_data;
 
@@ -46,7 +46,7 @@ void UPDATE(){
             }
         break;
         case ENEMY_STATE_WALKING:
-            SetSpriteAnim(THIS, anim_mother_walk, 8u);
+            SetSpriteAnim(THIS, anim_cutmother_walk, 8u);
         break;
     }
 

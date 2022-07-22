@@ -43,7 +43,7 @@ extern const UINT8 EMPTY_TILE;
 #define MAX_LANDING_TIME 24
 #define MAX_ACCEL_Y_TO_LAND_ANIMATION 36
 
-//const UINT8 anim_idle[] = {1, 0}; //The first number indicates the number of frames
+//The first number indicates the number of frames
 const UINT8 anim_idle[] = {4, 12, 13, 14, 13};
 const UINT8 anim_jump[] = {1, 11};
 const UINT8 anim_jump_up[] = {1, 6};
@@ -54,17 +54,7 @@ const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {3,2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
 
-INT8 jump_power = 0;
-INT8 death_cooldown = 0;
-INT8 hit_cooldown = 0;
-extern UINT8 tile_collision;
-INT16 archer_accel_y = 0;
-INT8 shoot_cooldown = 0;
-INT8 platform_vx = 0;
-INT8 platform_vy = 0;
 extern INT8 is_on_boss;
-INT8 is_on_secret = -1;
-INT8 is_on_gameover = -1;
 extern UINT8 diag_found;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 extern UINT8 current_camera_counter;
@@ -72,6 +62,17 @@ extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
 extern INT8 fx_cooldown;
 extern UINT8 quiver; //little endian, rightest are the less important
+extern UINT8 tile_collision;
+
+INT8 jump_power = 0;
+INT8 death_cooldown = 0;
+INT8 hit_cooldown = 0;
+INT16 archer_accel_y = 0;
+INT8 shoot_cooldown = 0;
+INT8 platform_vx = 0;
+INT8 platform_vy = 0;
+INT8 is_on_secret = -1;
+INT8 is_on_gameover = -1;
 INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
 INT8 landing_time = MAX_LANDING_TIME;
 
@@ -255,22 +256,20 @@ void UPDATE() {
 			if(shoot_cooldown) {
 				SetSpriteAnim(THIS, anim_shoot, 12u);
 			} else if(!KEY_PRESSED(J_DOWN)){
-				//else{
-					if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT)) {
-						landing_time = MAX_LANDING_TIME;
-						SetSpriteAnim(THIS, anim_walk, 16u);
-					}else{
-						if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
-						else{
-							if(landing_time < MAX_LANDING_TIME){
-								SetSpriteAnim(THIS, anim_shield, 16u);
-								landing_time++;
-							}else{
-								SetSpriteAnim(THIS, anim_idle, 12u);
-							}
-						}					
-					}
-				//}
+				if(KEY_PRESSED(J_RIGHT) || KEY_PRESSED(J_LEFT)) {
+					landing_time = MAX_LANDING_TIME;
+					SetSpriteAnim(THIS, anim_walk, 16u);
+				}else{
+					if (archer_state == STATE_NORMAL_PLATFORM){SetSpriteAnim(THIS, anim_flying, 16u);}
+					else{
+						if(landing_time < MAX_LANDING_TIME){
+							SetSpriteAnim(THIS, anim_shield, 16u);
+							landing_time++;
+						}else{
+							SetSpriteAnim(THIS, anim_idle, 12u);
+						}
+					}					
+				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
 				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1

@@ -1,5 +1,6 @@
 #include "Banks/SetAutoBank.h"
 
+#include "SGB.h"
 #include "Palette.h"
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -23,6 +24,7 @@ IMPORT_MAP(map80);
 
 IMPORT_MAP(diagnew7);
 IMPORT_MAP(window7);
+IMPORT_MAP(finalborder);
 
 DECLARE_MUSIC(bgm_level_cematery);
 
@@ -95,8 +97,14 @@ void ShowWindow7() BANKED;
 void ShowWindowDiag7() BANKED;
 void set_window_y7(UBYTE y);
 
+INT8 final_border_set = 1;
+
 
 void START() {
+	if(final_border_set){
+		LOAD_SGB_BORDER(finalborder);
+		final_border_set = 0;
+	}
 	
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
@@ -162,7 +170,11 @@ void START() {
 	else{
 		ResumeMusic;
 	}
-	archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	if(current_level == 7u && current_map == 0){
+		archer_player = SpriteManagerAdd(SpriteMother, drop_player_x << 3, drop_player_y << 3);
+	}else{
+		archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	}
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x , archer_player->y);
 	InitScroll((UINT8) map78banks[current_map], maps78[current_map], collision_tiles7, 0);
 	SHOW_BKG;

@@ -128,6 +128,9 @@ void START() {
 		case 6u:
 			SetState(StateGame6);
 		break;
+		case 7u:
+			SetState(StateGame7);
+		break;
 	}
 
 	//INIT SOUND
