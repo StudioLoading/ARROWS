@@ -313,6 +313,8 @@ void UPDATE() {
 					SetState(StateDiag);
 				break;
 			}
+		}else if(is_on_cutscene){
+			SetState(StateCutscene);
 		}else{
 			colliding_mother = 0u;
 			switch(current_level){

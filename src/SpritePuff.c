@@ -3,7 +3,6 @@
 #include "ZGBMain.h"
 #include "SpriteManager.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 

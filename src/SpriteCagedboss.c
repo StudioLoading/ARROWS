@@ -25,6 +25,7 @@ const UINT8 ibex_caged[] = {1, 1}; //The first number indicates the number of fr
 const UINT8 bear_caged[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 boss_idle[] = {4, 3,3,3,4}; //The first number indicates the number of frames
 
+UINT8 final_quiver = 0b00000001;
 
 void START() {    
 	THIS->lim_x = 255u;
@@ -62,11 +63,22 @@ void UPDATE() {
             drop_player_x = archer_player->x >> 3;
             drop_player_y = archer_player->y >> 3;
 			switch(icbspr->type){
-				case SpritePlayer:
+				case SpriteMother:
 					caged_data->setup = 0;
                     caged_data->hit = 0;
                     diag_found = Build_Next_Dialog_Banked(THIS);
                     load_next_d = 4;
+                    switch(caged_data->state){
+                        case WOLF_CAGED:
+                            final_quiver |= 0b00000010;
+                        break;
+                        case IBEX_CAGED:
+                            final_quiver |= 0b00000100;
+                        break;
+                        case BEAR_CAGED:
+                            final_quiver |= 0b00001000;
+                        break;
+                    }
                     SetState(StateDiag);
 				break;
 				case SpriteArrow:

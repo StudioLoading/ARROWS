@@ -39,37 +39,39 @@ LIV 4 TREES -> Bear -> tool di uscita
 LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
 LIV 6 CIMITERO -> no boss
 				
-LIV 7 CASTELLO -> 3 MAPPE
-		cutscene in cui la mamma dice che deve andare sopra la torre da sola per 
-		"liberare le bestie".
-		- mappa 1 torre -> vado con la mamma in cima - da sola
-				stanze segrete per liberare i lupo, aquila, orso 
-				che erano stati messi in trappola dal finalBoss per punizione.
-				la mamma non fa niente, se non saltare. non può essere ferita => non può morire. 
-				Se li trovo e ci parlo, li curo e verranno dopo in aiuto.
-				il finalboss l' attacca, la scena si sposta sull' arcere che deve rifare da solo 
-		- mappa 2 torre -> controllo l' arcere: le stanze segrete sono vuote ma con scrigni di vite.
-		- boss -> in cima alla torre c'è boss, mamma e arcere: l' aquila prende il boss e vola via.
-			cutscene di mamma che dice "vallo a prendere!" 
-			mamma spara freccia ogni 2 secondi finchè non ci salgo sopra e supero un po' di metri
-			la freccia della mamma va piuttosto lenta, direi come la nostra di stone
-			sono in aria, sto andando verso destra e devo arrivare alla fine
-			c'è qualche tassello di rimbalzo, magari doppio così in uno ci atterro sopra, nell' altro a sinistra sparo che, 
-				tornando indietro, ci posso risalire sopra
-			nemici uccelli, pipistrelli e teste di gatto
-			arrivo sull' altra torre, la freccia della mamma sparisce e atterro
-			diag col boss che mi minaccia  
-			Inizia lo scontro col boss a schermata fissa
-			Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. 
-			Ho a disposizione frecce normali e frecce di fuoco per demolirlo. 
-			Alla fine arriva mamma , dice "insieme figlio!" 
-			cutscene con mamma e figlio che scoccano una freccia ciscuno, quando le frecce si uniscono spariscono e diventano
-			un freccione di "luce" (? forse riesco con sfondo scuro scuro)
-			il boss viene colpito in pieno e viene spinto giù fuori schermo.
-			diag dell' arcere e madre che escono dal cancello, senza più gli amuleti perchè diciamo di averceli tutti
-			titoli di coda
-			titoli di coda
-			cutscene alla Gator Swamp col coccodrillo insieme al finalBoss.
+LIV 7 CASTELLO -> 3 MAPPE		
+	- boss -> in cima alla torre c'è boss, mamma e arcere: 
+		cutscena
+		diag mother che dice punishment is not right
+		diag boss che se ne batte il cazzo
+		mappa e arriva l' acquila, prende il boss e se lo porta a destra
+		diag mother che mi invita a seguirlo sulla sua freccia
+		mappa con la mamma che spara da dietro di me
+		l' archer ci salta sopra ed esce di schermo
+		fine cutscene
+		
+		il nocciolo della questione è che il boss punisce ingiustamente e noi ci mettiamo
+		in mezzo alla questione anche se non c'entriamo niente.
+		la freccia della mamma va piuttosto lenta, direi come la nostra di stone
+		sono in aria, sto andando verso destra e devo arrivare alla fine
+		c'è qualche tassello di rimbalzo, magari doppio così in uno ci atterro sopra, nell' altro a sinistra sparo che, 
+			tornando indietro, ci posso risalire sopra
+		nemici uccelli, pipistrelli e teste di gatto
+		arrivo sull' altra torre, la freccia della mamma sparisce e atterro
+		diag col boss che mi minaccia  
+		Inizia lo scontro col boss a schermata fissa
+		Ogni due colpi dati, arriva un boss vecchio che ferisce il cattivone. 
+		Ho a disposizione frecce normali e frecce di fuoco per demolirlo. 
+		Alla fine arriva mamma , dice "insieme figlio!" 
+		cutscene con mamma e figlio che scoccano una freccia ciscuno, quando le frecce si uniscono spariscono e diventano
+		un freccione di "luce" (? forse riesco con sfondo scuro scuro)
+		il boss viene colpito in pieno e viene spinto giù fuori schermo.
+		diag dell' arcere e madre che escono dal cancello, 
+		gli animali arrivano, dicendo di aver recuperato gli AMULETI
+		per ringraziarci di essere entrati in un conflitto non nostro
+		titoli di coda
+		titoli di coda
+		cutscene alla Gator Swamp col coccodrillo insieme al finalBoss.
 
 			
 ---------------------------------------------------------

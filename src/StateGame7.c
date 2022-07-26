@@ -47,6 +47,7 @@ extern INT8 load_next_gameover;
 extern INT8 level_tool;
 extern UINT8 current_level;
 extern UINT8 current_map;
+extern UINT8 current_cutscene;
 extern INT8 is_on_boss;
 extern INT8 is_on_secret;
 extern INT8 is_on_gameover;
@@ -91,11 +92,14 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 extern UINT8 quiver;
+extern UINT8 final_quiver;
+extern INT8 is_on_cutscene;
 
 void UpdateHUD7() BANKED;
 void ShowWindow7() BANKED;
 void ShowWindowDiag7() BANKED;
 void set_window_y7(UBYTE y);
+void spawn_item7(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
 
 INT8 final_border_set = 1;
 
@@ -122,6 +126,15 @@ void START() {
 			if(sgb_check()){
 				set_sgb_palette01_CASTLE();
 				set_sgb_palette_statusbar();
+			}
+			switch(current_map){
+				case 0:
+					quiver = final_quiver;
+				break;
+				case 1:
+					SpriteManagerLoad(SpriteCutmother);
+					SpriteManagerLoad(SpriteCutfinalboss);
+				break;
 			}
 		break;
 	}		
@@ -334,7 +347,7 @@ void UPDATE(){
 						wolfcaged_data->setup = 1;
 						spawning_counter = 1;
 					}
-					if(spawning_counter == 1 && archer_player->y < (UINT16) 560u){
+					if(spawning_counter == 1 && archer_player->y < (UINT16) 584u){
 						enemies_1 = SpriteManagerAdd(SpriteCagedboss, (UINT16) 26 << 3, (UINT16) 64 << 3);
 						enemies_1->attr_add = 0b10000000;
 						enemies_1->mirror = V_MIRROR;
@@ -364,6 +377,50 @@ void UPDATE(){
 						SetState(StateDiag);
 					}
 	            break;
+				case 1u:
+					if(spawning_counter == 0 && archer_player->y < ((UINT16) 114u << 3)){
+						spawn_item7(scrigno_dcoin, 33u, 110u, 3, 1);
+						spawning_counter = 1;
+					}
+					if(spawning_counter == 1 && archer_player->y < ((UINT16) 100u << 3)){
+						//spawn_item7(scrigno_dcoin, 21u, 91u, 7, 1);
+						spawning_counter = 2;
+					}
+					if(spawning_counter == 2 && archer_player->y < ((UINT16) 90u << 3)){
+						spawn_item7(scrigno_dcoin, 7u, 84u, 7, 1);
+						spawning_counter = 3;
+					}
+					if(spawning_counter == 3 && archer_player->y < ((UINT16) 96u << 3)){
+						//spawn_item7(scrigno_dcoin, 18u, 96u, 7, 1);
+						spawning_counter = 4;
+					}
+					if(spawning_counter == 4 && archer_player->y < ((UINT16) 50u << 3)){
+						spawn_item7(scrigno_up, 17u, 41u, 3, 1);
+						spawning_counter = 5;
+					}
+					if(spawning_counter == 5 && archer_player->y < ((UINT16) 30u << 3)){
+						spawn_item7(scrigno_up, 23u, 28u, 3, 1);
+						spawning_counter = 6;
+					}
+					if(spawning_counter == 6 && archer_player->y < ((UINT16) 22u << 3)){
+						spawn_item7(scrigno_up, 23u, 28u, 3, 1);
+						spawning_counter = 5;
+						enemies_1 = SpriteManagerAdd(SpriteCutfinalboss, (UINT16) 35 << 3, (UINT16) 11 << 3);
+						enemies_1->mirror = V_MIRROR;
+						struct CagedbossInfo* finalboss_data = (struct CagedbossInfo*)enemies_1->custom_data;
+						finalboss_data->state = BOSS_IDLE;
+						finalboss_data->setup = 1;
+						enemies_2 = SpriteManagerAdd(SpriteCutmother, (UINT16) 34 << 3, (UINT16) 13 << 3);						
+						enemies_2->mirror = V_MIRROR;
+						spawning_counter = 7;
+					}
+					if(spawning_counter == 7 && archer_player->y < ((UINT16) 15u << 3) && archer_player->x > ((UINT16) 28u << 3)){
+						//Cutscene
+						spawning_counter = 8;
+						current_cutscene = 1;//current_cutscene++ viene fatto sulla START dello StateCutscene
+						SetState(StateCutscene);
+					}
+				break;
 	        }
         break;
     }

@@ -16,6 +16,8 @@ const UINT8 anim_cutarcher_idle[] = {5, 5,6,7,7,6};
 const UINT8 anim_cutarcher_walk[] = {5, 4,3,2,3,1};
 
 void START(){
+    THIS->lim_x = 255u;
+    THIS->lim_y = 255u;
    	struct EnemyInfo* cutarcher = (struct EnemyInfo*)THIS->custom_data;
     cutarcher->vx = 0;
     cutarcher->enemy_accel_y = 24u;

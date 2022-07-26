@@ -16,6 +16,7 @@
 #define MOTHER_MAX_DIAG_COOLDOWN 60
 #define MOTHER_MAX_LANDING_TIME 24
 #define MOTHER_MAX_ACCEL_Y_TO_LAND_ANIMATION 36
+#define MOTHER_MAX_JUMP_POWER 5
 
 const UINT8 anim_mother_idle[] = {4, 0, 0, 0, 3};
 const UINT8 anim_mother_jump[] = {1, 4};
@@ -76,11 +77,12 @@ extern UINT8 diag_found;
 extern UINT8 current_level;
 extern UINT8 current_map;
 extern UINT8 current_level_b;
-
+extern INT8 load_next_d;
 
 void MoveMother();
 void JumpMother();
 void ShootMother();
+void Build_Next_Dialog_Mother() BANKED;
 
 void START() {
     archer_accel_y = 0;
@@ -183,6 +185,12 @@ void UPDATE(){
                         }
                     }					
                 }
+			}			
+			if (KEY_PRESSED(J_DOWN)){
+				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
+					Build_Next_Dialog_Mother();
+					return;
+				}
 			}
             if(KEY_TICKED(J_A)){//&& landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
@@ -212,7 +220,7 @@ void UPDATE(){
 				}else{
 					if (archer_accel_y < 4){									
 						if(KEY_PRESSED(J_A)) {
-							if (jump_power < 4){
+							if (jump_power < MOTHER_MAX_JUMP_POWER){
 								jump_power += 1;
 								archer_accel_y -= 2;
 							}
@@ -261,6 +269,28 @@ void UPDATE(){
 	}else if (archer_state == STATE_ASCENDING){
 		archer_accel_y = -12;
 		archer_state = STATE_NORMAL;
+	}
+}
+
+
+void Build_Next_Dialog_Mother() BANKED{
+	diag_found = Build_Next_Dialog_Banked(THIS);
+	if(diag_found){
+		if(diag_found < 89u){ 
+			drop_player_x = THIS->x >> 3;
+			drop_player_y = THIS->y >> 3;
+			load_next_d = 1;
+		}else{//means no state changing
+			// 99u just simple diag message to show from StateGame			
+			// 98u means paused
+			// 90u suggestion with error sound
+			if(diag_found == 90u){
+				PlayFx(CHANNEL_1, 60, 0x70a, 0x80, 0xf4, 0x73, 0x86);
+			}
+			archer_state = STATE_DIAG;
+			SetSpriteAnim(THIS, anim_mother_idle, 12u);
+			show_diag = 1;	
+		}		
 	}
 }
 

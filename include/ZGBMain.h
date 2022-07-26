@@ -67,6 +67,8 @@ _SPRITE_DMG(SpriteCutarcher, cutarcher)\
 _SPRITE_DMG(SpriteCastlegate, castlegate)\
 _SPRITE_DMG(SpriteCagedboss, cagedboss)\
 _SPRITE_DMG(SpriteMother, mother)\
+_SPRITE_DMG(SpriteCutfinalboss, cutfinalboss)\
+_SPRITE_DMG(SpriteCuteagle, cuteagle)\
 SPRITE_DEF_END
 
 

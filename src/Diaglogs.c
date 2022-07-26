@@ -33,6 +33,8 @@ extern INT8 on_worldmap;
 extern UINT8 colliding_mother;
 extern UINT8 quiver;
 extern UINT8 paused;
+extern UINT8 wait_c;
+
 
 UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	UINT8 diagf = 0u;	
@@ -110,6 +112,70 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 				memcpy(d3, "  AROUND THE DOOR   ", 20);
 				memcpy(d4, "  ENTRANCE          ", 20);
 				diagf = 99u;
+			break;
+			case 2u:
+				switch (wait_c){
+					case 41:
+						memcpy(d1, " MOM: SON! THIS GUY ", 20);
+						memcpy(d2, " IS ABUSING THE     ", 20);
+						memcpy(d3, " WILD ANIMALS !!    ", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 99u;
+					break;
+					case 42:
+						memcpy(d1, " ???: UUH! I WOULD  ", 20);
+						memcpy(d2, " CALL IT TEACHING   ", 20);
+						memcpy(d3, " RESPECT TO HUMANS  ", 20);
+						memcpy(d4, "  ... AGAIN!        ", 20);
+						diagf = 99u;
+					break;
+					case 43:
+						memcpy(d1, " MOM: NO! THE WORLD ", 20);
+						memcpy(d2, " CAN NOT GO BACK    ", 20);
+						memcpy(d3, " LIKE THAT !! WE    ", 20);
+						memcpy(d4, " FIGHT AGAINST IT!  ", 20);
+						diagf = 99u;
+					break;
+					case 44:
+						memcpy(d1, " ???: ARE YOU REALLY ", 20);
+						memcpy(d2, " FEELING SORRY FOR   ", 20);
+						memcpy(d3, " THE HUMANS WARDENS ?", 20);
+						memcpy(d4, "                     ", 20);
+						diagf = 99u;
+					break;
+					case 45:
+						memcpy(d1, "                     ", 20);
+						memcpy(d2, " MOTHER!             ", 20);
+						memcpy(d3, " LET S TAKE HIM DOWN ", 20);
+						memcpy(d4, "                     ", 20);
+						diagf = 99u;
+					break;
+					case 46:
+						memcpy(d1, "     SKREEEETCH !!   ", 20);
+						memcpy(d3, " I AM COMING FOR YOU ", 20);
+						memcpy(d4, "       MASTER        ", 20);
+						memcpy(d2, "                     ", 20);
+						diagf = 53u;
+					break;
+				}
+			break;
+			case 3u:
+				switch (wait_c){
+					case 40u:
+						memcpy(d1, "  ARCHER:           ", 20);
+						memcpy(d2, "                    ", 20);
+						memcpy(d3, "  WAIT... WHAT ?!   ", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 99u;
+					break;
+					case 43u:
+						memcpy(d1, "  MOM:              ", 20);
+						memcpy(d2, "  GO SON!           ", 20);
+						memcpy(d3, "  RIDE MY ARROW AND ", 20);
+						memcpy(d4, "  GET HIM !         ", 20);
+						diagf = 99u;
+					break;
+				}
 			break;
 		}
 	}
@@ -710,12 +776,38 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 				switch(current_map){
 					case 0u:
 						switch(archer->type){
-							case SpritePlayer:
-								memcpy(d1, "  THE ANSWER IS     ", 20);
-								memcpy(d2, "  SO CLOSE NOW !!   ", 20);
-								memcpy(d3, "                    ", 20);
-								memcpy(d4, "                    ", 20);
-								diagf = 99u;
+							case SpriteMother:
+								if(archer->y < ((UINT16) 36 << 3)){
+									memcpy(d1, "                    ", 20);
+									memcpy(d2, "  THE ANSWER IS     ", 20);
+									memcpy(d3, "  SO CLOSE NOW !!   ", 20);
+									memcpy(d4, "                    ", 20);
+									diagf = 60u;
+								}else if (archer->y < ((UINT16) 65 << 3)){
+									memcpy(d1, "                    ", 20);
+									memcpy(d2, " WHY DO I SMELL     ", 20);
+									memcpy(d3, " THE FOREST NOW ?   ", 20);
+									memcpy(d4, "                    ", 20);
+									diagf = 99u;
+								}else if (archer->y < ((UINT16) 100 << 3)){
+									memcpy(d1, " WHY DO I SMELL     ", 20);
+									memcpy(d2, " LIKE ...           ", 20);
+									memcpy(d3, " LIKE SOMETHING IS  ", 20);
+									memcpy(d4, " BURNING ?          ", 20);
+									diagf = 99u;
+								}else if (archer->y < ((UINT16) 113 << 3)){
+									memcpy(d1, " WHY DO I SMELL     ", 20);
+									memcpy(d2, " OF THE ZOO ?       ", 20);
+									memcpy(d3, " SO WEIRD  TO SMELL ", 20);
+									memcpy(d4, " IT HERE AND NOW ...", 20);
+									diagf = 99u;
+								}else{
+									memcpy(d1, " WAIT HERE MY SON.  ", 20);
+									memcpy(d2, " FROM NOW ON IT IS  ", 20);
+									memcpy(d3, " ON ME.             ", 20);
+									memcpy(d4, " TRUST ME !         ", 20);
+									diagf = 60u;
+								}
 							break;
 							case SpriteCagedboss:
 								cagedboss_data = (struct CagedbossInfo*)archer->custom_data;
@@ -726,6 +818,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 										memcpy(d3, " FAILURES. WHAT DO  ", 20);
 										memcpy(d4, " YOU WANT DOCTOR ?  ", 20);
 										diagf = 57u;
+										current_map = 1;
 									break;
 									case WOLF_CAGED:
 									case IBEX_CAGED:

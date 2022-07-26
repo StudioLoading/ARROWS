@@ -17,6 +17,8 @@ extern UINT8 colliding_mother;
 struct EnemyInfo* mother_data;
 
 void START(){
+    THIS->lim_x = 255u;
+    THIS->lim_y = 255u;
 	SetSpriteAnim(THIS, mother_idle, 8u);
    	mother_data = (struct EnemyInfo*)THIS->custom_data;
     mother_data->enemy_state = ENEMY_STATE_WAIT;

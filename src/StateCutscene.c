@@ -17,10 +17,13 @@
 
 IMPORT_TILES(font);
 IMPORT_TILES(tiles6);
+IMPORT_TILES(tiles7);
 
 IMPORT_MAP(mapcutscene0);
+IMPORT_MAP(mapcutscene1);
 IMPORT_MAP(diagnew);
 DECLARE_MUSIC(bgm_level_cematery);
+DECLARE_MUSIC(bgm_level_castle);
 
 
 const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
@@ -45,20 +48,31 @@ extern UINT8 quiver;
 
 UINT8 wait_c = 0u;
 struct CameraInfo* camera_data;
+struct CagedbossInfo* sprite_finalboss_data;
 struct EnemyInfo* sprite_1_data;
 struct EnemyInfo* sprite_2_data;
 struct EnemyInfo* sprite_3_data;
 struct EnemyInfo* sprite_4_data;
 const UINT8 const collision_tiles_cutscene[] = {5, 7, 8, 11, 13, 16, 17, 18, 19, 29, 37, 0};
+//questo sotto deve essere uguale all' array collision_tiles7
+const UINT8 const collision_tiles_cutscene1[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26,
+ 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 
+ 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+
 Sprite* sprite_1;
 Sprite* sprite_2;
 Sprite* sprite_3;
 Sprite* sprite_4;
+UINT16 camera_finalx = 0u;
+UINT16 camera_finaly = 0u;
 UINT16 sprite_1_finalx = 0u;
 UINT16 sprite_2_finalx = 0u;
+UINT16 sprite_4_finalx = 0u;
+UINT16 sprite_4_finaly = 0u;
 INT8 temporeggia = 0;
 INT8 counter_0 = 0;
 const UINT16 distance_cutscene1_sprite = 172u;
+UINT8 scene_bank = 0u;
 
 void ShowCutDiag();
 void set_window_y_c(UBYTE y);
@@ -81,19 +95,13 @@ void START() {
 			if(sgb_check()){
 				set_sgb_palette01_CEMATERYCRYPT();
 			}
-			/*const struct MapInfo* const level_cutscene[] = { &mapcutscene0 };
-			const struct MapInfo** const levels_cutscene[] = {level_cutscene};
-			UINT8 level_cuscene_banks[] = {BANK(mapcutscene0)};
-			UINT8 * levels_cutscenes_banks[] = {level_cuscene_banks};
-			const struct MapInfo** levels_cutscenes = levels_cutscene[0];
-			*/
-			UINT8 cutscene0_bank = BANK(mapcutscene0);
-			InitScroll(cutscene0_bank, &mapcutscene0, collision_tiles_cutscene, 0);
+			scene_bank = BANK(mapcutscene0);
+			InitScroll(scene_bank, &mapcutscene0, collision_tiles_cutscene, 0);
 
 			SpriteManagerLoad(SpriteCutmother);
 			SpriteManagerLoad(SpriteCutarcher);
 			SpriteManagerLoad(SpriteCastlegate);
-			scroll_target = SpriteManagerAdd(SpriteCamerafocus, (UINT16) 440u, (UINT16) 144u);
+			scroll_target = SpriteManagerAdd(SpriteCamerafocus, (UINT16) 440u, (UINT16) 160u);
 	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
 			sprite_1 = SpriteManagerAdd(SpriteCutmother, (UINT16) 440u, (UINT16) 144u);
 			sprite_2 = SpriteManagerAdd(SpriteCutarcher, (UINT16) 432u, (UINT16) 144u);
@@ -101,6 +109,55 @@ void START() {
 			sprite_2_data = (struct EnemyInfo*)sprite_2->custom_data;
 			PlayMusic(bgm_level_cematery, 1);
 
+		break;
+		case 2u:		
+			if(sgb_check()){
+				set_sgb_palette01_CASTLE();
+				set_sgb_palette_statusbar();
+			}			
+			scene_bank = BANK(mapcutscene1);
+			InitScroll(scene_bank, &mapcutscene1, collision_tiles_cutscene1, 0);
+			SpriteManagerLoad(SpriteCutmother);
+			SpriteManagerLoad(SpriteCutarcher);
+			SpriteManagerLoad(SpriteCutfinalboss);
+			scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((UINT16) 20u << 3), ((UINT16) 12u << 3));
+	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
+			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
+			sprite_1->mirror = V_MIRROR;
+			sprite_finalboss_data = (struct CagedbossInfo*)sprite_1->custom_data;
+			sprite_finalboss_data->state = BOSS_IDLE;
+			sprite_finalboss_data->setup = 1;
+			sprite_2 = SpriteManagerAdd(SpriteCutmother, ((UINT16) 35u << 3), ((UINT16) 13u << 3));						
+			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 30u << 3), ((UINT16) 13u << 3));
+			sprite_2_data = (struct EnemyInfo*)sprite_2->custom_data;
+			sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
+			PlayMusic(bgm_level_castle, 1);
+		break;
+		case 3u://eagle che prende il boss e lo porta a destra		
+			if(sgb_check()){
+				set_sgb_palette01_CASTLE();
+				set_sgb_palette_statusbar();
+			}
+			scene_bank = BANK(mapcutscene1);
+			InitScroll(scene_bank, &mapcutscene1, collision_tiles_cutscene1, 0);
+			SpriteManagerLoad(SpriteCutmother);
+			SpriteManagerLoad(SpriteCutarcher);
+			SpriteManagerLoad(SpriteCutfinalboss);
+			SpriteManagerLoad(SpriteEagle);
+			scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((UINT16) 20u << 3), ((UINT16) 12u << 3));
+	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
+			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
+			sprite_1->mirror = V_MIRROR;
+			sprite_finalboss_data = (struct CagedbossInfo*)sprite_1->custom_data;
+			sprite_finalboss_data->state = BOSS_IDLE;
+			sprite_finalboss_data->setup = 1;
+			sprite_2 = SpriteManagerAdd(SpriteCutmother, ((UINT16) 29u << 3), ((UINT16) 13u << 3));						
+			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 31u << 3), ((UINT16) 13u << 3));
+			sprite_2_data = (struct EnemyInfo*)sprite_2->custom_data;
+			sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
+			sprite_4 = SpriteManagerAdd(SpriteCuteagle, ((UINT16) 10u << 3), ((UINT16) 1u << 3));
+			sprite_4_data = (struct EnemyInfo*)sprite_4->custom_data;
+			sprite_4_data->enemy_state = ENEMY_STATE_NORMAL;
 		break;
 	}
 	
@@ -132,118 +189,248 @@ void UPDATE() {
 	}
 	switch(current_cutscene){
 		case 1u:
-			if(wait_c == 40u){ // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
-				diag_found = Build_Next_Dialog_Banked(scroll_target);
-				ShowCutDiag();
-				CalculateSpritesDestinations();
-				wait_c = 41u;
-				sprite_3 = SpriteManagerAdd(SpriteCastlegate, (UINT16) 600u, (UINT16) 130u);
-				sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
-				sprite_3_data->enemy_state = ENEMY_STATE_NORMAL;
-				quiver = 0b00000001;
-			}
-		break;
-	}
-	switch(wait_c){
-		case 41u:
-			switch(temporeggia){
-				case 0:
-					/*if(sprite_2->y != sprite_1->y){
-						sprite_2->y = sprite_1->y;
-					}*/
+			switch(wait_c){
+				case 40u: // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
+					diag_found = Build_Next_Dialog_Banked(scroll_target);
+					ShowCutDiag();
+					CalculateSpritesDestinations();
+					wait_c = 41u;
+					sprite_3 = SpriteManagerAdd(SpriteCastlegate, (UINT16) 600u, (UINT16) 130u);
+					sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
+					sprite_3_data->enemy_state = ENEMY_STATE_NORMAL;
+					quiver = 0b00000001;
+				break;
+				case 41u:
+					switch(temporeggia){
+						case 0:
+							/*if(sprite_2->y != sprite_1->y){
+								sprite_2->y = sprite_1->y;
+							}*/
+							if(sprite_1->x != sprite_1_finalx){			
+								TranslateSprite(sprite_1, 1 << delta_time, 0);
+							}
+							if(sprite_2->x != sprite_2_finalx){
+								TranslateSprite(sprite_2, 1 << delta_time, 0);
+							}
+							if(scroll_target->x != sprite_1->x){
+								scroll_target->x = sprite_1->x;
+							}
+							temporeggia = 1;
+							if(sprite_1->x == sprite_1_finalx && sprite_2->x == sprite_2_finalx){
+								wait_c = 42u;
+							}
+						break;
+						case 1:
+							temporeggia = 0;
+						break;
+					}
+				break;
+				case 42u: //sprite arrivati a destinazione finale
+					PauseMusic;
+					sprite_1_data->enemy_state = ENEMY_STATE_WAIT;
+					sprite_2_data->enemy_state = ENEMY_STATE_WAIT;
+					if(temporeggia < 60){
+						temporeggia++;
+					}else{
+						temporeggia = 0;
+						//metti amuleto, azzera temporeggia
+						switch(counter_0){
+							case 0:
+								CutsceneAmulet0();
+								PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
+							break;
+							case 1:
+								CutsceneAmulet1();
+								PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
+							break;
+							case 2:
+								CutsceneAmulet2();
+								PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
+							break;
+							case 3:
+								CutsceneAmulet3();
+								PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
+							break;
+							case 4:
+								wait_c = 43u;
+							break;
+						}
+						counter_0++;
+					}
+				break;
+				case 43u:
+					//solleva il portone
+					if(temporeggia < 42){
+						if(temporeggia & 1){
+							sprite_3->y += 1;
+						}else{
+							sprite_3->y -= 2;
+						}
+						if(temporeggia & 1 == 0){					
+							PlayFx(CHANNEL_1, 60, 0x73, 0x09, 0xf2, 0x1e, 0x86);
+						}
+						temporeggia++;
+					}else{
+						wait_c = 44u;
+						sprite_1_data->enemy_state = ENEMY_STATE_WALKING;
+						sprite_2_data->enemy_state = ENEMY_STATE_WALKING;
+						sprite_1->attr_add = 0b10000000;
+						sprite_2->attr_add = 0b10000000;
+						sprite_1_finalx = sprite_1->x + 32u;
+						sprite_2_finalx = sprite_2->x + 54u;
+					}
+				break;
+				case 44u:
+					ResumeMusic;
 					if(sprite_1->x != sprite_1_finalx){			
 						TranslateSprite(sprite_1, 1 << delta_time, 0);
 					}
 					if(sprite_2->x != sprite_2_finalx){
 						TranslateSprite(sprite_2, 1 << delta_time, 0);
 					}
-					if(scroll_target->x != sprite_1->x){
-						scroll_target->x = sprite_1->x;
-					}
-					temporeggia = 1;
 					if(sprite_1->x == sprite_1_finalx && sprite_2->x == sprite_2_finalx){
-						wait_c = 42u;
+						wait_c = 99u;
 					}
 				break;
-				case 1:
-					temporeggia = 0;
+				case 99u:
+					//worldmap
+					set_window_y_c(144);
+					HIDE_WIN;
+					current_level = 7u;
+					current_map = 0;
+					SetState(StateWorldmap);
 				break;
 			}
 		break;
-		case 42u: //sprite arrivati a destinazione finale
-			PauseMusic;
-			sprite_1_data->enemy_state = ENEMY_STATE_WAIT;
-			sprite_2_data->enemy_state = ENEMY_STATE_WAIT;
-			if(temporeggia < 60){
-				temporeggia++;
-			}else{
-				temporeggia = 0;
-				//metti amuleto, azzera temporeggia
-				switch(counter_0){
-					case 0:
-						CutsceneAmulet0();
-						PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
-					break;
-					case 1:
-						CutsceneAmulet1();
-						PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
-					break;
-					case 2:
-						CutsceneAmulet2();
-						PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
-					break;
-					case 3:
-						CutsceneAmulet3();
-						PlayFx(CHANNEL_1, 60, 0x23, 0x93, 0xf7, 0x48, 0x81);
-					break;
-					case 4:
+		case 2u:
+			switch(wait_c){
+				case 40u:
+					CalculateSpritesDestinations();
+					wait_c = 41u;
+				break;
+				case 41u:
+					if(camera_finalx > scroll_target->x){
+						TranslateSprite(scroll_target, 1, 0);
+					}else{
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						ShowCutDiag();
+						wait_c = 42u;
+						temporeggia = 0;
+					}
+				break;
+				case 42u:
+					if(temporeggia < 120){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+							temporeggia = 0;
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							ShowCutDiag();
+							wait_c = 43u;
+						}
+					}
+				break;
+				case 43u:
+					if(temporeggia < 120){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+							temporeggia = 0;
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							ShowCutDiag();
+							wait_c = 44u;
+						}
+					}
+				break;
+				case 44u:
+					if(temporeggia < 120){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+							temporeggia = 0;
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							ShowCutDiag();
+							wait_c = 45u;
+						}
+					}
+				break;
+				case 45u:
+					if(temporeggia < 120){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+							temporeggia = 0;
+							wait_c = 46u;
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							SetState(StateDiag);
+						}
+					}
+				break;
+			}
+		break;
+		case 3u://eagle che porta via boss		
+			switch(wait_c){
+				case 40u:
+					CalculateSpritesDestinations();
+					diag_found = Build_Next_Dialog_Banked(scroll_target);
+					ShowCutDiag();
+					wait_c = 41u;
+				break;
+				case 41u:
+					if(sprite_4->x < sprite_4_finalx){
+						TranslateSprite(sprite_4, 2, 0);
+					}
+					if(sprite_4->y < sprite_4_finaly){
+						TranslateSprite(sprite_4, 0, 1);
+					}
+					if(camera_finalx > scroll_target->x){
+						TranslateSprite(scroll_target, 1, 0);
+					}else{		
+						CalculateSpritesDestinations();
+						sprite_4_data->enemy_state = ENEMY_STATE_JUMPING;
+						wait_c = 42u;
+						temporeggia = 0;
+					}
+				break;
+				case 42u:
+					sprite_1->x = sprite_4->x;
+					sprite_1->y = sprite_4->y + 22u;
+					if(sprite_4->y > sprite_4_finaly && sprite_4->y < 800u){
+						if(temporeggia == 3){
+							TranslateSprite(sprite_4, 0, -1);
+							temporeggia = 0;
+						}else{
+							temporeggia++;
+						}
+					}else if (sprite_4->x < sprite_4_finalx){
+						if(sprite_4_data->enemy_state != ENEMY_STATE_SLIDING){
+							sprite_4_data->enemy_state = ENEMY_STATE_SLIDING;
+						}
+						if(temporeggia == 0){
+							temporeggia = 1;
+						}else{
+							temporeggia = 0;
+						}
+						TranslateSprite(sprite_4, 2, -temporeggia);
+					}else{
 						wait_c = 43u;
-					break;
-				}
-				counter_0++;
+					}
+				break;
+				case 43u:
+					temporeggia = 0;
+					diag_found = Build_Next_Dialog_Banked(scroll_target);
+					ShowCutDiag();
+					wait_c = 44u;
+				break;
+				case 44u:
+					if(temporeggia < 60){
+						temporeggia++;
+					}else{
+
+						wait_c = 45u;
+					}
+				break;
 			}
-		break;
-		case 43u:
-			//solleva il portone
-			if(temporeggia < 42){
-				if(temporeggia & 1){
-					sprite_3->y += 1;
-				}else{
-					sprite_3->y -= 2;
-				}
-				if(temporeggia & 1 == 0){					
-					PlayFx(CHANNEL_1, 60, 0x73, 0x09, 0xf2, 0x1e, 0x86);
-				}
-				temporeggia++;
-			}else{
-				wait_c = 44u;
-				sprite_1_data->enemy_state = ENEMY_STATE_WALKING;
-				sprite_2_data->enemy_state = ENEMY_STATE_WALKING;
-				sprite_1->attr_add = 0b10000000;
-				sprite_2->attr_add = 0b10000000;
-				sprite_1_finalx = sprite_1->x + 32u;
-				sprite_2_finalx = sprite_2->x + 54u;
-			}
-		break;
-		case 44u:
-			ResumeMusic;
-			if(sprite_1->x != sprite_1_finalx){			
-				TranslateSprite(sprite_1, 1 << delta_time, 0);
-			}
-			if(sprite_2->x != sprite_2_finalx){
-				TranslateSprite(sprite_2, 1 << delta_time, 0);
-			}
-			if(sprite_1->x == sprite_1_finalx && sprite_2->x == sprite_2_finalx){
-				wait_c = 99u;
-			}
-		break;
-		case 99u:
-			//worldmap
-			set_window_y_c(144);
-			HIDE_WIN;
-			current_level = 7u;
-			current_map = 0;
-			SetState(StateWorldmap);
 		break;
 	}
 }
@@ -275,6 +462,23 @@ void CalculateSpritesDestinations() BANKED{
 			sprite_1_data->vx = 1;
 			sprite_2_data->enemy_state = ENEMY_STATE_WALKING;
 			sprite_2_data->vx = 1;
+		break;
+		case 2u:
+			camera_finalx = ((UINT16) 34u << 3);
+		break;
+		case 3u:
+			switch(wait_c){
+				case 40u:
+					camera_finalx = ((UINT16) 36u << 3);
+					sprite_4_finalx = sprite_1->x;
+					sprite_4_finaly = sprite_1->y - 24u;
+				break;
+				case 41u:
+					camera_finalx = ((UINT16) 58u << 3);
+					sprite_4_finalx = ((UINT16) 58u << 3);
+					sprite_4_finaly = ((UINT16) 5u << 3);
+				break;
+			}
 		break;
 	}
 }
