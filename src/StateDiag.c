@@ -332,6 +332,7 @@ void UPDATE() {
 					SetState(StateGame6);
 				break;
 				case 7u:
+				case 8u:
 					SetState(StateGame7);
 				break;
 			}

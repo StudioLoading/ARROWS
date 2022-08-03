@@ -19,6 +19,7 @@ IMPORT_TILES(font);
 IMPORT_TILES(tiles7);
 
 IMPORT_MAP(map80);
+IMPORT_MAP(map90);
 //IMPORT_MAP(map71);
 //IMPORT_MAP(mapcutscene0);
 
@@ -28,9 +29,7 @@ IMPORT_MAP(finalborder);
 
 DECLARE_MUSIC(bgm_level_cematery);
 
-const UINT8 const collision_tiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26,
- 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 
- 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 UINT8 bank_tiles7 = BANK(tiles7);
 
@@ -94,6 +93,10 @@ extern const UINT8 EMPTY_TILE;
 extern UINT8 quiver;
 extern UINT8 final_quiver;
 extern INT8 is_on_cutscene;
+extern INT8 temporeggia;
+
+struct EnemyInfo* enemies_0_data = 0;
+struct EnemyInfo* enemies_1_data = 0;
 
 void UpdateHUD7() BANKED;
 void ShowWindow7() BANKED;
@@ -109,7 +112,7 @@ void START() {
 		LOAD_SGB_BORDER(finalborder);
 		final_border_set = 0;
 	}
-	
+	temporeggia = 0;
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
@@ -118,7 +121,6 @@ void START() {
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	NR50_REG = 0xFF; //Max volume 0x77
-
 
 	//LOAD SPRITES OF THE MAP
 	switch (current_level){
@@ -137,6 +139,21 @@ void START() {
 				break;
 			}
 		break;
+		case 8u:
+			if(sgb_check()){
+				set_sgb_palette01_ICE();
+				set_sgb_palette_statusbar();
+			}
+			switch(current_map){
+				case 0:
+					SpriteManagerLoad(SpritePlayer);
+					SpriteManagerLoad(SpriteArrow);
+					SpriteManagerLoad(SpriteArrowmother);
+					SpriteManagerLoad(SpriteCuteagle);
+					SpriteManagerLoad(SpriteBosseagle);
+				break;
+			}
+		break;
 	}		
 	SHOW_SPRITES;
 
@@ -150,13 +167,13 @@ void START() {
 	scroll_bottom_movement_limit = 62u;	
 
 	const struct MapInfo* const level_7[] = { &map80, &map80};
-	//const struct MapInfo* const level_8[] = {};
+	const struct MapInfo* const level_8[] = { &map90};
 
-	const struct MapInfo** const levels78[] = {level_7};//, level_8};
+	const struct MapInfo** const levels78[] = {level_7, level_8};
 
 	UINT8 level_7_banks[] = {BANK(map80), BANK(map80)};
-	//UINT8 level_8_banks[] = {};
-	UINT8 * levels78_banks[] = {level_7_banks};//, level_8_banks};
+	UINT8 level_8_banks[] = {BANK(map90)};
+	UINT8 * levels78_banks[] = {level_7_banks, level_8_banks};
 
 	const struct MapInfo** maps78 = levels78[current_level-7];
 	UINT8* map78banks = levels78_banks[current_level-7];
@@ -169,7 +186,7 @@ void START() {
 		ScrollFindTile((UINT8) map78banks[current_map], maps78[current_map], 45, 0, 0, 
 			map_w7, map_h7, &drop_player_x, &drop_player_y);
 	}else if(load_next || load_next_d == 0 || load_next_gameover){
-		spawning_counter = 0;
+		spawning_counter = 0;		
 		switch(current_level){
 			case 7u:
 				PlayMusic(bgm_level_cematery, 1);
@@ -183,10 +200,20 @@ void START() {
 	else{
 		ResumeMusic;
 	}
-	if(current_level == 7u && current_map == 0){
-		archer_player = SpriteManagerAdd(SpriteMother, drop_player_x << 3, drop_player_y << 3);
-	}else{
-		archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+	if(current_level == 7u){
+		if (current_map == 0){
+			archer_player = SpriteManagerAdd(SpriteMother, drop_player_x << 3, drop_player_y << 3);
+		}else{
+			archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+		}
+	}
+	if(current_level == 8u){
+		if (current_map == 0){
+			archer_player = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
+			enemies_1 = SpriteManagerAdd(SpriteArrowmother, drop_player_x << 3, (drop_player_y << 3) + 24u);
+			enemies_1_data = (struct EnemyInfo*) enemies_1->custom_data;
+			enemies_1_data->enemy_state = ARROWMOTHER_NORMAL;
+		}
 	}
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x , archer_player->y);
 	InitScroll((UINT8) map78banks[current_map], maps78[current_map], collision_tiles7, 0);
@@ -241,35 +268,37 @@ void START() {
 
 void UPDATE(){
 	//camerafocus shifting management
-	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
-		if(archer_player->x < 32u){
-			scroll_target->x = 32u;
-		}else{
-			apx = archer_player->x + 24;
-			apy = archer_player->y - 8;
-			if(archer_state == STATE_ASCENDING){
-				apy -= 4;
-				apy += platform_vy;
-			}
-			apx_mirrored = archer_player->x - 24;
-			scroll_target->y = apy;
-			INT8 dx = platform_vx;
-			if(archer_player->mirror == V_MIRROR){
-				if(scroll_target->x > apx_mirrored){
-					dx -= 1;
-				}
-				if(scroll_target->x < apx_mirrored){
-					dx += 1;
-				}
+	if(current_level != 8u ){
+		if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
+			if(archer_player->x < 32u){
+				scroll_target->x = 32u;
 			}else{
-				if(scroll_target->x < apx){
-					dx += 1;
+				apx = archer_player->x + 24;
+				apy = archer_player->y - 8;
+				if(archer_state == STATE_ASCENDING){
+					apy -= 4;
+					apy += platform_vy;
 				}
-				if(scroll_target->x > apx){
-					dx -= 1;
+				apx_mirrored = archer_player->x - 24;
+				scroll_target->y = apy;
+				INT8 dx = platform_vx;
+				if(archer_player->mirror == V_MIRROR){
+					if(scroll_target->x > apx_mirrored){
+						dx -= 1;
+					}
+					if(scroll_target->x < apx_mirrored){
+						dx += 1;
+					}
+				}else{
+					if(scroll_target->x < apx){
+						dx += 1;
+					}
+					if(scroll_target->x > apx){
+						dx -= 1;
+					}
 				}
+				scroll_target->x += dx;
 			}
-			scroll_target->x += dx;
 		}
 	}
 	
@@ -303,6 +332,7 @@ void UPDATE(){
 		load_next = 0;
 		switch(current_level){
 			case 7u:
+			case 8u:
 				SetState(StateGame7);
 			break;
 		} 
@@ -423,6 +453,22 @@ void UPDATE(){
 				break;
 	        }
         break;
+		case 8u:
+			if(temporeggia < 60){
+				temporeggia++;
+				return;
+			}
+			switch(current_map){
+				case 0u://boss chasing
+					if(spawning_counter == 0){
+						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 29u << 3, (UINT16) 7u << 3);
+						enemies_0_data = (struct EnemyInfo*) enemies_0->custom_data;
+						enemies_0_data->enemy_state = BOSS_APPROACHING;
+						spawning_counter = 1;
+					}
+				break;
+			}
+		break;
     }
 	
 	if(thunder_delay == 0u){
@@ -431,18 +477,22 @@ void UPDATE(){
 
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 20) {
+	if (updatecounter < 60) {
 		switch(updatecounter){
 			case 1:
+			case 2:
+			case 3:
 				Anim_Tiles_0();
 			break;
-			case 10:
+			case 39:
+			case 40:
+			case 41:
 				Anim_Tiles_1();
 			break;
 		}			
 	}else{
 		updatecounter = 0;
-	}
+	}	
     
 	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 

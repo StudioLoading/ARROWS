@@ -21,7 +21,7 @@ unsigned char d3[21];
 unsigned char d4[21];
 
 INT8 is_on_boss = -1;
-INT8 is_on_cutscene = 0;
+extern INT8 is_on_cutscene;
 struct ArcherInfo* archer_data;
 struct CagedbossInfo* cagedboss_data;
 UINT8 tile_collision = 0u;
@@ -100,6 +100,13 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 				memcpy(d4, "                    ", 20);
 				diagf = 17u;
 			break;
+			case 8u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "    BOSS CHASING    ", 20);
+				memcpy(d3, "                    ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 13u;
+			break;
 		}
 		on_worldmap = 0;
 	}
@@ -137,10 +144,10 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						diagf = 99u;
 					break;
 					case 44:
-						memcpy(d1, " ???: ARE YOU REALLY ", 20);
-						memcpy(d2, " FEELING SORRY FOR   ", 20);
-						memcpy(d3, " THE HUMANS WARDENS ?", 20);
-						memcpy(d4, "                     ", 20);
+						memcpy(d1, " ???:                ", 20);
+						memcpy(d3, " FEELING SORRY FOR   ", 20);
+						memcpy(d4, " THE HUMANS WARDENS? ", 20);
+						memcpy(d2, " ARE YOU REALLY      ", 20);
 						diagf = 99u;
 					break;
 					case 45:
@@ -167,13 +174,20 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						memcpy(d3, "  WAIT... WHAT ?!   ", 20);
 						memcpy(d4, "                    ", 20);
 						diagf = 99u;
-					break;
+					break;				
 					case 43u:
+						memcpy(d1, "  ARCHER:           ", 20);
+						memcpy(d3, "  MOTHER! HELP ME   ", 20);
+						memcpy(d4, "  GET HIM !!  -      ", 20);
+						memcpy(d2, "                    ", 20);
+						diagf = 99u;
+					break;					
+					case 45:
 						memcpy(d1, "  MOM:              ", 20);
 						memcpy(d2, "  GO SON!           ", 20);
 						memcpy(d3, "  RIDE MY ARROW AND ", 20);
 						memcpy(d4, "  GET HIM !         ", 20);
-						diagf = 99u;
+						diagf = 60u;
 					break;
 				}
 			break;

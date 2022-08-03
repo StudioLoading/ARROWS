@@ -25,7 +25,7 @@ void UPDATE(){
         break;
         case ENEMY_STATE_SLIDING:
          	SetSpriteAnim(THIS, cuteagle_idle, 8u);
-            cuteagle_data->enemy_state = ENEMY_STATE_NORMAL;
+            //cuteagle_data->enemy_state = ENEMY_STATE_NORMAL;
         break;
     }
 }

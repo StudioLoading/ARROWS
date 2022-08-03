@@ -37,6 +37,7 @@ extern UINT8 current_level;
 extern UINT8 current_map;
 extern ARCHER_STATE archer_state;
 extern struct ArcherInfo* archer_data;
+extern struct EnemyInfo* mother_data;
 extern unsigned char d1[];
 extern unsigned char d2[];
 extern unsigned char d3[];
@@ -55,9 +56,7 @@ struct EnemyInfo* sprite_3_data;
 struct EnemyInfo* sprite_4_data;
 const UINT8 const collision_tiles_cutscene[] = {5, 7, 8, 11, 13, 16, 17, 18, 19, 29, 37, 0};
 //questo sotto deve essere uguale all' array collision_tiles7
-const UINT8 const collision_tiles_cutscene1[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26,
- 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 
- 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles_cutscene1[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 Sprite* sprite_1;
 Sprite* sprite_2;
@@ -80,6 +79,17 @@ void CalculateSpritesDestinations() BANKED;
 
 void START() {
 	
+	if(wait_c == 99u){
+		//worldmap
+		current_level += 1;
+		current_map = 0;
+		is_on_cutscene = 0;
+		temporeggia = 0;
+		wait_c = 0;
+		set_window_y_c(144);
+		HIDE_WIN;
+		SetState(StateWorldmap);
+	}
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
 	NR51_REG = 0xFF; //Enables all channels (left and right)
@@ -131,9 +141,10 @@ void START() {
 			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 30u << 3), ((UINT16) 13u << 3));
 			sprite_2_data = (struct EnemyInfo*)sprite_2->custom_data;
 			sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
+			sprite_3_data->enemy_state = ENEMY_STATE_WAIT;
 			PlayMusic(bgm_level_castle, 1);
 		break;
-		case 3u://eagle che prende il boss e lo porta a destra		
+		case 3u://eagle che prende il boss e lo porta a destra
 			if(sgb_check()){
 				set_sgb_palette01_CASTLE();
 				set_sgb_palette_statusbar();
@@ -144,6 +155,7 @@ void START() {
 			SpriteManagerLoad(SpriteCutarcher);
 			SpriteManagerLoad(SpriteCutfinalboss);
 			SpriteManagerLoad(SpriteEagle);
+			SpriteManagerLoad(SpriteArrowmother);
 			scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((UINT16) 20u << 3), ((UINT16) 12u << 3));
 	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
 			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
@@ -153,8 +165,9 @@ void START() {
 			sprite_finalboss_data->setup = 1;
 			sprite_2 = SpriteManagerAdd(SpriteCutmother, ((UINT16) 29u << 3), ((UINT16) 13u << 3));						
 			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 31u << 3), ((UINT16) 13u << 3));
-			sprite_2_data = (struct EnemyInfo*)sprite_2->custom_data;
+			mother_data = (struct EnemyInfo*)sprite_2->custom_data;
 			sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
+			sprite_3_data->enemy_state = ENEMY_STATE_WAIT;
 			sprite_4 = SpriteManagerAdd(SpriteCuteagle, ((UINT16) 10u << 3), ((UINT16) 1u << 3));
 			sprite_4_data = (struct EnemyInfo*)sprite_4->custom_data;
 			sprite_4_data->enemy_state = ENEMY_STATE_NORMAL;
@@ -294,6 +307,7 @@ void UPDATE() {
 				break;
 				case 99u:
 					//worldmap
+					wait_c = 0;
 					set_window_y_c(144);
 					HIDE_WIN;
 					current_level = 7u;
@@ -310,7 +324,7 @@ void UPDATE() {
 				break;
 				case 41u:
 					if(camera_finalx > scroll_target->x){
-						TranslateSprite(scroll_target, 1, 0);
+						TranslateSprite(scroll_target, 1 << delta_time, 0);
 					}else{
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
 						ShowCutDiag();
@@ -378,13 +392,13 @@ void UPDATE() {
 				break;
 				case 41u:
 					if(sprite_4->x < sprite_4_finalx){
-						TranslateSprite(sprite_4, 2, 0);
+						TranslateSprite(sprite_4, 2 << delta_time, 0);
 					}
 					if(sprite_4->y < sprite_4_finaly){
-						TranslateSprite(sprite_4, 0, 1);
+						TranslateSprite(sprite_4, 0, 1 << delta_time);
 					}
 					if(camera_finalx > scroll_target->x){
-						TranslateSprite(scroll_target, 1, 0);
+						TranslateSprite(scroll_target, 1 << delta_time, 0);
 					}else{		
 						CalculateSpritesDestinations();
 						sprite_4_data->enemy_state = ENEMY_STATE_JUMPING;
@@ -397,7 +411,7 @@ void UPDATE() {
 					sprite_1->y = sprite_4->y + 22u;
 					if(sprite_4->y > sprite_4_finaly && sprite_4->y < 800u){
 						if(temporeggia == 3){
-							TranslateSprite(sprite_4, 0, -1);
+							TranslateSprite(sprite_4, 0, -1 << delta_time);
 							temporeggia = 0;
 						}else{
 							temporeggia++;
@@ -411,7 +425,7 @@ void UPDATE() {
 						}else{
 							temporeggia = 0;
 						}
-						TranslateSprite(sprite_4, 2, -temporeggia);
+						TranslateSprite(sprite_4, 2 << delta_time, -temporeggia << delta_time);
 					}else{
 						wait_c = 43u;
 					}
@@ -426,9 +440,32 @@ void UPDATE() {
 					if(temporeggia < 60){
 						temporeggia++;
 					}else{
-
+						temporeggia = 0;
+						mother_data->enemy_state = ENEMY_STATE_ATTACK;
+						sprite_3_data->enemy_accel_y = -12;
+						sprite_3_data->enemy_state = ENEMY_STATE_JUMPING;
 						wait_c = 45u;
 					}
+				break;
+				case 45u:
+					if(temporeggia < 60){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+							temporeggia = 0;
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							wait_c = 99u;
+							SetState(StateDiag);
+						}	
+					}
+				break;
+				case 99u:
+					//worldmap
+					set_window_y_c(144);
+					HIDE_WIN;
+					current_level = 8u;
+					current_map = 0;
+					SetState(StateWorldmap);
 				break;
 			}
 		break;
@@ -465,6 +502,7 @@ void CalculateSpritesDestinations() BANKED{
 		break;
 		case 2u:
 			camera_finalx = ((UINT16) 34u << 3);
+			sprite_1_data->enemy_state = ENEMY_STATE_WAIT;
 		break;
 		case 3u:
 			switch(wait_c){
@@ -474,7 +512,7 @@ void CalculateSpritesDestinations() BANKED{
 					sprite_4_finaly = sprite_1->y - 24u;
 				break;
 				case 41u:
-					camera_finalx = ((UINT16) 58u << 3);
+					camera_finalx = ((UINT16) 60u << 3);
 					sprite_4_finalx = ((UINT16) 58u << 3);
 					sprite_4_finaly = ((UINT16) 5u << 3);
 				break;

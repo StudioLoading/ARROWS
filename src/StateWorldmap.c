@@ -102,6 +102,12 @@ void START() {
 			dataiconpsg->type=2;
 			dataiconpsg->setup=1u;
 		break;
+		case 8u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 128u, (UINT16) 104u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=11;
+			dataiconpsg->setup=1u;
+		break;
 	}
 
 	HIDE_WIN;

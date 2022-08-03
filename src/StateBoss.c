@@ -88,7 +88,10 @@ const struct MapInfo* const bosses[] = {&mapboss0, &mapboss1, &mapboss2, &mapbos
  Sprite* boss;
 INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
- Sprite* reward = 0;
+Sprite* reward = 0;
+Sprite* reward_wrench = 0;
+Sprite* reward_wrench2 = 0;
+Sprite* reward_key = 0;
 
 const UINT8 const collision_btiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
@@ -419,7 +422,9 @@ void SpawnBoss(INT8 hp_default){
 }
 
 void SpawnReward(){//and move boss to position
-	struct ItemInfo* datak = 0;
+	struct ItemInfo* datak_wrench = 0;
+	struct ItemInfo* datak_wrench2 = 0;
+	struct ItemInfo* datak_key = 0;
 	struct AmuletInfo* data_amulet = 0;
 	Sprite* key_s = 0;
 	PlayMusic(bgm_boss_defeated, 1);
@@ -427,10 +432,10 @@ void SpawnReward(){//and move boss to position
 		case 0u:// wolf -> wrench
 			boss->x = (UINT16) 24u << 3;
 			boss->y = (UINT16) 12u << 3;
-			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
-			datak = (struct ItemInfo*)reward->custom_data;
-			datak->type = 2;
-			datak->setup = 1u;
+			reward_wrench = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
+			datak_wrench = (struct ItemInfo*)reward_wrench->custom_data;
+			datak_wrench->type = 2;
+			datak_wrench->setup = 1u;
 		break;
 		case 1u: // gator -> amulet stone
 			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 22u << 3, (UINT16) 13u << 3);
@@ -439,10 +444,10 @@ void SpawnReward(){//and move boss to position
 			data_amulet->type = 1;
 		break;
 		case 2u: // eagle -> key
-			reward = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
-			datak = (struct ItemInfo*)reward->custom_data;
-			datak->type = 1;
-			datak->setup = 1u;
+			reward_key = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
+			datak_key = (struct ItemInfo*)reward_key->custom_data;
+			datak_key->type = 1;
+			datak_key->setup = 1u;
 		break;
 		case 3u: // ibex -> amulet thunder
 			boss->x = (UINT16) 24u << 3;
@@ -454,10 +459,10 @@ void SpawnReward(){//and move boss to position
 			data_amulet->setup = 0;	
 		break;
 		case 4u: // bear -> wrench
-			reward = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 12u << 3);
-			datak = (struct ItemInfo*)reward->custom_data;
-			datak->type = 2;
-			datak->setup = 1u;
+			reward_wrench2 = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 12u << 3);
+			datak_wrench2 = (struct ItemInfo*)reward_wrench2->custom_data;
+			datak_wrench2->type = 2;
+			datak_wrench2->setup = 1u;
 			boss->x = (UINT16) 24u << 3;
 			boss->y = (UINT16) 13u << 3;
 		break;

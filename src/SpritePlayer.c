@@ -109,10 +109,10 @@ void START() {
 		datakey->setup = 1u;
 	}
 	if(diag_found == 20u){ //spawn wrench			
-		Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
-		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
-		datakey->type = 2;
-		datakey->setup = 1u;
+		Sprite* wrench_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
+		struct ItemInfo* datawrench = (struct ItemInfo*)wrench_sprite->custom_data;
+		datawrench->type = 2;
+		datawrench->setup = 1u;
 	}
 	
 	diag_found = 0u;
@@ -121,7 +121,11 @@ void START() {
 		
 	update_hud = 1;
 
-	archer_state = STATE_NORMAL;
+	if(current_level == 8u && current_map == 0){
+		//archer_state = STATE_ARROWMOTHER;
+	}else{
+		archer_state = STATE_NORMAL;
+	}
 	landing_time = MAX_LANDING_TIME;
 }
 
@@ -235,7 +239,7 @@ void UPDATE() {
 								SetState(StateGame);
 							}else if (current_level < 5u){
 								SetState(StateGame3);
-							}else if (current_level == 7u){
+							}else if (current_level >= 7u){
 								current_map = 2;
 								SetState(StateGame7);
 							}
@@ -357,9 +361,41 @@ void UPDATE() {
 			}
 			return;
 		break;
+		case STATE_ARROWMOTHER:
+			//Jump
+			if(jump_power){
+				jump_power = 0;
+			}
+			if(shoot_cooldown) {
+				SetSpriteAnim(THIS, anim_shoot, 12u);
+			}else{
+				SetSpriteAnim(THIS, anim_idle, 12u);
+			}
+			if(KEY_PRESSED(J_LEFT)) {
+				THIS->mirror = V_MIRROR;
+			}
+			if(KEY_PRESSED(J_RIGHT)) {
+				THIS->mirror = NO_MIRROR;
+			}
+			THIS->x = THIS->lim_x;
+			THIS->y = THIS->lim_y;
+			if(KEY_TICKED(J_A)){//&& landing_time == MAX_LANDING_TIME){
+				fx_cooldown = 30;
+				landing_time = MAX_LANDING_TIME;
+				PlayFx(CHANNEL_1, 50, 0x27, 0x40, 0x43, 0x68, 0x86);
+				Jump();
+			}
+			if(shoot_cooldown) {
+				shoot_cooldown -= 1;
+			} else {
+				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
+					Shoot();
+				}
+			}
+		break;
 	}//end switch archer_state	
 	
-	if( archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD) {
+	if( archer_state != STATE_LADDER && archer_state != STATE_HIT && archer_state != STATE_DEAD && archer_state != STATE_ARROWMOTHER) {
 		//Simple gravity physics 
 		if(archer_accel_y < 24) {
 			archer_accel_y += 1;
@@ -614,7 +650,7 @@ void UPDATE() {
 				break;
 				case SpriteArrow:					
 					arrowdata = (struct ArrowInfo*)ispr->custom_data;
-					if (arrowdata->arrowdir != 1){return;}//guardo solo se è orizzontale
+					if (arrowdata->arrowdir != 1 || current_level == 8u){return;}//guardo solo se è orizzontale
 					if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
 						if (ispr->mirror == V_MIRROR){
 							platform_vx = 0-arrowdata->vx;	
@@ -631,6 +667,13 @@ void UPDATE() {
 				case SpriteGate:
 					THIS->x--;
 				break;				
+				case SpriteArrowmother:
+					if(archer_accel_y > -2 ){//archer_state != STATE_JUMPING && 
+						archer_state = STATE_ARROWMOTHER;
+						THIS->lim_y = ispr->y - 11u;
+					}
+					THIS->lim_x = ispr->x + 4u;
+				break;
 			}//fine switch ispr->type
 		}// fine check collision
 	}//fine SPRITEMANAGER_ITERATE
@@ -660,11 +703,11 @@ void Shoot() {
 	struct ArrowInfo* arrow_data = (struct ArrowInfo*)arrow_sprite->custom_data;
 	if (archer_data->amulet){arrow_data->type = archer_data->amulet;}
 	else{arrow_data->type = 1;}
-	if (KEY_PRESSED(J_DOWN)){
+	if (KEY_PRESSED(J_DOWN) && current_level != 8u){
 		arrow_data->arrowdir = 4; // verticale in giu
 		arrow_sprite->y += 8;
 	}else{
-		if (KEY_PRESSED(J_UP)){ //verticale in su
+		if (KEY_PRESSED(J_UP) && current_level != 8u){ //verticale in su
 			arrow_data->arrowdir = 3;
 			arrow_sprite->y -= 3;
 		}else{

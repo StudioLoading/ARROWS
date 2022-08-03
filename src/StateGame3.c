@@ -600,12 +600,16 @@ void UPDATE() {
 
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 30) {
+	if (updatecounter < 60) {
 		switch(updatecounter){
 			case 1:
+			case 2:
+			case 3:
 				Anim_Tiles_0();
 			break;
-			case 15:
+			case 39:
+			case 40:
+			case 41:
 				Anim_Tiles_1();
 			break;
 		}			

@@ -673,18 +673,22 @@ void UPDATE() {
 
 	//MOVING BACKGROUND TILES	
 	updatecounter++;
-	if (updatecounter < 20) {
+	if (updatecounter < 60) {
 		switch(updatecounter){
 			case 1:
+			case 2:
+			case 3:
 				Anim_Tiles_0();
 			break;
-			case 10:
+			case 39:
+			case 40:
+			case 41:
 				Anim_Tiles_1();
 			break;
 		}			
 	}else{
 		updatecounter = 0;
-	}
+	}	
 
 	//DIAG MANAGEMENT
 	if(show_diag >= 2){ // if(show_diag >= max_diag){ 

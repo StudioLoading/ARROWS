@@ -13,8 +13,12 @@ extern void Build_Next_Dialog() BANKED;
 
 const UINT8 mother_idle[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_cutmother_walk[] = {4, 0, 1, 0, 2}; //The first number indicates the number of frames
+const UINT8 anim_cutmother_shoot[] = {3,4,3,4};
 extern UINT8 colliding_mother;
 struct EnemyInfo* mother_data;
+INT8 cooldown = 0;
+
+void ShootCutmother();
 
 void START(){
     THIS->lim_x = 255u;
@@ -26,13 +30,29 @@ void START(){
     mother_data->vx = 0;
 }
 
+void ShootCutmother(){
+    SetSpriteAnim(THIS, anim_cutmother_shoot, 12u);
+	Sprite* arrow_cutsprite = SpriteManagerAdd(SpriteArrowmother, THIS->x+2u, THIS->y-2u);
+	//PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);
+	//struct ArrowInfo* arrow_cutdata = (struct ArrowInfo*)arrow_cutsprite->custom_data;
+    //arrow_cutdata->type = 2;
+    mother_data->enemy_state = ENEMY_STATE_WAIT;
+}
 void UPDATE(){
-
-   	struct EnemyInfo* cutmother = (struct EnemyInfo*)THIS->custom_data;
 
     UINT8 smother_tile;
     Sprite* mspr;
     switch(mother_data->enemy_state){
+        case ENEMY_STATE_ATTACK:
+            if(cooldown == 0){
+                ShootCutmother();
+                cooldown++;
+            }else if (cooldown < 20){
+                cooldown++;
+            }else if (cooldown == 20){
+                mother_data->enemy_state = ENEMY_STATE_WAIT;
+            }
+        break;
         case ENEMY_STATE_WAIT:
             SetSpriteAnim(THIS, mother_idle, 8u);
             SPRITEMANAGER_ITERATE(smother_tile, mspr) {
