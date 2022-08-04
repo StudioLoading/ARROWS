@@ -425,9 +425,14 @@ void UPDATE() {
 	}
 	
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
+		if(ispr->type == SpriteArrowboss && CheckCollision(THIS, ispr)){
+			if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
+				Hit(1);
+			}
+		}
 		if(CheckCollision(THIS, ispr)) {
 			switch(ispr->type){
-				case SpriteAmulet: 
+				case SpriteAmulet:
 					amuletdata = (struct AmuletInfo*)ispr->custom_data;
 					ispr->y -= 24u;
 					archer_data->hp = MAX_HP;
@@ -559,8 +564,7 @@ void UPDATE() {
 						return;
 					}
 					dataenemy = (struct EnemyInfo*)ispr->custom_data;
-					if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE ||
-						dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
+					if(dataenemy->enemy_state == ENEMY_STATE_INVISIBLE || dataenemy->enemy_state == ENEMY_STATE_HIDDEN){
 						return;
 					}
 					switch(is_on_boss){
@@ -594,7 +598,7 @@ void UPDATE() {
 							&& ispr->type != SpriteAlligator && ispr->type != SpriteEagle 
 							&& ispr->type != SpriteIbex && ispr->type != SpriteWalrus 
 							&& ispr->type != SpriteWalrusspin
-							&& ispr->type != SpriteBear){
+							&& ispr->type != SpriteBear && ispr->type != SpriteArrowboss){
 							if (ispr->x < THIS->x){
 								if (THIS->mirror == V_MIRROR){//mi sto riparando bene
 									TranslateSprite(ispr, -16u << delta_time, -2u << delta_time);
@@ -668,7 +672,7 @@ void UPDATE() {
 					THIS->x--;
 				break;				
 				case SpriteArrowmother:
-					if(archer_accel_y > -2 ){//archer_state != STATE_JUMPING && 
+					if(archer_accel_y > -2 && archer_state != STATE_HIT){//archer_state != STATE_JUMPING && 
 						archer_state = STATE_ARROWMOTHER;
 						THIS->lim_y = ispr->y - 11u;
 					}
@@ -865,7 +869,7 @@ void CheckCollisionTile() {
 
 void Hit(INT8 damage) {
 	landing_time = MAX_LANDING_TIME;
-	if (archer_state != STATE_DEAD && archer_state != STATE_HIT && archer_state != STATE_JUMPING){
+	if (archer_state != STATE_DEAD && archer_state != STATE_HIT && (archer_state != STATE_JUMPING || current_level == 8u)){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
 		if (archer_data->hp <= 0){

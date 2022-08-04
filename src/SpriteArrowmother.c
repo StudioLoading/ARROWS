@@ -28,19 +28,21 @@ void UPDATE(){
         break;
         case ARROWMOTHER_NORMAL:
             if(KEY_PRESSED(J_UP) && archer_accel_y > -2){
+                THIS->lim_x = 0u;
                 THIS->lim_y = -1u;
                 some_keys = 0;
             }else if(KEY_PRESSED(J_DOWN)){
+                THIS->lim_x = 0u;
                 THIS->lim_y = 1u;
                 some_keys = 0;
             }
             if(KEY_PRESSED(J_RIGHT)){
-				THIS->mirror = NO_MIRROR;
                 THIS->lim_x = 1u;
+                THIS->lim_y = 0u;
                 some_keys = 0;
             }else if(KEY_PRESSED(J_LEFT)){
-				THIS->mirror = V_MIRROR;
                 THIS->lim_x = -1u;
+                THIS->lim_y = 0u;
                 some_keys = 0;
             }
             if(some_keys){
