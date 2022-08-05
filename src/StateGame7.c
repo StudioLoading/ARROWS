@@ -15,6 +15,8 @@
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
+#define CLOUD_TIMEOUT_SPAWNING 75
+
 IMPORT_TILES(font);
 IMPORT_TILES(tiles7);
 
@@ -97,6 +99,11 @@ extern INT8 temporeggia;
 
 struct EnemyInfo* enemies_0_data = 0;
 struct EnemyInfo* enemies_1_data = 0;
+INT8 cloud_type_to_spawn = 0;
+const UINT8 const clouds_y_poss[] = {8u, 10u, 9u, 12u, 19u, 14u, 11u};
+INT8 clouds_y_idx = 0;
+INT8 clouds_y_inc = 0;
+const INT8 clouds_y_size = 7;
 
 void UpdateHUD7() BANKED;
 void ShowWindow7() BANKED;
@@ -151,6 +158,9 @@ void START() {
 					SpriteManagerLoad(SpriteArrowmother);
 					SpriteManagerLoad(SpriteCuteagle);
 					SpriteManagerLoad(SpriteBosseagle);
+					SpriteManagerLoad(SpriteCathead);
+					SpriteManagerLoad(SpriteCloud);
+					SpriteManagerLoad(SpriteHurricane);
 				break;
 			}
 		break;
@@ -247,6 +257,16 @@ void START() {
 						quiver = 0b00000001;
 						//spawn_item6(scrigno_dcoin, 3u, 16u, 7, 1);//1coin 2hp 3up 7dcoin
 						//spawn_item6(scrigno_dcoin, 15u, 10u, 2, 0);//1coin 2hp 3up 7dcoin
+					break;
+				}
+			break;
+			case 8u:
+				switch(current_map){
+					case 0u:
+						thunder_delay = CLOUD_TIMEOUT_SPAWNING;
+						cloud_type_to_spawn = 0;
+						clouds_y_idx = 0;
+						clouds_y_inc = 1;
 					break;
 				}
 			break;
@@ -459,9 +479,19 @@ void UPDATE(){
 				return;
 			}
 			switch(current_map){
-				case 0u://boss chasing
+				case 0u://boss chasing				
+					if(thunder_delay == 0u && spawning_counter > 0){
+						if(clouds_y_idx == 0){
+							clouds_y_inc = 1;	
+						}else if(clouds_y_idx == clouds_y_size){
+							clouds_y_inc = -1;
+						}
+						clouds_y_idx += clouds_y_inc;						
+						SpriteManagerAdd(SpriteCloud, (UINT16) enemies_0->x +24u, (UINT16) clouds_y_poss[clouds_y_idx] << 3);
+						thunder_delay = CLOUD_TIMEOUT_SPAWNING;
+					}
 					if(spawning_counter == 0){
-						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 29u << 3, (UINT16) 7u << 3);
+						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 29u << 3, (UINT16) 9u << 3);
 						enemies_0_data = (struct EnemyInfo*) enemies_0->custom_data;
 						enemies_0_data->enemy_state = BOSS_APPROACHING;
 						spawning_counter = 1;

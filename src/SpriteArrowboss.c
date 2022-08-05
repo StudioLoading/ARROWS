@@ -31,14 +31,11 @@ void UPDATE(){
 	SPRITEMANAGER_ITERATE(scrollarrowboss_tile, iabspr) {
 		if(CheckCollision(THIS, iabspr)) {
             if(iabspr->type == SpriteArrowmother){
+                THIS->x += 4u;
                 SpriteManagerRemoveSprite(THIS);
             }
-            if(iabspr->type == SpritePlayer){
-                //SpriteManagerRemoveSprite(THIS);
-                //Hit(1);
-            }
-            if(iabspr->type != SpriteBosseagle && iabspr->type != SpriteCuteagle && iabspr->type != SpriteArrowboss){
-			    SpriteManagerRemoveSprite(THIS);
+            if(iabspr->type == SpriteArrow){
+                SpriteManagerRemoveSprite(iabspr);
             }
         }
     }

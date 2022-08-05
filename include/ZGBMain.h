@@ -72,6 +72,7 @@ _SPRITE_DMG(SpriteCuteagle, cuteagle)\
 _SPRITE_DMG(SpriteArrowmother, arrowmother)\
 _SPRITE_DMG(SpriteBosseagle, bosseagle)\
 _SPRITE_DMG(SpriteArrowboss, arrowboss)\
+_SPRITE_DMG(SpriteCloud, cloud)\
 SPRITE_DEF_END
 
 

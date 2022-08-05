@@ -15,6 +15,9 @@ const UINT8 anim_bosseagle_hit[] = {2, 0, 1}; //The first number indicates the n
 UINT8 boss_wait = 0u;
 Sprite* boss_eagle = 0;
 INT8 bosseagleshoot_cooldown = 0;
+INT8 fly_counter = 0;
+//3 2 1 1 2 3 
+//ogni 10 frame
 
 void START() {
 	THIS->lim_x = 120u;
@@ -43,8 +46,30 @@ void UPDATE(){
             }
         break;
         case BOSS_MOVING:
+            fly_counter++;
+            switch(fly_counter){
+                case 10u:
+                    THIS->y += 2;
+                break;
+                case 20u:
+                    THIS->y += 1;
+                break;
+                case 30u:
+                    THIS->y += 1;
+                break;
+                case 40u:
+                    THIS->y -= 1;
+                break;
+                case 50u:
+                    THIS->y -= 1;
+                break;
+                case 60u:
+                    THIS->y -= 2;
+                    fly_counter = 0;
+                break;
+            }
             boss_wait++;
-            if(boss_wait == 120u){
+            if(boss_wait == 200u){
                 boss_wait = 0u;
                 SetSpriteAnim(THIS, anim_bosseagle_attack, 4u);
                 boss_data->enemy_state = BOSS_ATTACK;

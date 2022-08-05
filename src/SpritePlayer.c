@@ -425,11 +425,6 @@ void UPDATE() {
 	}
 	
 	SPRITEMANAGER_ITERATE(scroll_tile, ispr) {
-		if(ispr->type == SpriteArrowboss && CheckCollision(THIS, ispr)){
-			if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
-				Hit(1);
-			}
-		}
 		if(CheckCollision(THIS, ispr)) {
 			switch(ispr->type){
 				case SpriteAmulet:
@@ -642,6 +637,12 @@ void UPDATE() {
 							SpriteManagerAdd(SpritePuff, THIS->x - 8, ispr->y -2u);
 						}
 					}
+				break;
+				case SpriteArrowboss:
+					if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
+						Hit(1);
+					}
+					SpriteManagerRemoveSprite(ispr);
 				break;
 				case SpriteHurricane:
 					if (archer_state != STATE_HIT) {	
