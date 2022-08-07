@@ -15,7 +15,7 @@ void START() {
 	struct EnemyInfo* catheaddata = (struct EnemyInfo*)THIS->custom_data;
 	SetSpriteAnim(THIS, cathead_idle, 16u);
 	catheaddata->enemy_state = ENEMY_STATE_ATTACK;
-	catheaddata->hp = 10;
+	catheaddata->hp = 6;
 	catheaddata->enemy_accel_y = 0;
 	catheaddata->vx = 0;
 	catheaddata->wait = 0u;

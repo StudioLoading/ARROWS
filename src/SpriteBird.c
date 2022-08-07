@@ -99,6 +99,9 @@ void UPDATE() {
 		if(data->tile_e_collision == 40u){//skull of death
 			EDie();
 		}
+		if(data->tile_e_collision == 77u){//boss chasing
+			SpriteManagerRemoveSprite(THIS);
+		}
 		//THIS->y += data->enemy_accel_y;	
 	}else{		
 		if(data->wait << 2){

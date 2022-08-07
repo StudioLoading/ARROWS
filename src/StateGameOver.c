@@ -22,6 +22,7 @@ DECLARE_MUSIC(bgm_gameover);
 const UINT8 collision_tiles_gameover[] = {1,0};
 INT8 countdown;
 INT8 one_second;
+UINT8 music_delay;
 
 void ResetConfig(INT8 gameo);
 void ShowContinue();
@@ -62,12 +63,17 @@ void START() {
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
 			
-	PlayMusic(bgm_gameover, 1);
-
+	music_delay = 60u;
 	
 }
 
 void UPDATE() {
+	if(music_delay > 0){
+		music_delay--;
+	}else if (music_delay > -2){
+		PlayMusic(bgm_gameover, 0);
+		music_delay = -3;
+	}
 	if( scroll_target->y < (UINT16) 35u << 3){ //countdown <= 9 &&
 		scroll_target->y += 2;
 		return;
@@ -85,10 +91,10 @@ void UPDATE() {
 void ShowContinue(){
 	countdown--;
 	if(countdown > -1){
-		PRINT(6u, 39u, "CONTINUE? 0");
+		PRINT(6u, 41u, "CONTINUE? 0");
 		unsigned char str[] = "0";
 		UIntToString(countdown, str);
-		PRINT(17u, 39u, str);
+		PRINT(17u, 41u, str);
 	}else if (countdown == -2){
 		ResetConfig(1);
 	}

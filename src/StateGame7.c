@@ -15,7 +15,11 @@
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
-#define CLOUD_TIMEOUT_SPAWNING 75
+#define CLOUD_TIMEOUT_SPAWNING_LOW 90
+#define CLOUD_TIMEOUT_SPAWNING_HIGH 65
+#define BIRD_TIMEOUT_SPAWNING_LOW 140
+#define BIRD_TIMEOUT_SPAWNING_MID 100
+#define BIRD_TIMEOUT_SPAWNING_HIGH 80
 
 IMPORT_TILES(font);
 IMPORT_TILES(tiles7);
@@ -104,12 +108,15 @@ const UINT8 const clouds_y_poss[] = {8u, 10u, 9u, 12u, 19u, 14u, 11u};
 INT8 clouds_y_idx = 0;
 INT8 clouds_y_inc = 0;
 const INT8 clouds_y_size = 7;
+INT8 cathead_spawnin = 0;
+INT8 bird_spawning = 0;
 
 void UpdateHUD7() BANKED;
 void ShowWindow7() BANKED;
 void ShowWindowDiag7() BANKED;
 void set_window_y7(UBYTE y);
-void spawn_item7(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno) BANKED;
+void spawn_item7(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT8 scrigno);
+void spawn_enemy7(UINT8 spriteType, UINT16 posx, UINT16 posy);
 
 INT8 final_border_set = 1;
 
@@ -123,6 +130,7 @@ void START() {
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
+	bird_spawning = 0;
 	
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -158,9 +166,9 @@ void START() {
 					SpriteManagerLoad(SpriteArrowmother);
 					SpriteManagerLoad(SpriteCuteagle);
 					SpriteManagerLoad(SpriteBosseagle);
-					SpriteManagerLoad(SpriteCathead);
 					SpriteManagerLoad(SpriteCloud);
-					SpriteManagerLoad(SpriteHurricane);
+					SpriteManagerLoad(SpriteBird);
+					SpriteManagerLoad(SpriteIconpsg);
 				break;
 			}
 		break;
@@ -172,6 +180,12 @@ void START() {
 	memcpy(d2, "                    ", 20);
 	memcpy(d3, "                    ", 20);
 	memcpy(d4, "                    ", 20);
+
+	//INIT ENEMIES	
+	enemies_0 = 0;
+	enemies_1 = 0;
+	enemies_2 = 0;
+	enemies_3 = 0;
 
 	//SCROLL	
 	scroll_bottom_movement_limit = 62u;	
@@ -223,9 +237,17 @@ void START() {
 			enemies_1 = SpriteManagerAdd(SpriteArrowmother, drop_player_x << 3, (drop_player_y << 3) + 24u);
 			enemies_1_data = (struct EnemyInfo*) enemies_1->custom_data;
 			enemies_1_data->enemy_state = ARROWMOTHER_NORMAL;
+			enemies_2 = SpriteManagerAdd(SpriteIconpsg, (UINT16) 5u << 3, ((UINT16) 18u << 3) + 7u);
+			struct ItemInfo* iconpsg_archer_data = (struct ItemInfo*)enemies_2->custom_data;
+			iconpsg_archer_data->type = 5;
+			iconpsg_archer_data->setup = 1;
+			enemies_3 = SpriteManagerAdd(SpriteIconpsg, (UINT16) 13u << 3, ((UINT16) 18u << 3) +7u);
+			struct ItemInfo* iconpsg_question_data = (struct ItemInfo*)enemies_3->custom_data;
+			iconpsg_question_data->type = 4;
+			iconpsg_question_data->setup = 1;
 		}
 	}
-	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x , archer_player->y);
+	scroll_target = SpriteManagerAdd(SpriteCamerafocus, archer_player->x + 16u , archer_player->y);
 	InitScroll((UINT8) map78banks[current_map], maps78[current_map], collision_tiles7, 0);
 	SHOW_BKG;
 
@@ -242,12 +264,6 @@ void START() {
 	INIT_CONSOLE(font, 0, 4);
 	ShowWindow7();
 	
-	//INIT ENEMIES	
-	enemies_0 = 0;
-	enemies_1 = 0;
-	enemies_2 = 0;
-	enemies_3 = 0;
-	
 	//INIT SPAWNING	
 	if (load_next_s > -1 && load_next_d == 0){ // NON vengo da secret nè da dialogo!
 		switch(current_level){
@@ -263,7 +279,7 @@ void START() {
 			case 8u:
 				switch(current_map){
 					case 0u:
-						thunder_delay = CLOUD_TIMEOUT_SPAWNING;
+						thunder_delay = CLOUD_TIMEOUT_SPAWNING_LOW;
 						cloud_type_to_spawn = 0;
 						clouds_y_idx = 0;
 						clouds_y_inc = 1;
@@ -473,13 +489,19 @@ void UPDATE(){
 				break;
 	        }
         break;
-		case 8u:
+		case 8u: // Chasing boss
 			if(temporeggia < 60){
 				temporeggia++;
 				return;
 			}
 			switch(current_map){
 				case 0u://boss chasing				
+					if(spawning_counter == 0){
+						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 29u << 3, (UINT16) 9u << 3);
+						enemies_0_data = (struct EnemyInfo*) enemies_0->custom_data;
+						enemies_0_data->enemy_state = BOSS_APPROACHING_FIRST;
+						spawning_counter = 1;
+					}	
 					if(thunder_delay == 0u && spawning_counter > 0){
 						if(clouds_y_idx == 0){
 							clouds_y_inc = 1;	
@@ -488,15 +510,35 @@ void UPDATE(){
 						}
 						clouds_y_idx += clouds_y_inc;						
 						SpriteManagerAdd(SpriteCloud, (UINT16) enemies_0->x +24u, (UINT16) clouds_y_poss[clouds_y_idx] << 3);
-						thunder_delay = CLOUD_TIMEOUT_SPAWNING;
+						if(enemies_2->x > ((UINT16) 11u << 3)){
+							thunder_delay = CLOUD_TIMEOUT_SPAWNING_HIGH;
+						}else{
+							thunder_delay = CLOUD_TIMEOUT_SPAWNING_LOW;
+						}
 					}
-					if(spawning_counter == 0){
-						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 29u << 3, (UINT16) 9u << 3);
-						enemies_0_data = (struct EnemyInfo*) enemies_0->custom_data;
-						enemies_0_data->enemy_state = BOSS_APPROACHING;
-						spawning_counter = 1;
+					if(enemies_2->x == ((UINT16) 12u << 3)){
+						load_next = 1;
 					}
-				break;
+					//BIRD SPAWNING
+					bird_spawning++;
+					if(enemies_2->x > ((UINT16) 11u << 3)){
+						if(bird_spawning >= BIRD_TIMEOUT_SPAWNING_HIGH){
+							bird_spawning = -archer_player->x;
+						}
+					}else if(enemies_2->x > ((UINT16) 8u << 3)){
+						if(bird_spawning >= BIRD_TIMEOUT_SPAWNING_MID){
+							bird_spawning = -archer_player->x;
+						}
+					}else{
+						if(bird_spawning >= BIRD_TIMEOUT_SPAWNING_LOW){
+							bird_spawning = -archer_player->x;
+						}
+					}
+					if(bird_spawning == 0){
+						SpriteManagerAdd(SpriteBird, (UINT16) 17u << 3, (UINT16) (clouds_y_poss[clouds_y_idx] - 4u) << 3);
+						bird_spawning = 1;
+					}
+				break; 
 			}
 		break;
     }

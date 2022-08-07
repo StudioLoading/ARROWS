@@ -12,6 +12,8 @@
 const UINT8 arrowmother_idle[] = {1, 0}; //The first number indicates the number of frames
 
 extern INT16 archer_accel_y;
+extern ARCHER_STATE archer_state;
+
 
 void START(){
     THIS->lim_x = 128u;
@@ -27,7 +29,7 @@ void UPDATE(){
             TranslateSprite(THIS, 2 << delta_time, 0);
         break;
         case ARROWMOTHER_NORMAL:
-            if(KEY_PRESSED(J_UP) && archer_accel_y > -2){
+            if(KEY_PRESSED(J_UP) && archer_accel_y > -2 && archer_state != STATE_HIT){
                 THIS->lim_x = 0u;
                 THIS->lim_y = -1u;
                 some_keys = 0;
@@ -36,11 +38,11 @@ void UPDATE(){
                 THIS->lim_y = 1u;
                 some_keys = 0;
             }
-            if(KEY_PRESSED(J_RIGHT)){
+            if(KEY_PRESSED(J_RIGHT) && archer_state != STATE_HIT){
                 THIS->lim_x = 1u;
                 THIS->lim_y = 0u;
                 some_keys = 0;
-            }else if(KEY_PRESSED(J_LEFT)){
+            }else if(KEY_PRESSED(J_LEFT) && archer_state != STATE_HIT){
                 THIS->lim_x = -1u;
                 THIS->lim_y = 0u;
                 some_keys = 0;

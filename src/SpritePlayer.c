@@ -239,8 +239,10 @@ void UPDATE() {
 								SetState(StateGame);
 							}else if (current_level < 5u){
 								SetState(StateGame3);
-							}else if (current_level >= 7u){
+							}else if (current_level == 7u){
 								current_map = 2;
+								SetState(StateGame7);
+							}else if (current_level == 8u){
 								SetState(StateGame7);
 							}
 						}
@@ -639,10 +641,12 @@ void UPDATE() {
 					}
 				break;
 				case SpriteArrowboss:
+					SpriteManagerRemoveSprite(ispr);
+				case SpriteBosseagle:
+				case SpriteCuteagle:
 					if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
 						Hit(1);
 					}
-					SpriteManagerRemoveSprite(ispr);
 				break;
 				case SpriteHurricane:
 					if (archer_state != STATE_HIT) {	
