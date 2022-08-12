@@ -95,17 +95,24 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 			break;
 			case 7u:
 				memcpy(d1, "                    ", 20);
-				memcpy(d2, "    FINAL CASTLE    ", 20);
-				memcpy(d3, "                    ", 20);
+				memcpy(d2, "     THE CASTLE     ", 20);
+				memcpy(d3, "      OF FEAR       ", 20);
 				memcpy(d4, "                    ", 20);
 				diagf = 17u;
 			break;
 			case 8u:
 				memcpy(d1, "                    ", 20);
-				memcpy(d2, "    BOSS CHASING    ", 20);
-				memcpy(d3, "                    ", 20);
+				memcpy(d2, "       FLYING       ", 20);
+				memcpy(d3, "       ARROWS       ", 20);
 				memcpy(d4, "                    ", 20);
 				diagf = 13u;
+			break;
+			case 9u:
+				memcpy(d1, "                    ", 20);
+				memcpy(d2, "       FINAL        ", 20);
+				memcpy(d3, "       FIGHT        ", 20);
+				memcpy(d4, "                    ", 20);
+				diagf = 18u;
 			break;
 		}
 		on_worldmap = 0;
@@ -865,13 +872,30 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						}			
 					break;
 					case 1u://sono appena entrato nel livello 7.1					
-						case SpritePlayer:
-							memcpy(d1, "                    ", 20);
-							memcpy(d2, "     MOTHEEEER !    ", 20);
-							memcpy(d3, "                    ", 20);
-							memcpy(d4, "                    ", 20);
-							diagf = 1u;
-						break;
+						switch(archer->type){
+								case SpritePlayer:
+								memcpy(d1, "                    ", 20);
+								memcpy(d2, "     MOTHEEEER !    ", 20);
+								memcpy(d3, "                    ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 1u;
+							break;	
+						}
+					break;
+				}
+			break;
+			case 8u:
+				switch(current_map){
+					case 0u://triggered at the end of level 8.0
+						switch(archer->type){
+							case SpritePlayer:
+								memcpy(d1, "  WE END THIS NOW.  ", 20);
+								memcpy(d2, "                    ", 20);
+								memcpy(d3, "   LAND! MY EAGLE.  ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 57u;
+							break;	
+						}
 					break;
 				}
 			break;

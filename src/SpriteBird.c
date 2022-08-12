@@ -44,66 +44,63 @@ void UPDATE() {
 	
 	struct EnemyInfo* data = (struct EnemyInfo*)THIS->custom_data;
 	
-	if (data->enemy_state == ENEMY_STATE_DEAD){
-		if (data->wait > 0){
-			THIS->y--;
+	switch(data->enemy_state){
+		case ENEMY_STATE_DEAD:
+			if (data->wait > 0){
+				THIS->y--;
+				data->wait--;
+			}else{
+				SpriteManagerRemoveSprite(THIS);
+				SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);
+				THIS->y++;	
+				THIS->y++;
+			}		
+		break;
+		case ENEMY_STATE_HIT:
 			data->wait--;
-		}else{
-			SpriteManagerRemoveSprite(THIS);
-			THIS->y++;	
-			THIS->y++;
-		}		
-		return;
-	}
-	
-	if (data->enemy_state == ENEMY_STATE_HIT){
-		data->wait--;
-		if(data->wait){
-			return;
-		}
-	}
-	
-	if (data->enemy_state == ENEMY_STATE_ATTACK){
-		data->wait--;
-		if(data->wait == (bird_time_attack-1)){
-			data->enemy_accel_y = 2;
-		}else if (data->wait == 50u){
-			data->enemy_accel_y = 0;
-			SetSpriteAnim(THIS, bird_walk, 8u);
-		}else if(data->wait == 25u){
-			SetSpriteAnim(THIS, bird_up, 8u);
-			data->enemy_accel_y = -2;
-		}
-		if (data->wait == 0u){
-			data->enemy_accel_y = 0;
-			data->wait = bird_time_normal;
-			SetSpriteAnim(THIS, bird_walk, 8u);
-			data->enemy_state = ENEMY_STATE_NORMAL;
-			return;
-		}
-	}
-	
-	if (data->enemy_state == ENEMY_STATE_NORMAL){
-		data->wait--;
-		if(data->wait == 0u){
-			SetSpriteAnim(THIS, bird_attack, 8u);
-			data->wait = bird_time_attack;
-			data->enemy_state = ENEMY_STATE_ATTACK;
-			return;
-		}
-	}
-	
-	if(data->enemy_state == ENEMY_STATE_NORMAL){
-		//THIS->x += data->vx;
-		data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, data->enemy_accel_y << delta_time);
-		if(data->tile_e_collision == 40u){//skull of death
-			EDie();
-		}
-		if(data->tile_e_collision == 77u){//boss chasing
-			SpriteManagerRemoveSprite(THIS);
-		}
+			if(data->wait){
+				return;
+			}
+		break;
+		case ENEMY_STATE_ATTACK:
+			data->wait--;
+			if(data->wait == (bird_time_attack-1)){
+				data->enemy_accel_y = 2;
+			}else if (data->wait == 50u){
+				data->enemy_accel_y = 0;
+				SetSpriteAnim(THIS, bird_walk, 8u);
+			}else if(data->wait == 25u){
+				SetSpriteAnim(THIS, bird_up, 8u);
+				data->enemy_accel_y = -2;
+			}
+			if (data->wait == 0u){
+				data->enemy_accel_y = 0;
+				data->wait = bird_time_normal;
+				SetSpriteAnim(THIS, bird_walk, 8u);
+				data->enemy_state = ENEMY_STATE_NORMAL;
+				return;
+			}
+		break;
+		case ENEMY_STATE_NORMAL:
+			data->wait--;
+			if(data->wait == 0u){
+				SetSpriteAnim(THIS, bird_attack, 8u);
+				data->wait = bird_time_attack;
+				data->enemy_state = ENEMY_STATE_ATTACK;
+				return;
+			}
+			//THIS->x += data->vx;
+			data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, data->enemy_accel_y << delta_time);
+			if(data->tile_e_collision == 40u){//skull of death
+				EDie();
+			}
+			if(data->tile_e_collision == 77u){//boss chasing
+				SpriteManagerRemoveSprite(THIS);
+			}
+		break;
 		//THIS->y += data->enemy_accel_y;	
-	}else{		
+	}
+	if(data->enemy_state != ENEMY_STATE_NORMAL){
 		if(data->wait << 2){
 			data->tile_e_collision = TranslateSprite(THIS, data->vx << delta_time, data->enemy_accel_y << delta_time);
 			if(data->tile_e_collision == 40u){//skull of death
@@ -136,8 +133,10 @@ void UPDATE() {
 			}
 			
 		}
-		if(ibispr->type == SpriteArrow) {
-			if(CheckCollision(THIS, ibispr)) {
+		if(CheckCollision(THIS, ibispr)) {
+			if(ibispr->type == SpriteArrowmother) {
+				SpriteManagerRemoveSprite(THIS);
+			}else if(ibispr->type == SpriteArrow) {
 				SpriteManagerRemoveSprite(ibispr);
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
 				data->enemy_state = ENEMY_STATE_HIT;

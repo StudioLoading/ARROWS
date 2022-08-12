@@ -16,6 +16,8 @@ extern INT8 temporeggia;
 
 const UINT8 anim_cutarcher_idle[] = {5, 5,6,7,7,6};
 const UINT8 anim_cutarcher_walk[] = {5, 4,3,2,3,1};
+const UINT8 anim_cutarcher_jump[] = {1, 3};
+const UINT8 anim_cutarcher_knee[] = {1, 8};
 
 void START(){
     THIS->lim_x = 255u;
@@ -42,7 +44,15 @@ void UPDATE(){
             SetSpriteAnim(THIS, anim_cutarcher_walk, 8u);
             cutarcher_data->enemy_state = ENEMY_STATE_NORMAL;
         break;
+        case ENEMY_STATE_KNEE:
+            cutarcher_data->wait--;
+            if(cutarcher_data->wait == 0){
+                cutarcher_data->enemy_state = ENEMY_STATE_WAIT;
+            }
+            SetSpriteAnim(THIS, anim_cutarcher_knee, 8u);
+        break;
         case ENEMY_STATE_JUMPING:
+            SetSpriteAnim(THIS,anim_cutarcher_jump, 1u);
         case ENEMY_STATE_SLIDING:
             //TranslateSprite(THIS, cutarcher_data->vx << delta_time, 0);
             //THIS->y = cutarcher_data->enemy_accel_y; 
@@ -51,7 +61,7 @@ void UPDATE(){
 
     SPRITEMANAGER_ITERATE(cutarcher_tile, cutarcherspr) {
         if(CheckCollision(THIS, cutarcherspr)) {
-            if(cutarcherspr->type == SpriteArrowmother) {
+            if(cutarcherspr->type == SpriteArrowmother && cutarcher_data->enemy_state != ENEMY_STATE_JUMPING) {
                 cutarcher_data->enemy_state = ENEMY_STATE_SLIDING;
                 cutarcher_data->tile_e_collision = 1u;
                 cutarcher_data->vx = 2;

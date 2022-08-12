@@ -32,6 +32,8 @@ extern UINT8 diag_found;
 extern UINT8 on_worldmap;
 extern UINT8 quiver;
 extern INT8 visited;
+extern INT8 is_on_boss;
+
 
 const UINT8 const collision_tiles_worldmap[] = {0, 0};
 
@@ -106,6 +108,12 @@ void START() {
 			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 128u, (UINT16) 104u);
 			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
 			dataiconpsg->type=11;
+			dataiconpsg->setup=1u;
+		break;
+		case 9u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 128u, (UINT16) 104u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
 			dataiconpsg->setup=1u;
 		break;
 	}
@@ -184,6 +192,14 @@ void UPDATE(){
 			}
 			if(counter > 80u && siconpsg->y > 104u && (counter & 1)){
 				siconpsg->y--;
+			}
+		break;
+		case 9u:
+			if(counter > 80u && siconpsg->x > 8u && (counter & 1)){
+				siconpsg->x-=2;
+			}
+			if(counter > 80u && siconpsg->y < 112u && (counter & 0x4)){
+				siconpsg->y++;
 			}
 		break;
 	}

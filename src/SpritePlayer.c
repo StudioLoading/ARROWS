@@ -38,7 +38,8 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-#define MAX_HIT_COOLDOWN 64
+#define MAX_HIT_COOLDOWN 24
+#define MAX_DEATH_COOLDOWN 80
 #define MAX_DIAG_COOLDOWN 60
 #define MAX_LANDING_TIME 24
 #define MAX_ACCEL_Y_TO_LAND_ANIMATION 36
@@ -222,9 +223,9 @@ void UPDATE() {
 			if (death_cooldown < 12){
 				TranslateSprite(THIS, 0, -2 );
 			}else if (death_cooldown != 0){
-				if (death_cooldown < 80){
+				if (death_cooldown < MAX_DEATH_COOLDOWN){
 					tile_collision = TranslateSprite(THIS, 0, 1);
-				}else if (death_cooldown == 80){
+				}else if (death_cooldown == MAX_DEATH_COOLDOWN){
 					death_cooldown = 0;
 					archer_data->hp = MAX_HP;
 					update_hud = 1;
@@ -346,7 +347,7 @@ void UPDATE() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
-			if(KEY_PRESSED(J_A) && hit_cooldown < 20) {
+			if(KEY_PRESSED(J_A) && hit_cooldown < (MAX_HIT_COOLDOWN - 10)) {
 				hit_cooldown = MAX_HIT_COOLDOWN;
 				Jump();
 			}else{

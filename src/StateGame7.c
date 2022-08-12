@@ -35,7 +35,7 @@ IMPORT_MAP(finalborder);
 
 DECLARE_MUSIC(bgm_level_cematery);
 
-const UINT8 const collision_tiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 UINT8 bank_tiles7 = BANK(tiles7);
 
@@ -100,6 +100,8 @@ extern UINT8 quiver;
 extern UINT8 final_quiver;
 extern INT8 is_on_cutscene;
 extern INT8 temporeggia;
+extern UINT8 colliding_mother;
+extern INT8 camera_tramble_c;
 
 struct EnemyInfo* enemies_0_data = 0;
 struct EnemyInfo* enemies_1_data = 0;
@@ -303,7 +305,25 @@ void START() {
 }
 
 void UPDATE(){
-	//camerafocus shifting management
+	//CAMERA TRAMBLE MANAGEMENT
+	if(archer_player && archer_state == STATE_HIT){
+		camera_tramble_c++;
+		switch(camera_tramble_c){
+			case 6:
+				camera_tramble_c = 0;
+			break;
+			case 1:
+			case 2:
+				scroll_target->y = archer_player->y - 17u;
+			break;
+			case 4:
+			case 5:
+				scroll_target->y = archer_player->y + 17u;
+			break;
+		}
+	}
+
+	//CAMERA SHIFTING
 	if(current_level != 8u ){
 		if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
 			if(archer_player->x < 32u){
@@ -517,7 +537,8 @@ void UPDATE(){
 						}
 					}
 					if(enemies_2->x == ((UINT16) 12u << 3)){
-						load_next = 1;
+						colliding_mother = 8u;
+						load_next_d = 1;
 					}
 					//BIRD SPAWNING
 					bird_spawning++;

@@ -84,6 +84,7 @@ extern UINT16 apy;
 extern UINT16 apx_mirrored;
 extern INT8 platform_vx;
 extern INT8 platform_vy;
+extern INT8 camera_tramble_c;
 
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
@@ -346,7 +347,25 @@ void spawn_item3(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, IN
 
 void UPDATE() {
 	
-	//camerafocus shifting management
+	//CAMERA TRAMBLE MANAGEMENT
+	if(archer_player && archer_state == STATE_HIT){
+		camera_tramble_c++;
+		switch(camera_tramble_c){
+			case 6:
+				camera_tramble_c = 0;
+			break;
+			case 1:
+			case 2:
+				scroll_target->y = archer_player->y - 17u;
+			break;
+			case 4:
+			case 5:
+				scroll_target->y = archer_player->y + 17u;
+			break;
+		}
+	}
+
+	//CAMERA SHIFTING
 	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
 		if(archer_player->x < 32u){
 			scroll_target->x = 32u;

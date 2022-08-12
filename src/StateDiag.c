@@ -26,6 +26,7 @@ IMPORT_MAP(maplevel4jungle);
 IMPORT_MAP(maplevel5icecave);
 IMPORT_MAP(maplevel6cematery);
 IMPORT_MAP(maplevel7castle);
+IMPORT_MAP(maplevel9colusseum);
 
 IMPORT_MAP(mapdiagarcher);
 IMPORT_MAP(mapdiagslave1);
@@ -82,6 +83,7 @@ extern INT8 is_on_boss;
 
 extern INT8 show_diag;
 extern INT8 showing_diag;
+extern UINT8 current_level_b;
 
 extern unsigned char d1[];
 extern unsigned char d2[];
@@ -179,6 +181,13 @@ void START() {
 				set_sgb_palette01_CASTLE();
 			}
 			InitScroll(BANK(maplevel7castle), &maplevel7castle, collision_dtiles, 0);
+		break;
+		case 18u:
+			if(sgb_check()){
+				set_sgb_palette01_1D();
+			}
+			is_on_cutscene = 1;
+			InitScroll(BANK(maplevel9colusseum), &maplevel9colusseum, collision_dtiles, 0);
 		break;
 		case 19u:
 			if(sgb_check()){
@@ -305,6 +314,12 @@ void UPDATE() {
 					is_on_cutscene = 1;
 					SetState(StateCutscene);
 				break;
+				case 8u://go to StateWorldmap after level 8.0 completed
+					current_level = 9u;
+					current_map = 0;
+					SetState(StateWorldmap);
+					colliding_mother = 0u;		
+				break;
 				case 1u:
 				case 2u:
 				case 3u:
@@ -334,6 +349,10 @@ void UPDATE() {
 				case 7u:
 				case 8u:
 					SetState(StateGame7);
+				break;
+				case 9u:
+					current_level_b = 9u;
+					SetState(StateBoss);
 				break;
 			}
 		}

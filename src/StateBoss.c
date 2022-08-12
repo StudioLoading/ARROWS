@@ -25,6 +25,7 @@ IMPORT_MAP(mapboss2);
 IMPORT_MAP(mapboss3);
 IMPORT_MAP(mapboss4);
 IMPORT_MAP(mapboss5);
+IMPORT_MAP(mapboss9);
 
 DECLARE_MUSIC(bgm_boss_defeated);
 
@@ -82,8 +83,11 @@ const struct MapInfo* const boss_4[] = {
 const struct MapInfo* const boss_5[] = {
 	&mapboss5
 };
+const struct MapInfo* const boss_9[] = {
+	&mapboss9
+};
 //const struct MapInfo** const bosses[] = {boss_0, boss_1, boss_2, boss_3, boss_4, boss_5};
-const struct MapInfo* const bosses[] = {&mapboss0, &mapboss1, &mapboss2, &mapboss3, &mapboss4, &mapboss5};
+const struct MapInfo* const bosses[] = {&mapboss0, &mapboss1, &mapboss2, &mapboss3, &mapboss4, &mapboss5, 0, 0, 0, &mapboss9};
 
  Sprite* boss;
 INT8 boss_hp = 0;
@@ -98,6 +102,8 @@ const UINT8 const collision_btiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17
 const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 68, 69, 70, 71, 73, 74, 75, 81, 90, 100, 101, 102, 103, 104, 111, 119, 0};//numero delle tile con zero finale
 
 const UINT8 const collision_btiles6[] = {1, 2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+
+const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void SpawnBoss(INT8 hp_default);
 void SpawnReward();
@@ -171,6 +177,13 @@ void START(){
 				set_sgb_palette01_WALRUS();
 			}
 		break;
+		case 9u:
+			level_tool=0;
+			SpriteManagerLoad(SpriteBosseagle);
+			if(sgb_check()){
+				set_sgb_palette01_CASTLE();
+			}
+		break;
 	}	
 	if(sgb_check()){
 		set_sgb_palette_statusbar();
@@ -179,7 +192,7 @@ void START(){
 
 	//SCROLL
 	const struct MapInfo* level_maps_b = bosses[current_level_b];
-	UINT8 boss_banks[] = {BANK(mapboss0), BANK(mapboss1), BANK(mapboss2),BANK(mapboss3), BANK(mapboss4), BANK(mapboss5)};
+	UINT8 boss_banks[] = {BANK(mapboss0), BANK(mapboss1), BANK(mapboss2),BANK(mapboss3), BANK(mapboss4), BANK(mapboss5), 0, 0, 0, BANK(mapboss9)};
 	UINT8 map_w = 0;
 	UINT8 map_h = 0;
 	GetMapSize(boss_banks[current_level_b], level_maps_b, &map_w, &map_h);
@@ -210,6 +223,9 @@ void START(){
 		break;
 		case 5u:
 			InitScroll((UINT8) boss_banks[current_level_b], level_maps_b, collision_btiles6, 0);
+		break;
+		case 9u:
+			InitScroll((UINT8) boss_banks[current_level_b], level_maps_b, collision_btiles7, 0);
 		break;
 	}
 	
@@ -413,6 +429,11 @@ void SpawnBoss(INT8 hp_default){
 				gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 34 << 3, (UINT16) 19 << 3);
 				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 				gatedata->vx = 4;
+			break;
+			case 9u:			
+				boss = SpriteManagerAdd(SpriteBosseagle, (UINT16) 19u << 3, ((UINT16) 15u << 3) - 4u);
+				boss_data_b = (struct EnemyInfo*)boss->custom_data;
+				boss_hp = boss_data_b->hp;
 			break;
 		}
 		

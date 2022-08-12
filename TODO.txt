@@ -41,13 +41,6 @@ LIV 6 CIMITERO -> no boss
 				
 LIV 7 CASTELLO -> 3 MAPPE		
 	- boss -> in cima alla torre c'è boss, mamma e arcere: 
-		map90
-		controllo l' arrowmother
-		che ha sopra un archer costruito ad hoc
-		schermo fisso, con oggetti del cielo che scorrono da destra a sinistra
-		nemici uccelli, pipistrelli e teste di gatto
-		
-		sconfiggo il boss e cutscene 
 
 		arrivo sull' altra torre, la freccia della mamma sparisce e atterro
 		diag col boss che mi minaccia  

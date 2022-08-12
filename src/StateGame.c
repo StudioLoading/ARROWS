@@ -43,6 +43,7 @@ extern UINT8 current_level_b;
 extern UINT8 current_map_b;
 extern INT8 platform_vx;
 extern INT8 platform_vy;
+extern INT8 camera_tramble_c;
 extern UINT8 current_camera_state;
 extern UINT8 current_camera_counter;
 extern UINT8 diag_found;
@@ -75,9 +76,9 @@ INT8 load_next_d = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
-UINT8 current_level = 8u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle
+UINT8 current_level = 9u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle, 8 chasing boss, 9 final fight
 UINT8 current_map = 0u; // 0u default
-UINT8 current_cutscene = 0u;
+UINT8 current_cutscene = 3u; //0u default
 INT8 is_on_cutscene = 0;
 
 UINT16 drop_player_x = 0u;
@@ -349,8 +350,26 @@ void spawn_item(Sprite* itemin, UINT16 posx, UINT16 posy, INT8 content_type, INT
 	}
 }
 
-void UPDATE() {
-	//camerafocus shifting management
+void UPDATE() {	
+	//CAMERA TRAMBLE MANAGEMENT
+	if(archer_player && archer_state == STATE_HIT){
+		camera_tramble_c++;
+		switch(camera_tramble_c){
+			case 6:
+				camera_tramble_c = 0;
+			break;
+			case 1:
+			case 2:
+				scroll_target->y = archer_player->y - 17u;
+			break;
+			case 4:
+			case 5:
+				scroll_target->y = archer_player->y + 17u;
+			break;
+		}
+	}
+
+	//CAMERA SHIFTING
 	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
 		if(archer_player->x < 32u){
 			scroll_target->x = 32u;

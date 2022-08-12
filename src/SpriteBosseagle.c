@@ -39,6 +39,7 @@ void START() {
     bosseagleshoot_cooldown = 0;
     struct EnemyInfo* bosseagle_data = (struct EnemyInfo*) THIS->custom_data;
     bosseagle_data->archer_posx = 0u;
+    bosseagle_data->hp = 8;
 }
 
 void UPDATE(){
@@ -66,11 +67,17 @@ void UPDATE(){
                         THIS->x--;
                     }else if(THIS->x < init_posx){
                         THIS->x ++;
+                        if(enemies_2->x > ((UINT16) 8u << 3)){
+                            THIS->x ++;
+                        }
                     }
                     if(THIS->y > init_posy){
                         THIS->y --;
                     }else if(THIS->y < init_posy){
                         THIS->y ++;
+                        if(enemies_2->x > ((UINT16) 8u << 3)){
+                            THIS->y ++;
+                        }
                     }
                 //}
             }
@@ -132,7 +139,7 @@ void UPDATE(){
             UINT8 cos_position = boss_data->archer_posx + 64u;
 		    THIS->x = THIS->lim_x + ((sine_wave[cos_position]) >> 3);
 		    THIS->y = THIS->lim_y + ((sine_wave[boss_data->archer_posx]) >> 3);
-		    if(enemies_2->x < ((UINT16) 9u << 3)){
+		    if(enemies_2->x < ((UINT16) 8u << 3)){
                 boss_data->archer_posx += 2u;
             }else{
                 boss_data->archer_posx += 4u;
