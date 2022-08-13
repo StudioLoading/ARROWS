@@ -38,7 +38,7 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
-#define MAX_HIT_COOLDOWN 24
+#define MAX_HIT_COOLDOWN 40
 #define MAX_DEATH_COOLDOWN 80
 #define MAX_DIAG_COOLDOWN 60
 #define MAX_LANDING_TIME 24

@@ -9,7 +9,7 @@
 #include "custom_datas.h"
 #include "Dialogs.h"
 
-const UINT8 arrowboss_idle[] = {4, 0, 1, 2, 3}; //The first number indicates the number of frames
+const UINT8 arrowboss_idle[] = {1, 0}; //The first number indicates the number of frames
 
 UINT8 scrollarrowboss_tile;
 Sprite* iabspr;
@@ -21,7 +21,7 @@ INT8 arrowboss_direction = 0;
 void START(){
     THIS->lim_x = 2u;
     THIS->lim_y = 20u;
-    SetSpriteAnim(THIS, arrowboss_idle, 16u);
+    SetSpriteAnim(THIS, arrowboss_idle, 1u);
    	struct EnemyInfo* arrowboss_data = (struct EnemyInfo*)THIS->custom_data;    
     arrowboss_data->vx = 0;
     if(arrowboss_direction == 1){

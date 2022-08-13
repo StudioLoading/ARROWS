@@ -514,8 +514,8 @@ void UPDATE() {
 							sprite_3->y = sprite_2->y + 28u;
 							wait_c = 41u;
 						}
-						if(scroll_target->x != (sprite_3->x - 24u)){
-							scroll_target->x = sprite_3->x - 24u;
+						if(scroll_target->x != (sprite_3->x - 32u)){
+							scroll_target->x = sprite_3->x - 32u;
 							wait_c = 41u;
 						}
 						if(scroll_target->y != (sprite_3->y - 16u)){
@@ -544,8 +544,8 @@ void UPDATE() {
 							break;
 						}
 					}else{
-						if(scroll_target->x != (sprite_3->x - 24u)){
-							scroll_target->x = sprite_3->x - 24u;
+						if(scroll_target->x != (sprite_3->x - 32u)){
+							scroll_target->x = sprite_3->x - 32u;
 						}
 						if(scroll_target->y != (sprite_3->y - 16u)){
 							scroll_target->y = (sprite_3->y - 16u);
@@ -597,12 +597,32 @@ void UPDATE() {
 					if(sprite_1_data->tile_e_collision == 80u){
 						sprite_1_data->enemy_state = ENEMY_STATE_KNEE;
 						sprite_1_data->wait = 40u;
+						temporeggia = 0;
 						CalculateSpritesDestinations();
 						wait_c = 45u;
 					}
 				break;
 				case 45u:
 					TranslateSprite(sprite_4, 2 << delta_time, 0);
+					if(temporeggia < 50){
+						temporeggia++;
+					}
+					if(temporeggia == 50 && (KEY_TICKED(J_A) || KEY_TICKED(J_B))){
+						temporeggia = 0;
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						ShowCutDiag();
+						wait_c = 46u;
+					}
+				break;
+				case 46u:
+					if(temporeggia < 50){
+						temporeggia++;
+					}
+					if(temporeggia == 50 && (KEY_TICKED(J_A) || KEY_TICKED(J_B))){
+						temporeggia = 0;
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						SetState(StateDiag);
+					}
 				break;
 			}
 		break;

@@ -54,6 +54,7 @@ extern INT8 load_next_gameover;
 extern INT8 update_hud;
 
 extern const INT8 MAX_HP;
+extern const INT8 MAX_FINALBOSS_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
@@ -103,7 +104,7 @@ const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 1
 
 const UINT8 const collision_btiles6[] = {1, 2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
-const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 92, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void SpawnBoss(INT8 hp_default);
 void SpawnReward();
@@ -112,13 +113,13 @@ void WriteBBOSSHP();
 void START(){
 
 	reward = 0;
-	
+
 	if(is_on_boss <= 0){
 		is_on_boss = 0;
 	}
-	
+
 	SPRITES_8x16;
-	
+
 	SpriteManagerLoad(SpriteCamerafocus);
 	SpriteManagerLoad(SpritePlayer);
 	SpriteManagerLoad(SpriteArrow);
@@ -148,7 +149,7 @@ void START(){
 			SpriteManagerLoad(SpriteKey);
 			if(sgb_check()){
 				set_sgb_palette01_FOREST();
-			}			
+			}
 		break;
 		case 3u:
 			level_tool=0;
@@ -171,7 +172,7 @@ void START(){
 			level_tool=0;
 			SpriteManagerLoad(SpriteWalrus);
 			SpriteManagerLoad(SpriteWalrusspin);
-			SpriteManagerLoad(SpriteGate);			
+			SpriteManagerLoad(SpriteGate);
 			SpriteManagerLoad(SpriteAmulet);
 			if(sgb_check()){
 				set_sgb_palette01_WALRUS();
@@ -179,15 +180,16 @@ void START(){
 		break;
 		case 9u:
 			level_tool=0;
-			SpriteManagerLoad(SpriteBosseagle);
+			SpriteManagerLoad(SpriteBossfighter);
+			SpriteManagerLoad(SpriteAlligator);
 			if(sgb_check()){
 				set_sgb_palette01_CASTLE();
 			}
 		break;
-	}	
+	}
 	if(sgb_check()){
 		set_sgb_palette_statusbar();
-	}	
+	}
 	SHOW_SPRITES;
 
 	//SCROLL
@@ -204,7 +206,7 @@ void START(){
 		if(is_on_boss <= 2){
 			is_on_boss = 2;
 			ScrollFindTile((UINT8) boss_banks[current_level_b], level_maps_b, 9, 0, 0, map_w, map_h, &drop_player_x, &drop_player_y);
-		}		
+		}
 		scroll_top_movement_limit = 30;
 		scroll_target = SpriteManagerAdd(SpritePlayer, drop_player_x << 3, drop_player_y << 3);
 		scroll_bottom_movement_limit = 80;//customizzo altezza archer sul display
@@ -228,19 +230,19 @@ void START(){
 			InitScroll((UINT8) boss_banks[current_level_b], level_maps_b, collision_btiles7, 0);
 		break;
 	}
-	
+
 	SHOW_BKG;
-	
-	if (is_on_boss > 2){	
+
+	if (is_on_boss > 2){
 		if(is_on_boss == 4){//lo setto a 4 solo quando si muore dopo aver sconfitto il boss ma prima di essere usciti, come dei coglioni
 			SpawnReward();
-		}		
+		}
 		SpawnBoss(0);
 		archer_state = STATE_JUMPING;
 	}else{
 		SpawnBoss(-1);
 	}
-		
+
 	//INTRO
 	if (current_camera_state < 3u){
 		boss_data_b->enemy_state = ENEMY_STATE_WAIT;
@@ -248,10 +250,10 @@ void START(){
 	}else{
 		boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
 		if(is_on_boss > 2){
-			boss_data_b->enemy_state = ENEMY_STATE_DEAD;	
+			boss_data_b->enemy_state = ENEMY_STATE_DEAD;
 		}
 	}
-	
+
 	//INIT ARCHER
 	archer_data->ups = ups;
 	archer_data->hp = hp;
@@ -262,11 +264,11 @@ void START(){
 	INIT_CONSOLE(font, 10, 0);
 	ShowWindow();
 	WriteBBOSSHP();
-	
+
 }
 
 void UPDATE() {
-	
+
 	if(load_next_d){
 		switch(load_next_d){
 			case 1: //go to StateDiag
@@ -277,9 +279,9 @@ void UPDATE() {
 			case 2:
 				load_next_d = 0;
 			break;
-		}		
+		}
 	}
-	
+
 	if(load_next_b){
 		switch(load_next_b){
 			case 2: //esco dal boss col tool
@@ -288,22 +290,22 @@ void UPDATE() {
 			break;
 		}
 	}
-	
+
 	if(load_next_gameover){
 		load_next_gameover = 0;
 		is_on_gameover = 1;
 		SetState(StateGameover);
 	}
-	
-	// INTRO START	
+
+	// INTRO START
 	if (current_camera_state < 3u){
-		switch(current_camera_state){//0 initial wait, 1 move to boss, 2 go to Diag, 
+		switch(current_camera_state){//0 initial wait, 1 move to boss, 2 go to Diag,
 			case 0u:
 				current_camera_counter += 1u;
 				if(current_camera_counter == 60u){
 					current_camera_counter = 0u;
 					current_camera_state += 1u;
-				}	
+				}
 			break;
 			case 1u:
 				if(scroll_target->y < boss->y){scroll_target->y += 1;}
@@ -322,38 +324,38 @@ void UPDATE() {
 					current_camera_state += 1u;
 					current_camera_counter = 0u;
 					SetState(StateDiag);
-				}	
+				}
 			break;
-		}	
+		}
 		/*PRINT_POS(10, 0);
 		Printf("%d", current_camera_counter);
 		PRINT_POS(13, 0);
 		Printf("%d", current_camera_state);	*/
 	}
 	//INTRO END
-	
+
 	//DIAG MANAGEMENT
-	if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+	if(show_diag >= 2){ // if(show_diag >= max_diag){
 		ShowWindow();
 		return;
-	}	
+	}
 	if(archer_state == STATE_DIAG){
-		if(show_diag >= 2){ // if(show_diag >= max_diag){ 
+		if(show_diag >= 2){ // if(show_diag >= max_diag){
 			ShowWindow();
 			return;
 		}
 		if(show_diag > 0 ){
 			ShowWindowDiag();
 			return;
-		}		
+		}
 	}
-	
+
 	//HUD MANAGEMENT
 	if (update_hud){
 		update_hud = 0;
 		UpdateHUD();
 	}
-	
+
 	if (boss_hp != boss_data_b->hp && is_on_boss < 3){
 		boss_hp = boss_data_b->hp;
 		WriteBBOSSHP();
@@ -366,11 +368,11 @@ void UPDATE() {
 	if(level_tool && level_tool == archer_data->tool){
 		UpdateHUD();
 	}
-	*/	
+	*/
 	//UPDATE ARCHER POSX IN BOSS CUSTOM_DATA
 	boss_data_b->archer_posx = scroll_target->x;
-	
-	//MOVING BACKGROUND TILES	
+
+	//MOVING BACKGROUND TILES
 	updatecounter++;
 	if (updatecounter < 20) {
 		switch(updatecounter){
@@ -380,11 +382,11 @@ void UPDATE() {
 			case 10:
 				Anim_Tiles_1();
 			break;
-		}			
+		}
 	}else{
 		updatecounter = 0;
-	}	
-	
+	}
+
 }
 
 void SpawnBoss(INT8 hp_default){
@@ -430,13 +432,14 @@ void SpawnBoss(INT8 hp_default){
 				gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 				gatedata->vx = 4;
 			break;
-			case 9u:			
-				boss = SpriteManagerAdd(SpriteBosseagle, (UINT16) 19u << 3, ((UINT16) 15u << 3) - 4u);
+			case 9u:
+				boss = SpriteManagerAdd(SpriteBossfighter, (UINT16) 22u << 3, ((UINT16) 15u << 3) + 3u);
+				SpriteManagerAdd(SpriteAlligator, (UINT16) 21u << 3 , ((UINT16) 26u << 3) + 2u);
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
 			break;
 		}
-		
+
 		if(hp_default == 0){
 			boss_hp = 0;
 		}
@@ -477,7 +480,7 @@ void SpawnReward(){//and move boss to position
 			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
 			data_amulet = (struct AmuletInfo*)reward->custom_data;
 			data_amulet->type = 3;
-			data_amulet->setup = 0;	
+			data_amulet->setup = 0;
 		break;
 		case 4u: // bear -> wrench
 			reward_wrench2 = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 12u << 3);
@@ -487,7 +490,7 @@ void SpawnReward(){//and move boss to position
 			boss->x = (UINT16) 24u << 3;
 			boss->y = (UINT16) 13u << 3;
 		break;
-		case 5u: // tusk -> amulet water		
+		case 5u: // tusk -> amulet water
 			boss->x = (UINT16) 12u << 3;
 			boss->y = (UINT16) 15u << 3;
 			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 28u << 3, (UINT16) 13u << 3);
@@ -504,7 +507,14 @@ void WriteBBOSSHP(){
 	for(i = 0; i != boss_hp; ++i) {
 		set_win_tiles(11 + i, 0, 1, 1, &SKULL_TILE);
 	}
-	for(; i != MAX_HP; ++i) {
-		set_win_tiles(11 + i, 0, 1, 1, &EMPTY_TILE);
-	}	
+	if(current_level_b < 9u){
+		for(; i != MAX_HP; ++i) {
+			set_win_tiles(11 + i, 0, 1, 1, &EMPTY_TILE);
+		}
+	}else{
+		for(; i != MAX_FINALBOSS_HP; ++i) {
+			set_win_tiles(11 + i, 0, 1, 1, &EMPTY_TILE);
+		}
+
+	}
 }

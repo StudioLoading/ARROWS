@@ -198,6 +198,27 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 					break;
 				}
 			break;
+			case 4u:	
+				switch (wait_c){
+					case 45u:				
+						memcpy(d1, " ???: WHY YOU WANT  ", 20);
+						memcpy(d2, " TO BE PUNISHED ?   ", 20);
+						memcpy(d3, " GET OUT OF MY WAY  ", 20);
+						memcpy(d4, " OR ... !           ", 20);
+						diagf = 99u;
+					break;
+					case 46u:				
+						memcpy(d1, " ... OR WHAT ?      ", 20);
+						memcpy(d2, " MOTHER IS NOT HERE ", 20);
+						memcpy(d3, " NOW. IT IS JUST YOU", 20);
+						memcpy(d4, " AND ME. NO MERCY ! ", 20);
+						is_on_cutscene = 0;
+						wait_c = 99u;
+						current_camera_state = 2u;
+						diagf = 1u;
+					break;
+				}
+			break;
 		}
 	}
 	//diagf contains an integer corresponding to a map to show on StateDiag!
@@ -304,6 +325,13 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						memcpy(d4, "    LET'S FIGHT!    ", 20);
 						diagf = 1u;
 					break;
+					case 9u:
+						memcpy(d1, "                    ", 20);
+						memcpy(d2, "   GET OVER HERE !  ", 20);
+						memcpy(d3, "                    ", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 57u;
+					break;
 				}
 			break;
 			case 1:  //is_on_boss == 1
@@ -355,6 +383,14 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						memcpy(d4, " PRETTY OR ISN'T IT?", 20);
 						current_camera_state = 3u;
 						diagf = 56u;
+					break;
+					case 9u:
+						memcpy(d1, "                    ", 20);
+						memcpy(d2, "   GET OVER HERE !  ", 20);
+						memcpy(d3, "                    ", 20);
+						memcpy(d4, "                    ", 20);
+						current_camera_state = 3u;
+						diagf = 57u;
 					break;
 				}	
 			break;
