@@ -141,7 +141,7 @@ void START() {
 			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
 			sprite_1->mirror = V_MIRROR;
 			sprite_finalboss_data = (struct CagedbossInfo*)sprite_1->custom_data;
-			sprite_finalboss_data->state = BOSS_IDLE;
+			sprite_finalboss_data->state = CAGEDBOSS_IDLE;
 			sprite_finalboss_data->setup = 1;
 			sprite_2 = SpriteManagerAdd(SpriteCutmother, ((UINT16) 35u << 3), ((UINT16) 13u << 3));						
 			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 30u << 3), ((UINT16) 13u << 3));
@@ -164,7 +164,7 @@ void START() {
 			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
 			sprite_1->mirror = V_MIRROR;
 			sprite_finalboss_data = (struct CagedbossInfo*)sprite_1->custom_data;
-			sprite_finalboss_data->state = BOSS_IDLE;
+			sprite_finalboss_data->state = CAGEDBOSS_IDLE;
 			sprite_finalboss_data->setup = 1;
 			sprite_2 = SpriteManagerAdd(SpriteCutmother, ((UINT16) 29u << 3), ((UINT16) 13u << 3));						
 			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 31u << 3), ((UINT16) 13u << 3));

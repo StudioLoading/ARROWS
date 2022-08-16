@@ -642,8 +642,19 @@ void UPDATE() {
 					}
 				break;
 				case SpriteArrowboss:
-					SpriteManagerRemoveSprite(ispr);
+					if(KEY_PRESSED(J_DOWN)){
+						dataenemy = (struct EnemyInfo*)ispr->custom_data;
+						if(dataenemy->vx != 0){
+							SpriteManagerAdd(SpritePuff, ispr->x, ispr->y);
+							dataenemy->vx = 0;
+						}
+						dataenemy->enemy_accel_y = -3;
+						return;					
+					}else{
+						SpriteManagerRemoveSprite(ispr);
+					}
 				case SpriteBosseagle:
+				case SpriteBossfighter:
 				case SpriteCuteagle:
 					if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
 						Hit(1);
@@ -874,8 +885,8 @@ void CheckCollisionTile() {
 }
 
 void Hit(INT8 damage) {
-	landing_time = MAX_LANDING_TIME;
-	if (archer_state != STATE_DEAD && archer_state != STATE_HIT && (archer_state != STATE_JUMPING || current_level == 8u)){
+s	landing_time = MAX_LANDING_TIME;
+	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){//} && (archer_state != STATE_JUMPING || current_level == 8u)){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
 		if (archer_data->hp <= 0){

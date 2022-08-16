@@ -225,7 +225,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 	struct ArrowInfo* arrow_data = (struct ArrowInfo*)THIS->custom_data;
 	arrow_data->play_sound = 1;
 	switch(ta) {
-		case 11u: //da DX a GIU
+		case 11u: // GIU
 			arrow_data->arrowdir = 4;
 			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 2;
@@ -234,7 +234,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 			}			
 			THIS->y += 4;
 		break;
-		case 13u: // da DX a SU
+		case 13u: // a SU
 			arrow_data->arrowdir = 3;
 			if(THIS->mirror == V_MIRROR){
 				THIS->x -= 4;
@@ -242,7 +242,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 				THIS->x += 4;
 			}
 		break;
-		case 16u://da GIU a DX
+		case 16u:// a DX
 			THIS->mirror = NO_MIRROR; //SPRITE_UNSET_VMIRROR(THIS);
 			arrow_data->arrowdir = 1;
 			THIS->x += 4;

@@ -104,7 +104,7 @@ const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 1
 
 const UINT8 const collision_btiles6[] = {1, 2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
-const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 92, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 94, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void SpawnBoss(INT8 hp_default);
 void SpawnReward();
@@ -182,6 +182,7 @@ void START(){
 			level_tool=0;
 			SpriteManagerLoad(SpriteBossfighter);
 			SpriteManagerLoad(SpriteAlligator);
+			SpriteManagerLoad(SpriteArrowboss);
 			if(sgb_check()){
 				set_sgb_palette01_CASTLE();
 			}

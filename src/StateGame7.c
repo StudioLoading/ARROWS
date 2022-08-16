@@ -454,7 +454,7 @@ void UPDATE(){
 						enemies_3 = SpriteManagerAdd(SpriteCagedboss, (UINT16) 13 << 3, (UINT16) 11 << 3);
 						//enemies_1->attr_add = 0b10000000;
 						struct CagedbossInfo* finalboss_data = (struct CagedbossInfo*)enemies_3->custom_data;
-						finalboss_data->state = BOSS_IDLE;
+						finalboss_data->state = CAGEDBOSS_IDLE;
 						finalboss_data->setup = 1;
 						spawning_counter = 4;
 					}
@@ -494,7 +494,7 @@ void UPDATE(){
 						enemies_1 = SpriteManagerAdd(SpriteCutfinalboss, (UINT16) 35 << 3, (UINT16) 11 << 3);
 						enemies_1->mirror = V_MIRROR;
 						struct CagedbossInfo* finalboss_data = (struct CagedbossInfo*)enemies_1->custom_data;
-						finalboss_data->state = BOSS_IDLE;
+						finalboss_data->state = CAGEDBOSS_IDLE;
 						finalboss_data->setup = 1;
 						enemies_2 = SpriteManagerAdd(SpriteCutmother, (UINT16) 34 << 3, (UINT16) 13 << 3);						
 						enemies_2->mirror = V_MIRROR;

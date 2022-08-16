@@ -112,6 +112,8 @@ void Anim_Tiles_0() BANKED{
 	}
 	if(current_level >= 7u){
 		set_banked_bkg_data(43, 1u, 7u, BANK(tiles7));
+		set_banked_bkg_data(91, 1u, 7u, BANK(tiles7));
+		set_banked_bkg_data(92, 1u, 7u, BANK(tiles7));
 	}
 }
 
@@ -171,6 +173,8 @@ void Anim_Tiles_1() BANKED{
 	}
 	if(current_level >= 7u){
 		set_banked_bkg_data(43u, 1u, 1u, BANK(tilesanims));
+		set_banked_bkg_data(91, 1u, 1u, BANK(tilesanims));
+		set_banked_bkg_data(92, 1u, 1u, BANK(tilesanims));
 	}
 }
 

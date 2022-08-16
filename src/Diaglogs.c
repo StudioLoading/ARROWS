@@ -869,7 +869,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 							case SpriteCagedboss:
 								cagedboss_data = (struct CagedbossInfo*)archer->custom_data;
 								switch(cagedboss_data->state){
-									case BOSS_IDLE:
+									case CAGEDBOSS_IDLE:
 										memcpy(d1, " MY PETS HAVE BEEN  ", 20);
 										memcpy(d2, " PUNISHED FOR THEIR ", 20);
 										memcpy(d3, " FAILURES. WHAT DO  ", 20);

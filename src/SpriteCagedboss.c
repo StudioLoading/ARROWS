@@ -47,7 +47,7 @@ void UPDATE() {
             case BEAR_CAGED:
                 SetSpriteAnim(THIS, bear_caged, 8u);
             break;
-            case BOSS_IDLE:
+            case CAGEDBOSS_IDLE:
                 SetSpriteAnim(THIS, boss_idle, 12u);
             break;
         }

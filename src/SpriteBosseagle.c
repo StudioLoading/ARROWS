@@ -148,7 +148,9 @@ void UPDATE(){
         case BOSS_ATTACK:
             bosseagleshoot_cooldown++;
             if(bosseagleshoot_cooldown >= SHOOT_MAXCOOLDOWN && THIS->anim_frame == 1){
-                SpriteManagerAdd(SpriteArrowboss, THIS->x + 4u, THIS->y + 12u);
+                Sprite* arrowboss_spr = SpriteManagerAdd(SpriteArrowboss, THIS->x + 4u, THIS->y + 12u);
+                struct EnemyInfo* arrowboss_spr_data = (struct EnemyInfo*) arrowboss_spr->custom_data;
+                arrowboss_spr_data->vx = -2;
                 bosseagleshoot_cooldown = 0;
             }            
             boss_wait++;
