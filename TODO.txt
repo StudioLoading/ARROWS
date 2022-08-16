@@ -41,10 +41,6 @@ LIV 6 CIMITERO -> no boss
 				
 LIV 7 CASTELLO -> 3 MAPPE		
 	- boss -> in cima alla torre c'è boss, mamma e arcere: 
-
-		arrivo sull' altra torre, la freccia della mamma sparisce e atterro
-		diag col boss che mi minaccia  
-		Inizia lo scontro col boss a schermata fissa
 		
 		boss vecchio che ferisce il cattivone a seconda della freccia scielta
 		

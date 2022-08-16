@@ -657,7 +657,7 @@ void UPDATE() {
 				case SpriteBossfighter:
 				case SpriteCuteagle:
 					if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
-						Hit(1);
+ 						Hit(1);
 					}
 				break;
 				case SpriteHurricane:
@@ -885,7 +885,7 @@ void CheckCollisionTile() {
 }
 
 void Hit(INT8 damage) {
-s	landing_time = MAX_LANDING_TIME;
+	landing_time = MAX_LANDING_TIME;
 	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){//} && (archer_state != STATE_JUMPING || current_level == 8u)){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;

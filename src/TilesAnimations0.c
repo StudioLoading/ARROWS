@@ -9,6 +9,8 @@ IMPORT_TILES(tiles7);
 IMPORT_TILES(tilesanims);
 IMPORT_TILES(tilesanimsmapworld);
 IMPORT_TILES(tilesanimscutscene);
+IMPORT_TILES(tilescredit);
+IMPORT_TILES(tilesanimcredit);
 
 extern UINT8 current_level;
 extern UINT8 current_map;
@@ -20,6 +22,8 @@ UINT8 bank_tiles = BANK(tiles);
 UINT8 bank_tiles4 = BANK(tiles4);
 UINT8 bank_tilesanims = BANK(tilesanims);
 UINT8 bank_tilesanimsmapworld = BANK(tilesanimsmapworld);
+UINT8 bank_tilescredit = BANK(tilescredit);
+UINT8 bank_tilesanimcredit = BANK(tilesanimcredit);
 
 
 void set_banked_bkg_data(UINT8 first_tile, UINT8 nb_tiles, UINT8 tiles_used, UINT8 bank) NONBANKED {
@@ -47,8 +51,23 @@ void set_banked_bkg_data(UINT8 first_tile, UINT8 nb_tiles, UINT8 tiles_used, UIN
 		case 7u:
 		    set_bkg_data(first_tile, nb_tiles, tiles7.data+((16u) * first_tile));
 		break;
+		case 8u:
+		    set_bkg_data(first_tile, nb_tiles, tilescredit.data+((16u) * first_tile));
+		break;
+		case 9u:
+		    set_bkg_data(first_tile, nb_tiles, tilesanimcredit.data+((16u) * first_tile));
+		break;
 	}
     SWITCH_ROM(save);
+}
+
+void Anim_StudioLoading_0() BANKED{
+	set_banked_bkg_data(14u, 1u, 8u, BANK(tilescredit));
+	set_banked_bkg_data(15u, 1u, 8u, BANK(tilescredit));
+}
+void Anim_StudioLoading_1() BANKED{
+	set_banked_bkg_data(14u, 1u, 9u, BANK(tilesanimcredit));
+	set_banked_bkg_data(15u, 1u, 9u, BANK(tilesanimcredit));
 }
 
 void Anim_Tiles_0() BANKED{
@@ -198,8 +217,14 @@ void CutsceneAmulet1() BANKED{
 	set_banked_bkg_data(31u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
 }
 void CutsceneAmulet2() BANKED{
-	set_banked_bkg_data(38u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
+	set_banked_bkg_data(38u, 1u, 5, BANK(tilesanimscutscene));
 }
 void CutsceneAmulet3() BANKED{
-	set_banked_bkg_data(39u, 1u, 5, BANK(tilesanimscutscene));// 16 * 10
+	set_banked_bkg_data(39u, 1u, 5, BANK(tilesanimscutscene));
+}
+void WorldmapFinalFight() BANKED{//116 117 + 118 119
+	set_banked_bkg_data(116u, 1u, 2, BANK(tilesanimsmapworld));
+	set_banked_bkg_data(117u, 1u, 2, BANK(tilesanimsmapworld));
+	set_banked_bkg_data(118u, 1u, 2, BANK(tilesanimsmapworld));
+	set_banked_bkg_data(119u, 1u, 2, BANK(tilesanimsmapworld));
 }

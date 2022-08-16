@@ -12,6 +12,7 @@
 #include "Fade.h"
 #include "Music.h"
 
+#include "TilesAnimations0.h"
 #include "sgb_palette.h"
 
 IMPORT_TILES(tilescredit);
@@ -29,6 +30,8 @@ IMPORT_MAP(mapcredits4);
 DECLARE_MUSIC(bgm_credits);
 IMPORT_MAP(border);
 
+extern UINT8 thunder_delay;
+
 const UINT8 collision_tiles_credits[] = {1,0};
 UINT8 updatecounter;
 UINT8 credit_step;
@@ -42,6 +45,7 @@ void START() {
 	wait_time = 0u;
 	on_worldmap = 0;
 	colliding_mother = 0u;
+	thunder_delay = 0;
 	InitScroll(BANK(mapcredit0), &mapcredit0, collision_tiles_credits, 0);	
 	
 	//SOUND
@@ -57,6 +61,18 @@ void START() {
 void UPDATE() {
 	wait_time += 1u;
 	UINT8 cb = 0;
+	if(credit_step == 0){
+		switch(thunder_delay){
+			case 20u:
+				Anim_StudioLoading_1();
+			break;		
+			case 40u:
+				Anim_StudioLoading_0();
+				thunder_delay = 0;
+			break;
+		}
+		thunder_delay++;
+	}	
 	if(KEY_TICKED(J_START)){
 		SetState(StateTitlescreen);
 		return;

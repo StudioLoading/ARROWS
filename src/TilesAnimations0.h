@@ -1,9 +1,12 @@
+void Anim_StudioLoading_0() BANKED;
+void Anim_StudioLoading_1() BANKED;
 void Anim_Tiles_0() BANKED;
 void Anim_Tiles_1() BANKED;
 void WorldmapQuiverStone() BANKED;
 void WorldmapQuiverThunder() BANKED;
 void WorldmapQuiverIce() BANKED;
 void WorldmapQuiverFire() BANKED;
+void WorldmapFinalFight() BANKED;
 void CutsceneAmulet0() BANKED;
 void CutsceneAmulet1() BANKED;
 void CutsceneAmulet2() BANKED;

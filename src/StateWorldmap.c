@@ -8,7 +8,6 @@
 #include "Print.h"
 #include "Music.h"
 #include "Sound.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 #include "TilesAnimations0.h"
@@ -150,7 +149,10 @@ void UPDATE(){
 		}		
 		if((quiver & 0b0000010000) == 0b0000010000){// ho vulkan pyramid
 			WorldmapQuiverFire();
-		}		
+		}
+		if(current_level == 9u){
+			WorldmapFinalFight();
+		}
 	}
 	switch(current_level){ // spostamento orizzontale da un punto all' altro di 25u
 		case 1u:
@@ -195,10 +197,10 @@ void UPDATE(){
 			}
 		break;
 		case 9u:
-			if(counter > 80u && siconpsg->x > 8u && (counter & 1)){
+			if(counter > 80u && siconpsg->x > 16u && (counter & 1)){
 				siconpsg->x-=2;
 			}
-			if(counter > 80u && siconpsg->y < 112u && (counter & 0x4)){
+			if(counter > 80u && siconpsg->y < 120u && (counter & 0x4)){
 				siconpsg->y++;
 			}
 		break;
