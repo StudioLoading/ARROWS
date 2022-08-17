@@ -32,6 +32,7 @@ extern UINT8 on_worldmap;
 extern UINT8 quiver;
 extern INT8 visited;
 extern INT8 is_on_boss;
+extern INT8 is_on_cutscene;
 
 
 const UINT8 const collision_tiles_worldmap[] = {0, 0};
@@ -108,6 +109,7 @@ void START() {
 			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
 			dataiconpsg->type=11;
 			dataiconpsg->setup=1u;
+			is_on_cutscene = 0;
 		break;
 		case 9u:
 			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 128u, (UINT16) 104u);

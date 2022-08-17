@@ -222,7 +222,7 @@ void UPDATE() {
 		return;
 	}
 	switch(current_cutscene){
-		case 1u:
+		case 1u://mother meeting
 			switch(wait_c){
 				case 40u: // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
 					diag_found = Build_Next_Dialog_Banked(scroll_target);
@@ -232,7 +232,7 @@ void UPDATE() {
 					sprite_3 = SpriteManagerAdd(SpriteCastlegate, (UINT16) 600u, (UINT16) 130u);
 					sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
 					sprite_3_data->enemy_state = ENEMY_STATE_NORMAL;
-					quiver = 0b00000001;
+					quiver = 0b00010001;
 				break;
 				case 41u:
 					switch(temporeggia){
@@ -337,7 +337,7 @@ void UPDATE() {
 				break;
 			}
 		break;
-		case 2u:
+		case 2u://tower talk
 			switch(wait_c){
 				case 40u:
 					CalculateSpritesDestinations();
@@ -485,6 +485,7 @@ void UPDATE() {
 					set_window_y_c(144);
 					HIDE_WIN;
 					current_level = 8u;
+					is_on_cutscene = 0;
 					current_map = 0;
 					SetState(StateWorldmap);
 				break;

@@ -441,18 +441,18 @@ void UPDATE() {
 					switch(amuletdata->type){
 						case 1:
 							archer_state = STATE_AMULET_STONE;
-							quiver = quiver | 0b0000000010; 
+							quiver |= 0b0000000010; 
 						break;
 						case 2:
 							archer_state = STATE_AMULET_ICE;
-							quiver = quiver | 0b0000001000;
+							quiver |= 0b0000001000;
 						break;
 						case 3:
 							archer_state = STATE_AMULET_THUNDER;
-							quiver = quiver | 0b0000000100;
+							quiver |= 0b0000000100;
 						break;
 						case 4:
-							quiver = quiver | 0b0000010000;
+							quiver |= 0b0000010000;
 							archer_state = STATE_AMULET_FIRE;
 						break;
 					}

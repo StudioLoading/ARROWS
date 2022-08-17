@@ -76,9 +76,12 @@ INT8 load_next_d = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
 UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
-UINT8 current_level = 9u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle, 8 chasing boss, 9 final fight
+UINT8 current_level = 7u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle, 8 flying arrows, 9 final fight
+//7u con 1u in current_cutscene
+//8u con 2u in current_cutscene
+//9u con 3u in current_cutscene
 UINT8 current_map = 0u; // 0u default
-UINT8 current_cutscene = 3u; //0u default
+UINT8 current_cutscene = 1u; //0 no scene, 1 mother at castle, 2 tower talk, 3 eagle picks boss, 4 colusseum talk
 INT8 is_on_cutscene = 0;
 
 UINT16 drop_player_x = 0u;

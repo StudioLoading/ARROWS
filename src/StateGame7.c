@@ -163,6 +163,7 @@ void START() {
 			}
 			switch(current_map){
 				case 0:
+					quiver = final_quiver;
 					SpriteManagerLoad(SpritePlayer);
 					SpriteManagerLoad(SpriteArrow);
 					SpriteManagerLoad(SpriteArrowmother);
@@ -306,7 +307,7 @@ void START() {
 
 void UPDATE(){
 	//CAMERA TRAMBLE MANAGEMENT
-	if(archer_player && archer_state == STATE_HIT){
+	if(archer_player && archer_state == STATE_HIT && current_level != 8u){
 		camera_tramble_c++;
 		switch(camera_tramble_c){
 			case 6:
