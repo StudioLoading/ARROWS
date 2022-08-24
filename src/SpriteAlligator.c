@@ -4,7 +4,6 @@
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -15,6 +14,9 @@ const UINT8 alligator_bite[] = {7, 5, 4, 3, 2, 2, 2, 5}; //The first number indi
 const UINT8 alligator_hit[] = {6, 3, 6, 3, 6, 3, 6}; //The first number indicates the number of frames
 const UINT8 alligator_dead[] = {1, 7}; //The first number indicates the number of frames
 const UINT8 alligator_normal[] = {1, 5}; //The first number indicates the number of frames
+
+extern INT8 is_on_cutscene;
+extern UINT8 current_level_b;
 
 const UINT16 boss_posx[] = {9u, 24u, 16u};
 UINT8 poss = 0;
@@ -30,7 +32,9 @@ void START() {
 	alligator_data->vx = 0;
 	alligator_data->wait = 250u;
 	alligator_data->hp = 3;
-	alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
+	if(is_on_cutscene == 0){
+		alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
+	}
 }
 
 void UPDATE() {
@@ -71,7 +75,9 @@ void UPDATE() {
 		SetSpriteAnim(THIS, alligator_hide, 8u);
 	}else if (alligator_data->wait == 180u){
 		alligator_data->enemy_state = ENEMY_STATE_ATTACK;
-		PlayFx(CHANNEL_4, 60, 0x08, 0xf7, 0x04, 0x80, 0x00);
+		if(current_level_b < 9u){
+			PlayFx(CHANNEL_4, 60, 0x08, 0xf7, 0x04, 0x80, 0x00);
+		}
 		SetSpriteAnim(THIS, alligator_bite, 10u);
 	}else if (alligator_data->wait == 120u){
 		alligator_data->enemy_state = ENEMY_STATE_NORMAL;

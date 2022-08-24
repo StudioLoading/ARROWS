@@ -12,6 +12,7 @@ extern UINT8 diag_found;
 extern void Build_Next_Dialog() BANKED;
 
 const UINT8 cutfinalboss_idle[] = {5, 0, 0, 0, 0, 1}; //The first number indicates the number of frames
+const UINT8 cutfinalboss_grappling[] = {1, 2};
 extern UINT8 colliding_mother;
 struct EnemyInfo* cutfinalboss_data;
 
@@ -45,6 +46,9 @@ void UPDATE(){
         break;
         case ENEMY_STATE_WALKING:
             SetSpriteAnim(THIS, cutfinalboss_idle, 8u);
+        break;
+        case ENEMY_STATE_GRAPPLING:
+            SetSpriteAnim(THIS, cutfinalboss_grappling, 1u);
         break;
     }
 

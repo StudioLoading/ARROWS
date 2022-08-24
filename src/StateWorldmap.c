@@ -50,6 +50,8 @@ void START() {
 	
 	//SpriteManagerLoad(SpriteIconpsg);
 	
+	is_on_cutscene = 0;
+	
 	if(sgb_check()){
 		set_sgb_palette01_worldmap();
 		//reset_sgb_palette_statusbar();
@@ -109,7 +111,6 @@ void START() {
 			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
 			dataiconpsg->type=11;
 			dataiconpsg->setup=1u;
-			is_on_cutscene = 0;
 		break;
 		case 9u:
 			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 128u, (UINT16) 104u);

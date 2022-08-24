@@ -49,14 +49,21 @@ void UPDATE(){
     if(arrowboss_tile_collision){
         switch(arrowboss_tile_collision){
             case 11u:// REDIRECTION DOWN
+                if(arrowboss_data->vx > 0){
+                    THIS->x += 4u;
+                }else if(arrowboss_data->vx < 0){
+                    THIS->x -= 4u;
+                }
                 arrowboss_data->vx = 0;
                 arrowboss_data->enemy_accel_y = 1;
             break;
             case 16u: //REDIRECTION RIGHT
+                THIS->y -= 4u;
                 arrowboss_data->vx = 2;
                 arrowboss_data->enemy_accel_y = 0;
             break;
             case 17u: //REDIRECTION LEFT
+                THIS->y -= 4u;
                 arrowboss_data->vx = -2;
                 arrowboss_data->enemy_accel_y = 0;
             break;

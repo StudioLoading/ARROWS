@@ -28,6 +28,7 @@ IMPORT_MAP(mapboss5);
 IMPORT_MAP(mapboss9);
 
 DECLARE_MUSIC(bgm_boss_defeated);
+DECLARE_MUSIC(bgm_titlescreen);
 
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
@@ -52,6 +53,8 @@ extern UINT8 diag_found;
 extern INT8 load_next_d;
 extern INT8 load_next_gameover;
 extern INT8 update_hud;
+extern UINT8 quiver;
+extern UINT8 final_quiver;
 
 extern const INT8 MAX_HP;
 extern const INT8 MAX_FINALBOSS_HP;
@@ -179,12 +182,16 @@ void START(){
 			}
 		break;
 		case 9u:
+			quiver = final_quiver;
 			level_tool=0;
 			SpriteManagerLoad(SpriteBossfighter);
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteArrowboss);
 			if(sgb_check()){
 				set_sgb_palette01_CASTLE();
+			}
+			if(current_camera_state >=3){
+				PlayMusic(bgm_titlescreen, 1);
 			}
 		break;
 	}

@@ -311,7 +311,7 @@ void UPDATE() {
 			switch(colliding_mother){
 					//triggera la cutscene di madre e figlio che vanno al portale
 				case 7u:
-					is_on_cutscene = 1;
+					//is_on_cutscene = 1;
 					SetState(StateCutscene);
 				break;
 				case 8u://go to StateWorldmap after level 8.0 completed

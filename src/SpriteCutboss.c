@@ -37,6 +37,9 @@ void UPDATE(){
 				cutboss_data->enemy_state = ENEMY_STATE_WAIT;
 			}
 		break;
+		case ENEMY_STATE_GRAPPLING:
+			SetSpriteAnim(THIS, anim_cutboss_oneagle, 1u);
+		break;
 	}
 
 }

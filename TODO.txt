@@ -1,18 +1,18 @@
-File: FLYINGARROWS_2021_12_23.gb
-Tools: GBDK, Version: 2020.4.0.2
-Engine: ZGB, Version: 2021.0
-Music: GBT Player
-
 
 TODO:
-- livello castello come da design sopra
+- map 8 flyingArrows tiles 77 in più in alto a sinistra x 5o6 tiles
 - final boss
-- bonus level
-- DIFFERENTE BORDO DI SNES PER LIVELLO CASTELLO
+- cutscene freccione
+- cutscene wolf con spiega
+- titoli finali (coi nomi backers)
+- cutscene finale fogna
 - dopo titleScreen, prima del biglietto, schermata di configurazione per salto/fire A/B o viceversa
 But it is not that hard. J_A is defined as 0x10u. Just make a variable which contains this value and change it as fit. 
 KEY_PRESSED(A_Button_Var)
 A_Button_Var contains the value you set in the configuration. 0x10u as default, 0x20 is the B button, 0x40u is the Select button, and so on. 
+
+
+
 
 MUSIC MANAGEMENT
 
@@ -30,40 +30,6 @@ castle			5 prechorus
 gameover		5 preOutro
 boss defeated	4 preChorus  todo
 amulet			4 outro
-
-LIV 0 ZOO -> Wolf -> tool per uscita
-LIV 1 SEWER -> Gator -> stone
-LIV 2 FOREST -> Eagle  -> tool per uscita
-LIV 3 SKY -> Ibex -> thunder
-LIV 4 TREES -> Bear -> tool di uscita
-LIV 5 GROTTA CON STALATITI E STALAGMITI -> Walrus -> ice
-LIV 6 CIMITERO -> no boss
-				
-LIV 7 CASTELLO -> 3 MAPPE		
-	- boss -> in cima alla torre c'è boss, mamma e arcere: 
-		
-		boss vecchio che ferisce il cattivone a seconda della freccia scielta
-		
-		Alla fine arriva mamma , dice "insieme figlio!" 
-		cutscene con mamma e figlio che scoccano una freccia ciscuno, quando le frecce si uniscono spariscono e diventano
-		un freccione di "luce" (? forse riesco con sfondo scuro scuro)
-		il boss viene colpito in pieno e viene spinto giù fuori schermo.
-		diag dell' arcere e madre che parlano di vittoria, 
-		gli animali arrivano, dicendo di aver recuperato gli AMULETI
-		per ringraziarci di essere entrati in un conflitto non nostro
-		titoli di coda
-		titoli di coda
-		ringraziamenti dai backers di KS
-		cutscene alla Gator Swamp col coccodrillo insieme al finalBoss.
-
-			
----------------------------------------------------------
-LIVELLI BONUS -> si controlla il boss senza amuleto e gli si fa fare na certa cosa. Se riesce, questo boss darà una mano al protagonista nello scontro finale
-	- WOLF siamo al cimitero, il lupo ha una vx che aumenta, scopo è catturare 10 topi, al massimo si può saltare, e i topi sono o per terra o sopra una lapide. quando wolf arriva al cancello del castello, il livello è finito. se ha catturato 10 topi partecipa allo scontro contro il boss
-	- EAGLE stesso processo, i topi sono o per terra o sopra gli alberi. l' aquila resta in volo e con "salto" va in picchiata
-	- BEAR boh, uguale al wolf ma magari più lento, e ne deve beccare di più ?
----------------------------------------------------------
-
 
 nice2have:
 	- bonus level

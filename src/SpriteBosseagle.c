@@ -8,7 +8,7 @@
 #include "custom_datas.h"
 #include "CircleMath.h"
 
-#define SHOOT_MAXCOOLDOWN 36
+#define SHOOT_MAXCOOLDOWN 24
 
 const UINT8 anim_bosseagle_normal[] = {1, 0}; //The first number indicates the number of frames
 const UINT8 anim_bosseagle_attack[] = {2, 0, 2}; //The first number indicates the number of frames
@@ -85,7 +85,7 @@ void UPDATE(){
                 SetSpriteAnim(THIS, anim_bosseagle_normal, 4u);
                 boss_data->enemy_state = BOSS_MOVING;
                 if(enemies_2->x < ((UINT16) 7u << 3)){
-                    init_posx = ((UINT16) 18u << 3);
+                    init_posx = ((UINT16) 17u << 3);
                     init_posy = ((UINT16) 8u << 3);
                 }else{
                     if(alternate_initposs < 0){
@@ -131,10 +131,13 @@ void UPDATE(){
             boss_wait++;
             if(boss_wait == 180u){
                 boss_wait = 0u;
-                SetSpriteAnim(THIS, anim_bosseagle_attack, 6u);
+                if(enemies_2->x < ((UINT16) 8u << 3)){
+                    SetSpriteAnim(THIS, anim_bosseagle_attack, 8u);
+                }else{
+                    SetSpriteAnim(THIS, anim_bosseagle_attack, 16u);
+                }
                 boss_data->enemy_state = BOSS_ATTACK;
             }
-
             //ROUNDING
             UINT8 cos_position = boss_data->archer_posx + 64u;
 		    THIS->x = THIS->lim_x + ((sine_wave[cos_position]) >> 3);
@@ -154,7 +157,7 @@ void UPDATE(){
                 bosseagleshoot_cooldown = 0;
             }            
             boss_wait++;
-            if(boss_wait == 180u){
+            if((enemies_2->x <= ((UINT16) 11u <<3) && boss_wait == 180u) || (enemies_2->x > ((UINT16) 11u <<3) && boss_wait == 60u)){
                 boss_wait = 0u;
                 SetSpriteAnim(THIS, anim_bosseagle_normal, 4u);
                 boss_data->archer_posx = 0u;	

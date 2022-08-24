@@ -75,6 +75,8 @@ _SPRITE_DMG(SpriteArrowboss, arrowboss)\
 _SPRITE_DMG(SpriteCloud, cloud)\
 _SPRITE_DMG(SpriteCutboss, cutboss)\
 _SPRITE_DMG(SpriteBossfighter, bossfighter)\
+_SPRITE_DMG(SpriteCutbossdead, cutbossdead)\
+_SPRITE_DMG(SpriteCutalligator, cutalligator)\
 SPRITE_DEF_END
 
 

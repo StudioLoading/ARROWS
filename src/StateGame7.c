@@ -16,10 +16,10 @@
 #include "sgb_palette.h"
 
 #define CLOUD_TIMEOUT_SPAWNING_LOW 90
-#define CLOUD_TIMEOUT_SPAWNING_HIGH 65
-#define BIRD_TIMEOUT_SPAWNING_LOW 140
-#define BIRD_TIMEOUT_SPAWNING_MID 90
-#define BIRD_TIMEOUT_SPAWNING_HIGH 50
+#define CLOUD_TIMEOUT_SPAWNING_HIGH 48
+#define BIRD_TIMEOUT_SPAWNING_LOW 120
+#define BIRD_TIMEOUT_SPAWNING_MID 80
+#define BIRD_TIMEOUT_SPAWNING_HIGH 40
 
 IMPORT_TILES(font);
 IMPORT_TILES(tiles7);
@@ -518,7 +518,7 @@ void UPDATE(){
 			switch(current_map){
 				case 0u://boss chasing				
 					if(spawning_counter == 0){
-						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 29u << 3, (UINT16) 9u << 3);
+						enemies_0 = SpriteManagerAdd(SpriteBosseagle, (UINT16) 28u << 3, (UINT16) 9u << 3);
 						enemies_0_data = (struct EnemyInfo*) enemies_0->custom_data;
 						enemies_0_data->enemy_state = BOSS_APPROACHING_FIRST;
 						spawning_counter = 1;

@@ -240,8 +240,10 @@ void UPDATE() {
 								SetState(StateGame);
 							}else if (current_level < 5u){
 								SetState(StateGame3);
+							}else if (current_level <= 6u){
+								SetState(StateGame6);
 							}else if (current_level == 7u){
-								current_map = 2;
+								//current_map = 2;
 								SetState(StateGame7);
 							}else if (current_level == 8u){
 								SetState(StateGame7);
@@ -347,7 +349,7 @@ void UPDATE() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
-			if(KEY_PRESSED(J_A) && hit_cooldown < (MAX_HIT_COOLDOWN - 10)) {
+			if(KEY_PRESSED(J_A) && hit_cooldown > (MAX_HIT_COOLDOWN - 10)) {
 				hit_cooldown = MAX_HIT_COOLDOWN;
 				Jump();
 			}else{
@@ -653,8 +655,12 @@ void UPDATE() {
 					}else{
 						SpriteManagerRemoveSprite(ispr);
 					}
-				case SpriteBosseagle:
 				case SpriteBossfighter:
+					dataenemy = (struct EnemyInfo*)ispr->custom_data;
+					if(dataenemy->enemy_state == BOSS_DIEING && dataenemy->enemy_state == BOSS_DEAD){
+						return;
+					}
+				case SpriteBosseagle:
 				case SpriteCuteagle:
 					if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
  						Hit(1);

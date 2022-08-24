@@ -218,6 +218,24 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						diagf = 1u;
 					break;
 				}
+			break;			
+			case 5u:	
+				switch (wait_c){
+					case 40u:				
+						memcpy(d1, " ???:               ", 20);
+						memcpy(d2, " ... YOU ....       ", 20);
+						memcpy(d3, "    ... WHY ? ...   ", 20);
+						memcpy(d4, "    AAAAAAHH !      ", 20);
+						diagf = 99u;
+					break;
+					case 41u:				
+						memcpy(d1, " ALLIGATOR:         ", 20);
+						memcpy(d2, "            ....    ", 20);
+						memcpy(d3, "                    ", 20);
+						memcpy(d4, "                    ", 20);
+						diagf = 99u;
+					break;
+				}
 			break;
 		}
 	}

@@ -25,7 +25,7 @@ IMPORT_MAP(mapboss9);
 IMPORT_MAP(diagnew);
 DECLARE_MUSIC(bgm_level_cematery);
 DECLARE_MUSIC(bgm_level_castle);
-
+DECLARE_MUSIC(bgm_amulet);
 
 const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
 extern UINT8 bank_tiles6;
@@ -47,6 +47,7 @@ extern UINT8 diag_found;
 extern INT8 is_on_cutscene;
 extern UINT8 current_cutscene;
 extern UINT8 quiver;
+extern struct EnemyInfo* bossfighter_data;
 
 UINT8 wait_c = 0u;
 struct CameraInfo* camera_data;
@@ -95,6 +96,7 @@ void START() {
 		set_window_y_c(144);
 		HIDE_WIN;
 		SetState(StateWorldmap);
+		return;
 	}
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -163,15 +165,15 @@ void START() {
 	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
 			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
 			sprite_1->mirror = V_MIRROR;
-			sprite_finalboss_data = (struct CagedbossInfo*)sprite_1->custom_data;
-			sprite_finalboss_data->state = CAGEDBOSS_IDLE;
-			sprite_finalboss_data->setup = 1;
+			sprite_1_data = (struct EnemyInfo*)sprite_1->custom_data;
+			sprite_1_data->enemy_state = ENEMY_STATE_WAIT;
+			//sprite_finalboss_data->setup = 1;
 			sprite_2 = SpriteManagerAdd(SpriteCutmother, ((UINT16) 29u << 3), ((UINT16) 13u << 3));						
-			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 31u << 3), ((UINT16) 13u << 3));
+			sprite_3 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 32u << 3), ((UINT16) 13u << 3));
 			mother_data = (struct EnemyInfo*)sprite_2->custom_data;
 			sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
 			sprite_3_data->enemy_state = ENEMY_STATE_WAIT;
-			sprite_4 = SpriteManagerAdd(SpriteCuteagle, ((UINT16) 10u << 3), ((UINT16) 1u << 3));
+			sprite_4 = SpriteManagerAdd(SpriteCuteagle, ((UINT16) 10u << 3), ((UINT16) 1u << 3) -2u);
 			sprite_4_data = (struct EnemyInfo*)sprite_4->custom_data;
 			sprite_4_data->enemy_state = ENEMY_STATE_NORMAL;
 		break;
@@ -192,6 +194,29 @@ void START() {
 			sprite_2_data = (struct EnemyInfo*) sprite_2->custom_data;
 			sprite_3 = SpriteManagerAdd(SpriteCutboss, ((UINT16) 13u << 3), ((UINT16) 3u << 3));
 			sprite_3_data = (struct EnemyInfo*) sprite_3->custom_data;
+		break;
+		case 5u:		
+			ResumeMusic;	
+			scene_bank = BANK(mapboss9);
+			InitScroll(scene_bank, &mapboss9, collision_tiles_cutscene7, 0);
+	   		SpriteManagerLoad(SpriteCutarcher);
+			SpriteManagerLoad(SpriteCutbossdead);
+			SpriteManagerLoad(SpriteCutalligator);
+			UINT16 x3 = bossfighter_data->enemy_accel_y;
+			sprite_3 = SpriteManagerAdd(SpriteCutbossdead,  x3, ((UINT16) 15u << 3));
+			sprite_3_data = (struct EnemyInfo*) sprite_3->custom_data;
+			if(bossfighter_data->enemy_accel_y < ((UINT16) 15u << 3)){
+				sprite_1 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 12u << 3), ((UINT16) 17u << 3));
+				sprite_1->mirror = V_MIRROR;
+			}else{
+				sprite_1 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 21u << 3), ((UINT16) 17u << 3));
+				sprite_3->mirror = V_MIRROR;
+			}
+			sprite_1_data = (struct EnemyInfo*) sprite_1->custom_data;
+			sprite_1_data->enemy_state = ENEMY_STATE_WAIT;
+			scroll_target = SpriteManagerAdd(SpriteCamerafocus, sprite_1->x, ((UINT16) 22u << 3));
+			camera_data = (struct CameraInfo*)scroll_target->custom_data;
+			
 		break;
 	}
 	
@@ -423,6 +448,8 @@ void UPDATE() {
 					}else{		
 						CalculateSpritesDestinations();
 						sprite_4_data->enemy_state = ENEMY_STATE_JUMPING;
+						//sprite_4_data->
+						sprite_1_data->enemy_state = ENEMY_STATE_GRAPPLING;
 						wait_c = 42u;
 						temporeggia = 0;
 					}
@@ -463,8 +490,8 @@ void UPDATE() {
 					}else{
 						temporeggia = 0;
 						mother_data->enemy_state = ENEMY_STATE_ATTACK;
-						sprite_3_data->enemy_accel_y = -12;
-						sprite_3_data->enemy_state = ENEMY_STATE_JUMPING;
+						//sprite_3_data->enemy_accel_y = -12;
+						//sprite_3_data->enemy_state = ENEMY_STATE_JUMPING;
 						wait_c = 45u;
 					}
 				break;
@@ -538,10 +565,12 @@ void UPDATE() {
 							case 1:
 							case 2:
 								scroll_target->y = ((UINT16) 12u << 3);
+								PlayFx(CHANNEL_1, 60, 0x42, 0x04, 0xfc, 0x28, 0x82);
 							break;
 							case 4:
 							case 5:
 								scroll_target->y = ((UINT16) 16u << 3);
+								//PlayFx(CHANNEL_1, 60, 0x23, 0x01, 0xf7, 0x28, 0x82);
 							break;
 						}
 					}else{
@@ -562,6 +591,9 @@ void UPDATE() {
 					}else{
 						scroll_target->y = (sprite_3->y - 16u);
 						CalculateSpritesDestinations();
+						sprite_1 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 5u << 3), ((UINT16) 13u << 3) + 4u);
+						sprite_1_data = (struct EnemyInfo*) sprite_1->custom_data;
+						PlayMusic(bgm_level_castle, 1);
 						wait_c = 43u;
 					}
 				break;
@@ -624,6 +656,46 @@ void UPDATE() {
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
 						SetState(StateDiag);
 					}
+				break;
+			}
+		break;
+		case 5u://boss muore
+			switch(wait_c){
+				case 40u:
+					diag_found = Build_Next_Dialog_Banked(scroll_target);
+					ShowCutDiag();
+					wait_c = 41u;
+				break;
+				case 41u:					
+					if(sprite_3_data->enemy_state == ENEMY_STATE_HIDDEN){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						ShowCutDiag();
+						wait_c = 42u;
+					}
+				break;
+				case 42u:
+					if(sprite_1->mirror == NO_MIRROR){
+						sprite_4 = SpriteManagerAdd(SpriteCutalligator, (UINT16) sprite_1->x - 16u, ((UINT16) 26u << 3));
+					}else{
+						sprite_4 = SpriteManagerAdd(SpriteCutalligator, (UINT16) sprite_1->x + 16u, ((UINT16) 26u << 3));						
+					}
+					sprite_4_data = (struct EnemyInfo*) sprite_4->custom_data;
+					sprite_4_data->enemy_state = ENEMY_STATE_WALKING;
+					if(sprite_1->mirror == NO_MIRROR){
+						sprite_4_data->vx = 1;
+					}else{
+						sprite_4_data->vx = -1;
+					}
+					wait_c = 43u;
+					temporeggia = 0;
+					PlayMusic(bgm_amulet, 1);
+				break;
+				case 43u:
+					//temporeggia++;
+				break;
+				case 44u://wait_c = 44u is done on the DESTROY of Cutalligator
+					//go to cutscene at the zoo
+					temporeggia++;
 				break;
 			}
 		break;

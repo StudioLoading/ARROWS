@@ -52,7 +52,7 @@ void UPDATE(){
             SetSpriteAnim(THIS, anim_cutarcher_knee, 8u);
         break;
         case ENEMY_STATE_JUMPING:
-            SetSpriteAnim(THIS,anim_cutarcher_jump, 1u);
+            //SetSpriteAnim(THIS,anim_cutarcher_jump, 1u);
         case ENEMY_STATE_SLIDING:
             //TranslateSprite(THIS, cutarcher_data->vx << delta_time, 0);
             //THIS->y = cutarcher_data->enemy_accel_y; 
@@ -61,11 +61,12 @@ void UPDATE(){
 
     SPRITEMANAGER_ITERATE(cutarcher_tile, cutarcherspr) {
         if(CheckCollision(THIS, cutarcherspr)) {
-            if(cutarcherspr->type == SpriteArrowmother && cutarcher_data->enemy_state != ENEMY_STATE_JUMPING) {
-                cutarcher_data->enemy_state = ENEMY_STATE_SLIDING;
-                cutarcher_data->tile_e_collision = 1u;
-                cutarcher_data->vx = 2;
-                THIS->y = cutarcherspr->y - 9u;
+            if(cutarcherspr->type == SpriteArrowmother){//} && cutarcher_data->enemy_state != ENEMY_STATE_JUMPING) {
+                //cutarcher_data->enemy_state = ENEMY_STATE_SLIDING;
+                //cutarcher_data->tile_e_collision = 1u;
+                //cutarcher_data->vx = 2;
+                SetSpriteAnim(THIS, anim_cutarcher_idle, 8u);
+                THIS->y = cutarcherspr->y - 14u;
                 THIS->x = cutarcherspr->x + 4u;
             }
         }
