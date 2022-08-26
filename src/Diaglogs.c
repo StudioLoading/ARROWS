@@ -274,8 +274,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		88  Cat Tomb
 		90  Suggestion with error
 		98  Paused
-		99 	Suggestion
-	
+		99 	Suggestion	
 	*/
 
 	if(paused && diagf == 0u){
@@ -344,10 +343,10 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						diagf = 1u;
 					break;
 					case 9u:
-						memcpy(d1, "                    ", 20);
-						memcpy(d2, "   GET OVER HERE !  ", 20);
-						memcpy(d3, "                    ", 20);
-						memcpy(d4, "                    ", 20);
+						memcpy(d1, "        UH,         ", 20);
+						memcpy(d2, " FEEL FREE TO TAKE  ", 20);
+						memcpy(d3, " A LOOK UNDER THIS  ", 20);
+						memcpy(d4, "      PLATFORM ...  ", 20);
 						diagf = 57u;
 					break;
 				}
@@ -455,6 +454,31 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						memcpy(d3, " SPINNING. I SHOULD ", 20);
 						memcpy(d4, " GET HIM JUMPING.   ", 20);
 						diagf = 99u;
+					break;
+					case 9u: //finlfight, archer->lim_y has the type of arrow shoot
+						switch(archer->lim_y){
+							case 2u: //STONE WOLF
+								memcpy(d1, "                    ", 20);
+								memcpy(d2, "    GGGRRRRRR !!    ", 20);
+								memcpy(d3, "                    ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 51u;
+							break;
+							case 3u: //BLAST IBEX
+								memcpy(d1, "                    ", 20);
+								memcpy(d2, "    GGGRRRRRR !!    ", 20);
+								memcpy(d3, "                    ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 54u;
+							break;
+							case 4u: //ICE BEAR	
+								memcpy(d1, "                    ", 20);
+								memcpy(d2, "    GGGRRRRRR !!    ", 20);
+								memcpy(d3, "                    ", 20);
+								memcpy(d4, "                    ", 20);
+								diagf = 55u;
+							break;
+						}
 					break;
 				}
 			break;

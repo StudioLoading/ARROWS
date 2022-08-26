@@ -14,7 +14,6 @@ typedef enum  {
 	STATE_ARROWMOTHER
 }ARCHER_STATE;
 
-
 struct ArcherInfo {
 	UINT8 amulet;
 	UINT8 coins;
@@ -146,3 +145,11 @@ struct CagedbossInfo{
 	UINT8 wait;
 	INT16 enemy_accel_y;
 };
+
+typedef struct FinalFightInfo{
+	UINT16 bossfighter_x;
+	struct EnemyInfo* bossfighter_data;
+	UINT16 archer_x;
+	UINT16 archer_y;
+	UINT8 to_be_loaded;
+} FinalFightInfo;

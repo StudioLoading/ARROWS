@@ -48,6 +48,7 @@ extern INT8 is_on_cutscene;
 extern UINT8 current_cutscene;
 extern UINT8 quiver;
 extern struct EnemyInfo* bossfighter_data;
+extern FinalFightInfo finalfightdata;
 
 UINT8 wait_c = 0u;
 struct CameraInfo* camera_data;
@@ -653,6 +654,7 @@ void UPDATE() {
 					}
 					if(temporeggia == 50 && (KEY_TICKED(J_A) || KEY_TICKED(J_B))){
 						temporeggia = 0;
+						finalfightdata.to_be_loaded = 0u;
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
 						SetState(StateDiag);
 					}
@@ -700,6 +702,22 @@ void UPDATE() {
 			}
 		break;
 	}
+	
+	//MOVING BACKGROUND TILES
+	updatecounter++;
+	if (updatecounter < 20) {
+		switch(updatecounter){
+			case 1:
+				Anim_Tiles_0();
+			break;
+			case 10:
+				Anim_Tiles_1();
+			break;
+		}
+	}else{
+		updatecounter = 0;
+	}
+
 }
 
 void ShowCutDiag(){

@@ -38,6 +38,7 @@ nice2have:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  
 
 TODO PER IL BUILDONE DEFINITIVO:
+- METTERE A 7 LA VITA DEL BOSS FINALE
 - INSERIRE NEI CREDITI FINALI I NOMI DI QUELLI DEL PERK CREDITI KICKSTARTER
 - CONTROLLO di tutti i suggerimenti/dialoghi
 - SOSTITUIRE LE TILE DI SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS

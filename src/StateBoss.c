@@ -113,6 +113,10 @@ void SpawnBoss(INT8 hp_default);
 void SpawnReward();
 void WriteBBOSSHP();
 
+FinalFightInfo finalfightdata;
+
+void GotoFinalFightCutscene(UINT8 arrow_type) BANKED;
+
 void START(){
 
 	reward = 0;
@@ -182,7 +186,6 @@ void START(){
 			}
 		break;
 		case 9u:
-			quiver = final_quiver;
 			level_tool=0;
 			SpriteManagerLoad(SpriteBossfighter);
 			SpriteManagerLoad(SpriteAlligator);
@@ -271,8 +274,21 @@ void START(){
 	INIT_FONT(font, PRINT_WIN);
 	INIT_CONSOLE(font, 10, 0);
 	ShowWindow();
-	WriteBBOSSHP();
 
+	if(current_level_b == 9u){
+		if (finalfightdata.to_be_loaded){
+			finalfightdata.to_be_loaded = 0u;
+			scroll_target->x = finalfightdata.archer_x;
+			scroll_target->y = finalfightdata.archer_y;
+			boss_data_b = finalfightdata.bossfighter_data;
+		}else{
+			boss_hp = 7;
+			boss_data_b->hp = boss_hp;
+			quiver = final_quiver;
+		}
+	}
+
+	WriteBBOSSHP();
 }
 
 void UPDATE() {
@@ -525,4 +541,34 @@ void WriteBBOSSHP(){
 		}
 
 	}
+}
+
+void GoToFinalFightCutscene(UINT8 arrow_type) BANKED{
+	switch(arrow_type){
+		case 2u:// STONE->> WOLF
+		break;
+		case 3u:// THUNDER ->> IBEX
+		break;
+		case 4u:// ICE ->> BEAR
+		break;
+	}
+	boss->lim_y = arrow_type;
+	finalfightdata.bossfighter_x = boss->x;
+	boss_hp--;
+	boss_data_b->hp = boss_hp;
+	finalfightdata.bossfighter_data = boss_data_b;
+	finalfightdata.archer_x = scroll_target->x;
+	finalfightdata.archer_y = scroll_target->y;
+	finalfightdata.to_be_loaded = 1u;
+	diag_found = Build_Next_Dialog_Banked(boss);
+	load_next_d = 2;
+	SetState(StateDiag);
+/*
+{
+	UINT16 bossfighter_x;
+	struct EnemyInfo* bossfighter_data;
+	UINT16 archer_x;
+	UINT16 archer_y;
+}
+*/
 }

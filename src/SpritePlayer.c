@@ -43,6 +43,7 @@ extern const UINT8 EMPTY_TILE;
 #define MAX_DIAG_COOLDOWN 60
 #define MAX_LANDING_TIME 24
 #define MAX_ACCEL_Y_TO_LAND_ANIMATION 36
+#define MAX_SHOOT_COOLDOWN 8
 
 //The first number indicates the number of frames
 const UINT8 anim_idle[] = {4, 12, 13, 14, 13};
@@ -93,6 +94,8 @@ void CheckCollisionTile();
 void CheckCollisionTileDoor();
 void Hit(INT8 damage);
 void Build_Next_Dialog() BANKED;
+void GoToFinalFightCutscene(UINT8 arrow_type) BANKED;
+void Next_Amulet() BANKED;
 
 void START() {
 		
@@ -128,6 +131,9 @@ void START() {
 		archer_state = STATE_NORMAL;
 	}
 	landing_time = MAX_LANDING_TIME;
+	if(current_level == 9u){
+		archer_data->amulet = 1u;
+	}
 }
 
 void UPDATE() {
@@ -194,17 +200,7 @@ void UPDATE() {
 	}
 	
 	if (KEY_RELEASED(J_SELECT)){
-		UINT8 or_ = 0u;
-		while(or_ == 0u){			
-			archer_data->amulet += 1u;
-			archer_data->amulet %= 6u;
-			if(archer_data->amulet == 0u){
-				archer_data->amulet = 1u;
-			}
-			or_ = quiver >> (archer_data->amulet - 1u); // del risultato di questa operazione devo prendere solo il bit meno significativo, più a dx
-			or_ = or_ & 1u;
-		}
-		update_hud = 1;
+		Next_Amulet();
 	}
 	
 	switch(archer_state) {
@@ -706,6 +702,20 @@ void UPDATE() {
 	}//fine SPRITEMANAGER_ITERATE
 }
 
+void Next_Amulet() BANKED{
+	UINT8 or_ = 0u;
+	while(or_ == 0u){			
+		archer_data->amulet += 1u;
+		archer_data->amulet %= 6u;
+		if(archer_data->amulet == 0u){
+			archer_data->amulet = 1u;
+		}
+		or_ = quiver >> (archer_data->amulet - 1u); // del risultato di questa operazione devo prendere solo il bit meno significativo, più a dx
+		or_ = or_ & 1u;
+	}
+	update_hud = 1;
+}
+
 void Die(){
 	StopMusic;
 	fx_cooldown = 60;
@@ -741,7 +751,23 @@ void Shoot() {
 			arrow_data->arrowdir = 1;
 		}
 	}
-	shoot_cooldown = 8;
+	shoot_cooldown = MAX_SHOOT_COOLDOWN;
+	if(current_level_b == 9u){
+		switch(archer_data->amulet){
+			case 2: //STONE
+				quiver &= 0b1111111101;
+				GoToFinalFightCutscene(archer_data->amulet);
+			break;
+			case 3: //BLAST
+				quiver &= 0b1111111011;
+				GoToFinalFightCutscene(archer_data->amulet);
+			break;
+			case 4: //ICE
+				quiver &= 0b1111110111;
+				GoToFinalFightCutscene(archer_data->amulet);
+			break;
+		}
+	}
 }
 
 void Jump() {

@@ -22,6 +22,7 @@
 
 extern INT8 temporeggia;
 extern UINT8 wait_c;
+extern INT8 boss_hp;
 
 const UINT8 anim_boss_idle[] = {4, 0, 0, 0, 1};
 const UINT8 anim_boss_walk[] = {4, 0, 2, 1, 2};
@@ -42,7 +43,7 @@ void START(){
     THIS->x = MAX_POS_X;
 	bossfighter_data= (struct EnemyInfo*)THIS->custom_data;
 	bossfighter_data->enemy_state = BOSS_IDLE;    
-	bossfighter_data->hp = 1;
+	bossfighter_data->hp = boss_hp;
     temporeggia = 0;
     bossfighter_hit_cooldown = 0;
 }
