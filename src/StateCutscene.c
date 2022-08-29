@@ -26,6 +26,7 @@ IMPORT_MAP(diagnew);
 DECLARE_MUSIC(bgm_level_cematery);
 DECLARE_MUSIC(bgm_level_castle);
 DECLARE_MUSIC(bgm_amulet);
+DECLARE_MUSIC(bgm_titlescreen);
 
 const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
 extern UINT8 bank_tiles6;
@@ -49,6 +50,7 @@ extern UINT8 current_cutscene;
 extern UINT8 quiver;
 extern struct EnemyInfo* bossfighter_data;
 extern FinalFightInfo finalfightdata;
+extern UINT8 updatecounter;
 
 UINT8 wait_c = 0u;
 struct CameraInfo* camera_data;
@@ -59,7 +61,8 @@ struct EnemyInfo* sprite_3_data;
 struct EnemyInfo* sprite_4_data;
 const UINT8 const collision_tiles_cutscene[] = {5, 7, 8, 11, 13, 16, 17, 18, 19, 29, 37, 0};
 //questo sotto deve essere uguale all' array collision_tiles7
-const UINT8 const collision_tiles_cutscene7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 80, 81, 82, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles_cutscene7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 94, 95, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+
 INT8 camera_tramble_c = 0;
 
 Sprite* sprite_1;
@@ -196,8 +199,8 @@ void START() {
 			sprite_3 = SpriteManagerAdd(SpriteCutboss, ((UINT16) 13u << 3), ((UINT16) 3u << 3));
 			sprite_3_data = (struct EnemyInfo*) sprite_3->custom_data;
 		break;
-		case 5u:		
-			ResumeMusic;	
+		case 5u://boss dies		
+			PlayMusic(bgm_titlescreen, 1);	
 			scene_bank = BANK(mapboss9);
 			InitScroll(scene_bank, &mapboss9, collision_tiles_cutscene7, 0);
 	   		SpriteManagerLoad(SpriteCutarcher);
@@ -218,6 +221,29 @@ void START() {
 			scroll_target = SpriteManagerAdd(SpriteCamerafocus, sprite_1->x, ((UINT16) 22u << 3));
 			camera_data = (struct CameraInfo*)scroll_target->custom_data;
 			
+		break;
+		case 11u://wolf attacks boss
+		case 12u://ibex attacks boss
+		case 13u://bear attacks boss
+			//ResumeMusic;	
+			scene_bank = BANK(mapboss9);
+			InitScroll(scene_bank, &mapboss9, collision_tiles_cutscene7, 0);
+	   		SpriteManagerLoad(SpriteCutarcher);
+			switch(current_cutscene){
+				case 11u:
+					scroll_target = SpriteManagerAdd(SpriteCutwolf,((UINT16) 6u << 3), ((UINT16) 15u << 3));
+				break;
+				case 12u:
+					scroll_target = SpriteManagerAdd(SpriteCutibex,((UINT16) 6u << 3), ((UINT16) 15u << 3));
+				break;
+				case 13u:
+					scroll_target = SpriteManagerAdd(SpriteCutbear,((UINT16) 6u << 3), ((UINT16) 15u << 3));
+				break;
+			}
+			sprite_1_data = (struct EnemyInfo*) scroll_target->custom_data;
+			sprite_2 = SpriteManagerAdd(SpriteCutfinalboss,((UINT16) 20u << 3), ((UINT16) 15u << 3));
+			sprite_2->mirror = V_MIRROR;
+			sprite_2_data = (struct EnemyInfo*) sprite_2->custom_data;
 		break;
 	}
 	
@@ -698,6 +724,26 @@ void UPDATE() {
 				case 44u://wait_c = 44u is done on the DESTROY of Cutalligator
 					//go to cutscene at the zoo
 					temporeggia++;
+				break;
+			}
+		break;
+		case 11u: //wolf hits boss
+		case 12u: //ibex hits boss
+		case 13u: //bear hits boss
+			switch(wait_c){
+				case 40u: // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
+					diag_found = Build_Next_Dialog_Banked(scroll_target);
+					ShowCutDiag();
+					wait_c = 41u;
+				break;
+				case 42u:
+					if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){	
+						temporeggia = 0;
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						is_on_cutscene = 0;
+						//wait_c = 99u;
+						SetState(StateDiag);
+					}	
 				break;
 			}
 		break;

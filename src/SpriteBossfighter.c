@@ -23,6 +23,7 @@
 extern INT8 temporeggia;
 extern UINT8 wait_c;
 extern INT8 boss_hp;
+extern UINT8 current_cutscene;
 
 const UINT8 anim_boss_idle[] = {4, 0, 0, 0, 1};
 const UINT8 anim_boss_walk[] = {4, 0, 2, 1, 2};
@@ -105,6 +106,7 @@ void UPDATE(){
         case BOSS_ATTACK:        
             attack_ball_cooldown++;
             if(THIS->anim_frame == 3 && attack_ball_cooldown >= MAX_ATTACK_BALL_COOLDWON && temporeggia < 180){
+                PlayFx(CHANNEL_1, 60, 0x1e, 0x44, 0xc2, 0x45, 0x85);//sfx bossfighter attack
                 Sprite* arrowboss_spr = SpriteManagerAdd(SpriteArrowboss, THIS->x + 4u, THIS->y + 12u);
                 struct EnemyInfo* arrowboss_spr_data = (struct EnemyInfo*) arrowboss_spr->custom_data;
                 if(THIS->mirror == NO_MIRROR){
@@ -127,6 +129,9 @@ void UPDATE(){
         break;
         case BOSS_HIT:
             bossfighter_hit_cooldown++;
+            if(THIS->anim_frame == 0){
+                PlayFx(CHANNEL_1, 60, 0x44, 0x82, 0xf3, 0x45, 0x85);//sfx hit
+            }
             if((bossfighter_data->hp <= 7 && bossfighter_hit_cooldown >= MIN_BF_HIT_COOLDOWN) || (bossfighter_data->hp < 5 && bossfighter_hit_cooldown >= MAX_BF_HIT_COOLDOWN)){
                 SetSpriteAnim(THIS, anim_boss_idle, 8u);
                 bossfighter_data->enemy_state = BOSS_IDLE;
@@ -134,6 +139,9 @@ void UPDATE(){
             }
         break;
         case BOSS_DIEING:
+            if(THIS->anim_frame == 0){
+                PlayFx(CHANNEL_1, 60, 0x44, 0x82, 0xf3, 0x45, 0x85);//sfx hit
+            }
             if(THIS->mirror == NO_MIRROR){//going back means right
                 bossfighter_data->vx = 1;
             }else{
@@ -149,6 +157,7 @@ void UPDATE(){
                 bossfighter_data->enemy_state = BOSS_DEAD;
                 bossfighter_data->enemy_accel_y = THIS->x;
                 wait_c = 0;
+                current_cutscene = 4u;
                 SetState(StateCutscene);
                 return;
             }

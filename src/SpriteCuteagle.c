@@ -18,6 +18,9 @@ void START(){
 }
 
 void UPDATE(){
+    if(THIS->anim_frame == 2){
+        PlayFx(CHANNEL_4, 60, 0x3f, 0xf1, 0x23, 0xc0, 0x00);
+    }
    	struct EnemyInfo* cuteagle_data = (struct EnemyInfo*)THIS->custom_data;
     switch(cuteagle_data->enemy_state){
         case ENEMY_STATE_JUMPING:

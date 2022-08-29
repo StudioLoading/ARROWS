@@ -14,6 +14,8 @@ const UINT8 anim_cutboss_knee[] = {1, 1}; //The first number indicates the numbe
 
 
 void START(){
+	THIS->lim_x = 200u;
+	THIS->lim_y = 200u;
 	SetSpriteAnim(THIS, anim_cutboss_oneagle, 1u);
 	struct EnemyInfo* cutboss_data = (struct EnemyInfo*)THIS->custom_data;
 	cutboss_data->enemy_accel_y = 2u;

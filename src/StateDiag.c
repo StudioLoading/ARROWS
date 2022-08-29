@@ -301,7 +301,9 @@ void UPDATE() {
 	
 	if(KEY_PRESSED(J_B) || KEY_PRESSED(J_A) || KEY_PRESSED(J_START)) {
 		HIDE_WIN;
-		if(is_on_boss >= 0){
+		if(is_on_cutscene){
+			SetState(StateCutscene);
+		}else if(is_on_boss >= 0){
 			SetState(StateBoss);
 		}else if (colliding_mother != 0u && colliding_mother != 6u){
 			//0u means just the tip
@@ -328,9 +330,10 @@ void UPDATE() {
 					SetState(StateDiag);
 				break;
 			}
-		}else if(is_on_cutscene){
+		}/*else if(is_on_cutscene){
 			SetState(StateCutscene);
-		}else{
+		}*/
+		else{
 			colliding_mother = 0u;
 			switch(current_level){
 				case 0u:

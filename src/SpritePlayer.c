@@ -65,6 +65,7 @@ extern ARCHER_STATE archer_state;
 extern INT8 fx_cooldown;
 extern UINT8 quiver; //little endian, rightest are the less important
 extern UINT8 tile_collision;
+extern UINT8 final_quiver;
 
 INT8 jump_power = 0;
 INT8 death_cooldown = 0;
@@ -94,7 +95,7 @@ void CheckCollisionTile();
 void CheckCollisionTileDoor();
 void Hit(INT8 damage);
 void Build_Next_Dialog() BANKED;
-void GoToFinalFightCutscene(UINT8 arrow_type) BANKED;
+void GoToFinalFightCutscene(UINT8 arrow_type) BANKED;//StateBoss
 void Next_Amulet() BANKED;
 
 void START() {
@@ -417,7 +418,7 @@ void UPDATE() {
 		}
 	}
 	
-	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
+	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u || GetScrollTile((THIS->x >> 3) + 16u, (THIS->y >> 3) + 4u) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
 		archer_accel_y = -2;
 		archer_state = STATE_ASCENDING;
 	}else if (archer_state == STATE_ASCENDING){
@@ -756,14 +757,17 @@ void Shoot() {
 		switch(archer_data->amulet){
 			case 2: //STONE
 				quiver &= 0b1111111101;
+				final_quiver &= 0b1111111101;
 				GoToFinalFightCutscene(archer_data->amulet);
 			break;
 			case 3: //BLAST
 				quiver &= 0b1111111011;
+				final_quiver &= 0b1111111011;
 				GoToFinalFightCutscene(archer_data->amulet);
 			break;
 			case 4: //ICE
 				quiver &= 0b1111110111;
+				final_quiver &= 0b1111110111;
 				GoToFinalFightCutscene(archer_data->amulet);
 			break;
 		}

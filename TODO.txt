@@ -1,11 +1,11 @@
 
 TODO:
-- map 8 flyingArrows tiles 77 in più in alto a sinistra x 5o6 tiles
-- final boss
-- cutscene freccione
-- cutscene wolf con spiega
+- sfx sulle cutscene di amici che colpiscono boss
+- cutscene wolf con spiega @ zoo
 - titoli finali (coi nomi backers)
 - cutscene finale fogna
+- cercare i TODO commentati nel codice che magari ho lasciato cose
+- controllare tutti i messaggi di suggerimento in mappe e boss
 - dopo titleScreen, prima del biglietto, schermata di configurazione per salto/fire A/B o viceversa
 But it is not that hard. J_A is defined as 0x10u. Just make a variable which contains this value and change it as fit. 
 KEY_PRESSED(A_Button_Var)

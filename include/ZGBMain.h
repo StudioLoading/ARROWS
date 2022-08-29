@@ -77,6 +77,9 @@ _SPRITE_DMG(SpriteCutboss, cutboss)\
 _SPRITE_DMG(SpriteBossfighter, bossfighter)\
 _SPRITE_DMG(SpriteCutbossdead, cutbossdead)\
 _SPRITE_DMG(SpriteCutalligator, cutalligator)\
+_SPRITE_DMG(SpriteCutwolf, wolf)\
+_SPRITE_DMG(SpriteCutibex, ibex)\
+_SPRITE_DMG(SpriteCutbear, bear)\
 SPRITE_DEF_END
 
 

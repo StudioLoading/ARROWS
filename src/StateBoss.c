@@ -61,10 +61,13 @@ extern const INT8 MAX_FINALBOSS_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern UINT8 current_cutscene;
+extern INT8 is_on_cutscene;
 
 extern void ShowWindow() BANKED;
 extern void ShowWindowDiag() BANKED ;
 extern void UpdateHUD() BANKED;
+extern void Build_Next_Dialog() BANKED;
 
 //Boss
 extern UINT8 current_level_b;
@@ -107,7 +110,7 @@ const UINT8 const collision_btiles4[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 1
 
 const UINT8 const collision_btiles6[] = {1, 2, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 20, 26, 35, 36, 37, 38, 39, 41, 43, 44, 61, 62, 64, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
-const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 94, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_btiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 94, 95, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
 void SpawnBoss(INT8 hp_default);
 void SpawnReward();
@@ -193,9 +196,6 @@ void START(){
 			if(sgb_check()){
 				set_sgb_palette01_CASTLE();
 			}
-			if(current_camera_state >=3){
-				PlayMusic(bgm_titlescreen, 1);
-			}
 		break;
 	}
 	if(sgb_check()){
@@ -280,9 +280,10 @@ void START(){
 			finalfightdata.to_be_loaded = 0u;
 			scroll_target->x = finalfightdata.archer_x;
 			scroll_target->y = finalfightdata.archer_y;
+			boss_data_b->hp = boss_hp;
 			boss_data_b = finalfightdata.bossfighter_data;
 		}else{
-			boss_hp = 7;
+			boss_hp = MAX_FINALBOSS_HP;//MAX_FINALBOSS_HP
 			boss_data_b->hp = boss_hp;
 			quiver = final_quiver;
 		}
@@ -544,31 +545,31 @@ void WriteBBOSSHP(){
 }
 
 void GoToFinalFightCutscene(UINT8 arrow_type) BANKED{
-	switch(arrow_type){
-		case 2u:// STONE->> WOLF
-		break;
-		case 3u:// THUNDER ->> IBEX
-		break;
-		case 4u:// ICE ->> BEAR
-		break;
+	if(boss_hp > 1){	
+		switch(arrow_type){
+			case 2u:// STONE->> WOLF
+				current_cutscene = 10u;
+			break;
+			case 3u:// THUNDER ->> IBEX
+				current_cutscene = 11u;
+			break;
+			case 4u:// ICE ->> BEAR
+				current_cutscene = 12u;
+			break;
+		}
+		diag_found = Build_Next_Dialog_Banked(boss);
+		boss_hp--;
+		boss_data_b->hp = boss_hp;
+		boss->lim_y = arrow_type;
+		finalfightdata.bossfighter_x = boss->x;
+		finalfightdata.bossfighter_data = boss_data_b;
+		finalfightdata.archer_x = scroll_target->x;
+		finalfightdata.archer_y = scroll_target->y;
+		finalfightdata.to_be_loaded = 1u;
+		load_next_d = 2;
+		is_on_cutscene = 1;
+		SetState(StateDiag);
+	}else{
+		Build_Next_Dialog();
 	}
-	boss->lim_y = arrow_type;
-	finalfightdata.bossfighter_x = boss->x;
-	boss_hp--;
-	boss_data_b->hp = boss_hp;
-	finalfightdata.bossfighter_data = boss_data_b;
-	finalfightdata.archer_x = scroll_target->x;
-	finalfightdata.archer_y = scroll_target->y;
-	finalfightdata.to_be_loaded = 1u;
-	diag_found = Build_Next_Dialog_Banked(boss);
-	load_next_d = 2;
-	SetState(StateDiag);
-/*
-{
-	UINT16 bossfighter_x;
-	struct EnemyInfo* bossfighter_data;
-	UINT16 archer_x;
-	UINT16 archer_y;
-}
-*/
 }

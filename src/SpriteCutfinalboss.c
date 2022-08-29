@@ -4,14 +4,15 @@
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "Sound.h"
 
 #include "custom_datas.h"
 #include "Dialogs.h"
 
-extern UINT8 diag_found;
 extern void Build_Next_Dialog() BANKED;
 
 const UINT8 cutfinalboss_idle[] = {5, 0, 0, 0, 0, 1}; //The first number indicates the number of frames
+const UINT8 cutfinalboss_hit[] = {2, 3, 4}; //The first number indicates the number of frames
 const UINT8 cutfinalboss_grappling[] = {1, 2};
 extern UINT8 colliding_mother;
 struct EnemyInfo* cutfinalboss_data;
@@ -24,6 +25,7 @@ void START(){
     cutfinalboss_data->enemy_state = ENEMY_STATE_WAIT;
     cutfinalboss_data->enemy_accel_y = 24;
     cutfinalboss_data->vx = 0;
+    cutfinalboss_data->wait = 0u;
 }
 
 void UPDATE(){
@@ -41,6 +43,10 @@ void UPDATE(){
                             Build_Next_Dialog();
                         }
                     }
+                    if(cfbspr->type == SpriteCutwolf || cfbspr->type == SpriteCutibex || cfbspr->type == SpriteCutbear){
+                        cutfinalboss_data->wait = 0u;
+                        cutfinalboss_data->enemy_state = ENEMY_STATE_HIT;
+                    }
                 }
             }
         break;
@@ -50,8 +56,18 @@ void UPDATE(){
         case ENEMY_STATE_GRAPPLING:
             SetSpriteAnim(THIS, cutfinalboss_grappling, 1u);
         break;
+        case ENEMY_STATE_HIT:
+            SetSpriteAnim(THIS, cutfinalboss_hit, 24u);
+            if(THIS->anim_frame == 0){
+                PlayFx(CHANNEL_1, 60, 0x44, 0x82, 0xf3, 0x45, 0x85);//sfx hit
+            }
+            cutfinalboss_data->wait++;
+            if(cutfinalboss_data->wait == 120u){
+                cutfinalboss_data->wait = 0u;
+                cutfinalboss_data->enemy_state = ENEMY_STATE_WAIT;
+            }
+        break;
     }
-
 }
 
 void DESTROY(){
