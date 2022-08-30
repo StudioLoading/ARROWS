@@ -620,7 +620,6 @@ void UPDATE() {
 						CalculateSpritesDestinations();
 						sprite_1 = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 5u << 3), ((UINT16) 13u << 3) + 4u);
 						sprite_1_data = (struct EnemyInfo*) sprite_1->custom_data;
-						PlayMusic(bgm_level_castle, 1);
 						wait_c = 43u;
 					}
 				break;
@@ -670,6 +669,7 @@ void UPDATE() {
 					if(temporeggia == 50 && (KEY_TICKED(J_A) || KEY_TICKED(J_B))){
 						temporeggia = 0;
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						PlayMusic(bgm_level_castle, 1);
 						ShowCutDiag();
 						wait_c = 46u;
 					}
@@ -716,7 +716,7 @@ void UPDATE() {
 					}
 					wait_c = 43u;
 					temporeggia = 0;
-					PlayMusic(bgm_amulet, 1);
+					//PlayMusic(bgm_amulet, 1);
 				break;
 				case 43u:
 					//temporeggia++;

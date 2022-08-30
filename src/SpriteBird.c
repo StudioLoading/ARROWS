@@ -142,7 +142,7 @@ void UPDATE() {
 				data->enemy_state = ENEMY_STATE_HIT;
 				data->wait = 30u;
 				SetSpriteAnim(THIS, bird_hit, 24u); 
-				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//sfx hit
 				data->hp -= arrowbidata->arrowdamage;
 				if (data->hp <= 0){
 					data->wait = 8u;

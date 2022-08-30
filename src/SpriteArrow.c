@@ -286,7 +286,7 @@ void CheckCollisionArrowTile(UINT8 ta) {
 	}
 	arrow_data->type = arrow_data->original_type;
 	if(arrow_data->play_sound == 1){
-		PlayFx(CHANNEL_1, 30, 0x2e, 0x81, 0xc2, 0x73, 0x86);
+		PlayFx(CHANNEL_1, 50, 0x2e, 0x81, 0xc2, 0x73, 0x86);
 	}
 }
 

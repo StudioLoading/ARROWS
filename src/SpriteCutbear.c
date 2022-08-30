@@ -27,7 +27,6 @@ void UPDATE(){
 	struct EnemyInfo* cutbear_data = (struct EnemyInfo*)THIS->custom_data;
     if(THIS->x == ((UINT16) 15u << 3)){
         cutbear_data->enemy_accel_y = -4;
-		PlayFx(CHANNEL_1, 60, 0x54, 0x8c, 0xc2, 0x1b, 0x84);//sfx jump
         THIS->x++;
     }
     if(THIS->x >= ((UINT16) 24u << 3)){
@@ -35,7 +34,7 @@ void UPDATE(){
     }
 	switch(cutbear_data->enemy_state){
         case ENEMY_STATE_WALKING:
-            if(THIS->anim_frame == 1 && cutwolf_data->tile_e_collision){
+            if(THIS->anim_frame == 1 && cutbear_data->tile_e_collision != 0){
                 PlayFx(CHANNEL_1, 60, 0x3a, 0xd2, 0x00, 0xc0, 0x85);//sfx step
             }
             if(cutbear_data->enemy_accel_y < 3){

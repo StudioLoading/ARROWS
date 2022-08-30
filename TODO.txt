@@ -1,8 +1,7 @@
 
 TODO:
-- sfx sulle cutscene di amici che colpiscono boss
 - cutscene wolf con spiega @ zoo
-- titoli finali (coi nomi backers)
+- titoli finali (+ nomi backers)
 - cutscene finale fogna
 - cercare i TODO commentati nel codice che magari ho lasciato cose
 - controllare tutti i messaggi di suggerimento in mappe e boss

@@ -24,6 +24,7 @@ extern INT8 temporeggia;
 extern UINT8 wait_c;
 extern INT8 boss_hp;
 extern UINT8 current_cutscene;
+extern struct ArcherInfo* archer_data;
 
 const UINT8 anim_boss_idle[] = {4, 0, 0, 0, 1};
 const UINT8 anim_boss_walk[] = {4, 0, 2, 1, 2};
@@ -35,6 +36,7 @@ const UINT8 anim_boss_hit[] = {2, 2, 4};
 struct EnemyInfo* bossfighter_data;
 INT8 attack_ball_cooldown = 0;
 INT8 bossfighter_hit_cooldown = 0;
+UINT8 sfx_counter = 0;
 
 UINT8 scrollbossfighter_tile;
 Sprite* ibfspr;
@@ -57,7 +59,8 @@ void UPDATE(){
             SetSpriteAnim(THIS, anim_boss_idle, 8u);
             temporeggia++;
             if((bossfighter_data->hp < 5 && temporeggia == 36) || (bossfighter_data->hp <= 7 && temporeggia == 60)){
-                SetSpriteAnim(THIS, anim_boss_walk, 4u);
+                THIS->anim_frame = 1;
+                SetSpriteAnim(THIS, anim_boss_walk, 8u);
                 if(THIS->mirror == NO_MIRROR){
                     THIS->x--;
                 }else{
@@ -68,6 +71,13 @@ void UPDATE(){
             }
         break;
         case BOSS_MOVING:
+            if(THIS->anim_frame == 1 && sfx_counter == 0){
+                PlayFx(CHANNEL_1, 60, 0x34, 0x3f, 0xb1, 0xb0, 0x86);
+                sfx_counter = 1;
+            }
+            if(THIS->anim_frame != 1){
+                sfx_counter = 0;
+            }
             if(THIS->x == MIN_POS_X || THIS->x == MAX_POS_X){
                 bossfighter_data->vx = 0;
                 if(temporeggia == 0){//turn!
@@ -106,7 +116,6 @@ void UPDATE(){
         case BOSS_ATTACK:        
             attack_ball_cooldown++;
             if(THIS->anim_frame == 3 && attack_ball_cooldown >= MAX_ATTACK_BALL_COOLDWON && temporeggia < 180){
-                PlayFx(CHANNEL_1, 60, 0x1e, 0x44, 0xc2, 0x45, 0x85);//sfx bossfighter attack
                 Sprite* arrowboss_spr = SpriteManagerAdd(SpriteArrowboss, THIS->x + 4u, THIS->y + 12u);
                 struct EnemyInfo* arrowboss_spr_data = (struct EnemyInfo*) arrowboss_spr->custom_data;
                 if(THIS->mirror == NO_MIRROR){
@@ -164,7 +173,7 @@ void UPDATE(){
         break;
     }
 	SPRITEMANAGER_ITERATE(scrollbossfighter_tile, ibfspr) {
-		if(CheckCollision(THIS, ibfspr) && bossfighter_data->enemy_state != BOSS_DIEING) {
+		if(CheckCollision(THIS, ibfspr) && bossfighter_data->enemy_state != BOSS_DIEING && archer_data->hp > 0) {
             if(ibfspr->type == SpriteArrowboss){
                 struct EnemyInfo* ibfspr_data = (struct EnemyInfo*)ibfspr->custom_data;
                 if((ibfspr_data->vx > 0 && THIS->mirror == NO_MIRROR) || (ibfspr_data->vx < 0 && THIS->mirror == V_MIRROR)){

@@ -36,6 +36,7 @@ void START(){
     if(arrowboss_direction == 4){        
         arrowboss_direction = 0;
     }
+    PlayFx(CHANNEL_1, 60, 0x1e, 0x44, 0xc2, 0x45, 0x85);//sfx bossfighter attack                
 }
 
 void UPDATE(){
@@ -49,6 +50,7 @@ void UPDATE(){
     if(arrowboss_tile_collision){
         switch(arrowboss_tile_collision){
             case 11u:// REDIRECTION DOWN
+		        PlayFx(CHANNEL_1, 50, 0x2e, 0x81, 0xc2, 0x73, 0x86);//sfx redirect
                 if(arrowboss_data->vx > 0){
                     THIS->x += 4u;
                 }else if(arrowboss_data->vx < 0){
@@ -58,11 +60,13 @@ void UPDATE(){
                 arrowboss_data->enemy_accel_y = 1;
             break;
             case 16u: //REDIRECTION RIGHT
+		        PlayFx(CHANNEL_1, 50, 0x2e, 0x81, 0xc2, 0x73, 0x86);//sfx redirect
                 THIS->y -= 4u;
                 arrowboss_data->vx = 2;
                 arrowboss_data->enemy_accel_y = 0;
             break;
             case 17u: //REDIRECTION LEFT
+		        PlayFx(CHANNEL_1, 50, 0x2e, 0x81, 0xc2, 0x73, 0x86);//sfx redirect
                 THIS->y -= 4u;
                 arrowboss_data->vx = -2;
                 arrowboss_data->enemy_accel_y = 0;
@@ -86,6 +90,7 @@ void UPDATE(){
             if(iabspr->type == SpriteArrowmother){
                 THIS->x += 4u;
                 SpriteManagerAdd(SpritePuff, THIS->x, THIS->y - 4u);
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//sfx hit
                 SpriteManagerRemoveSprite(THIS);
             }
             if(iabspr->type == SpriteArrow){
@@ -98,7 +103,11 @@ void UPDATE(){
                     }
                     arrowboss_data->enemy_accel_y = 0;
                 }
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//sfx hit
                 SpriteManagerRemoveSprite(iabspr);
+            }
+            if(iabspr->type == SpriteBossfighter){
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//sfx hit
             }
         }
     }

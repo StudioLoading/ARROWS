@@ -17,6 +17,7 @@ const UINT8 alligator_normal[] = {1, 5}; //The first number indicates the number
 
 extern INT8 is_on_cutscene;
 extern UINT8 current_level_b;
+extern struct ArcherInfo* archer_data;
 
 const UINT16 boss_posx[] = {9u, 24u, 16u};
 UINT8 poss = 0;
@@ -89,7 +90,7 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_a_tile, iaspr) {
-		if(CheckCollision(THIS, iaspr) && alligator_data->enemy_state != ENEMY_STATE_DEAD) {
+		if(CheckCollision(THIS, iaspr) && alligator_data->enemy_state != ENEMY_STATE_DEAD && archer_data->hp > 0) {
 			switch (iaspr->type){
 				case SpritePlayer:
 					alligator_data->wait = 24u;

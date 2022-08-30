@@ -36,7 +36,7 @@ void UPDATE(){
     }
 	switch(cutwolf_data->enemy_state){
         case ENEMY_STATE_WALKING:
-            if(THIS->anim_frame == 1 && cutwolf_data->tile_e_collision){
+            if(THIS->anim_frame == 1 && cutwolf_data->tile_e_collision != 0){
                 PlayFx(CHANNEL_1, 60, 0x3a, 0xd2, 0x00, 0xc0, 0x85);//sfx step
             }
             if(cutwolf_data->enemy_accel_y < 3){

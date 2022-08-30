@@ -78,6 +78,7 @@ INT8 is_on_secret = -1;
 INT8 is_on_gameover = -1;
 INT8 diag_cooldown = MAX_DIAG_COOLDOWN;
 INT8 landing_time = MAX_LANDING_TIME;
+UINT8 surfing = 0u;
 
 UINT8 scroll_tile;
 Sprite* ispr;
@@ -467,7 +468,7 @@ void UPDATE() {
 					itemdata = (struct ItemInfo*)ispr->custom_data;
 					if (itemdata->setup == 0u){ //se e' trasparente non faccio niente
 						fx_cooldown = 30;
-						PlayFx(CHANNEL_1, 30, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
+						PlayFx(CHANNEL_1, 50, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 						switch(itemdata->type){
 							case 1u: //coins
 								archer_data->coins += 1u;
@@ -632,7 +633,7 @@ void UPDATE() {
 						}
 						Hit(enemydamage);
 					}else{
-						PlayFx(CHANNEL_1, 30, 0x2c, 0x81, 0x43, 0x73, 0x86);	
+						PlayFx(CHANNEL_1, 50, 0x2c, 0x81, 0x43, 0x73, 0x86);	
 						if(THIS->mirror != V_MIRROR){
 							SpriteManagerAdd(SpritePuff, THIS->x + 8, ispr->y -2u);
 						}else{
@@ -673,7 +674,8 @@ void UPDATE() {
 					}
 				break;
 				case SpriteArrow:					
-					arrowdata = (struct ArrowInfo*)ispr->custom_data;
+					arrowdata = (struct ArrowInfo*)ispr->custom_data;					
+					surfing = 40u;
 					if (arrowdata->arrowdir != 1 || current_level == 8u){return;}//guardo solo se è orizzontale
 					if (archer_accel_y > 0 && THIS->y < (ispr->y-4)){//se sono in salita non collido !
 						if (ispr->mirror == V_MIRROR){
@@ -700,6 +702,14 @@ void UPDATE() {
 				break;
 			}//fine switch ispr->type
 		}// fine check collision
+		else{
+			if(surfing > 0u){
+				surfing--;
+				if(surfing == 0u){
+					platform_vx = 0;
+				}
+			}
+		}
 	}//fine SPRITEMANAGER_ITERATE
 }
 

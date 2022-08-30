@@ -197,31 +197,33 @@ void UPDATE() {
 	Sprite* iwspr;
 	
 	//Check sprite collision platform/enemy
-	SPRITEMANAGER_ITERATE(scroll_w_tile, iwspr) {	
-		if(iwspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, iwspr)){
-				if (walrus_data->enemy_state == WALRUS_STATE_JUMP_DOWN || walrus_data->enemy_state == WALRUS_STATE_JUMP_UP
-				 || walrus_data->enemy_state == WALRUS_STATE_SWIMMING) {
-					struct ArrowInfo* arrowdata = (struct ArrowInfo*)iwspr->custom_data;
-					switch(walrus_data->enemy_state){
-						case WALRUS_STATE_JUMP_UP:
-							SetSpriteAnim(THIS, walrus_hit_up, 24u);
-						break;
-						case WALRUS_STATE_JUMP_DOWN:
-							SetSpriteAnim(THIS, walrus_hit_down, 24u);
-						break;						
-					} 
-					walrus_data->hp -= arrowdata->original_type;
-					PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
-					if (walrus_data->hp <= 0){
-						walrus_data->hp = 0;
-						SetSpriteAnim(THIS, walrus_dead, 16u);
-						walrus_data->enemy_state = ENEMY_STATE_DEAD;
-						THIS->x = (UINT16) 21u << 3;
-						THIS->y = (UINT16) 14u << 3;
-					}
-				}					
-				SpriteManagerRemoveSprite(iwspr);
+	SPRITEMANAGER_ITERATE(scroll_w_tile, iwspr) {
+		if(CheckCollision(THIS, iwspr)){
+			switch(iwspr->type) {
+				case SpriteArrow:
+					if (archer_data->hp > 0 && walrus_data->enemy_state == WALRUS_STATE_JUMP_DOWN || walrus_data->enemy_state == WALRUS_STATE_JUMP_UP
+				 		|| walrus_data->enemy_state == WALRUS_STATE_SWIMMING) {
+						struct ArrowInfo* arrowdata = (struct ArrowInfo*)iwspr->custom_data;
+						switch(walrus_data->enemy_state){
+							case WALRUS_STATE_JUMP_UP:
+								SetSpriteAnim(THIS, walrus_hit_up, 24u);
+							break;
+							case WALRUS_STATE_JUMP_DOWN:
+								SetSpriteAnim(THIS, walrus_hit_down, 24u);
+							break;						
+						} 
+						walrus_data->hp -= arrowdata->original_type;
+						PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
+						if (walrus_data->hp <= 0){
+							walrus_data->hp = 0;
+							SetSpriteAnim(THIS, walrus_dead, 16u);
+							walrus_data->enemy_state = ENEMY_STATE_DEAD;
+							THIS->x = (UINT16) 21u << 3;
+							THIS->y = (UINT16) 14u << 3;
+						}
+					}					
+					SpriteManagerRemoveSprite(iwspr);
+				break;
 			}  
 		}
 	}

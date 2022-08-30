@@ -9,6 +9,7 @@
 
 extern UINT8 current_camera_state;
 extern INT8 walk_fx_cooldown;
+extern struct ArcherInfo* archer_data;
 
 //BEAR
 const UINT8 bear_idle[] = {1, 2}; //The first number indicates the number of frames
@@ -120,7 +121,7 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_be_tile, bebspr) {
-		if(CheckCollision(THIS, bebspr)) {
+		if(CheckCollision(THIS, bebspr) && archer_data->hp > 0) {
 			switch(bebspr->type){
 				case SpritePlayer:
 					bear_data->wait = 24u;

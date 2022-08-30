@@ -19,6 +19,8 @@ const UINT8 eagle_up[] = {4, 0, 1, 2, 1}; //The first number indicates the numbe
 const UINT8 eagle_time_attack = 76u;
 const UINT8 eagle_time_normal = 81u;
 
+extern struct ArcherInfo* archer_data;
+
 extern void CheckCollisionETile();
 extern void ETurn();
 
@@ -113,7 +115,7 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_bi_tile, ibispr) {
-		if(ibispr->type == SpritePlayer) {
+		if(ibispr->type == SpritePlayer && archer_data->hp > 0) {
 			if(data->enemy_state == ENEMY_STATE_NORMAL){ //  & data->wait == 40u
 				if(THIS->x > ibispr->x){
 					THIS->mirror = V_MIRROR; //SPRITE_SET_VMIRROR(THIS);
@@ -133,7 +135,7 @@ void UPDATE() {
 				}
 			}			
 		}
-		if(ibispr->type == SpriteArrow) {
+		if(ibispr->type == SpriteArrow && archer_data->hp > 0) {
 			if(CheckCollision(THIS, ibispr)) {
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
 				if(data->enemy_state != ENEMY_STATE_HIT && arrowbidata->arrowdir == 1){ //sensibile solo alle orizzontali

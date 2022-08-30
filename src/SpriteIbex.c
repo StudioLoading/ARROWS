@@ -16,6 +16,7 @@ const UINT8 ibex_jump_up[] = {1, 4};
 const UINT8 ibex_jump_down[] = {1, 3};
 
 extern INT8 jump_i;
+extern struct ArcherInfo* archer_data;
 
 struct EnemyInfo* ibex_data ;
 INT8 zoccolo_fx_cooldown = WALK_FX_COOLDOWN;
@@ -115,36 +116,38 @@ void UPDATE() {
 	
 	//Check sprite collision platform/enemy
 	SPRITEMANAGER_ITERATE(scroll_ib_tile, ibbspr) {
-		if(ibbspr->type == SpritePlayer) {
-			if(CheckCollision(THIS, ibbspr)) {
-				ibex_data->wait = 24u;
-			}
-		}
-		if(ibbspr->type == SpriteArrow) {
-			if(CheckCollision(THIS, ibbspr) & ibex_data->enemy_state != ENEMY_STATE_DEAD) {
-				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibbspr->custom_data;
-				if(arrowdata->original_type == 3){
-					ibex_data->wait = 28u;
-					SetSpriteAnim(THIS, ibex_hit, 18u);
-					ibex_data->hp -= 1;
-					PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
-					if (ibex_data->vx < 0){
-						THIS->x++;
-					}else{
-						THIS->x--;
+		if(CheckCollision(THIS, ibbspr)) {
+			switch(ibbspr->type){
+				case SpritePlayer:
+					ibex_data->wait = 24u;
+				break;
+				case SpriteArrow:
+					if( archer_data->hp > 0 && ibex_data->enemy_state != ENEMY_STATE_DEAD) {
+						struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibbspr->custom_data;
+						if(arrowdata->original_type == 3){
+							ibex_data->wait = 28u;
+							SetSpriteAnim(THIS, ibex_hit, 18u);
+							ibex_data->hp -= 1;
+							PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
+							if (ibex_data->vx < 0){
+								THIS->x++;
+							}else{
+								THIS->x--;
+							}
+							SpriteManagerRemoveSprite(ibbspr);
+							if (ibex_data->hp <= 0){
+								ibex_data->enemy_state = ENEMY_STATE_DEAD;
+								ibex_data->hp = 0;
+								THIS->mirror = V_MIRROR; //SPRITE_SET_VMIRROR(THIS);
+								THIS->x = (UINT16) 24u << 3;
+								THIS->y = (UINT16) 12u << 3;
+								SetSpriteAnim(THIS, ibex_idle, 4u);
+							}
+						}
 					}
-					SpriteManagerRemoveSprite(ibbspr);
-					if (ibex_data->hp <= 0){
-						ibex_data->enemy_state = ENEMY_STATE_DEAD;
-						ibex_data->hp = 0;
-						THIS->mirror = V_MIRROR; //SPRITE_SET_VMIRROR(THIS);
-						THIS->x = (UINT16) 24u << 3;
-						THIS->y = (UINT16) 12u << 3;
-						SetSpriteAnim(THIS, ibex_idle, 4u);
-					}
-				}
+				break;
 			}
-		}
+		}		
 	}
 }
 

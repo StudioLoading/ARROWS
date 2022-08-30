@@ -34,6 +34,7 @@ IMPORT_MAP(window7);
 IMPORT_MAP(finalborder);
 
 DECLARE_MUSIC(bgm_level_cematery);
+DECLARE_MUSIC(bgm_level_sky);
 
 const UINT8 const collision_tiles7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
 
@@ -219,6 +220,7 @@ void START() {
 				PlayMusic(bgm_level_cematery, 1);
 			break;
             case 8u:
+				PlayMusic(bgm_level_sky, 1);
             break;
 		}		
 		ScrollFindTile((UINT8) map78banks[current_map], maps78[current_map], 9, 0, 0, 
