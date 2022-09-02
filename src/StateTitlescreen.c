@@ -35,6 +35,7 @@ extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern UINT8 cursor_moving;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
 
@@ -42,6 +43,8 @@ UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 
 UINT8 current_camera_counter = 0u;
 UINT8 wait_titlescreen = 0u;
 INT8 loading_code = 0;
+UINT8 bgm_started = 0u;
+UINT8 cursor_spawned = 0u;
 
 void START() {	
 
@@ -72,7 +75,7 @@ void START() {
 	
 }
 
-void UPDATE() {	
+void UPDATE() {
 
 	switch(loading_code){
 		case 5:
@@ -136,6 +139,9 @@ void UPDATE() {
 		case 120u:
 			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x, (UINT16) 2 << 3);
 		break;
+		case 140u:
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x , 0);
+		break;
 		case 160u:
 			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 10u, (UINT16) 6 << 3);
 		break;
@@ -146,44 +152,71 @@ void UPDATE() {
 			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x -5u, (UINT16) 10 << 3);
 		break;
 	}
+
 	switch(current_camera_state){
 		case 0u:
-			scroll_target->x += 8u;
-			if(current_camera_counter == 20u){
-				//PlayMusic(bgm_titlescreen, 1);//file, loop
+			scroll_target->x += 6u;
+			if(scroll_target->x >= ((UINT16) 12u << 3) && bgm_started == 0u){
 				PlayMusic(bgm_titlescreen, 1);
+				bgm_started = 1u;
 			}
-			if(current_camera_counter == 62u){
+			if(scroll_target->x >= ((UINT16) 70u << 3)){
+				scroll_target->x = ((UINT16) 70u << 3);
 				current_camera_state = 2u;
 			}	
 		break;
+		case 2u://loop wait_titlescreen up to 120
+			wait_titlescreen -= 1u;
+			switch (wait_titlescreen){
+				case 0u:
+					PRINT(64u, 17u, "PRESS  START");	
+					wait_titlescreen = 60u;
+				break;
+				case 30u:	
+					PRINT(64u, 17u, "            ");	
+				break;
+			}
+			if(KEY_TICKED(J_START)){
+				StopMusic;
+				current_camera_state = 3u;
+			}
+		break;
+		case 3u:
+			scroll_target->x += 2u;
+			if(scroll_target->x >= ((UINT16) 110u << 3)){
+				scroll_target->x = (UINT16) 110u << 3;
+				current_camera_state = 4u;
+			}
+		break;
+		case 4u:
+			if(cursor_spawned == 0u){
+				PRINT(102u, 5u, "(A) JUMP (B) FIRE");
+				PRINT(102u, 8u, "(A) FIRE (B) JUMP");
+				SpriteManagerAdd(SpriteCursor, ((UINT16) 101u << 3), ((UINT16) 5u << 3));
+				cursor_spawned = 1u;
+			}
+			//if(KEY_TICKED(J_SELECT)){//logic in SpriteCursor
+			//}
+			wait_titlescreen -= 1u;
+			switch (wait_titlescreen){
+				case 0u:
+					PRINT(64u, 17u, "PRESS SELECT");	
+					wait_titlescreen = 60u;
+				break;
+				case 30u:	
+					PRINT(64u, 17u, "            ");	
+				break;
+			}
+			if(cursor_moving == 0u && KEY_TICKED(J_START)){
+				current_camera_state = 5u;
+			}
+		break;
+		case 5u:
+			scroll_target->x += 2u;
+			if(scroll_target->x >= ((UINT16) 130u << 3)){
+				SetState(StateIntro);
+			}
+		break;
 	}
-	
-	if(KEY_TICKED(J_SELECT)){
-		StopMusic;
-		SetState(StateTitlescreen);	
-	}
-	
-	if(KEY_TICKED(J_START)){
-		StopMusic;
-		SetState(StateIntro);	
-	}
-	
-	if(current_camera_state >= 2u){
-		//loop wait_titlescreen up to 120
-		wait_titlescreen -= 1u;
-		switch (wait_titlescreen){
-			case 0u:
-				//PRINT(69u, 15u, "PUSH START");
-				PRINT(65u, 17u, "PUSH START");	
-				wait_titlescreen = 60u;
-			break;
-			case 30u:
-				//PRINT(69u, 15u, "          ");	
-				PRINT(65u, 17u, "          ");	
-			break;
-		}
-	}
-	
 	
 }

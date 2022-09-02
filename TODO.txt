@@ -1,6 +1,5 @@
 
 TODO:
-- titlescreen, premuto start, musica si stoppa,la camera deve andare più a destra, e a logo scomparso, cambia state
 - cutscene wolf con spiega @ zoo
 - titoli finali (+ nomi backers)
 - cutscene finale fogna

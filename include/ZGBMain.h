@@ -25,6 +25,7 @@ _STATE(StateGame7)\
 STATE_DEF_END
 
 #define SPRITES \
+_SPRITE_DMG(SpriteCursor, cursor)\
 _SPRITE_DMG(SpriteIconpsg, iconpsg)\
 _SPRITE_DMG(SpriteCamerafocus, camerafocus)\
 _SPRITE_DMG(SpriteArrowtitle, arrowtitle)\

@@ -839,7 +839,7 @@ void MoveArcher() {
 void CheckCollisionTileDoor(){
 	tile_collision = GetScrollTile((THIS->x >> 3) +1u, ((THIS->y+3) >> 3) +2u);
 	switch(tile_collision){//tile_collision
-		case 7u: //fine level - goto boss!
+		case 7u: //EXIT fine level - goto boss!
 			current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 			current_camera_counter = 0u;
 			switch(current_level){
