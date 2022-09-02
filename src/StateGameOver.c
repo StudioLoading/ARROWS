@@ -27,6 +27,8 @@ UINT8 music_delay;
 void ResetConfig(INT8 gameo);
 void ShowContinue();
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern INT8 is_on_boss;
 extern INT8 is_on_gameover;
 extern UINT8 current_level;
@@ -83,7 +85,7 @@ void UPDATE() {
 		one_second = 0;
 		ShowContinue();
 	}
-	if(KEY_TICKED(J_START) || KEY_TICKED(J_A) || KEY_TICKED(J_B)) {
+	if(KEY_TICKED(J_START) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)) {
 		ResetConfig(0);		
 	}	
 }

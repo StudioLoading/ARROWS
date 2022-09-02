@@ -31,6 +31,8 @@ INT8 hp;
 INT8 level_tool = -1;
 INT8 archer_tool = 0;
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
@@ -87,42 +89,42 @@ void UPDATE() {
 				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
 				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
 				loading_code = 7;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}	
 		break;
 		case 4:
 			if(KEY_TICKED(J_LEFT)){
 				loading_code = 5;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT)){
+			}else if (KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_RIGHT)){
 				loading_code = 0;
 			}	
 		break;
 		case 3:
 			if(KEY_TICKED(J_DOWN)){
 				loading_code = 4;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}	
 		break;
 		case 2:
 			if(KEY_TICKED(J_RIGHT)){
 				loading_code = 3;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}		
 		break;
 		case 1:
-			if(KEY_TICKED(J_B)){
+			if(KEY_TICKED(J_FIRE)){
 				loading_code = 2;
-			}else if (KEY_TICKED(J_A) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_JUMP) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}
 		break;
 		case 0:
-			if(KEY_TICKED(J_A)){
+			if(KEY_TICKED(J_JUMP)){
 				loading_code = 1;
-			}else if (KEY_TICKED(J_B) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
+			}else if (KEY_TICKED(J_FIRE) || KEY_TICKED(J_DOWN) || KEY_TICKED(J_UP) || KEY_TICKED(J_RIGHT) || KEY_TICKED(J_LEFT)){
 				loading_code = 0;
 			}
 		break;
@@ -137,19 +139,19 @@ void UPDATE() {
 			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x - 10u, 0);
 		break;
 		case 120u:
-			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x, (UINT16) 2 << 3);
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x, (UINT16) 2u << 3);
 		break;
 		case 140u:
 			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x , 0);
 		break;
 		case 160u:
-			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 10u, (UINT16) 6 << 3);
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 10u, (UINT16) 6u << 3);
 		break;
 		case 200u:
-			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 20u, (UINT16) 6 << 3);
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 20u, (UINT16) 6u << 3);
 		break;
 		case 240u:
-			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x -5u, (UINT16) 10 << 3);
+			SpriteManagerAdd(SpriteArrowtitle, scroll_target->x + 40u, (UINT16) 5u << 3);
 		break;
 	}
 
@@ -200,14 +202,15 @@ void UPDATE() {
 			wait_titlescreen -= 1u;
 			switch (wait_titlescreen){
 				case 0u:
-					PRINT(64u, 17u, "PRESS SELECT");	
+					PRINT(104u, 17u, "PRESS SELECT");	
 					wait_titlescreen = 60u;
 				break;
 				case 30u:	
-					PRINT(64u, 17u, "            ");	
+					PRINT(104u, 17u, "            ");	
 				break;
 			}
 			if(cursor_moving == 0u && KEY_TICKED(J_START)){
+				PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);//sfx key
 				current_camera_state = 5u;
 			}
 		break;

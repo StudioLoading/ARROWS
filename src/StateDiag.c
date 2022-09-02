@@ -71,6 +71,8 @@ IMPORT_MAP(diagamuletfire);
 IMPORT_MAP(mapdiagtomb);
 
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern UINT16 bg_palette[];
 extern UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -301,7 +303,7 @@ void START() {
 
 void UPDATE() {
 	
-	if(KEY_PRESSED(J_B) || KEY_PRESSED(J_A) || KEY_PRESSED(J_START)) {
+	if(KEY_PRESSED(J_FIRE) || KEY_PRESSED(J_JUMP) || KEY_PRESSED(J_START)) {
 		HIDE_WIN;
 		if(is_on_cutscene){
 			SetState(StateCutscene);

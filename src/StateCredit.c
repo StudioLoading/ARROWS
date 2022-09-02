@@ -30,6 +30,8 @@ IMPORT_MAP(mapcredits4);
 DECLARE_MUSIC(bgm_credits);
 IMPORT_MAP(border);
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern UINT8 thunder_delay;
 
 const UINT8 collision_tiles_credits[] = {1,0};
@@ -77,7 +79,7 @@ void UPDATE() {
 		StopMusic;
 		SetState(StateTitlescreen);
 		return;
-	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_time == 106u){
+	}else if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || wait_time == 106u){
 		wait_time = 0u;
 		credit_step += 1u;
 		if(credit_step == 5u){

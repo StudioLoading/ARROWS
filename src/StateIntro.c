@@ -20,6 +20,8 @@ IMPORT_MAP(mapintro);
 
 DECLARE_MUSIC(intro);
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern UINT16 sprites_palette_titlescreen[];
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 extern UINT8 current_camera_counter;
@@ -77,13 +79,13 @@ void UPDATE() {
 			scroll_target->y += 2;
 		break;
 	}	
-	if(KEY_PRESSED(J_A)){
+	if(KEY_PRESSED(J_JUMP)){
 		scroll_target->y++;
 	}
 	if(KEY_PRESSED(J_DOWN)){
 		scroll_target->y++;
 	}
-	if(KEY_PRESSED(J_B)){
+	if(KEY_PRESSED(J_FIRE)){
 		scroll_target->y--;			
 	}
 	if(KEY_PRESSED(J_UP)){

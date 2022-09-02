@@ -14,12 +14,15 @@
 const UINT8 anim_cursor_normal[] = {1, 1}; //The first number indicates the number of frames
 const UINT8 anim_cursor_blink[] = {2, 0, 1}; //The first number indicates the number of frames
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
+
 UINT8 cursor_move_cmd = 0u;
 UINT8 cursor_moving = 0u;
 INT8 cursor_vy = 0;
 
 void START(){
-    SetSpriteAnim(THIS, anim_cursor_normal, 4u);
+    SetSpriteAnim(THIS, anim_cursor_blink, 16u);
 }
 
 void UPDATE(){
@@ -29,6 +32,7 @@ void UPDATE(){
         cursor_moving = 1u;
     }
     if(cursor_move_cmd == 1u){
+        SetSpriteAnim(THIS, anim_cursor_normal, 4u);
         cursor_move_cmd = 0u;
         if(THIS->y == ((UINT16) CURSOR_UP_Y << 3 )){
             cursor_vy = 1;
@@ -42,12 +46,16 @@ void UPDATE(){
         TranslateSprite(THIS, 0 << delta_time, cursor_vy << delta_time);
         if(cursor_vy == -1){ // going up
             if(THIS->y == ((UINT16) CURSOR_UP_Y << 3)){
-                cursor_vy = 0;
+                cursor_vy = 0;    
+                SetSpriteAnim(THIS, anim_cursor_blink, 16u);
                 cursor_moving = 0u;
             }
         }else if(cursor_vy == 1){ // going down
             if(THIS->y == ((UINT16) CURSOR_DOWN_Y << 3)){
                 cursor_vy = 0;
+                J_JUMP=J_B;//0x20;
+                J_FIRE=J_A;//0x10; switch them both from defaulted main.c setting
+                SetSpriteAnim(THIS, anim_cursor_blink, 16u);
                 cursor_moving = 0u;
             }
         }

@@ -59,6 +59,8 @@ const UINT8 anim_hit[] = {2, 8, 10};
 const UINT8 anim_shoot[] = {3,2,1,2};
 const UINT8 anim_flying[] = {4, 12, 13, 14, 13};
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern INT8 is_on_boss;
 extern UINT8 diag_found;
 extern UINT8 current_camera_state; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
@@ -176,7 +178,7 @@ void UPDATE() {
 					paused = 0;
 				} 
 				else if(!paused){				
-					if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
 						if(is_on_boss == -1) ResumeMusic;	
 						set_sgb_palette_statusbar();
 						diag_cooldown = MAX_DIAG_COOLDOWN;
@@ -285,7 +287,7 @@ void UPDATE() {
 				}
 			}
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
+				if(KEY_PRESSED(J_JUMP) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
 					SetSpriteAnim(THIS, anim_shield, 8u);
 					Build_Next_Dialog();
 					return;
@@ -294,7 +296,7 @@ void UPDATE() {
 				}
 			}
 			//Jump
-			if(KEY_TICKED(J_A)){//&& landing_time == MAX_LANDING_TIME){
+			if(KEY_TICKED(J_JUMP)){//&& landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
 				landing_time = MAX_LANDING_TIME;
 				PlayFx(CHANNEL_1, 50, 0x27, 0x40, 0x43, 0x68, 0x86);
@@ -303,7 +305,7 @@ void UPDATE() {
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
 			} else {
-				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
+				if(KEY_TICKED(J_FIRE) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
 					Shoot();
 				}
 			}
@@ -322,16 +324,16 @@ void UPDATE() {
 				shoot_cooldown -= 1;
 			}
 			else{
-				if(KEY_TICKED(J_B)) {
+				if(KEY_TICKED(J_FIRE)) {
 					Shoot();
 				}else{
 					if (archer_accel_y < 4){									
-						if(KEY_PRESSED(J_A)) {
+						if(KEY_PRESSED(J_JUMP)) {
 							if (jump_power < ARCHER_MAX_JUMP_POWER){
 								jump_power += 1;
 								archer_accel_y -= 2;
 							}
-						}else if (KEY_RELEASED(J_A)){
+						}else if (KEY_RELEASED(J_JUMP)){
 							jump_power += 1;
 							archer_accel_y = 0;
 						}
@@ -353,7 +355,7 @@ void UPDATE() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
-			if(KEY_PRESSED(J_A) && hit_cooldown < MIN_HIT_COOLDOWN) {
+			if(KEY_PRESSED(J_JUMP) && hit_cooldown < MIN_HIT_COOLDOWN) {
 				hit_cooldown = MAX_HIT_COOLDOWN;
 				Jump();
 			}else{
@@ -388,7 +390,7 @@ void UPDATE() {
 			}
 			THIS->x = THIS->lim_x;
 			THIS->y = THIS->lim_y;
-			if(KEY_TICKED(J_A)){//&& landing_time == MAX_LANDING_TIME){
+			if(KEY_TICKED(J_JUMP)){//&& landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
 				landing_time = MAX_LANDING_TIME;
 				PlayFx(CHANNEL_1, 50, 0x27, 0x40, 0x43, 0x68, 0x86);
@@ -397,7 +399,7 @@ void UPDATE() {
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
 			} else {
-				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
+				if(KEY_TICKED(J_FIRE) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
 					Shoot();
 				}
 			}
@@ -586,7 +588,7 @@ void UPDATE() {
 								}else{
 									THIS->x += 1;
 								}
-								if(KEY_TICKED(J_A)){
+								if(KEY_TICKED(J_JUMP)){
 									if (KEY_PRESSED(J_UP)){		
 										Build_Next_Dialog();	
 									}

@@ -25,6 +25,9 @@ const UINT8 anim_mother_walk[] = {4, 7, 4, 6, 5, 4};
 const UINT8 anim_mother_shoot[] = {3,2,1,2};
 
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
+
 extern UINT8 amulet;
 extern INT8 drop_player_x ;
 extern INT8 drop_player_y ;
@@ -79,6 +82,7 @@ extern UINT8 current_map;
 extern UINT8 current_level_b;
 extern INT8 load_next_d;
 
+
 void MoveMother();
 void JumpMother();
 void ShootMother();
@@ -126,7 +130,7 @@ void UPDATE(){
 					paused = 0;
 				} 
 				else if(!paused){				
-					if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP) || KEY_TICKED(J_UP) || KEY_TICKED(J_DOWN)){ //show_diag < max_diag
 						if(is_on_boss == -1) ResumeMusic;	
 						set_sgb_palette_statusbar();
 						diag_cooldown = MOTHER_MAX_DIAG_COOLDOWN;
@@ -187,12 +191,12 @@ void UPDATE(){
                 }
 			}			
 			if (KEY_PRESSED(J_DOWN)){
-				if(KEY_PRESSED(J_A) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
+				if(KEY_PRESSED(J_JUMP) && archer_state == STATE_NORMAL && is_on_secret == -1){// && is_on_boss != 1
 					Build_Next_Dialog_Mother();
 					return;
 				}
 			}
-            if(KEY_TICKED(J_A)){//&& landing_time == MAX_LANDING_TIME){
+            if(KEY_TICKED(J_JUMP)){//&& landing_time == MAX_LANDING_TIME){
 				fx_cooldown = 30;
 				landing_time = MOTHER_MAX_LANDING_TIME;
 				PlayFx(CHANNEL_1, 50, 0x27, 0x40, 0x43, 0x68, 0x86);
@@ -201,7 +205,7 @@ void UPDATE(){
 			if(shoot_cooldown) {
 				shoot_cooldown -= 1;
 			} else {
-				if(KEY_TICKED(J_B) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
+				if(KEY_TICKED(J_FIRE) && (!KEY_PRESSED(J_DOWN) || ((KEY_PRESSED(J_DOWN) && archer_state == STATE_JUMPING)))) {
 					ShootMother();
 				}
 			}
@@ -215,16 +219,16 @@ void UPDATE(){
 				shoot_cooldown -= 1;
 			}
 			else{
-				if(KEY_TICKED(J_B)) {
+				if(KEY_TICKED(J_FIRE)) {
 					ShootMother();
 				}else{
 					if (archer_accel_y < 4){									
-						if(KEY_PRESSED(J_A)) {
+						if(KEY_PRESSED(J_JUMP)) {
 							if (jump_power < MOTHER_MAX_JUMP_POWER){
 								jump_power += 1;
 								archer_accel_y -= 2;
 							}
-						}else if (KEY_RELEASED(J_A)){
+						}else if (KEY_RELEASED(J_JUMP)){
 							jump_power += 1;
 							archer_accel_y = 0;
 						}

@@ -31,6 +31,8 @@ DECLARE_MUSIC(bgm_titlescreen);
 const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
 extern UINT8 bank_tiles6;
 
+extern UINT8 J_JUMP;
+extern UINT8 J_FIRE;
 extern const UINT16 bg_palette6[];
 extern const UINT16 sprites_palette[];
 extern UINT8 amulet ;
@@ -279,7 +281,7 @@ void UPDATE() {
 	switch(current_cutscene){
 		case 1u://mother meeting
 			switch(wait_c){
-				case 40u: // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
+				case 40u: // (KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)) &&
 					diag_found = Build_Next_Dialog_Banked(scroll_target);
 					ShowCutDiag();
 					CalculateSpritesDestinations();
@@ -412,7 +414,7 @@ void UPDATE() {
 					if(temporeggia < 120){
 						temporeggia++;
 					}else{
-						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+						if(KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)){
 							temporeggia = 0;
 							diag_found = Build_Next_Dialog_Banked(scroll_target);
 							ShowCutDiag();
@@ -424,7 +426,7 @@ void UPDATE() {
 					if(temporeggia < 120){
 						temporeggia++;
 					}else{
-						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+						if(KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)){
 							temporeggia = 0;
 							diag_found = Build_Next_Dialog_Banked(scroll_target);
 							ShowCutDiag();
@@ -436,7 +438,7 @@ void UPDATE() {
 					if(temporeggia < 120){
 						temporeggia++;
 					}else{
-						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+						if(KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)){
 							temporeggia = 0;
 							diag_found = Build_Next_Dialog_Banked(scroll_target);
 							ShowCutDiag();
@@ -448,7 +450,7 @@ void UPDATE() {
 					if(temporeggia < 120){
 						temporeggia++;
 					}else{
-						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+						if(KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)){
 							temporeggia = 0;
 							wait_c = 46u;
 							diag_found = Build_Next_Dialog_Banked(scroll_target);
@@ -529,7 +531,7 @@ void UPDATE() {
 					if(temporeggia < 60){
 						temporeggia++;
 					}else{
-						if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){
+						if(KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)){
 							temporeggia = 0;
 							diag_found = Build_Next_Dialog_Banked(scroll_target);
 							wait_c = 99u;
@@ -669,7 +671,7 @@ void UPDATE() {
 					if(temporeggia < 50){
 						temporeggia++;
 					}
-					if(temporeggia == 50 && (KEY_TICKED(J_A) || KEY_TICKED(J_B))){
+					if(temporeggia == 50 && (KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE))){
 						temporeggia = 0;
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
 						PlayMusic(bgm_level_castle, 1);
@@ -681,7 +683,7 @@ void UPDATE() {
 					if(temporeggia < 50){
 						temporeggia++;
 					}
-					if(temporeggia == 50 && (KEY_TICKED(J_A) || KEY_TICKED(J_B))){
+					if(temporeggia == 50 && (KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE))){
 						temporeggia = 0;
 						finalfightdata.to_be_loaded = 0u;
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
@@ -734,13 +736,13 @@ void UPDATE() {
 		case 12u: //ibex hits boss
 		case 13u: //bear hits boss
 			switch(wait_c){
-				case 40u: // (KEY_TICKED(J_A) || KEY_TICKED(J_B)) &&
+				case 40u: // (KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)) &&
 					diag_found = Build_Next_Dialog_Banked(scroll_target);
 					ShowCutDiag();
 					wait_c = 41u;
 				break;
 				case 42u:
-					if(KEY_TICKED(J_A) || KEY_TICKED(J_B)){	
+					if(KEY_TICKED(J_JUMP) || KEY_TICKED(J_FIRE)){	
 						temporeggia = 0;
 						diag_found = Build_Next_Dialog_Banked(scroll_target);
 						is_on_cutscene = 0;

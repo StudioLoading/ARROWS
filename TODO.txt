@@ -5,10 +5,6 @@ TODO:
 - cutscene finale fogna
 - cercare i TODO commentati nel codice che magari ho lasciato cose
 - controllare tutti i messaggi di suggerimento in mappe e boss
-- dopo titleScreen, prima del biglietto, schermata di configurazione per salto/fire A/B o viceversa
-But it is not that hard. J_A is defined as 0x10u. Just make a variable which contains this value and change it as fit. 
-KEY_PRESSED(A_Button_Var)
-A_Button_Var contains the value you set in the configuration. 0x10u as default, 0x20 is the B button, 0x40u is the Select button, and so on. 
 
 
 
