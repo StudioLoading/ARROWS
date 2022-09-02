@@ -142,7 +142,7 @@ void START() {
 			SpriteManagerLoad(SpriteCutmother);
 			SpriteManagerLoad(SpriteCutarcher);
 			SpriteManagerLoad(SpriteCutfinalboss);
-			scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((UINT16) 20u << 3), ((UINT16) 12u << 3));
+			scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((UINT16) 22u << 3), ((UINT16) 12u << 3));
 	   		camera_data = (struct CameraInfo*)scroll_target->custom_data;
 			sprite_1 = SpriteManagerAdd(SpriteCutfinalboss, ((UINT16) 36u << 3), ((UINT16) 11u << 3));
 			sprite_1->mirror = V_MIRROR;
@@ -265,6 +265,9 @@ void START() {
 	//ShowWindow();	
 	
 	wait_c = 0u;
+	//empty the windowdiag
+	diag_found = Build_Next_Dialog_Banked(scroll_target);
+	ShowCutDiag();
 
 }
 

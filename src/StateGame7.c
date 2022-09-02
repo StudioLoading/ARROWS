@@ -99,7 +99,6 @@ extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 extern UINT8 quiver;
 extern UINT8 final_quiver;
-extern INT8 is_on_cutscene;
 extern INT8 temporeggia;
 extern UINT8 colliding_mother;
 extern INT8 camera_tramble_c;
@@ -125,7 +124,7 @@ INT8 final_border_set = 1;
 
 
 void START() {
-	if(final_border_set){
+	if(final_border_set != 0){
 		LOAD_SGB_BORDER(finalborder);
 		final_border_set = 0;
 	}
@@ -367,7 +366,7 @@ void UPDATE(){
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
 				diag_found = Build_Next_Dialog_Banked(archer_player);
-				PauseMusic;
+				//PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
@@ -384,7 +383,7 @@ void UPDATE(){
 		switch(load_next){
 			case 1: //stage
 			case -1:
-				PauseMusic;
+				//PauseMusic;
 				current_map += load_next;
 			break;
 		}
@@ -400,7 +399,7 @@ void UPDATE(){
 	if(load_next_s == 1){
 		load_next_s = 0;
 		is_on_secret = 1;
-		PauseMusic;
+		//PauseMusic;
 		SetState(StateSecret);
 	}
 	

@@ -98,6 +98,8 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	}
 	
 	if(is_on_cutscene == 1){
+		copy_strings_to_dn("                    ","                    ","                    ","                    ");
+		diagf = 99u;
 		switch(current_cutscene){
 			case 1u:
 				copy_strings_to_dn("  WE HAVE TO PLACE  ","  ALL THE AMULETS   ","  AROUND THE DOOR   ","  ENTRANCE          ");

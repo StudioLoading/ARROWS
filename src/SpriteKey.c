@@ -3,6 +3,8 @@
 #include "ZGBMain.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
+#include "Sound.h"
+
 #include "custom_datas.h"
 
 const UINT8 key_hidden[] = {1, 0}; //The first number indicates the number of frames
@@ -16,6 +18,7 @@ void START() {
 	keydata->item_accel_y = 0;
 	keydata->type = 0;
 	keydata->setup = 0;
+	keydata->counter = 0;
 	THIS->mt_sprite->dx = 0;
 	THIS->mt_sprite->dy = 0;
 	THIS->coll_w = 8;
@@ -38,12 +41,14 @@ void UPDATE() {
 		}
 		keydata->setup = 0;
 	}
-	if(keydata->item_accel_y < 8) {
+	keydata->counter++;
+	if(keydata->item_accel_y < 4 && ((keydata->counter & 0x3) == 0)) {
 		keydata->item_accel_y += 1;
 	}
-	keydata->tile_i_collision = TranslateSprite(THIS, keydata->vx, keydata->item_accel_y >> 2);	
-	if(keydata->tile_i_collision != 0 && keydata->item_accel_y > 6){
-		keydata->item_accel_y = -4;
+	keydata->tile_i_collision = TranslateSprite(THIS, keydata->vx, keydata->item_accel_y);	
+	if(keydata->tile_i_collision != 0){ //&& keydata->item_accel_y > 6){
+		PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);//sfx key
+		keydata->item_accel_y = -2;
 	}
 	
 }

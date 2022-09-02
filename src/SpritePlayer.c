@@ -12,6 +12,8 @@
 #include "Dialogs.h"
 #include "sgb_palette.h"
 
+#define ARCHER_MAX_JUMP_POWER 6
+
 extern UINT8 amulet;
 extern INT8 load_next;
 extern INT8 load_next_s;
@@ -39,6 +41,7 @@ extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
 #define MAX_HIT_COOLDOWN 40
+#define MIN_HIT_COOLDOWN 10
 #define MAX_DEATH_COOLDOWN 80
 #define MAX_DIAG_COOLDOWN 60
 #define MAX_LANDING_TIME 24
@@ -109,12 +112,14 @@ void START() {
 	}
 	
 	if(diag_found == 21u){ //spawn key
+		PauseMusic;
 		Sprite* key_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 		struct ItemInfo* datakey = (struct ItemInfo*)key_sprite->custom_data;
 		datakey->type = 1;
 		datakey->setup = 1u;
 	}
-	if(diag_found == 20u){ //spawn wrench			
+	if(diag_found == 20u){ //spawn wrench	
+		PauseMusic;		
 		Sprite* wrench_sprite = SpriteManagerAdd(SpriteKey, THIS->x + 16u, THIS->y);
 		struct ItemInfo* datawrench = (struct ItemInfo*)wrench_sprite->custom_data;
 		datawrench->type = 2;
@@ -167,6 +172,7 @@ void UPDATE() {
 					diag_cooldown = MAX_DIAG_COOLDOWN;
 					show_diag += 1;
 					SetSpriteAnim(THIS, anim_idle, 12u);
+					archer_state = STATE_NORMAL;
 					paused = 0;
 				} 
 				else if(!paused){				
@@ -321,7 +327,7 @@ void UPDATE() {
 				}else{
 					if (archer_accel_y < 4){									
 						if(KEY_PRESSED(J_A)) {
-							if (jump_power < 6){
+							if (jump_power < ARCHER_MAX_JUMP_POWER){
 								jump_power += 1;
 								archer_accel_y -= 2;
 							}
@@ -347,7 +353,7 @@ void UPDATE() {
 		break;
 		case STATE_HIT:
 			hit_cooldown -= 1;
-			if(KEY_PRESSED(J_A) && hit_cooldown > (MAX_HIT_COOLDOWN - 10)) {
+			if(KEY_PRESSED(J_A) && hit_cooldown < MIN_HIT_COOLDOWN) {
 				hit_cooldown = MAX_HIT_COOLDOWN;
 				Jump();
 			}else{
@@ -419,7 +425,7 @@ void UPDATE() {
 		}
 	}
 	
-	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u || GetScrollTile((THIS->x >> 3) + 16u, (THIS->y >> 3) + 4u) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
+	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u || GetScrollTile((THIS->x >> 3) + 2u, (THIS->y >> 3) + 1u) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
 		archer_accel_y = -2;
 		archer_state = STATE_ASCENDING;
 	}else if (archer_state == STATE_ASCENDING){
@@ -468,7 +474,9 @@ void UPDATE() {
 					itemdata = (struct ItemInfo*)ispr->custom_data;
 					if (itemdata->setup == 0u){ //se e' trasparente non faccio niente
 						fx_cooldown = 30;
-						PlayFx(CHANNEL_1, 50, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
+						if(itemdata->type == itemdata->content_type){
+							PlayFx(CHANNEL_1, 50, 0x6d, 0x8c, 0x73, 0xff, 0xc7);//sfx item
+						}
 						switch(itemdata->type){
 							case 1u: //coins
 								archer_data->coins += 1u;
@@ -495,6 +503,7 @@ void UPDATE() {
 					}
 				break;
 				case SpriteKey:
+					ResumeMusic;
 					itemdata = (struct ItemInfo*)ispr->custom_data;
 					switch(itemdata->type){
 						case 1: //key				
@@ -507,7 +516,6 @@ void UPDATE() {
 							}
 							archer_data->tool = 6;
 							update_hud = 1;
-							PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);	
 							SpriteManagerRemoveSprite(ispr);
 							return;
 						break;
@@ -932,7 +940,10 @@ void CheckCollisionTile() {
 
 void Hit(INT8 damage) {
 	landing_time = MAX_LANDING_TIME;
-	if (archer_state != STATE_DEAD && archer_state != STATE_HIT){//} && (archer_state != STATE_JUMPING || current_level == 8u)){
+	if (//hit_cooldown < MAX_HIT_COOLDOWN - && 
+		((archer_state != STATE_DEAD && archer_state != STATE_HIT) 
+		||
+		(archer_state == STATE_JUMPING && jump_power < ARCHER_MAX_JUMP_POWER))){
 		archer_state = STATE_HIT;
 		archer_data->hp -=  damage;
 		if (archer_data->hp <= 0){

@@ -262,6 +262,8 @@ void START(){
 		boss_data_b->enemy_state = ENEMY_STATE_NORMAL;
 		if(is_on_boss > 2){
 			boss_data_b->enemy_state = ENEMY_STATE_DEAD;
+		}else{
+			StopMusic;
 		}
 	}
 
@@ -326,6 +328,8 @@ void UPDATE() {
 	if (current_camera_state < 3u){
 		switch(current_camera_state){//0 initial wait, 1 move to boss, 2 go to Diag,
 			case 0u:
+				//StopMusic;
+				PlayMusic(bgm_boss_defeated, 1);				
 				current_camera_counter += 1u;
 				if(current_camera_counter == 60u){
 					current_camera_counter = 0u;
@@ -424,7 +428,7 @@ void SpawnBoss(INT8 hp_default){
 				boss_hp = boss_data_b->hp;
 			break;
 			case 1u:
-				boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, ((UINT16) 16u << 3) - 4u);
+				boss = SpriteManagerAdd(SpriteAlligator, (UINT16) 29u << 3, ((UINT16) 16u << 3));// - 4u
 				boss_data_b = (struct EnemyInfo*)boss->custom_data;
 				boss_hp = boss_data_b->hp;
 				gate_sprite = SpriteManagerAdd(SpriteGate, 42 << 3,  13 << 3);
@@ -466,6 +470,8 @@ void SpawnBoss(INT8 hp_default){
 		}
 
 		if(hp_default == 0){
+			StopMusic;
+			PlayMusic(bgm_boss_defeated,1);
 			boss_hp = 0;
 		}
 }

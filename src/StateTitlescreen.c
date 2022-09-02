@@ -14,13 +14,16 @@
 #include "custom_datas.h"
 #include "sgb_palette.h"
 
+#define TEST_QUIVER 0b0000010001
+#define QUIVER 0b0000000001
+
 IMPORT_TILES(font);
 
 IMPORT_MAP(maptitlescreen);
 
 DECLARE_MUSIC(bgm_titlescreen);
 
-UINT8 quiver = 0b0000000001;//0b0000011111;
+UINT8 quiver = TEST_QUIVER;//0b0000011111;
 UINT8 amulet = 0;// = 0u;
 UINT8 coins = 0;// = 30u;
 INT8 ups = 0;// = 1;
@@ -157,10 +160,12 @@ void UPDATE() {
 	}
 	
 	if(KEY_TICKED(J_SELECT)){
+		StopMusic;
 		SetState(StateTitlescreen);	
 	}
 	
 	if(KEY_TICKED(J_START)){
+		StopMusic;
 		SetState(StateIntro);	
 	}
 	

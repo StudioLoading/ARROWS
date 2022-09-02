@@ -33,6 +33,7 @@ extern UINT8 quiver;
 extern INT8 visited;
 extern INT8 is_on_boss;
 extern INT8 is_on_cutscene;
+extern INT8 load_next_d;
 
 
 const UINT8 const collision_tiles_worldmap[] = {0, 0};
@@ -48,9 +49,10 @@ void START() {
 	NR51_REG = 0xFF; //Enables all channels (left and right)
 	NR50_REG = 0xFF; //Max volume 0x77
 	
-	//SpriteManagerLoad(SpriteIconpsg);
+	SpriteManagerLoad(SpriteIconpsg);
 	
 	is_on_cutscene = 0;
+	load_next_d = 0;//fix issue liv7 map0 from first mother cutscene
 	
 	if(sgb_check()){
 		set_sgb_palette01_worldmap();
@@ -210,6 +212,7 @@ void UPDATE(){
 	}
 	if(counter == 0){
 		diag_found = Build_Next_Dialog_Banked(siconpsg);
+		StopMusic;
 		SetState(StateDiag);
 	}
 }

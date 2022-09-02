@@ -398,7 +398,7 @@ void UPDATE() {
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
 				diag_found = Build_Next_Dialog_Banked(archer_player);
-				PauseMusic;
+				//PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
@@ -415,7 +415,7 @@ void UPDATE() {
 		switch(load_next){
 			case 1: //stage
 			case -1:
-				PauseMusic;
+				//PauseMusic;
 				current_map += load_next;
 			break;
 		}
@@ -431,7 +431,7 @@ void UPDATE() {
 	if(load_next_s == 1){
 		load_next_s = 0;
 		is_on_secret = 1;
-		PauseMusic;
+		//PauseMusic;
 		SetState(StateSecret);
 	}
 	

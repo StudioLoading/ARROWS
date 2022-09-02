@@ -14,6 +14,7 @@
 #include "Dialogs.h";
 #include "sgb_palette.h";
 
+DECLARE_MUSIC(bgm_boss_defeated);
 
 IMPORT_TILES(font);
 IMPORT_TILES(tiles);
@@ -193,6 +194,7 @@ void START() {
 			if(sgb_check()){
 				set_sgb_palette01_2E();
 			}
+			StopMusic;
 			InitScroll(BANK(mapdiagcave), &mapdiagcave, collision_dtiles, 0);
 		break;
 		case 20u:
@@ -314,6 +316,7 @@ void UPDATE() {
 					//triggera la cutscene di madre e figlio che vanno al portale
 				case 7u:
 					//is_on_cutscene = 1;
+					colliding_mother = 0u;
 					SetState(StateCutscene);
 				break;
 				case 8u://go to StateWorldmap after level 8.0 completed

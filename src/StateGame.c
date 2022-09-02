@@ -74,14 +74,14 @@ INT8 load_next = 0;
 INT8 load_next_s = 0;
 INT8 load_next_d = 0;
 INT8 load_next_b = 0; // 0 default, 1 se voglio testare il boss stage, in coerenza col current_level_b
-UINT8 current_level_b = 0u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
+UINT8 current_level_b = 5u; //0 default/wolf, 1 gator, 2 eagle, 3 ibex, 4 bear, 5 walrus
 INT8 load_next_gameover = 0;
-UINT8 current_level = 0u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle, 8 flying arrows, 9 final fight
+UINT8 current_level = 9u; // 0u default, 1 sewer, 2 forest, 3 sky, 4 trees, 5 ice cavern, 6 cematery, 7 castle, 8 flying arrows, 9 final fight
 //7u con 1u in current_cutscene
 //8u con 3u in current_cutscene
 //9u con 3u in current_cutscene
 UINT8 current_map = 0u; // 0u default   
-UINT8 current_cutscene = 0u; //0 no scene, 1 mother at castle, 2 tower talk, 3 eagle picks boss, 4 colusseum talk
+UINT8 current_cutscene = 3u; //0 no scene, 1 mother at castle, 2 tower talk, 3 eagle picks boss, 4 colusseum talk
 INT8 is_on_cutscene = 0;
 
 UINT16 drop_player_x = 0u;
@@ -405,13 +405,14 @@ void UPDATE() {
 		switch(load_next_d){
 			case 1: //vado allo StateDiag
 				diag_found = Build_Next_Dialog_Banked(archer_player);
-				PauseMusic;
+				//PauseMusic;
 				load_next_d = 2;
 				SetState(StateDiag);
 			break;
 			case 2:
 				load_next_d = 0;
 				if(is_on_boss == 0){
+					StopMusic;
 					load_next_b = 1;
 				}
 			break;
@@ -422,7 +423,7 @@ void UPDATE() {
 		switch(load_next){
 			case 1: //stage
 			case -1:
-				PauseMusic;
+				//PauseMusic;
 				current_map += load_next;
 			break;
 		}
@@ -449,7 +450,8 @@ void UPDATE() {
 	if(load_next_s == 1){
 		load_next_s = 0;
 		is_on_secret = 1;
-		PauseMusic;
+		//StopMusic;
+		//PlayMusic();
 		SetState(StateSecret);
 	}
 	
@@ -522,6 +524,7 @@ void UPDATE() {
 					}
 					if (scroll_target->x >= (UINT16) 146u << 3 && spawning_counter == 6){
 						spawn_enemy(SpriteEnemy, 155u, 8u);
+						spawn_item(scrigno_shield, 155u, 8u, 2, 1);
 						spawning_counter++;
 					}
 				break;

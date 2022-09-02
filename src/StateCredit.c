@@ -74,12 +74,14 @@ void UPDATE() {
 		thunder_delay++;
 	}	
 	if(KEY_TICKED(J_START)){
+		StopMusic;
 		SetState(StateTitlescreen);
 		return;
 	}else if(KEY_TICKED(J_B) || KEY_TICKED(J_A) || wait_time == 106u){
 		wait_time = 0u;
 		credit_step += 1u;
 		if(credit_step == 5u){
+			StopMusic;
 			SetState(StateTitlescreen);
 			return;
 		}

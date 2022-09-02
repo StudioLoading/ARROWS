@@ -97,7 +97,7 @@ void UPDATE() {
 		if((THIS->x == (UINT16) 24u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && THIS->mirror == V_MIRROR) ||
 			(THIS->x == (UINT16) 26u << 3 && wolf_data->enemy_state != ENEMY_STATE_JUMPING && THIS->mirror != V_MIRROR)){
 			SetSpriteAnim(THIS, wolf_jump, 8u);
-			PlayFx(CHANNEL_1, 60, 0x36, 0xf2, 0xf5, 0x82, 0x83);
+			PlayFx(CHANNEL_1, 60, 0x54, 0x8c, 0xc2, 0x1b, 0x84);//sfx jump
 			wolf_data->enemy_state = ENEMY_STATE_JUMPING;
 			wolf_data->enemy_accel_y = -25;
 		}
