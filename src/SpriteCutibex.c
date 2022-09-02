@@ -27,7 +27,7 @@ void UPDATE(){
 	struct EnemyInfo* cutibex_data = (struct EnemyInfo*)THIS->custom_data;
     if(THIS->x == ((UINT16) 15u << 3)){
         cutibex_data->enemy_accel_y = -4;
-        cutwolf_data->vx++;
+        cutibex_data->vx++;
 		PlayFx(CHANNEL_1, 60, 0x54, 0x8c, 0xc2, 0x1b, 0x84);//sfx jump
         THIS->x++;
     }

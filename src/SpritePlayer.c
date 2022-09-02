@@ -425,7 +425,7 @@ void UPDATE() {
 		}
 	}
 	
-	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u || GetScrollTile((THIS->x >> 3) + 2u, (THIS->y >> 3) + 1u) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
+	if (GetScrollTile((THIS->x >> 3), (THIS->y >> 3)) == 99u || GetScrollTile((THIS->x >> 3) + 1u, (THIS->y >> 3) + 1u) == 99u){ //tile di sollevamento, è bg quindi non posso fare altrimenti
 		archer_accel_y = -2;
 		archer_state = STATE_ASCENDING;
 	}else if (archer_state == STATE_ASCENDING){
