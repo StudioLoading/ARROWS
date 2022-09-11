@@ -306,7 +306,9 @@ void UPDATE() {
 	if(KEY_PRESSED(J_FIRE) || KEY_PRESSED(J_JUMP) || KEY_PRESSED(J_START)) {
 		HIDE_WIN;
 		if(is_on_cutscene){
-			SetState(StateCutscene);
+			if(current_cutscene < 22u){
+				SetState(StateCutscene);
+			}
 		}else if(is_on_boss >= 0){
 			SetState(StateBoss);
 		}else if (colliding_mother != 0u && colliding_mother != 6u){
@@ -361,6 +363,10 @@ void UPDATE() {
 				case 9u:
 					current_level_b = 9u;
 					SetState(StateBoss);
+				break;
+				case 10u:
+				case 11u:
+					SetState(StateCutscene);
 				break;
 			}
 		}

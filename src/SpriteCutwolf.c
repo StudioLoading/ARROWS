@@ -10,6 +10,9 @@
 extern UINT8 wait_c;
 
 const UINT8 anim_cutwolf_walk[] = {4, 0, 1, 2, 3}; //The first number indicates the number of frames
+const UINT8 anim_cutwolf_talking[] = {1, 2}; //The first number indicates the number of frames
+const UINT8 anim_cutwolf_uuu[] = {1, 5}; //The first number indicates the number of frames
+
 
 void START(){
 	THIS->lim_x = 200u;
@@ -46,6 +49,12 @@ void UPDATE(){
                 }
             }
             cutwolf_data->tile_e_collision = TranslateSprite(THIS, cutwolf_data->vx << delta_time, cutwolf_data->enemy_accel_y << delta_time);
+        break;
+        case ENEMY_STATE_WAIT:
+            SetSpriteAnim(THIS, anim_cutwolf_talking, 4u);
+        break;
+        case ENEMY_STATE_HIDDEN:
+            SetSpriteAnim(THIS, anim_cutwolf_uuu, 4u);
         break;
     }
 }

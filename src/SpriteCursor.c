@@ -4,7 +4,7 @@
 #include "Keys.h"
 #include "Sprite.h"
 #include "SpriteManager.h"
-#include "Music.h"
+#include "Sound.h"
 
 #include "custom_datas.h"
 
@@ -46,12 +46,16 @@ void UPDATE(){
         TranslateSprite(THIS, 0 << delta_time, cursor_vy << delta_time);
         if(cursor_vy == -1){ // going up
             if(THIS->y == ((UINT16) CURSOR_UP_Y << 3)){
+                PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);//sfx key
                 cursor_vy = 0;    
+                J_JUMP=J_A;//0x20;
+                J_FIRE=J_B;//0x10; switch them both from defaulted main.c setting
                 SetSpriteAnim(THIS, anim_cursor_blink, 16u);
                 cursor_moving = 0u;
             }
         }else if(cursor_vy == 1){ // going down
             if(THIS->y == ((UINT16) CURSOR_DOWN_Y << 3)){
+                PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);//sfx key
                 cursor_vy = 0;
                 J_JUMP=J_B;//0x20;
                 J_FIRE=J_A;//0x10; switch them both from defaulted main.c setting
@@ -63,5 +67,4 @@ void UPDATE(){
 }
 
 void DESTROY(){
-
 }

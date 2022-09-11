@@ -1,5 +1,6 @@
 #include "Banks/SetAutoBank.h"
 
+#include "SGB.h"
 #include "Keys.h"
 #include "ZGBMain.h"
 #include "Scroll.h"
@@ -21,12 +22,20 @@ IMPORT_TILES(tiles7);
 
 IMPORT_MAP(mapcutscene0);
 IMPORT_MAP(mapcutscene1);
+IMPORT_MAP(mapcutscene2);
+IMPORT_MAP(mapboss1);
 IMPORT_MAP(mapboss9);
 IMPORT_MAP(diagnew);
+IMPORT_MAP(mapend);
+IMPORT_MAP(border);
+
 DECLARE_MUSIC(bgm_level_cematery);
 DECLARE_MUSIC(bgm_level_castle);
 DECLARE_MUSIC(bgm_amulet);
 DECLARE_MUSIC(bgm_titlescreen);
+DECLARE_MUSIC(bgm_level_zoo);
+DECLARE_MUSIC(bgm_level_sewer);
+DECLARE_MUSIC(bgm_level_sky);
 
 const UINT8 const collision_tiles_cutscene0[] = {5, 7, 8, 10, 11, 13, 16, 17, 18, 19, 20, 29, 37, 0};
 extern UINT8 bank_tiles6;
@@ -53,6 +62,7 @@ extern UINT8 quiver;
 extern struct EnemyInfo* bossfighter_data;
 extern FinalFightInfo finalfightdata;
 extern UINT8 updatecounter;
+extern INT8 final_border_set;
 
 UINT8 wait_c = 0u;
 struct CameraInfo* camera_data;
@@ -64,6 +74,8 @@ struct EnemyInfo* sprite_4_data;
 const UINT8 const collision_tiles_cutscene[] = {5, 7, 8, 11, 13, 16, 17, 18, 19, 29, 37, 0};
 //questo sotto deve essere uguale all' array collision_tiles7
 const UINT8 const collision_tiles_cutscene7[] = {7, 8, 11, 13, 16, 17, 18, 20, 22, 25, 26, 30, 31, 35, 40, 41, 42, 46, 51, 52, 53, 64, 69, 77, 78, 79, 80, 81, 82, 89, 90, 94, 95, 111, 119, 0};//numero delle tile di collisione seguito da zero finale
+const UINT8 const collision_tiles_cutscene20[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
+const UINT8 const collision_tiles_cutscene21[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
 INT8 camera_tramble_c = 0;
 
@@ -91,7 +103,9 @@ void CalculateSpritesDestinations() BANKED;
 
 
 void START() {
-	
+	if(final_border_set == 0 && current_cutscene == 19u){
+		LOAD_SGB_BORDER(border);
+	}
 	if(wait_c == 99u){
 		//worldmap
 		current_level += 1;
@@ -246,6 +260,42 @@ void START() {
 			sprite_2 = SpriteManagerAdd(SpriteCutfinalboss,((UINT16) 20u << 3), ((UINT16) 15u << 3));
 			sprite_2->mirror = V_MIRROR;
 			sprite_2_data = (struct EnemyInfo*) sprite_2->custom_data;
+		break;
+		case 20u://final cutscene @ zoo
+			if(sgb_check()){
+				set_sgb_palette01_ZOO();
+				set_sgb_palette_statusbar();
+			}
+			PlayMusic(bgm_level_zoo, 1);
+			scene_bank = BANK(mapcutscene2);
+			InitScroll(scene_bank, &mapcutscene2, collision_tiles_cutscene20, 0);
+	   		SpriteManagerLoad(SpriteCutarcher);
+	   		SpriteManagerLoad(SpriteCutwolf);
+	   		SpriteManagerLoad(SpriteCutmother);
+			scroll_target = SpriteManagerAdd(SpriteCutarcher, ((UINT16) 8u << 3), ((UINT16) 12u << 3));
+			scroll_target->mirror = V_MIRROR;
+			sprite_4_data = (struct EnemyInfo*) scroll_target->custom_data;
+			sprite_4_data->enemy_state = ENEMY_STATE_WAIT;
+			sprite_1 = SpriteManagerAdd(SpriteCutmother,  ((UINT16) 10u << 3), ((UINT16) 12u << 3));
+			sprite_1->mirror = V_MIRROR;
+			sprite_1_data = (struct EnemyInfo*) sprite_1->custom_data;
+			sprite_1_data->enemy_state = ENEMY_STATE_HIDDEN;
+			sprite_2 = SpriteManagerAdd(SpriteCutwolf,  ((UINT16) 3u << 3), ((UINT16) 13u << 3) - 3u);
+			sprite_2->mirror = V_MIRROR;
+			sprite_2_data = (struct EnemyInfo*) sprite_2->custom_data;
+			sprite_2_data->enemy_state = ENEMY_STATE_WAIT;
+		break;
+		case 21u://final cutscene @sewer
+			if(sgb_check()){
+				set_sgb_palette01_SEWER();
+				//set_sgb_palette_statusbar();
+			}
+			PlayMusic(bgm_level_sewer, 1);
+			scene_bank = BANK(mapboss1);
+			InitScroll(scene_bank, &mapboss1, collision_tiles_cutscene21, 0);
+	   		SpriteManagerLoad(SpriteCutboss);
+	   		SpriteManagerLoad(SpriteCutalligator);
+			scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((UINT16) 4u << 3), ((UINT16) 2u << 3));
 		break;
 	}
 	
@@ -728,7 +778,14 @@ void UPDATE() {
 				break;
 				case 44u://wait_c = 44u is done on the DESTROY of Cutalligator
 					//go to cutscene at the zoo
-					temporeggia++;
+					/*wait_c = 0;
+					set_window_y_c(144);
+					HIDE_WIN;
+					current_level = 10u;
+					current_map = 0;
+					SetState(StateWorldmap);*/
+					wait_c = 99u;
+					SetState(StateCutscene);
 				break;
 			}
 		break;
@@ -752,6 +809,195 @@ void UPDATE() {
 				break;
 			}
 		break;
+		case 20u://final cutscene @ zoo
+			switch(wait_c){
+				case 40u:
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 41u;
+					}
+				break;
+				case 41u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						wait_c = 42u;
+					}
+				break;
+				case 42u:					
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 43u;
+					}
+				break;
+				case 43u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						wait_c = 44u;
+					}
+				break;
+				case 44u:					
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 45u;
+					}
+				break;
+				case 45u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						wait_c = 46u;
+					}
+				break;
+				case 46u:					
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 47u;
+					}
+				break;
+				case 47u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						wait_c = 48u;
+					}
+				break;
+				case 48u:					
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 49u;
+					}
+				break;
+				case 49u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						wait_c = 50u;
+					}
+				break;
+				case 50u:		
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 51u;
+					}
+				break;
+				case 51u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						wait_c = 52u;
+					}
+				break;
+				case 52u:					
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						sprite_2_data->enemy_state = ENEMY_STATE_HIDDEN;						
+						wait_c = 53u;
+					}
+				break;
+				case 53u:					
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						HIDE_WIN;
+						SetState(StateCreditfinal);
+					}
+				break;
+			}
+		break;
+		case 21u://final cutscene @sewer
+			switch(wait_c){
+				case 40u:
+					CalculateSpritesDestinations();
+					wait_c = 41u;
+				break;
+				case 41u:
+					if(scroll_target->y < camera_finaly){			
+						TranslateSprite(scroll_target, 0, 1 << delta_time);
+					}else{
+						wait_c = 42u;
+					}
+				break;
+				case 42u:
+					sprite_1 = SpriteManagerAdd(SpriteCutalligator, ((UINT16) 4u << 3), ((UINT16) 15u << 3));
+					sprite_1->mirror = V_MIRROR;
+					sprite_2 = SpriteManagerAdd(SpriteCutboss, ((UINT16) 7u << 3), ((UINT16) 13u << 3));
+					sprite_1_data = (struct EnemyInfo*) sprite_1->custom_data;
+					sprite_1_data->enemy_state = ENEMY_STATE_WAIT;
+					sprite_2_data = (struct EnemyInfo*) sprite_2->custom_data;
+					sprite_2_data->enemy_state = ENEMY_STATE_HIT;
+					wait_c = 43u;
+				break;
+				case 43u:
+					if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+						diag_found = Build_Next_Dialog_Banked(scroll_target);
+						temporeggia = 0;
+						ShowCutDiag();
+						wait_c = 44u;
+					}
+				break;
+				case 44u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							temporeggia = 0;
+							ShowCutDiag();
+							wait_c = 45u;
+						}
+					}
+				break;
+				case 45u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							temporeggia = 0;
+							ShowCutDiag();
+							wait_c = 46u;
+						}
+					}
+				break;
+				case 46u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							temporeggia = 0;
+							ShowCutDiag();
+							wait_c = 47u;
+						}
+					}
+				break;
+				case 47u:
+					if(temporeggia < 40){
+						temporeggia++;
+					}else{
+						if(KEY_TICKED(J_FIRE) || KEY_TICKED(J_JUMP)){
+							diag_found = Build_Next_Dialog_Banked(scroll_target);
+							SetState(StateDiag);
+						}
+						//wait_c = 0;
+					}
+				break;
+			}
+		break;		
 	}
 	
 	//MOVING BACKGROUND TILES
@@ -839,6 +1085,13 @@ void CalculateSpritesDestinations() BANKED{
 				break;
 				case 43:
 					sprite_4_finalx = ((UINT16) 30u << 3);
+				break;
+			}
+		break;
+		case 21u:
+			switch(wait_c){
+				case 40u:
+					camera_finaly = ((UINT16) 14u << 3);
 				break;
 			}
 		break;

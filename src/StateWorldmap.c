@@ -120,6 +120,18 @@ void START() {
 			dataiconpsg->type=1;
 			dataiconpsg->setup=1u;
 		break;
+		case 10u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 16u, (UINT16) 120u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=1;
+			dataiconpsg->setup=1u;
+		break;
+		case 11u:
+			siconpsg = SpriteManagerAdd(SpriteIconpsg, (UINT16) 16u, (UINT16) 120u);
+			dataiconpsg = (struct ItemInfo*)siconpsg->custom_data;
+			dataiconpsg->type=3;
+			dataiconpsg->setup=1u;
+		break;
 	}
 
 	HIDE_WIN;
@@ -155,7 +167,7 @@ void UPDATE(){
 		if((quiver & 0b0000010000) == 0b0000010000){// ho vulkan pyramid
 			WorldmapQuiverFire();
 		}
-		if(current_level == 9u){
+		if(current_level >= 9u){
 			WorldmapFinalFight();
 		}
 	}
@@ -207,6 +219,22 @@ void UPDATE(){
 			}
 			if(counter > 80u && siconpsg->y < 120u && (counter & 0x4)){
 				siconpsg->y++;
+			}
+		break;
+		case 10u:
+			if(counter > 80u && siconpsg->x > 9u && (counter & 0x2)){
+				siconpsg->x--;
+			}
+			if(counter > 80u && siconpsg->y > 81u && (counter & 0x2)){
+				siconpsg->y--;
+			}
+		break;
+		case 11u:
+			if(counter > 80u && siconpsg->x < 32u && (counter & 0x2)){
+				siconpsg->x++;
+			}
+			if(counter > 80u && siconpsg->y > 72u && (counter & 0x2)){
+				siconpsg->y--;
 			}
 		break;
 	}

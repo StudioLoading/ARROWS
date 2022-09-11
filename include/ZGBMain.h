@@ -22,6 +22,7 @@ _STATE(StateBoss)\
 _STATE(StateGameover)\
 _STATE(StateCutscene)\
 _STATE(StateGame7)\
+_STATE(StateCreditfinal)\
 STATE_DEF_END
 
 #define SPRITES \

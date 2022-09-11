@@ -17,6 +17,7 @@ extern UINT8 current_map;
 extern INT8 archer_tool;
 extern INT8 level_tool;
 extern INT8 is_on_boss;
+extern UINT8 current_cutscene;
 
 UINT8 bank_tiles = BANK(tiles);
 UINT8 bank_tiles4 = BANK(tiles4);
@@ -96,7 +97,7 @@ void Anim_Tiles_0() BANKED{
 		//prisoner20
 		set_banked_bkg_data(58u, 1u, 0u, BANK(tiles));
 	}
-	if(current_level < 2u){
+	if(current_level < 2u || current_cutscene == 21u){
 	//waterfalls0
 		set_banked_bkg_data(120u, 1u, 0u, BANK(tiles));// + 16u * 120 tile index
 		set_banked_bkg_data(123u, 1u, 0u, BANK(tiles));// + 16u * 123 tile index
@@ -157,7 +158,7 @@ void Anim_Tiles_1() BANKED{
 		//prisoner21
 		set_banked_bkg_data(58u, 1u, 1u, BANK(tilesanims));
 	}
-	if(current_level < 2u){
+	if(current_level < 2u || current_cutscene == 21u){
 		//waterfalls1
 		set_banked_bkg_data(120u, 1u, 1u, BANK(tilesanims));///+ 16u * 120 tile index
 		set_banked_bkg_data(123u, 1u, 1u, BANK(tilesanims));///+ 16u * 123 tile index

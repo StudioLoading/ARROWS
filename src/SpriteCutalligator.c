@@ -10,6 +10,7 @@
 
 //CUTALLIGATOR
 const UINT8 anim_cutalligator_invisible[] = {2, 0, 1}; //The first number indicates the number of frames
+const UINT8 anim_cutalligator_idle[] = {1, 2}; //The first number indicates the number of frames
 
 extern UINT8 wait_c;
 
@@ -25,11 +26,16 @@ void START() {
 }
 
 void UPDATE(){
-    if(cutalligator_data->enemy_state == ENEMY_STATE_WALKING){
-        cutalligator_data->wait++;
-        if((cutalligator_data->wait & 0x2) == 0){
-            THIS->x += cutalligator_data->vx;
-        }
+    switch(cutalligator_data->enemy_state){
+        case ENEMY_STATE_WALKING:
+            cutalligator_data->wait++;
+            if((cutalligator_data->wait & 0x2) == 0){
+                THIS->x += cutalligator_data->vx;
+            }
+        break;
+        case ENEMY_STATE_WAIT:
+	        SetSpriteAnim(THIS, anim_cutalligator_idle, 4u);
+        break;
     }
 }
 

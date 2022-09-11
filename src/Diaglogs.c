@@ -47,10 +47,6 @@ void copy_strings_to_dn(char* s1, char* s2, char* s3, char* s4){
 UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	UINT8 diagf = 0u;
 	copy_strings_to_dn("                    ","                    ","                    ","                    ");
-	/*memcpy(d1, "                    ", 20);
-	memcpy(d2, "                    ", 20);
-	memcpy(d3, "                    ", 20);
-	memcpy(d4, "                    ", 20);*/
 	if(on_worldmap == 1){
 		switch(current_level){
 			case 0u:
@@ -92,6 +88,14 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 			case 9u:
 				copy_strings_to_dn("                    ","       FINAL        ","       FIGHT        ","                    ");
 				diagf = 18u;
+			break;
+			case 10u:
+				copy_strings_to_dn("                    ","       THE ZOO      ","                    ","                    ");
+				diagf = 60u;
+			break;
+			case 11u:
+				copy_strings_to_dn("                    ","      THE SEWER     ","                    ","                    ");
+				diagf = 11u;
 			break;
 		}
 		on_worldmap = 0;
@@ -209,6 +213,62 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 					case 42u:
 						copy_strings_to_dn("                    ","      THANK YOU      ","        MOTHER      ","                    ");
 						diagf = 1u;
+					break;
+				}
+			break;
+			case 20u:	
+				switch (wait_c){
+					case 40u:
+						copy_strings_to_dn(" MOM: GREAT JOB SON! "," FOUR OF THE STRONG  "," EST WILD ANIMALS    "," ARE NOW FREE.        ");
+						diagf = 99u;
+					break;
+					case 42u:
+						copy_strings_to_dn(" BLACKIE: THANK YOU  "," DOCTOR AND SON. WHY  "," HAVE YOU DONE THAT ?","                     ");
+						diagf = 99u;
+					break;
+					case 44u:
+						copy_strings_to_dn(" BLACKIE:            "," WHY DID YOU GET IN "," ALL OF THIS?        ","                     ");
+						diagf = 99u;
+					break;
+					case 46u:
+						copy_strings_to_dn(" MOM: LISTEN TO ME.  "," THE MASTER AND       "," SLAVE RELATIONSHIP  "," IS OVER.            ");
+						diagf = 99u;
+					break;
+					case 48u:
+						copy_strings_to_dn(" MOM: ANIMALS NOW    "," HAVE A CONSCIENCE   "," AND ARE FREE TO SET "," THE RELATIONSHIP   ");
+						diagf = 99u;
+					break;
+					case 50u:
+						copy_strings_to_dn(" MOM: THEY PREFERE.  ","                     ","                     ","                     ");
+						diagf = 99u;
+					break;
+					case 52u:
+						copy_strings_to_dn(" BLACKIE: UUUUUUHH ! "," NO MORE PRISONS !!  "," NO MORE ZOO-ES !!   ","                     ");
+						diagf = 99u;
+					break;
+				}
+			break;			
+			case 21u:	
+				switch (wait_c){
+					case 43u:
+						copy_strings_to_dn(" ???:                "," THANK YOU MY FRIEND "," WHY MY BEASTS       "," BETRAYED ME ?       ");
+						diagf = 99u;
+					break;
+					case 44u:
+						copy_strings_to_dn(" GATOR: I SMELLED    "," THEY FEARED MORE    "," THAT DOCTOR THAN    "," YOU.                ");
+						diagf = 99u;
+					break;
+					case 45u:
+						copy_strings_to_dn(" ???: IT'S TIME THEN "," ... IT IS TIME FOR  "," THEM TO WAKE UP     "," ...                 ");
+						diagf = 99u;
+					break;
+					case 46u:
+						copy_strings_to_dn(" GATOR: NOW I AM     "," MORE AFRAID THAN    "," BEFORE, PLEASE      "," DON'T CALL THEM.    ");
+						diagf = 99u;
+					break;
+					case 47u:
+						copy_strings_to_dn("                     ","     MY DRAGONS !    ","                     ","           (THE END) ");
+						diagf = 57u;
 					break;
 				}
 			break;

@@ -48,6 +48,8 @@ INT8 loading_code = 0;
 UINT8 bgm_started = 0u;
 UINT8 cursor_spawned = 0u;
 
+Sprite* sprite_cursor = 0;
+
 void START() {	
 
 	current_camera_state = 0u;
@@ -194,7 +196,7 @@ void UPDATE() {
 			if(cursor_spawned == 0u){
 				PRINT(102u, 5u, "(A) JUMP (B) FIRE");
 				PRINT(102u, 8u, "(A) FIRE (B) JUMP");
-				SpriteManagerAdd(SpriteCursor, ((UINT16) 101u << 3), ((UINT16) 5u << 3));
+				sprite_cursor = SpriteManagerAdd(SpriteCursor, ((UINT16) 101u << 3), ((UINT16) 5u << 3));
 				cursor_spawned = 1u;
 			}
 			//if(KEY_TICKED(J_SELECT)){//logic in SpriteCursor
@@ -210,7 +212,7 @@ void UPDATE() {
 				break;
 			}
 			if(cursor_moving == 0u && KEY_TICKED(J_START)){
-				PlayFx(CHANNEL_1, 60, 0x6d, 0x8c, 0x73, 0xff, 0xc7);//sfx key
+				SpriteManagerRemoveSprite(sprite_cursor);
 				current_camera_state = 5u;
 			}
 		break;

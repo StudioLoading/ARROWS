@@ -42,6 +42,9 @@ void UPDATE(){
 		case ENEMY_STATE_GRAPPLING:
 			SetSpriteAnim(THIS, anim_cutboss_oneagle, 1u);
 		break;
+		case ENEMY_STATE_HIT:
+			SetSpriteAnim(THIS, anim_cutboss_knee, 1u);
+		break;
 	}
 
 }

@@ -26,19 +26,17 @@ gameover		5 preOutro
 boss defeated	4 preChorus  todo
 amulet			4 outro
 
+TODO PER IL BUILDONE DEFINITIVO:
+- METTERE A 7 LA VITA DEL BOSS FINALE
+- CONTROLLO di tutti i suggerimenti/dialoghi
+- svuotare il frame della camera sul suo camerafocus.gbr.c
+
+
 nice2have:
 	- bonus level
 	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  
-
-TODO PER IL BUILDONE DEFINITIVO:
-- METTERE A 7 LA VITA DEL BOSS FINALE
-- INSERIRE NEI CREDITI FINALI I NOMI DI QUELLI DEL PERK CREDITI KICKSTARTER
-- CONTROLLO di tutti i suggerimenti/dialoghi
-- SOSTITUIRE LE TILE DI SECRET, ENTRATA BOSS, USCITA BOSS, HIDDEN ITEMS
-- svuotare il frame della camera sul suo camerafocus.gbr.c
-
 
 
 
