@@ -777,7 +777,7 @@ void UpdateHUD6() BANKED{
 		if (archer_data->coins > 9){
 			Printf("%d", archer_data->coins);
 		}else{
-			Printf("0%d", archer_data->coins);
+			Printf(" %d ", archer_data->coins);
 		}	
 	}
 	//write hp
@@ -804,8 +804,8 @@ void UpdateHUD6() BANKED{
 	}
 	//write ups
 	PRINT_POS(2, 0); //up
-	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
-	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
+	if (archer_data->ups > 9){Printf("9", archer_data->ups);}
+	else if (archer_data->ups >= 0){Printf("%d", archer_data->ups);}
 }
 
 void ShowWindow6() BANKED{	

@@ -711,8 +711,8 @@ void UpdateHUD3() BANKED{
 	}
 	//write ups
 	PRINT_POS(2, 0); //up
-	if (archer_data->ups > 9){Printf("%d", archer_data->ups);}
-	else if (archer_data->ups >= 0){Printf("0%d", archer_data->ups);}
+	if (archer_data->ups > 9){Printf("9", archer_data->ups);}
+	else if (archer_data->ups >= 0){Printf("%d", archer_data->ups);}
 }
 
 void set_window_y3(UBYTE y) {

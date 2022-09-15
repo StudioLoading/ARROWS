@@ -18,6 +18,7 @@ extern Sprite* archer_player;
 extern struct ArcherInfo* archer_data;
 extern ARCHER_STATE archer_state;
 extern INT8 show_diag;
+extern const UINT8 COMPLETE_QUIVER;
 
 //CAGED BOSSES
 const UINT8 wolf_caged[] = {1, 0}; //The first number indicates the number of frames
@@ -25,7 +26,8 @@ const UINT8 ibex_caged[] = {1, 1}; //The first number indicates the number of fr
 const UINT8 bear_caged[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 boss_idle[] = {4, 3,3,3,4}; //The first number indicates the number of frames
 
-UINT8 final_quiver = 0b00011111;
+UINT8 final_quiver = 0b0000011111;//COMPLETE_QUIVER
+
 
 void START() {    
 	THIS->lim_x = 255u;

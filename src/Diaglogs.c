@@ -263,7 +263,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						diagf = 99u;
 					break;
 					case 46u:
-						copy_strings_to_dn(" GATOR: NOW I AM     "," MORE AFRAID THAN    "," BEFORE, PLEASE      "," DON'T CALL THEM.    ");
+						copy_strings_to_dn(" ???: SOME TIME AGO  "," THEY WERE CALLED    "," LIZARDS. THE MOON   "," CHANGED THEM INTO...");
 						diagf = 99u;
 					break;
 					case 47u:
@@ -404,7 +404,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 					break;
 				}	
 			break;
-			case 2://is_on_boss == 2 significa che lo sto combattendo			
+			case 2: //is_on_boss == 2 significa che lo sto combattendo			
 				switch(current_level_b){
 					case 0u:		
 						copy_strings_to_dn(" THE WOLF IS FAST   "," AND STRONG.        "," I SHOULD AIM TO    "," HIS BELLY !        ");
@@ -497,10 +497,6 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						break;
 					}
 				}
-				break;
-			case 4u: //TODO
-			break;
-			case 5u: //TODO
 			break;
 		}
 	}

@@ -14,22 +14,12 @@
 #include "custom_datas.h"
 #include "sgb_palette.h"
 
-#define TEST_QUIVER 0b0000010001
-#define QUIVER 0b0000000001
-
 IMPORT_TILES(font);
 
 IMPORT_MAP(maptitlescreen);
 
 DECLARE_MUSIC(bgm_titlescreen);
 
-UINT8 quiver = TEST_QUIVER;//0b0000011111;
-UINT8 amulet = 0;// = 0u;
-UINT8 coins = 0;// = 30u;
-INT8 ups = 0;// = 1;
-INT8 hp;
-INT8 level_tool = -1;
-INT8 archer_tool = 0;
 
 extern UINT8 J_JUMP;
 extern UINT8 J_FIRE;
@@ -38,8 +28,20 @@ extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 extern UINT8 cursor_moving;
+extern const UINT8 COMPLETE_QUIVER;
+extern const UINT8 QUIVER;
+extern const INT8 INIT_UPS;
+extern UINT8 current_level;
 
 const UINT8 collision_tiles_titlescreen[] = {1,0};
+
+UINT8 quiver = 0b0000000001;//QUIVER
+UINT8 amulet = 0;// = 0u;
+UINT8 coins = 0;// = 30u;
+INT8 ups = 0;
+INT8 hp;
+INT8 level_tool = -1;
+INT8 archer_tool = 0;
 
 UINT8 current_camera_state = 0u; //0 initial wait, 1 move to boss, 2 wait boss, 3 move to pg, 4 reload
 UINT8 current_camera_counter = 0u;
@@ -47,6 +49,7 @@ UINT8 wait_titlescreen = 0u;
 INT8 loading_code = 0;
 UINT8 bgm_started = 0u;
 UINT8 cursor_spawned = 0u;
+UINT8 select_counter = 0u;
 
 Sprite* sprite_cursor = 0;
 
@@ -57,10 +60,13 @@ void START() {
 	wait_titlescreen = 30u;
 	amulet = 0;
     coins = 30u;
-	ups = 1;
+	ups = INIT_UPS;
 	hp = MAX_HP;
 	archer_tool = 0;
 	level_tool = -1;
+	cursor_spawned = 0u;
+	select_counter = 0u;
+	bgm_started = 0u;
 	
 	if(sgb_check()){
 		set_sgb_palette01_2A();
@@ -75,17 +81,60 @@ void START() {
 	
 	InitScroll(BANK(maptitlescreen), &maptitlescreen, collision_tiles_titlescreen, 0);	
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
+	
 	SHOW_BKG;
 	
 }
 
 void UPDATE() {
 
+	if(KEY_TICKED(J_SELECT)){
+		select_counter++;
+		switch(select_counter){
+			case 5u:
+				PRINT(12u, 14u, "0");
+				current_level = 0u;
+			break;
+			case 6u:
+				PRINT(12u, 14u, "1");
+				current_level = 1u;
+			break;
+			case 7u:
+				PRINT(12u, 14u, "2");
+				quiver |= 0b0000000010; 
+				current_level = 2u;
+			break;
+			case 8u:
+				PRINT(12u, 14u, "3");
+				current_level = 3u;
+			break;
+			case 9u:
+				PRINT(12u, 14u, "4");
+				quiver |= 0b0000000110; 
+				current_level = 4u;
+			break;
+			case 10u:
+				PRINT(12u, 14u, "5");
+				current_level = 5u;
+			break;
+			case 11u:
+				PRINT(12u, 14u, "6");
+				quiver |= 0b0000001110; 
+				current_level = 6u;
+			break;
+			case 12u:
+				PRINT(12u, 14u, "0");
+				current_level = 0u;
+				select_counter = 4u;
+			break;
+		}
+	}
+
 	switch(loading_code){
 		case 5:
 			if(KEY_TICKED(J_UP)){
 				StopMusic;
-				quiver = 0b0000011111;
+				quiver = COMPLETE_QUIVER;
 				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
 				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);
 				PlayFx(CHANNEL_1, 30, 0x7d, 0x85, 0xf5, 0xff, 0x57);

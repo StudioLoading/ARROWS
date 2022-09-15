@@ -96,6 +96,7 @@ extern unsigned char d4[];
 extern UINT8 diag_found;
 extern UINT8 colliding_mother;
 
+extern UINT8 current_cutscene;
 extern INT8 is_on_cutscene;
 
 //const UINT16 const bg_palette_diag[] = {PALETTE_FROM_HEADER(tiles)};
@@ -306,9 +307,8 @@ void UPDATE() {
 	if(KEY_PRESSED(J_FIRE) || KEY_PRESSED(J_JUMP) || KEY_PRESSED(J_START)) {
 		HIDE_WIN;
 		if(is_on_cutscene){
-			if(current_cutscene < 22u){
-				SetState(StateCutscene);
-			}
+			if(current_cutscene == 21u) return;
+			SetState(StateCutscene);
 		}else if(is_on_boss >= 0){
 			SetState(StateBoss);
 		}else if (colliding_mother != 0u && colliding_mother != 6u){

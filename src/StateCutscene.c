@@ -63,6 +63,7 @@ extern struct EnemyInfo* bossfighter_data;
 extern FinalFightInfo finalfightdata;
 extern UINT8 updatecounter;
 extern INT8 final_border_set;
+extern const UINT8 FIRE_QUIVER;
 
 UINT8 wait_c = 0u;
 struct CameraInfo* camera_data;
@@ -339,7 +340,7 @@ void UPDATE() {
 					sprite_3 = SpriteManagerAdd(SpriteCastlegate, (UINT16) 600u, (UINT16) 130u);
 					sprite_3_data = (struct EnemyInfo*)sprite_3->custom_data;
 					sprite_3_data->enemy_state = ENEMY_STATE_NORMAL;
-					quiver = 0b00010001;
+					quiver = FIRE_QUIVER;
 				break;
 				case 41u:
 					switch(temporeggia){

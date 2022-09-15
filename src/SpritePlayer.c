@@ -568,6 +568,11 @@ void UPDATE() {
 				case SpriteBat:
 				case SpriteFalce:
 				case SpriteCathead:
+					if (archer_data->hp <= 0){
+						update_hud = 1;
+						Die();
+						return;
+					}
 					if(archer_state == STATE_HIT || hit_cooldown < MAX_HIT_COOLDOWN) {
 						return;
 					}
@@ -670,6 +675,11 @@ void UPDATE() {
 					}
 				case SpriteBosseagle:
 				case SpriteCuteagle:
+					if (archer_data->hp <= 0){
+						update_hud = 1;
+						Die();
+						return;
+					}
 					if(archer_state != STATE_HIT && hit_cooldown == MAX_HIT_COOLDOWN) {
  						Hit(1);
 					}

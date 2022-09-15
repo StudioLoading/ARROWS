@@ -40,6 +40,7 @@ extern INT8 ups;
 extern INT8 hp;
 extern INT8 archer_tool;
 extern const INT8 MAX_HP;
+extern const INT8 INIT_UPS;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
@@ -51,11 +52,10 @@ void START() {
 	SpriteManagerLoad(SpriteCamerafocus);
 	if(sgb_check()){
 		set_sgb_palette01_2H();
+		reset_sgb_palette_statusbar();
 	}
 	SHOW_SPRITES;
 	
-	INIT_FONT(font, PRINT_BKG); 
-
 	current_map = 0u;
 	countdown = 10;
 	one_second = 0;
@@ -65,6 +65,8 @@ void START() {
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, 9u << 3, 8u << 3);
 	SHOW_BKG;
 			
+	INIT_FONT(font, PRINT_BKG); 
+
 	music_delay = 60u;
 	
 }
@@ -76,7 +78,7 @@ void UPDATE() {
 		PlayMusic(bgm_gameover, 0);
 		music_delay = -3;
 	}
-	if( scroll_target->y < (UINT16) 35u << 3){ //countdown <= 9 &&
+	if( scroll_target->y < (UINT16) 33u << 3){ //countdown <= 9 &&
 		scroll_target->y += 2;
 		return;
 	}
@@ -93,10 +95,10 @@ void UPDATE() {
 void ShowContinue(){
 	countdown--;
 	if(countdown > -1){
-		PRINT(6u, 41u, "CONTINUE? 0");
+		PRINT(6u, 38u, "CONTINUE?");
 		unsigned char str[] = "0";
 		UIntToString(countdown, str);
-		PRINT(17u, 41u, str);
+		PRINT(17u, 38u, str);
 	}else if (countdown == -2){
 		ResetConfig(1);
 	}
@@ -105,7 +107,7 @@ void ShowContinue(){
 void ResetConfig(INT8 gameo){		
 	is_on_gameover = -1;
 	hp = MAX_HP;
-	ups = 3;
+	ups = INIT_UPS;
 	coins = 0;
 	archer_tool = 0;
 	if(gameo > 0){
@@ -115,9 +117,6 @@ void ResetConfig(INT8 gameo){
 		SetState(StateTitlescreen);
 	}else{
 		if(is_on_boss > 0){
-			/*if(current_level > 0u){
-				current_level_b = current_level -1u;
-			}*/
 			SetState(StateBoss);	
 		}else{
 			SetState(StateWorldmap);			
