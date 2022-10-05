@@ -60,7 +60,7 @@ void START() {
 	SpriteManagerLoad(SpriteItem);
 	if(sgb_check()){
 		set_sgb_palette01_secret();
-		//set_sgb_palette_statusbar();
+		set_sgb_palette_statusbar();
 	}
 	SHOW_SPRITES;
 	//SCROLL
@@ -94,11 +94,11 @@ void START() {
 	//ITEMS
 	if(visited < current_map){
 		if (current_map == 0u){		
-			scrigno_up = spawn_item(scrigno_up, 5u, 5u, 3, 1);
-			scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
+			scrigno_up = spawn_item(scrigno_up, 3u, 5u, 3, 1);
+			scrigno_dcoin = spawn_item(scrigno_dcoin, 13u, 11u, 7, 1);
 		}else{
-			scrigno_coin = spawn_item(scrigno_coin, 5u, 5u, 1, 1);
-			scrigno_dcoin = spawn_item(scrigno_dcoin, 11u, 11u, 7, 1);
+			scrigno_coin = spawn_item(scrigno_coin, 3u, 5u, 1, 1);
+			scrigno_dcoin = spawn_item(scrigno_dcoin, 13u, 11u, 7, 1);
 		}
 		visited = current_map;
 	}	

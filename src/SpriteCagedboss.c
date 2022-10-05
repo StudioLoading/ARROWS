@@ -26,7 +26,7 @@ const UINT8 ibex_caged[] = {1, 1}; //The first number indicates the number of fr
 const UINT8 bear_caged[] = {1, 2}; //The first number indicates the number of frames
 const UINT8 boss_idle[] = {4, 3,3,3,4}; //The first number indicates the number of frames
 
-UINT8 final_quiver = 0b0000011111;//COMPLETE_QUIVER
+UINT8 final_quiver = 0b0000010001;//FIRE_QUIVER
 
 
 void START() {    

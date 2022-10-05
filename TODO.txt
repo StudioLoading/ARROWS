@@ -1,37 +1,8 @@
-MUSIC MANAGEMENT
-
-credits			2 prechorus
-titleScreen		2 chorus
-intro			intro leo
-ZOO				9 verse
-SEWER			3 prechorus + chorus
-HILLS			1 verse vocal
-SKY				1 chorus guitar
-FOREST			1 verse vocal
-icecave			bgm_level_zoo
-cematery		5 verse
-castle			5 prechorus
-gameover		5 preOutro
-boss defeated	4 preChorus  todo
-amulet			4 outro
-
-TODO PER IL BUILDONE DEFINITIVO:
-- CONTROLLO di tutti i suggerimenti/dialoghi
-- svuotare il frame della camera sul suo camerafocus.gbr.c
 
 
-nice2have:
-	- bonus level
-	- per family friendliness, coinvolgere anche il joypad2 sulla SNES, prendere spunto da:
+PAD2 sulla SNES, prendere spunto da:
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_pong/sgb_pong.c
 			- https://github.com/gbdk-2020/gbdk-2020/blob/develop/gbdk-lib/examples/gb/sgb_multiplayer/sgb_multiplayer.c  
-
-
-
-
-
-
-
 
 PNG2MAP
 C:\GB\ZGB-2021.3\tools\png2map\png2gbtiles.exe test2.png -gbm -g -pal=mypal.pal
@@ -53,13 +24,6 @@ C:\GB\ZGBNEW\tools\romusage-main\bin\romusage.exe C:\GB\ZGBNEW\ZGB-template-mast
 
 DISCORD MARKDOWN: ```c ```
 
-```c
-...
-_SPRITE_DMG(SpriteStalattite, stalattite)\
-_SPRITE_DMG(SpriteAmulet, amulet)\
-_SPRITE_DMG(SpriteWolf, wolf)\
-...
-```
 
 
 

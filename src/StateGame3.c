@@ -90,6 +90,7 @@ extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern const UINT8 CAMERA_TRAMBLE_DELTA;
 
 void UpdateHUD3() BANKED;
 void ShowWindow3() BANKED;
@@ -112,18 +113,6 @@ void START() {
 	current_camera_state = 0u;
 	current_camera_counter = 0u;
 	fx_cooldown = 0;
-	/*
-	switch(current_level){
-		case 0u:
-		case 1u:
-		case 2u:
-			SetState(StateGame);
-		break;
-		case 5u:
-		case 6u:
-			SetState(StateGame6);
-		break;
-	}*/
 
 	//INIT SOUND
 	NR52_REG = 0x80; //Enables sound, you should always setup this first
@@ -173,7 +162,7 @@ void START() {
 	memcpy(d4, "                    ", 20);
 
 	//SCROLL	
-	scroll_bottom_movement_limit = 62u;	
+	scroll_bottom_movement_limit = 56u;	
 
 	const struct MapInfo* const level_4[] = {
 		&map41,
@@ -356,11 +345,11 @@ void UPDATE() {
 			break;
 			case 1:
 			case 2:
-				scroll_target->y = archer_player->y - 17u;
+				scroll_target->y = archer_player->y - CAMERA_TRAMBLE_DELTA;
 			break;
 			case 4:
 			case 5:
-				scroll_target->y = archer_player->y + 17u;
+				scroll_target->y = archer_player->y + CAMERA_TRAMBLE_DELTA;
 			break;
 		}
 	}
@@ -375,22 +364,28 @@ void UPDATE() {
 			apx_mirrored = archer_player->x - 24;
 			scroll_target->y = apy + platform_vy;
 			INT8 dx = platform_vx;
-			if(archer_player->mirror == V_MIRROR){
-				if(scroll_target->x > apx_mirrored){
-					dx -= 1;
+			if(scroll_target->x <= apx && scroll_target->x >= apx_mirrored){
+				if(archer_player->mirror == V_MIRROR){
+					if(scroll_target->x >= apx_mirrored){
+						dx -= 2;
+					}
+					if(scroll_target->x <= apx_mirrored){
+						dx += 2;
+					}
+				}else{
+					if(scroll_target->x <= apx){
+						dx += 2;
+					}
+					if(scroll_target->x >= apx){
+						dx -= 2;
+					}
 				}
-				if(scroll_target->x < apx_mirrored){
-					dx += 1;
-				}
-			}else{
-				if(scroll_target->x < apx){
-					dx += 1;
-				}
-				if(scroll_target->x > apx){
-					dx -= 1;
-				}
+				scroll_target->x += dx;
+			}else if(scroll_target->x >= apx){
+				scroll_target->x = apx;
+			}else if(scroll_target->x <= apx_mirrored){
+				scroll_target->x = apx_mirrored;
 			}
-			scroll_target->x += dx;
 		}
 	}
 
@@ -479,15 +474,9 @@ void UPDATE() {
 							case 60u:
 								spawn_enemy3(SpriteHurricane, (scroll_target->x >> 3) + 5u, 5u);
 							break;
-							case 120u:
-								spawn_enemy3(SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
-							break;
-							case 180u:
-								spawn_enemy3(SpriteHurricane, (scroll_target->x >> 3) + 4u, 6u);
-							break;
 							case 0u:
 								spawn_enemy3(SpriteHurricane, (scroll_target->x >> 3), 7u);
-								thunder_delay = 180u;
+								thunder_delay = 120u;
 							break;
 						}
 						thunder_delay -= 1u;
@@ -510,7 +499,7 @@ void UPDATE() {
 							case 80u:
 								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) + 3u, 4u);
 							break;
-							case 100u:
+							case 120u:
 								spawn_enemy3(SpriteThunder, (scroll_target->x >> 3) - 2u, 4u);
 							break;
 							case 170u:
@@ -521,7 +510,7 @@ void UPDATE() {
 								thunder_delay = 200u;
 							break;
 							default:
-								if (scroll_target->x == (UINT16) 30u << 3 && spawning_counter ==0){
+								if (scroll_target->x == (UINT16) 30u << 3 && spawning_counter == 0){
 									spawn_item3(scrigno_shield, 39u, 4u, 2, 1);
 									spawning_counter = 1;
 								}
@@ -543,48 +532,38 @@ void UPDATE() {
 		case 4u: // Trees -> Bear
 			switch(current_map){
 				case 0u:
-					if(scroll_target->x > (UINT16) 25u << 3 && scroll_target->y < (UINT16) 14u << 3 && spawning_counter == 0){
+					if(scroll_target->x > (UINT16) 25u << 3 && spawning_counter == 0){
 						spawn_item3(scrigno_shield, 31u, 17u, 2, 1);
 						spawn_enemy3(SpriteBee, 33u, 13u);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 42u << 3 && scroll_target->y < (UINT16) 14u << 3 && spawning_counter == 1){
+					if(scroll_target->x > (UINT16) 42u << 3 && spawning_counter == 1){
 						spawn_enemy3(SpriteRat, 36u, 15u);
 						spawn_enemy3(SpriteBee, 37u, 18u);
 						spawning_counter++;
 					}
-					if(scroll_target->x < (UINT16) 16u << 3 && scroll_target->y < (UINT16) 22u << 3 && scroll_target->y > (UINT16) 13u << 3 && spawning_counter == 2){
-						spawn_item3(scrigno_up, 9u, 25u, 3, 1);
-						spawn_enemy3(SpriteBee, 8u, 26u);
+					if(scroll_target->x > (UINT16) 90u << 3 && spawning_counter == 2){
+						spawn_item3(scrigno_up, 100u, 10u, 3, 1);
+						spawn_enemy3(SpriteSpider, 102u, 10u);
 						spawning_counter++;
 					}
-					if(scroll_target->x < (UINT16) 12u << 3 && scroll_target->y < (UINT16) 36u << 3 && scroll_target->y > (UINT16) 27u << 3 && spawning_counter == 3){
-						spawn_item3(scrigno_dcoin, 13u, 38u, 7, 1);
-						spawn_enemy3(SpriteBee, 8u, 39u);
+					if(scroll_target->x > (UINT16) 100u << 3 && spawning_counter == 3){
+						spawn_item3(scrigno_dcoin, 112u, 10u, 7, 1);
+						spawn_enemy3(SpriteSpider, 107u, 10u);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 15u << 3 && scroll_target->x < (UINT16) 22u << 3 
-						&& scroll_target->y > (UINT16) 36u << 3 && scroll_target->y < (UINT16) 42u << 3 && spawning_counter == 4){
-						spawn_item3(scrigno_dcoin, 42u, 38u, 7, 1);
-						spawn_enemy3(SpriteBee, 40u, 42u);
-						spawn_enemy3(SpriteRat, 26u, 38u);
+					if(scroll_target->x > (UINT16) 116u << 3 && spawning_counter == 4){
+						spawn_enemy3(SpriteBee, 123u, 14u);
+						spawn_enemy3(SpriteBee, 127u, 9u);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 1u << 3 && scroll_target->y > (UINT16) 55u << 3 && scroll_target->y < (UINT16) 62u << 3 && spawning_counter == 5){
-						spawn_enemy3(SpriteRat, 22u, 57u);
+					if(scroll_target->x > (UINT16) 162u << 3 && spawning_counter == 5){
+						spawn_item3(scrigno_shield, 161u, 6u, 2, 1);
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 8u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_counter == 6){
-						spawn_enemy3(SpriteBee, 18u, 62u);
-						spawning_counter++;
-					}
-					if(scroll_target->x > (UINT16) 21u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_counter == 7){
-						spawn_enemy3(SpriteRat, 30u, 63u);						
-						spawn_item3(scrigno_dcoin, 25u, 63u, 7, 1);
-						spawning_counter++;
-					}
-					if(scroll_target->x > (UINT16) 23u << 3 && scroll_target->y > (UINT16) 60u << 3 && spawning_counter == 8){
-						spawn_enemy3(SpriteRat, 20u, 63u);
+					if(scroll_target->x > (UINT16) 184u << 3 && spawning_counter == 6){
+						spawn_enemy3(SpriteRat, 180u, 11u);
+						spawn_enemy3(SpriteRat, 181u, 10u);
 						spawning_counter++;
 					}
 				break;
@@ -594,22 +573,27 @@ void UPDATE() {
 						spawn_enemy3(SpriteBee, 34u, 13u);
 						if(scroll_target->x > (UINT16) 20u << 3){
 							spawn_item3(scrigno_dcoin, 34u, 2u, 7, 0);
+							spawn_item3(scrigno_up, 52u, 4u, 3, 1);
 						}
 						spawning_counter++;
 					}
-					if(scroll_target->y > (UINT16) 20u << 3 && spawning_counter == 1){
-						spawn_enemy3(SpriteRat, 16u, 15u);
-						spawn_enemy3(SpriteSpider, 18u, 15u);
+					if(scroll_target->x > (UINT16) 71u << 3 && spawning_counter == 1){
+						spawn_enemy3(SpriteRat, 69u, 8u);
+						spawn_enemy3(SpriteSpider, 75u, 7u);
 						spawning_counter++;
 					}
-					if(scroll_target->y < (UINT16) 33u << 3 && spawning_counter == 2){
-						spawn_enemy3(SpriteRat, 30u, 28u);
-						spawn_enemy3(SpriteSpider, 23u, 27u);
+					if(scroll_target->x > (UINT16) 110u << 3 && spawning_counter == 2){
+						spawn_enemy3(SpriteSpider, 177u, 7u);
+						spawn_enemy3(SpriteSpider, 179u, 8u);
 						spawning_counter++;
 					}
-					if(scroll_target->y > (UINT16) 34u << 3 && spawning_counter == 3){
-						spawn_enemy3(SpriteBee, 39u, 38u);
-						spawn_item3(scrigno_shield, 43u, 41u, 2, 1);
+					if(scroll_target->x > (UINT16) 180u << 3 && spawning_counter == 3){
+						spawn_enemy3(SpriteBee, 186u, 8u);
+						spawning_counter++;
+					}
+					if(scroll_target->x > (UINT16) 188u << 3 && spawning_counter == 4){
+						spawn_enemy3(SpriteRat, 183u, 8u);
+						spawn_item3(scrigno_shield, 193u, 9u, 2, 1);
 						spawning_counter++;
 					}
 				break;

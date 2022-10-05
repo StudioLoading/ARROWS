@@ -38,7 +38,7 @@ void START() {
 	walrus_data->enemy_accel_y = 24;
 	walrus_data->vx = -1;
 	walrus_data->wait = 60u;
-	walrus_data->hp = 4;
+	walrus_data->hp = 6;
 	walrus_data->enemy_state = ENEMY_STATE_NORMAL;
 	THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 	SetSpriteAnim(THIS, walrus_normal, 4u);
@@ -204,6 +204,9 @@ void UPDATE() {
 					if (archer_data->hp > 0 && walrus_data->enemy_state == WALRUS_STATE_JUMP_DOWN || walrus_data->enemy_state == WALRUS_STATE_JUMP_UP
 				 		|| walrus_data->enemy_state == WALRUS_STATE_SWIMMING) {
 						struct ArrowInfo* arrowdata = (struct ArrowInfo*)iwspr->custom_data;
+						if(arrowdata->original_type == 3u){
+							return;
+						}
 						switch(walrus_data->enemy_state){
 							case WALRUS_STATE_JUMP_UP:
 								SetSpriteAnim(THIS, walrus_hit_up, 24u);
@@ -211,8 +214,8 @@ void UPDATE() {
 							case WALRUS_STATE_JUMP_DOWN:
 								SetSpriteAnim(THIS, walrus_hit_down, 24u);
 							break;						
-						} 
-						walrus_data->hp -= arrowdata->original_type;
+						}
+						walrus_data->hp -= 1;
 						PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 						if (walrus_data->hp <= 0){
 							walrus_data->hp = 0;

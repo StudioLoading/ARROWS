@@ -24,8 +24,6 @@ void START() {
 	datak->setup = 0u;
 	datak->counter = -1;
 	SetSpriteAnim(THIS, icon_empty, 8u);
-	THIS->coll_w = 8;
-	THIS->coll_h = 16;
 	THIS->lim_x = 0;
 	THIS->lim_y = 255;
 }

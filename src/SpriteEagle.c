@@ -32,7 +32,7 @@ void START() {
 	data->enemy_accel_y = 0;
 	data->vx = 1;
 	data->wait = eagle_time_normal;
-	data->hp = 3;
+	data->hp = 5;
 	data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -138,13 +138,16 @@ void UPDATE() {
 		if(ibispr->type == SpriteArrow && archer_data->hp > 0) {
 			if(CheckCollision(THIS, ibispr)) {
 				struct ArrowInfo* arrowbidata = (struct ArrowInfo*)ibispr->custom_data;
+				if(arrowbidata->original_type != 1u){
+					return;
+				}
 				if(data->enemy_state != ENEMY_STATE_HIT && arrowbidata->arrowdir == 1){ //sensibile solo alle orizzontali
 					data->enemy_state = ENEMY_STATE_HIT;
 					data->wait = 32u;
 					SetSpriteAnim(THIS, eagle_hit, 24u);
 					PlayFx(CHANNEL_4, 60, 0x0a, 0xf1, 0x14, 0x80, 0x00);
 					SpriteManagerAdd(SpriteFeather, (UINT16) ibispr->x, (UINT16) ibispr->y);
-					data->hp -= arrowbidata->original_type;
+					data->hp -= 1;
 					if (data->hp <= 0){
 						data->enemy_state = ENEMY_STATE_DEAD;
 						data->hp = 0;

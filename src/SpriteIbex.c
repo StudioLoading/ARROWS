@@ -32,7 +32,7 @@ void START() {
 	ibex_data->enemy_accel_y = 24;
 	ibex_data->vx = 1;
 	ibex_data->wait = 0u;
-	ibex_data->hp = 4;
+	ibex_data->hp = 6;
 	ibex_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 

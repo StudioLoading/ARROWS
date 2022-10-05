@@ -46,7 +46,7 @@ void UPDATE() {
 				SetSpriteAnim(THIS, amulet_blast, 24u);
 			break;
 			case 4:
-				SetSpriteAnim(THIS, amulet_fire, 8u);
+				SetSpriteAnim(THIS, amulet_fire, 16u);
 			break;
 		}
 		data_amulet->setup = 1u;

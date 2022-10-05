@@ -32,7 +32,7 @@ void START() {
 	alligator_data->enemy_accel_y = 24;
 	alligator_data->vx = 0;
 	alligator_data->wait = 250u;
-	alligator_data->hp = 3;
+	alligator_data->hp = 5;
 	if(is_on_cutscene == 0){
 		alligator_data->enemy_state = ENEMY_STATE_HIDDEN;
 	}

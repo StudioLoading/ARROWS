@@ -97,6 +97,7 @@ extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern const UINT8 CAMERA_TRAMBLE_DELTA;
 extern UINT8 quiver;
 extern UINT8 final_quiver;
 extern INT8 temporeggia;
@@ -316,46 +317,46 @@ void UPDATE(){
 			break;
 			case 1:
 			case 2:
-				scroll_target->y = archer_player->y - 17u;
+				scroll_target->y = archer_player->y - CAMERA_TRAMBLE_DELTA;
 			break;
 			case 4:
 			case 5:
-				scroll_target->y = archer_player->y + 17u;
+				scroll_target->y = archer_player->y + CAMERA_TRAMBLE_DELTA;
 			break;
 		}
 	}
 
 	//CAMERA SHIFTING
-	if(current_level != 8u ){
-		if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
-			if(archer_player->x < 32u){
-				scroll_target->x = 32u;
-			}else{
-				apx = archer_player->x + 24;
-				apy = archer_player->y - 8;
-				if(archer_state == STATE_ASCENDING){
-					apy -= 4;
-					apy += platform_vy;
-				}
-				apx_mirrored = archer_player->x - 24;
-				scroll_target->y = apy;
-				INT8 dx = platform_vx;
+	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
+		if(archer_player->x < 32u){
+			scroll_target->x = 32u;
+		}else{
+			apx = archer_player->x + 24;
+			apy = archer_player->y - 8;
+			apx_mirrored = archer_player->x - 24;
+			scroll_target->y = apy + platform_vy;
+			INT8 dx = platform_vx;
+			if(scroll_target->x <= apx && scroll_target->x >= apx_mirrored){
 				if(archer_player->mirror == V_MIRROR){
-					if(scroll_target->x > apx_mirrored){
-						dx -= 1;
+					if(scroll_target->x >= apx_mirrored){
+						dx -= 2;
 					}
-					if(scroll_target->x < apx_mirrored){
-						dx += 1;
+					if(scroll_target->x <= apx_mirrored){
+						dx += 2;
 					}
 				}else{
-					if(scroll_target->x < apx){
-						dx += 1;
+					if(scroll_target->x <= apx){
+						dx += 2;
 					}
-					if(scroll_target->x > apx){
-						dx -= 1;
+					if(scroll_target->x >= apx){
+						dx -= 2;
 					}
 				}
 				scroll_target->x += dx;
+			}else if(scroll_target->x >= apx){
+				scroll_target->x = apx;
+			}else if(scroll_target->x <= apx_mirrored){
+				scroll_target->x = apx_mirrored;
 			}
 		}
 	}

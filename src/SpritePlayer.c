@@ -41,7 +41,7 @@ extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
 
 #define MAX_HIT_COOLDOWN 40
-#define MIN_HIT_COOLDOWN 10
+#define MIN_HIT_COOLDOWN 30
 #define MAX_DEATH_COOLDOWN 80
 #define MAX_DIAG_COOLDOWN 60
 #define MAX_LANDING_TIME 24
@@ -356,6 +356,8 @@ void UPDATE() {
 		case STATE_HIT:
 			hit_cooldown -= 1;
 			if(KEY_PRESSED(J_JUMP) && hit_cooldown < MIN_HIT_COOLDOWN) {
+				platform_vx = 0;
+				platform_vy = 0;
 				hit_cooldown = MAX_HIT_COOLDOWN;
 				Jump();
 			}else{
@@ -657,14 +659,16 @@ void UPDATE() {
 					}
 				break;
 				case SpriteArrowboss:
+					dataenemy = (struct EnemyInfo*)ispr->custom_data;
 					if(KEY_PRESSED(J_DOWN)){
-						dataenemy = (struct EnemyInfo*)ispr->custom_data;
 						if(dataenemy->vx != 0){
 							SpriteManagerAdd(SpritePuff, ispr->x, ispr->y);
 							dataenemy->vx = 0;
 						}
 						dataenemy->enemy_accel_y = -3;
 						return;					
+					}else if(dataenemy->vx != 0){
+						return;
 					}else{
 						SpriteManagerRemoveSprite(ispr);
 					}
@@ -814,14 +818,14 @@ void Jump() {
 }
 
 void MoveArcher() {
-	if(archer_state == STATE_HIT){
+	/*if(archer_state == STATE_HIT){
 		if(THIS->mirror == V_MIRROR){
 			platform_vx=1;
 		}else{
 			platform_vx=-1;
 		}			
-	}
-	if(platform_vx || platform_vy){
+	}*/
+	if(platform_vx != 0 || platform_vy != 0){
 		tile_collision = TranslateSprite(THIS, platform_vx << delta_time, platform_vy << delta_time);
 	}
 	if(landing_time == MAX_LANDING_TIME){

@@ -95,6 +95,11 @@ void UPDATE() {
 			credit_step_final = 8u;
 		}
 	}
+	if(credit_step_final == 8u || credit_step_final == 9u){
+		if(KEY_PRESSED(J_A) || KEY_PRESSED(J_B)){
+			credit_step_final += 1u;
+		}
+	}
 	if(credit_step_final == 11u){
 		temporeggia = -100;
 		if(scroll_target->y < camerainfo_data->final_y){
@@ -122,7 +127,7 @@ void UPDATE() {
 					PRINT(3u, 1u, "              ");
 					PRINT(3u, 2u, "              ");
 					PRINT(3u, 3u, "PRODUCED BY   ");
-					credit_step_final = 4u;
+					credit_step_final = 5u;
 				break;
 				case 5u:
 					PRINT(3u, 21u, "SPECIAL THANKS");
@@ -150,7 +155,6 @@ void UPDATE() {
 					PRINT(2u, 40u, "ELIZABETH GORMAN  ");
 					PRINT(2u, 41u, "                  ");
 					PRINT(2u, 42u, "SI PITTMAN          ");
-					credit_step_final = 9u;
 				break;
 				case 9u:
 					PRINT(2u, 36u, "AWESOME JACKET    ");
@@ -160,7 +164,6 @@ void UPDATE() {
 					PRINT(2u, 40u, "                 ");
 					PRINT(2u, 41u, "CAYLEN LEPPY  ");
 					PRINT(2u, 42u, "  WILLIAMS    ");
-					credit_step_final = 10u;
 				break;
 				case 10u:
 					camerainfo_data->final_y = ((UINT16) 51u << 3);

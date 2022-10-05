@@ -50,8 +50,11 @@ void START() {
 	NR50_REG = 0xFF; //Max volume 0x77
 	
 	SpriteManagerLoad(SpriteIconpsg);
-	
-	is_on_cutscene = 0;
+	if(current_level < 10){
+		is_on_cutscene = 0;
+	}else{
+		is_on_boss = -1;
+	}
 	load_next_d = 0;//fix issue liv7 map0 from first mother cutscene
 	
 	if(sgb_check()){

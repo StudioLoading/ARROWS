@@ -102,7 +102,10 @@ void UPDATE() {
 		if(ipenspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, ipenspr)) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ipenspr->custom_data;
-				pendata->wait = 40u;
+				if(arrowdata->original_type != 1u){
+					return;
+				}
+				pendata->wait = 24u;
 				SetSpriteAnim(THIS, penguin_hit, 24u); 
 				pendata->hp -= arrowdata->arrowdamage;
 				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound

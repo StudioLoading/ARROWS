@@ -85,9 +85,12 @@ void UPDATE() {
 		}
 		if(isspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, isspr)) {
+				struct ArrowInfo* arrowdata = (struct ArrowInfo*)isspr->custom_data;
+				if(arrowdata->original_type != 1u){
+					return;
+				}
 				spdata->wait = 32u;
 				SetSpriteAnim(THIS, spider_hit, 24u); 
-				struct ArrowInfo* arrowdata = (struct ArrowInfo*)isspr->custom_data;
 				spdata->hp -= arrowdata->arrowdamage;
 				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				spdata->tile_e_collision = TranslateSprite(THIS, 0, -2);

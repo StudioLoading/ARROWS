@@ -111,7 +111,9 @@ void START() {
 		//worldmap
 		current_level += 1;
 		current_map = 0;
-		is_on_cutscene = 0;
+		if(current_level < 10u){
+			is_on_cutscene = 0;
+		}
 		temporeggia = 0;
 		wait_c = 0;
 		set_window_y_c(144);
@@ -200,7 +202,7 @@ void START() {
 		break;
 		case 4u://eagle che lascia boss sul final stage
 			if(sgb_check()){
-				set_sgb_palette01_CASTLE();
+				set_sgb_palette01_BOSS();
 				set_sgb_palette_statusbar();
 			}
 			scene_bank = BANK(mapboss9);
@@ -217,6 +219,10 @@ void START() {
 			sprite_3_data = (struct EnemyInfo*) sprite_3->custom_data;
 		break;
 		case 5u://boss dies		
+			if(sgb_check()){
+				set_sgb_palette01_BOSS();
+				//set_sgb_palette_statusbar();
+			}
 			PlayMusic(bgm_titlescreen, 1);	
 			scene_bank = BANK(mapboss9);
 			InitScroll(scene_bank, &mapboss9, collision_tiles_cutscene7, 0);
@@ -265,7 +271,6 @@ void START() {
 		case 20u://final cutscene @ zoo
 			if(sgb_check()){
 				set_sgb_palette01_ZOO();
-				set_sgb_palette_statusbar();
 			}
 			PlayMusic(bgm_level_zoo, 1);
 			scene_bank = BANK(mapcutscene2);
@@ -289,7 +294,6 @@ void START() {
 		case 21u://final cutscene @sewer
 			if(sgb_check()){
 				set_sgb_palette01_SEWER();
-				//set_sgb_palette_statusbar();
 			}
 			PlayMusic(bgm_level_sewer, 1);
 			scene_bank = BANK(mapboss1);
@@ -781,12 +785,15 @@ void UPDATE() {
 					//go to cutscene at the zoo
 					/*wait_c = 0;
 					set_window_y_c(144);
-					HIDE_WIN;
-					current_level = 10u;
+					HIDE_WIN;*/
+					current_level = 9u;
 					current_map = 0;
-					SetState(StateWorldmap);*/
 					wait_c = 99u;
 					SetState(StateCutscene);
+					/*
+					current_map = 0;
+					wait_c = 0u;
+					SetState(StateWorldmap);*/
 				break;
 			}
 		break;

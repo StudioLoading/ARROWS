@@ -90,6 +90,8 @@ extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern const UINT8 CAMERA_TRAMBLE_DELTA;
+
 extern UINT8 quiver;
 
 void UpdateHUD6() BANKED;
@@ -270,11 +272,11 @@ void UPDATE() {
 			break;
 			case 1:
 			case 2:
-				scroll_target->y = archer_player->y - 17u;
+				scroll_target->y = archer_player->y - CAMERA_TRAMBLE_DELTA;
 			break;
 			case 4:
 			case 5:
-				scroll_target->y = archer_player->y + 17u;
+				scroll_target->y = archer_player->y + CAMERA_TRAMBLE_DELTA;
 			break;
 		}
 	}
@@ -289,22 +291,28 @@ void UPDATE() {
 			apx_mirrored = archer_player->x - 24;
 			scroll_target->y = apy + platform_vy;
 			INT8 dx = platform_vx;
-			if(archer_player->mirror == V_MIRROR){
-				if(scroll_target->x > apx_mirrored){
-					dx -= 1;
+			if(scroll_target->x <= apx && scroll_target->x >= apx_mirrored){
+				if(archer_player->mirror == V_MIRROR){
+					if(scroll_target->x >= apx_mirrored){
+						dx -= 2;
+					}
+					if(scroll_target->x <= apx_mirrored){
+						dx += 2;
+					}
+				}else{
+					if(scroll_target->x <= apx){
+						dx += 2;
+					}
+					if(scroll_target->x >= apx){
+						dx -= 2;
+					}
 				}
-				if(scroll_target->x < apx_mirrored){
-					dx += 1;
-				}
-			}else{
-				if(scroll_target->x < apx){
-					dx += 1;
-				}
-				if(scroll_target->x > apx){
-					dx -= 1;
-				}
+				scroll_target->x += dx;
+			}else if(scroll_target->x >= apx){
+				scroll_target->x = apx;
+			}else if(scroll_target->x <= apx_mirrored){
+				scroll_target->x = apx_mirrored;
 			}
-			scroll_target->x += dx;
 		}
 	}
 	
@@ -510,10 +518,10 @@ void UPDATE() {
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 190u << 3 && spawning_counter == 9){
-						spawn_enemy6(SpriteIceplat, 197u, 8u);
-						spawn_enemy6(SpriteIceplat, 199u, 9u);						
+						spawn_enemy6(SpriteIceplat, 198u, 10u);
+						spawn_enemy6(SpriteIceplat, 200u, 11u);						
 						spawn_item6(scrigno_shield, 194u, 5u, 2, 1);//1coin 2hp 3up 7dcoin
-						spawn_enemy6(SpriteIceplat, 201u, 10u);
+						spawn_enemy6(SpriteIceplat, 202u, 12u);
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 213u << 3 && spawning_counter == 10){
@@ -581,9 +589,9 @@ void UPDATE() {
 					if(scroll_target->x > (UINT16) 74u << 3 && scroll_target->x < (UINT16) 80u << 3 && amulet_spawn == 0 
 						&& ((quiver & 0b00010000) == 0b00000000)){
 						Sprite* reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 61u << 3, (UINT16) 25u << 3);
-						struct AmuletInfo* datak = (struct AmuletInfo*)reward->custom_data;
-						datak->type = 4;
-						datak->setup = 0;
+						struct AmuletInfo* data_amulet = (struct AmuletInfo*)reward->custom_data;
+						data_amulet->type = 4;
+						data_amulet->setup = 0;
 						amulet_spawn = 1;
 					}
 					if(scroll_target->x > (UINT16) 85u << 3 && spawning_counter == 6){
@@ -596,7 +604,7 @@ void UPDATE() {
 						amulet_spawn = 0;
 						spawning_counter++;
 					}
-					if(scroll_target->x > (UINT16) 106u << 3 && spawning_counter == 8){
+					if(scroll_target->x > (UINT16) 102u << 3 && spawning_counter == 8){
 						spawn_enemy6(SpriteBat, 111u, 20u);
 						spawn_enemy6(SpriteBat, 104u, 20u);
 						amulet_spawn = 0;
@@ -660,7 +668,7 @@ void UPDATE() {
 					}
 					if(scroll_target->x > (UINT16) 125u << 3 && spawning_counter == 11){
 						spawn_item6(scrigno_coin, 136u, 30u, 7, 1);//1coin 2hp 3up 7dcoin
-						spawn_item6(scrigno_coin, 141u, 30u, 7, 1);//1coin 2hp 3up 7dcoin
+						spawn_item6(scrigno_shield, 141u, 30u, 2, 1);//1coin 2hp 3up 7dcoin
 						spawning_counter++;
 					}
 					if(scroll_target->x > (UINT16) 141u << 3 && spawning_counter == 12){
@@ -669,10 +677,6 @@ void UPDATE() {
 					}
 					if(scroll_target->x > (UINT16) 151u << 3 && spawning_counter == 13){
 						spawn_enemy6(SpriteBat, 160u, 21u);
-						spawning_counter++;
-					}
-					if(scroll_target->x > (UINT16) 153u << 3 && spawning_counter == 14){
-						spawn_enemy6(SpriteBat, 161u, 23u);
 						spawning_counter++;
 					}
 				break;
@@ -733,10 +737,8 @@ void spawn_falci(UINT16 x, UINT16 y){
 	struct EnemyInfo * sfalcedata = (struct EnemyInfo*)sfalce1->custom_data;
 	sfalcedata->wait = 20u;
 	Sprite* sfalce2 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+1u) << 3, (UINT16) y << 3);
-	Sprite* sfalce3 = SpriteManagerAdd(SpriteFalce, (UINT16) (x+2u) << 3, (UINT16) y << 3);
 	Sprite* falcebase = SpriteManagerAdd(SpriteFalcebase, (UINT16) x << 3, (UINT16) (y+1u) << 3);
 	Sprite* falcebase2 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+1u) << 3, (UINT16) (y+1) << 3);
-	Sprite* falcebase3 = SpriteManagerAdd(SpriteFalcebase, (UINT16) (x+2u) << 3, (UINT16) (y+1) << 3);				
 	struct EnemyInfo * sfalce2data = (struct EnemyInfo*)sfalce2->custom_data;
 	sfalce2data->wait = 10u;
 	struct FalcebaseInfo* falcebasedata = (struct FalcebaseInfo*)falcebase->custom_data;
@@ -745,9 +747,6 @@ void spawn_falci(UINT16 x, UINT16 y){
 	struct FalcebaseInfo* falcebasedata2 = (struct FalcebaseInfo*)falcebase2->custom_data;
 	falcebasedata2->falcelama = sfalce2;
 	falcebasedata2->enemy_state = ENEMY_STATE_SLIDING;
-	struct FalcebaseInfo* falcebasedata3 = (struct FalcebaseInfo*)falcebase3->custom_data;
-	falcebasedata3->falcelama = sfalce3;
-	falcebasedata3->enemy_state = ENEMY_STATE_SLIDING;
 }
 
 void UpdateHUD6() BANKED{

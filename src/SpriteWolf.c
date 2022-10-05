@@ -29,7 +29,7 @@ void START() {
 	wolf_data->enemy_accel_y = 25;
 	wolf_data->vx = 1;
 	wolf_data->wait = 0u;
-	wolf_data->hp = 1;
+	wolf_data->hp = 3;
 	wolf_data->enemy_state = ENEMY_STATE_NORMAL;
 }
 
@@ -121,7 +121,7 @@ void UPDATE() {
 					if (arrowdata->arrowdir != 1){ //hit solo se freccia non orizzontale
 						wolf_data->wait = 28u;
 						SetSpriteAnim(THIS, wolf_hit, 16u);
-						wolf_data->hp -= arrowdata->original_type;
+						wolf_data->hp -= 1;
 						PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 					}
 				}

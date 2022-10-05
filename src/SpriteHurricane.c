@@ -4,7 +4,6 @@
 #include "SpriteManager.h"
 #include "Sound.h"
 #include "Scroll.h"
-#include "gbt_player.h"
 
 #include "custom_datas.h"
 
@@ -27,7 +26,7 @@ void START() {
 	hcdata->vx = 1;
 	hcdata->hp = 48u;
 	hcdata->wait = 15u;
-	hcdata->enemy_accel_y = 24;
+	hcdata->enemy_accel_y = 20;
 }
 
 void UPDATE() {
@@ -40,7 +39,7 @@ void UPDATE() {
 	
 	switch (hdata->enemy_state){
 		case ENEMY_STATE_NORMAL:
-			if(hdata->enemy_accel_y < 28) {
+			if(hdata->enemy_accel_y < 20) {
 				hdata->enemy_accel_y += 1;
 			}
 			hdata->wait += 1u;
@@ -55,7 +54,6 @@ void UPDATE() {
 			}
 			hdata->tile_e_collision = TranslateSprite(THIS, hdata->vx << delta_time,  (hdata->enemy_accel_y >> 4) << delta_time); // 1
 			if(!hdata->tile_e_collision && delta_time != 0) { //Do another iteration if there is no collision
-				//hdata->enemy_accel_y += 2;
 				hdata->tile_e_collision = TranslateSprite(THIS, (hdata->vx << 1) << delta_time, (hdata->enemy_accel_y >> 4) << delta_time);
 			}
 			if(hdata->tile_e_collision){
@@ -84,6 +82,7 @@ void UPDATE() {
 				struct ArrowInfo* arritem = (struct ArrowInfo*)hspr->custom_data;
 				if (arritem->original_type == 2u){
 					hdata->wait = 10u;
+					PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//sfx hit
 					SetSpriteAnim(THIS, hurricane_dead, 10u);
 					hdata->enemy_state = ENEMY_STATE_DEAD;
 					SpriteManagerAdd(SpritePuff, THIS->x, THIS->y+8u);

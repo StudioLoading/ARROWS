@@ -31,8 +31,8 @@ void SetupArrow();
 void CheckCollisionArrowTile(UINT8 ta);
 
 void START() {
-	THIS->lim_x = 60u;
-	THIS->lim_y = 60u;
+	THIS->lim_x = 24u;
+	THIS->lim_y = 24u;
 	
 	struct ArrowInfo* arrow_data = (struct ArrowInfo*)THIS->custom_data;
 	arrow_data->type = 0;

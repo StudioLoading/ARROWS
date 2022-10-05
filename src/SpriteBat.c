@@ -100,12 +100,15 @@ void UPDATE(){
 		if(CheckCollision(THIS, ibatspr)) {
 			if(ibatspr->type == SpriteArrow) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)ibatspr->custom_data;
+				if(arrowdata->original_type != 4u){
+					return;
+				}
 				batdata->wait = 0u;//this time because wait++ on the update
 				SetSpriteAnim(THIS, anim_bat_hit, 24u); 
 				batdata->hp -= arrowdata->arrowdamage;
 				batdata->enemy_state = ENEMY_STATE_HIT;
 				batdata->wait=0;
-				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
+				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//sfx hit
 				SpriteManagerRemoveSprite(ibatspr);
 				if (batdata->hp <= 0){
 					SpriteManagerRemove(THIS_IDX);

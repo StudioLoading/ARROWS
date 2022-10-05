@@ -59,10 +59,13 @@ void UPDATE(){
 			switch(iatspr->type){
 				case SpriteArrow:
 					if(throwerdata->enemy_state != ENEMY_STATE_HIT){
+						struct ArrowInfo* arrowdata = (struct ArrowInfo*)iatspr->custom_data;
+						if(arrowdata->original_type != 2u){
+							return;
+						}
 						SetSpriteAnim(THIS, anim_axethrower_hit, 20u);
 						throwerdata->enemy_state = ENEMY_STATE_HIT;	
 						throwerdata->wait = 20u;
-						struct ArrowInfo* arrowdata = (struct ArrowInfo*)iatspr->custom_data;
 						throwerdata->hp -= arrowdata->arrowdamage;
 						SpriteManagerRemoveSprite(iatspr);
 						if (throwerdata->hp <= 0){

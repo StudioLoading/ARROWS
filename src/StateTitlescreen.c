@@ -238,7 +238,10 @@ void UPDATE() {
 			scroll_target->x += 2u;
 			if(scroll_target->x >= ((UINT16) 110u << 3)){
 				scroll_target->x = (UINT16) 110u << 3;
-				current_camera_state = 4u;
+				current_camera_state = 4u;				
+				if(sgb_check()){
+					reset_sgb_palette_title();
+				}
 			}
 		break;
 		case 4u:

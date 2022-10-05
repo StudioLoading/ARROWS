@@ -19,12 +19,8 @@ void START() {
 	keydata->type = 0;
 	keydata->setup = 0;
 	keydata->counter = 0;
-	THIS->mt_sprite->dx = 0;
-	THIS->mt_sprite->dy = 0;
-	THIS->coll_w = 8;
-	THIS->coll_h = 8;
-	THIS->lim_x = 200;
-	THIS->lim_y = 200;
+	THIS->lim_x = 100;
+	THIS->lim_y = 100;
 }
 
 void UPDATE() {

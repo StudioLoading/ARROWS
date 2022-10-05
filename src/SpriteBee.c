@@ -77,6 +77,9 @@ void UPDATE() {
 				break;
 				case SpriteArrow:
 					arrowdata = (struct ArrowInfo*)ibeespr->custom_data;
+					if(arrowdata->original_type != 3u){
+						return;
+					}
 					beedata->wait = 24u;
 					SetSpriteAnim(THIS, bee_hit, 24u); 
 					beedata->hp -= arrowdata->arrowdamage;

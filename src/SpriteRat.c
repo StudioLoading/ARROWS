@@ -19,14 +19,8 @@ extern void EDie() BANKED;
 
 
 void START() {
-	/*
-	THIS->mt_sprite->dx = 2;
-	THIS->mt_sprite->dy = 5;
-	THIS->coll_w = 8;
-	THIS->coll_h = 11;
-	*/
-	THIS->lim_x = 160u;
-	THIS->lim_y = 160u;
+	THIS->lim_x = 60u;
+	THIS->lim_y = 60u;
 	struct EnemyInfo* rdata = (struct EnemyInfo*)THIS->custom_data;	
 	SetSpriteAnim(THIS, rat_walk, 8u);
 	rdata->enemy_accel_y = 24;
@@ -88,11 +82,7 @@ void UPDATE() {
 		if(irspr->type == SpriteArrow) {
 			if(CheckCollision(THIS, irspr)) {
 				struct ArrowInfo* arrowdata = (struct ArrowInfo*)irspr->custom_data;
-				if (arrowdata->type == 6u){ //spine from porcupine
-					return;
-				}
 				ratdata->wait = 16u;
-				SetSpriteAnim(THIS, rat_hit, 24u); 
 				ratdata->hp -= arrowdata->arrowdamage;
 				PlayFx(CHANNEL_1, 60, 0x2d, 0x41, 0xc8, 0xf0, 0xc7);//hit sound
 				if (THIS->x < irspr->x){ //se la freccia arriva dalla destra dell' enemy
@@ -106,6 +96,7 @@ void UPDATE() {
 					}
 					ratdata->tile_e_collision = TranslateSprite(THIS, 2 << delta_time, (ratdata->enemy_accel_y >> 4));
 				}
+				SetSpriteAnim(THIS, rat_hit, 24u); 
 				SpriteManagerRemoveSprite(irspr);
 				if (ratdata->hp <= 0){
 					EDie();

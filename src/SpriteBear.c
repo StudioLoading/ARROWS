@@ -32,7 +32,7 @@ void START() {
 	bear_data->enemy_accel_y = 24;
 	bear_data->vx = -1;
 	bear_data->wait = 0u;
-	bear_data->hp = 5;
+	bear_data->hp = 6;
 	if(current_camera_state == 3u){
 		ToNormalState();		
 	}
@@ -129,6 +129,9 @@ void UPDATE() {
 				case SpriteArrow:
 					if(bear_data->enemy_state != ENEMY_STATE_DEAD) {
 						struct ArrowInfo* arrowdata = (struct ArrowInfo*)bebspr->custom_data;
+						if(arrowdata->original_type != 2u){
+							return;
+						}
 						if(arrowdata->arrowdir == 4 || (bear_data->enemy_state == ENEMY_STATE_ATTACK)){
 							bear_data->wait = 60u;
 							bear_data->enemy_state = ENEMY_STATE_HIT;

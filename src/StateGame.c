@@ -54,6 +54,7 @@ extern const INT8 MAX_HP;
 extern const UINT8 SHIELD_TILE;
 extern const UINT8 SKULL_TILE;
 extern const UINT8 EMPTY_TILE;
+extern const UINT8 CAMERA_TRAMBLE_DELTA;
 
 const UINT8 const collision_tiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
@@ -366,11 +367,11 @@ void UPDATE() {
 			break;
 			case 1:
 			case 2:
-				scroll_target->y = archer_player->y - 17u;
+				scroll_target->y = archer_player->y - CAMERA_TRAMBLE_DELTA;
 			break;
 			case 4:
 			case 5:
-				scroll_target->y = archer_player->y + 17u;
+				scroll_target->y = archer_player->y + CAMERA_TRAMBLE_DELTA;
 			break;
 		}
 	}
@@ -385,22 +386,28 @@ void UPDATE() {
 			apx_mirrored = archer_player->x - 24;
 			scroll_target->y = apy + platform_vy;
 			INT8 dx = platform_vx;
-			if(archer_player->mirror == V_MIRROR){
-				if(scroll_target->x > apx_mirrored){
-					dx -= 1;
+			if(scroll_target->x <= apx && scroll_target->x >= apx_mirrored){
+				if(archer_player->mirror == V_MIRROR){
+					if(scroll_target->x >= apx_mirrored){
+						dx -= 2;
+					}
+					if(scroll_target->x <= apx_mirrored){
+						dx += 2;
+					}
+				}else{
+					if(scroll_target->x <= apx){
+						dx += 2;
+					}
+					if(scroll_target->x >= apx){
+						dx -= 2;
+					}
 				}
-				if(scroll_target->x < apx_mirrored){
-					dx += 1;
-				}
-			}else{
-				if(scroll_target->x < apx){
-					dx += 1;
-				}
-				if(scroll_target->x > apx){
-					dx -= 1;
-				}
+				scroll_target->x += dx;
+			}else if(scroll_target->x >= apx){
+				scroll_target->x = apx;
+			}else if(scroll_target->x <= apx_mirrored){
+				scroll_target->x = apx_mirrored;
 			}
-			scroll_target->x += dx;
 		}
 	}
 
@@ -577,6 +584,9 @@ void UPDATE() {
 					}
 					if (scroll_target->x > (UINT16) 180u << 3 && spawning_counter == 6){
 						spawn_item(scrigno_dcoin, 192u, 7u, 7, 1);
+						Sprite* gate_sprite3 = SpriteManagerAdd(SpriteGate, (UINT16) 191u << 3, (UINT16) 18u << 3);
+						struct EnemyInfo* gatedata3 = (struct EnemyInfo*)gate_sprite3->custom_data;
+						gatedata3->vx = 2;
 						Sprite* gate_sprite = SpriteManagerAdd(SpriteGate, (UINT16) 193u << 3, (UINT16) 18u << 3);
 						struct EnemyInfo* gatedata = (struct EnemyInfo*)gate_sprite->custom_data;
 						gatedata->vx = 2;

@@ -3,6 +3,7 @@
 #include "Keys.h"
 #include "ZGBMain.h"
 #include "string.h"
+#include "Music.h"
 #include "Scroll.h"
 
 #include "custom_datas.h"
@@ -70,11 +71,11 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 				diagf = 14u;
 			break;
 			case 5u:
-				copy_strings_to_dn("                    ","      ICE COLD      ","     THE JUNGLE     ","                    ");
+				copy_strings_to_dn("                    ","      ICE COLD      ","                    ","                    ");
 				diagf = 15u;
 			break;
 			case 6u:
-				copy_strings_to_dn("                    ","    PET CEMATERY    ","                    ","                    ");
+				copy_strings_to_dn("                    ","    PET SEMATARY    ","                    ","                    ");
 				diagf = 16u;
 			break;
 			case 7u:
@@ -91,9 +92,12 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 			break;
 			case 10u:
 				copy_strings_to_dn("                    ","       THE ZOO      ","                    ","                    ");
+				is_on_cutscene = 1;
+				current_cutscene = 19u;
 				diagf = 60u;
 			break;
 			case 11u:
+				is_on_cutscene = 1;
 				copy_strings_to_dn("                    ","      THE SEWER     ","                    ","                    ");
 				diagf = 11u;
 			break;
@@ -101,7 +105,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 		on_worldmap = 0;
 	}
 	
-	if(is_on_cutscene == 1){
+	if(is_on_cutscene == 1 && diagf == 0u){
 		copy_strings_to_dn("                    ","                    ","                    ","                    ");
 		diagf = 99u;
 		switch(current_cutscene){
@@ -183,7 +187,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 			case 11u:	
 				switch (wait_c){
 					case 40u:
-						copy_strings_to_dn(" WOLF:              ","       NO MORE      ","     HUMAN ZOO!     ","                    ");
+						copy_strings_to_dn(" WOLF:              ","       NO MORE      ","     HUMAN ZOOS!    ","                    ");
 						diagf = 99u;
 					break;
 					case 42u:
@@ -219,19 +223,19 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 			case 20u:	
 				switch (wait_c){
 					case 40u:
-						copy_strings_to_dn(" MOM: GREAT JOB SON! "," FOUR OF THE STRONG  "," EST WILD ANIMALS    "," ARE NOW FREE.        ");
+						copy_strings_to_dn(" MOM: GREAT JOB SON! "," FOUR OF THE STRONG- "," EST WILD ANIMALS    "," ARE NOW FREE.        ");
 						diagf = 99u;
 					break;
 					case 42u:
-						copy_strings_to_dn(" BLACKIE: THANK YOU  "," DOCTOR AND SON. WHY  "," HAVE YOU DONE THAT ?","                     ");
+						copy_strings_to_dn(" BLACKIE: THANK YOU  "," HEALER AND SON. WHY "," HAVE YOU DONE THAT? ","                     ");
 						diagf = 99u;
 					break;
 					case 44u:
-						copy_strings_to_dn(" BLACKIE:            "," WHY DID YOU GET IN "," ALL OF THIS?        ","                     ");
+						copy_strings_to_dn(" BLACKIE:            "," WHY DID YOU GET IN   "," ALL OF THIS?       ","                     ");
 						diagf = 99u;
 					break;
 					case 46u:
-						copy_strings_to_dn(" MOM: LISTEN TO ME.  "," THE MASTER AND       "," SLAVE RELATIONSHIP  "," IS OVER.            ");
+						copy_strings_to_dn(" MOM: LISTEN TO ME.  "," THE MASTER AND       "," SLAVE RELATIONSHIP "," IS OVER.            ");
 						diagf = 99u;
 					break;
 					case 48u:
@@ -243,7 +247,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						diagf = 99u;
 					break;
 					case 52u:
-						copy_strings_to_dn(" BLACKIE: UUUUUUHH ! "," NO MORE PRISONS !!  "," NO MORE ZOO-ES !!   ","                     ");
+						copy_strings_to_dn(" BLACKIE: UUUUUUHH ! "," NO MORE PRISONS !!  "," NO MORE ZOOS!       ","                     ");
 						diagf = 99u;
 					break;
 				}
@@ -255,7 +259,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 						diagf = 99u;
 					break;
 					case 44u:
-						copy_strings_to_dn(" GATOR: I SMELLED    "," THEY FEARED MORE    "," THAT DOCTOR THAN    "," YOU.                ");
+						copy_strings_to_dn(" GATOR: I SMELLED    "," THEY FEARED MORE    "," THAT HEALER THAN    "," YOU.                ");
 						diagf = 99u;
 					break;
 					case 45u:
@@ -334,6 +338,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 	if(diagf == 0u){
 		switch (is_on_boss){
 			case 0:
+				PauseMusic;
 				switch(current_level_b){
 					case 0u:		
 						copy_strings_to_dn("    A BLACK WOLF    ","  OWNS THE WRENCH   ","  I NEED TO EXIT.   ","    LET'S FIGHT!    ");
@@ -626,12 +631,15 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 				}
 			break;
 			case 4u:
-				if (tile_collision == 7u){
-					copy_strings_to_dn(" THERE IS TOO        "," MUCH SILENCE        "," FROM HERE ON.       ","                    ");
-					diagf = 99u;
-				}else{		
-					copy_strings_to_dn(" I HAVE TO GO        "," BELOW THESE         "," DEATHLY TREES       ","                    ");
-					diagf = 99u;
+				switch(current_map){
+					case 0u:
+						copy_strings_to_dn(" THERE IS TOO        "," MUCH SILENCE        "," FROM HERE ON.       ","                    ");
+						diagf = 99u;
+					break;
+					case 1u:
+						copy_strings_to_dn(" I HAVE TO GO        "," TO THE END OF THIS  "," PATH                ","                    ");
+						diagf = 99u;
+					break;
 				}
 			break;
 			case 5u:
@@ -665,7 +673,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 							copy_strings_to_dn("                    "," THIS IS THE NICEST "," CAT I'VE EVER SEEN.","                    ");
 							diagf = 88u;
 						}else{
-							copy_strings_to_dn("  THE CASTLE IS AT  ","  THE END OF THIS   ","  CEMATERY.         ","                    ");
+							copy_strings_to_dn("  THE CASTLE IS AT  ","  THE END OF THIS   ","  CEMETERY.         ","                    ");
 							diagf = 99u;	
 						}
 					break;
@@ -735,7 +743,7 @@ UINT8 Build_Next_Dialog_Banked(Sprite* archer) BANKED{
 								cagedboss_data = (struct CagedbossInfo*)archer->custom_data;
 								switch(cagedboss_data->state){
 									case CAGEDBOSS_IDLE:
-										copy_strings_to_dn(" MY PETS HAVE BEEN  "," PUNISHED FOR THEIR "," FAILURES. WHAT DO  "," YOU WANT DOCTOR ?  ");
+										copy_strings_to_dn(" MY PETS HAVE BEEN  "," PUNISHED FOR THEIR "," FAILURES. WHAT DO  "," YOU WANT HEALER ?  ");
 										diagf = 57u;
 										current_map = 1;
 									break;

@@ -101,8 +101,6 @@ INT8 boss_hp = 0;
 struct EnemyInfo* boss_data_b;
 Sprite* reward = 0;
 Sprite* reward_wrench = 0;
-Sprite* reward_wrench2 = 0;
-Sprite* reward_key = 0;
 
 const UINT8 const collision_btiles[] = {1, 2, 3, 6, 7, 8, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 29, 35, 40, 41, 42, 46, 74, 75, 76, 77, 81, 85, 86, 89, 90, 91, 92, 104, 111, 119, 0};//numero delle tile con zero finale
 
@@ -194,7 +192,7 @@ void START(){
 			SpriteManagerLoad(SpriteAlligator);
 			SpriteManagerLoad(SpriteArrowboss);
 			if(sgb_check()){
-				set_sgb_palette01_CASTLE();
+				set_sgb_palette01_BOSS();
 			}
 		break;
 	}
@@ -356,10 +354,6 @@ void UPDATE() {
 				}
 			break;
 		}
-		/*PRINT_POS(10, 0);
-		Printf("%d", current_camera_counter);
-		PRINT_POS(13, 0);
-		Printf("%d", current_camera_state);	*/
 	}
 	//INTRO END
 
@@ -477,6 +471,8 @@ void SpawnBoss(INT8 hp_default){
 }
 
 void SpawnReward(){//and move boss to position
+	Sprite* reward_key = 0;
+	Sprite* reward_wrench2 = 0;
 	struct ItemInfo* datak_wrench = 0;
 	struct ItemInfo* datak_wrench2 = 0;
 	struct ItemInfo* datak_key = 0;
@@ -487,19 +483,19 @@ void SpawnReward(){//and move boss to position
 		case 0u:// wolf -> wrench
 			boss->x = (UINT16) 24u << 3;
 			boss->y = (UINT16) 12u << 3;
-			reward_wrench = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 10u << 3);
+			reward_wrench = SpriteManagerAdd(SpriteKey, scroll_target->x, scroll_target->y - 16u);
 			datak_wrench = (struct ItemInfo*)reward_wrench->custom_data;
 			datak_wrench->type = 2;
 			datak_wrench->setup = 1u;
 		break;
 		case 1u: // gator -> amulet stone
-			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 22u << 3, (UINT16) 13u << 3);
+			reward = SpriteManagerAdd(SpriteAmulet, scroll_target->x, scroll_target->y - 16u);
 			data_amulet = (struct AmuletInfo*)reward->custom_data;
 			data_amulet->setup = 0u;
 			data_amulet->type = 1;
 		break;
 		case 2u: // eagle -> key
-			reward_key = SpriteManagerAdd(SpriteKey, (UINT16) 19u << 3, (UINT16) 14u << 3);
+			reward_key = SpriteManagerAdd(SpriteKey, scroll_target->x, scroll_target->y - 16u);
 			datak_key = (struct ItemInfo*)reward_key->custom_data;
 			datak_key->type = 1;
 			datak_key->setup = 1u;
@@ -508,13 +504,13 @@ void SpawnReward(){//and move boss to position
 			boss->x = (UINT16) 24u << 3;
 			boss->y = (UINT16) 14u << 3;
 			boss->mirror = V_MIRROR;
-			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 29u << 3, (UINT16) 13u << 3);
+			reward = SpriteManagerAdd(SpriteAmulet, scroll_target->x, scroll_target->y - 16u);
 			data_amulet = (struct AmuletInfo*)reward->custom_data;
 			data_amulet->type = 3;
 			data_amulet->setup = 0;
 		break;
 		case 4u: // bear -> wrench
-			reward_wrench2 = SpriteManagerAdd(SpriteKey, (UINT16) 30u << 3, (UINT16) 12u << 3);
+			reward_wrench2 = SpriteManagerAdd(SpriteKey, scroll_target->x, scroll_target->y - 16u);
 			datak_wrench2 = (struct ItemInfo*)reward_wrench2->custom_data;
 			datak_wrench2->type = 2;
 			datak_wrench2->setup = 1u;
@@ -524,7 +520,7 @@ void SpawnReward(){//and move boss to position
 		case 5u: // tusk -> amulet water
 			boss->x = (UINT16) 12u << 3;
 			boss->y = (UINT16) 15u << 3;
-			reward = SpriteManagerAdd(SpriteAmulet, (UINT16) 28u << 3, (UINT16) 13u << 3);
+			reward = SpriteManagerAdd(SpriteAmulet, scroll_target->x, scroll_target->y - 16u);
 			data_amulet = (struct AmuletInfo*)reward->custom_data;
 			data_amulet->type = 2;
 			data_amulet->setup = 0;
@@ -539,7 +535,7 @@ void WriteBBOSSHP(){
 		set_win_tiles(11 + i, 0, 1, 1, &SKULL_TILE);
 	}
 	if(current_level_b < 9u){
-		for(; i != MAX_HP; ++i) {
+		for(; i != MAX_FINALBOSS_HP; ++i) {
 			set_win_tiles(11 + i, 0, 1, 1, &EMPTY_TILE);
 		}
 	}else{
