@@ -37,9 +37,11 @@ const UINT8 collision_tiles_credits_final[] = {1,0};
 UINT8 credit_step_final;
 UINT8 wait_time_final;
 UINT8 on_worldmap_final;
+UINT8 next_credit_step = 0u;
 struct CameraInfo* camerainfo_data = 0;
 
 void START() {
+	next_credit_step = 0u;
 	credit_step_final = 0u;
 	wait_time_final = 0u;
 	on_worldmap_final = 0;
@@ -47,7 +49,7 @@ void START() {
 	InitScroll(BANK(mapcreditfinal), &mapcreditfinal, collision_tiles_credits_final, 0);
 	scroll_target = SpriteManagerAdd(SpriteCamerafocus, ((INT16) 10u << 3), ((UINT16) 7u << 3));
 	camerainfo_data = (struct CameraInfo*) scroll_target->custom_data;
-	camerainfo_data->final_y = ((UINT16) 25u << 3);	
+	camerainfo_data->final_y = ((UINT16) 29u << 3);	
 	temporeggia = 0;
 	updatecounter = 0u;
 	//SOUND
@@ -78,113 +80,84 @@ void UPDATE() {
 	thunder_delay++;
 	//END ANIMATION
 
-	temporeggia++;
-	if(credit_step_final == 4u){
-		temporeggia = -100;
-		if(scroll_target->y < camerainfo_data->final_y){
-			scroll_target->y++;
-		}else{
-			credit_step_final = 5u;
-		}
-	}
-	if(credit_step_final == 7u){
-		temporeggia = -100;
-		if(scroll_target->y < camerainfo_data->final_y){
-			scroll_target->y++;
-		}else{
-			credit_step_final = 8u;
-		}
-	}
-	if(credit_step_final == 8u || credit_step_final == 9u){
-		if(KEY_PRESSED(J_A) || KEY_PRESSED(J_B)){
+	if(temporeggia <= 30){
+		temporeggia++;
+	}else{
+		if(KEY_RELEASED(J_A) || KEY_RELEASED(J_B)){
+			temporeggia = 0;
 			credit_step_final += 1u;
+			next_credit_step = 1u;
 		}
 	}
-	if(credit_step_final == 11u){
-		temporeggia = -100;
+	if(next_credit_step == 1u){
+		next_credit_step = 0u;
+		switch(credit_step_final){
+			case 1u:
+				PRINT(3u, 1u, "FLYING ARROWS");
+				PRINT(3u, 2u, "IS A PRODUCT");
+				PRINT(3u, 3u, "DESIGNED BY");
+			break;
+			case 2u:
+				PRINT(3u, 1u, "              ");
+				PRINT(3u, 2u, "              ");
+				PRINT(3u, 3u, "GRAPHICS BY   ");
+			break;
+			case 3u:
+				PRINT(3u, 1u, "              ");
+				PRINT(3u, 2u, "              ");
+				PRINT(3u, 3u, "PRODUCED BY   ");
+			break;
+			case 5u:
+				PRINT(3u, 21u, "SPECIAL THANKS");
+				PRINT(3u, 22u, "              ");
+				PRINT(3u, 23u, "TO SPECIAL    ");
+				PRINT(3u, 24u, "              ");
+				PRINT(3u, 25u, "KICKSTARTER    ");
+				PRINT(3u, 26u, "              ");
+				PRINT(3u, 27u, "BACKERS:      ");
+			break;
+			case 6u:
+				PRINT(2u, 21u, "HEXADIGITAL      ");
+				PRINT(2u, 22u, "                 ");
+				PRINT(2u, 23u, "HAYDEN CRIST     ");
+				PRINT(2u, 24u, "                  ");
+				PRINT(2u, 25u, "ELIZABETH GORMAN  ");
+				PRINT(2u, 26u, "                  ");
+				PRINT(2u, 27u, "SI PITTMAN          ");
+			break;
+			case 7u:
+				PRINT(2u, 21u, "AWESOME JACKET   ");
+				PRINT(2u, 22u, "   DUDE KS       ");
+				PRINT(2u, 23u, "                 ");
+				PRINT(2u, 24u, "RICHARD DAVEY    ");
+				PRINT(2u, 25u, "                 ");
+				PRINT(2u, 26u, "CAYLEN LEPPY     ");
+				PRINT(2u, 27u, "  WILLIAMS       ");
+			break;
+			case 8u:
+				PRINT(2u, 21u, "                 ");
+				PRINT(2u, 22u, "                 ");
+				PRINT(2u, 23u, "MEANWHILE        ");
+				PRINT(2u, 24u, "                 ");
+				PRINT(2u, 25u, "IN THE SEWERS ...");
+				PRINT(2u, 26u, "                 ");
+				PRINT(2u, 27u, "                 ");
+				PRINT(2u, 28u, "                 ");
+				PRINT(2u, 29u, "                 ");
+			break;
+			case 9u:			
+				current_level = 11u;
+				current_map = 0u;
+				current_cutscene = 20u;
+				SetState(StateWorldmap);
+			break;
+		}
+	}
+	if(credit_step_final == 4u){
 		if(scroll_target->y < camerainfo_data->final_y){
-			scroll_target->y++;
-		}else{
-			credit_step_final = 12u;
+			temporeggia = 0;
+			scroll_target->y += 2;
 		}
 	}
-	switch(temporeggia){
-		case 120:
-			switch(credit_step_final){
-				case 0u:
-					PRINT(3u, 1u, "FLYING ARROWS");
-					PRINT(3u, 2u, "IS A PRODUCT");
-					PRINT(3u, 3u, "DESIGNED BY");
-					credit_step_final = 1u;
-				break;
-				case 1u:
-					PRINT(3u, 1u, "              ");
-					PRINT(3u, 2u, "              ");
-					PRINT(3u, 3u, "GRAPHICS BY   ");
-					credit_step_final = 3u;
-				break;
-				case 3u:
-					PRINT(3u, 1u, "              ");
-					PRINT(3u, 2u, "              ");
-					PRINT(3u, 3u, "PRODUCED BY   ");
-					credit_step_final = 5u;
-				break;
-				case 5u:
-					PRINT(3u, 21u, "SPECIAL THANKS");
-					PRINT(3u, 22u, "              ");
-					PRINT(3u, 23u, "TO SPECIAL    ");
-					PRINT(3u, 24u, "              ");
-					PRINT(3u, 25u, "KICKSTARTER    ");
-					PRINT(3u, 26u, "              ");
-					PRINT(3u, 27u, "BACKERS:      ");
-					credit_step_final = 6u;
-				break;
-				case 6u:
-					camerainfo_data->final_y = ((UINT16) 41u << 3);
-					credit_step_final = 7u;
-				break;
-				case 8u:
-					PRINT(2u, 32u, "                 ");
-					PRINT(2u, 33u, "                 ");
-					PRINT(2u, 34u, "                 ");
-					PRINT(2u, 35u, "                 ");
-					PRINT(2u, 36u, "HEXADIGITAL      ");
-					PRINT(2u, 37u, "                 ");
-					PRINT(2u, 38u, "HAYDEN CRIST     ");
-					PRINT(2u, 39u, "                  ");
-					PRINT(2u, 40u, "ELIZABETH GORMAN  ");
-					PRINT(2u, 41u, "                  ");
-					PRINT(2u, 42u, "SI PITTMAN          ");
-				break;
-				case 9u:
-					PRINT(2u, 36u, "AWESOME JACKET    ");
-					PRINT(2u, 37u, "   DUDE KS        ");
-					PRINT(2u, 38u, "                 ");
-					PRINT(2u, 39u, "RICHARD DAVEY    ");
-					PRINT(2u, 40u, "                 ");
-					PRINT(2u, 41u, "CAYLEN LEPPY  ");
-					PRINT(2u, 42u, "  WILLIAMS    ");
-				break;
-				case 10u:
-					camerainfo_data->final_y = ((UINT16) 51u << 3);
-					credit_step_final = 11u;
-				break;
-				case 12u:
-					PRINT(2u, 49u, "MEANWHILE         ");
-					PRINT(2u, 50u, "                 ");
-					PRINT(2u, 51u, "IN THE SEWERS ...");
-					credit_step_final = 13u;
-				break;
-				case 13u:
-					current_level = 11u;
-					current_map = 0u;
-					current_cutscene = 20u;
-					SetState(StateWorldmap);
-				break;
-			}
-			temporeggia = -100;
-		break;
-	}
-
 
 }

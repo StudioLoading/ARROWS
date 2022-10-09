@@ -667,7 +667,7 @@ void UPDATE() {
 						}
 						dataenemy->enemy_accel_y = -3;
 						return;					
-					}else if(dataenemy->vx != 0){
+					}else if(dataenemy->vx == 0){
 						return;
 					}else{
 						SpriteManagerRemoveSprite(ispr);

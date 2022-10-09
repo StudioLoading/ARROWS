@@ -38,7 +38,7 @@ void START() {
 	walrus_data->enemy_accel_y = 24;
 	walrus_data->vx = -1;
 	walrus_data->wait = 60u;
-	walrus_data->hp = 6;
+	walrus_data->hp = 5;
 	walrus_data->enemy_state = ENEMY_STATE_NORMAL;
 	THIS->mirror = V_MIRROR;//SPRITE_SET_VMIRROR(THIS);
 	SetSpriteAnim(THIS, walrus_normal, 4u);

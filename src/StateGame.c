@@ -681,7 +681,7 @@ void UPDATE() {
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 163u << 3 && spawning_counter == 9){
-						spawn_enemy(SpriteBird, 160u, 3u);
+						//spawn_enemy(SpriteBird, 160u, 3u);
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 167u << 3 && spawning_counter == 10){
@@ -704,7 +704,6 @@ void UPDATE() {
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 128u << 3 && spawning_counter == 2){
-						spawn_enemy(SpriteBird, 116u, 5u);
 						spawn_enemy(SpriteSpider, 135u, 10u);
 						spawning_counter++;
 					}
@@ -717,7 +716,7 @@ void UPDATE() {
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 163u << 3 && spawning_counter == 5){
-						spawn_enemy(SpriteBird, 175u, 5u);
+						//spawn_enemy(SpriteBird, 175u, 5u);
 						spawning_counter++;
 					}
 					if (scroll_target->x > (UINT16) 168u << 3 && spawning_counter == 6){

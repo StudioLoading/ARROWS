@@ -76,6 +76,7 @@ void set_sgb_palette_title() __banked;
 void reset_sgb_palette_title() __banked;
 void set_sgb_palette_statusbar() __banked;
 void set_sgb_palette01_TITLESCREEN() __banked;
+void set_sgb_palette01_MISTYHILLS() __banked;
 void set_sgb_palette01_intro() __banked;
 void set_sgb_palette01_secret() __banked;
 void set_sgb_palette01_worldmap() __banked;
@@ -98,6 +99,7 @@ void set_sgb_palette01_ICE() __banked;
 void set_sgb_palette01_WALRUS() __banked;
 void set_sgb_palette01_CEMATERYCRYPT() __banked;
 void set_sgb_palette01_CASTLE() __banked;
+void set_sgb_palette01_MOTHER() __banked;
 void set_sgb_palette01_BOSS() __banked;
 
 void set_sgb_palette01_1A() __banked;	

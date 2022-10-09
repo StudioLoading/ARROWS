@@ -327,7 +327,7 @@ void UPDATE(){
 	}
 
 	//CAMERA SHIFTING
-	if(archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
+	if(current_level != 8u && archer_player && archer_state != STATE_HIT && archer_state != STATE_DEAD){
 		if(archer_player->x < 32u){
 			scroll_target->x = 32u;
 		}else{

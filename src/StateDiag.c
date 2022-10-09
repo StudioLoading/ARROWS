@@ -280,7 +280,7 @@ void START() {
 		break;
 		case 60u:
 			if(sgb_check()){
-				set_sgb_palette01_TITLEINVERTED();
+				set_sgb_palette01_MOTHER();
 			}
 			InitScroll(BANK(mapdiagmother), &mapdiagmother, collision_dtiles, 0);
 		break;

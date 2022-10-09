@@ -310,11 +310,17 @@ void set_sgb_palette01_worldmap() __banked{
 void set_sgb_palette01_WOLF() __banked{
 	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, SGB_PAL2H_DARK, SGB_PAL2H_DARKER);
 }
+void set_sgb_palette01_MISTYHILLS() __banked{
+	set_sgb_palette(SGB_PAL2H_LIGHTER, SGB_PAL2H_LIGHT, RGB8(4, 255, 0), SGB_PAL2H_DARKER);
+}
 void set_sgb_palette01_TITLEINVERTED() __banked{
 	set_sgb_palette(SGB_PAL2A_LIGHTER, SGB_PAL2A_DARK, SGB_PAL2A_LIGHT, SGB_PAL2A_DARKER);
 }
 void set_sgb_palette01_COMUNEKO() __banked{
 	set_sgb_palette(SGB_COMUNEKO_LIGHTER, SGB_COMUNEKO_LIGHT, SGB_COMUNEKO_DARK, SGB_COMUNEKO_DARKER);
+}
+void set_sgb_palette01_MOTHER() __banked{
+    set_sgb_palette(SGB_PAL2A_LIGHTER, RGB8(255, 194, 209), RGB8(198, 132, 74), SGB_PAL2A_DARKER);
 }
 void set_sgb_palette01_AMULET_THUNDER() __banked{
 	set_sgb_palette(SGB_PAL1B_LIGHTER, RGB8(255, 187, 17), RGB8(198, 132, 74), SGB_PAL1B_DARKER);

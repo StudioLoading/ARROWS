@@ -131,6 +131,9 @@ void START() {
 	current_cutscene++;
 	is_on_cutscene = 1;
 
+	//SCROLL
+	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display
+
 	switch (current_cutscene){
 		case 1u:
 			if(sgb_check()){
@@ -311,10 +314,6 @@ void START() {
 	memcpy(d2, "                    ", 20);
 	memcpy(d3, "                    ", 20);
 	memcpy(d4, "                    ", 20);
-
-	//SCROLL
-	scroll_bottom_movement_limit = 60u;//customizzo altezza archer sul display
-	//const struct MapInfo** level_cuts = cutscenes[current_cutscene];
 
 	//WINDOW
 	INIT_FONT(font, PRINT_WIN);
@@ -1097,11 +1096,7 @@ void CalculateSpritesDestinations() BANKED{
 			}
 		break;
 		case 21u:
-			switch(wait_c){
-				case 40u:
-					camera_finaly = ((UINT16) 14u << 3);
-				break;
-			}
+			camera_finaly = ((UINT16) 15u << 3);
 		break;
 	}
 }

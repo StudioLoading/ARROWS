@@ -66,6 +66,9 @@ void START() {
 			InitScroll(BANK(mapcredit0), &mapcredit0, collision_tiles_credits, 0);
 		break;
 		case 1u:
+			if(sgb_check()){
+				set_sgb_palette01_MISTYHILLS();
+			}
 			InitScroll(BANK(mapcredits2), &mapcredits2, collision_tiles_credits, 0); // music of the Misty Hills
 		break;
 		case 2u:
